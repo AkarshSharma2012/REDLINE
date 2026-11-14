@@ -77,3 +77,11 @@ Re-read project guidance, existing deliverable and fetched #18/#19 research. Rec
 Verification: source-to-claim correspondence, source-key completeness, Markdown-only changed paths and git diff --check. No implementation tests apply. Next: conductor integration.
 
 STATUS: DONE
+
+## Follow-on alternate-atmosphere evidence
+
+Read existing completed work before changes; preserved scope and prior source provenance. Reviewed fetched #18 evidence spec and #19 BASS-II research via git show. Added NASA Tests 3 & 4 abstract S13 (one-page published PDF), including alternate-atmosphere protocol outcomes and its unresolved 35.6/36.5 kPa inconsistency. Kept these human-test results separate from estimates and the requested presets; no approval inferred from no observed cases. Rechecked S7 Methods/Results directly. No code, configs or scaffolding changed.
+
+Verification: compared S13 paragraph against PDF p.1 and S7 against public abstract; source keys, required presets, changed-path scope and whitespace checked. Next: conductor integration only.
+
+STATUS: DONE

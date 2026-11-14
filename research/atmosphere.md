@@ -25,6 +25,12 @@ NASA reports a **20-minute pre-breathe at 85% O2**, after **48 hours** acclimati
 
 **Inference:** present this tested protocol separately from the older comparison below. Retain its gas, suit pressure and acclimation conditions; do not replace a table entry assuming a different suit pressure with its 20 minutes.
 
+### Follow-on alternate-atmosphere tests
+
+NASA's Tests 3 & 4 abstract reports a **66.2 kPa / 28.5% O2** chamber atmosphere, **48 h** acclimation and simulated EVAs using **95% O2**. At **29.6 kPa**, the **90 min** pre-breathe protocol produced a neurological DCS case and further testing stopped; the **150 min** protocol had no identified DCS cases. A **20 min** protocol was rejected after a Type II DCS case. The abstract prints **35.6 kPa** in Methods but **36.5 kPa** for that protocol in Results; the discrepancy is unresolved here. No vehicle assignment or approval of the 150 min protocol is established by this abstract. [S13, PDF p.1, Methods; Results and Discussion]
+
+**Inference:** retain this alternate atmosphere as research context, separately from the three requested presets. Do not interpolate these results or equate absence of observed DCS with operational approval. S13's Introduction also describes an earlier validation pressure that differs from S7's Methods; preserve each report's stated conditions rather than silently reconciling them.
+
 ### Older comparison (2020 source)
 
 All durations below are oxygen pre-breathe or source-defined protocol comparison values, not total time from deciding to leave a cabin to starting EVA.
@@ -89,3 +95,5 @@ S6 describes a past resting in-suit protocol: 4 h breathing 100% oxygen at 14.7 
 **S12 - Ewert, Chen and Powell (editors), _Life Support Baseline Values and Assumptions Document_**, NASA/TP-2015-218570/REV2, February 2022. https://ntrs.nasa.gov/api/citations/20210024855/downloads/BVAD_2.15.22-final.pdf . Locator: section 4.6.3.6, Exploration Prebreathe, printed p.142 / PDF p.156. Vehicle-role recommendations and summary durations; not a complete flight procedure.
 
 **Baseline follow-up audit (14 November 2026):** Opened S12 directly and checked its vehicle roles, durations and suit-pressure assumption at the cited page. Reopened S5 final-slide comparison and S7 public abstract; their different conditions and evidence categories remain separate. Read fetched #18 evidence specification and #19 BASS-II research with git show; neither supplies a replacement pre-breathe dataset. Earlier access notes are historical records, not claims of fresh access to every source.
+
+**S13 — Garbino et al., _NASA Exploration Atmosphere Tests 3 & 4: Development and Validation of Planetary Extravehicular Activity Prebreathe Protocols for Alternate Atmospheres and Suit Pressures_**, AsMA-UHMS 2025 abstract, NASA NTRS 20240013238. https://ntrs.nasa.gov/api/citations/20240013238/downloads/ASMA_2025_EA_Garbino_v2.pdf . Locator: single-page PDF p.1, Introduction, Methods, Results and Discussion. Public PDF text and NTRS abstract directly reviewed in this pass. Its inconsistent pressure entries are retained explicitly, not corrected by inference.
