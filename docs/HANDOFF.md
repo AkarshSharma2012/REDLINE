@@ -13,3 +13,12 @@
 ## Verification / next
 
 - Pending document checks, commit and push. Later presenter must select a fully reviewed record and rehearse after kickoff; those are preparation steps, not missing deliverables for this planning issue.
+
+## Final verification
+
+- Six sequential beats cover 0:00–2:00; spoken text counted at 236 words excluding citations. Timing still needs a live rehearsal.
+- Checked all five criterion rows, the falsifiable question and pass/fail audit, source titles/URLs/locators, inference labels, access limitations and honest fallback.
+- git diff --cached --check passed before the draft commit af1e7d6. Only docs/pitch.md and docs/HANDOFF.md changed; no executable tests apply to this writing-only task.
+- All issue deliverables are complete. No human dependency remains for the planning document.
+
+STATUS: DONE
