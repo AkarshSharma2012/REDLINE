@@ -1,4 +1,4 @@
-# Issue #24 handoff
+﻿# Issue #24 handoff
 
 STATUS: DONE
 
@@ -27,3 +27,9 @@ STATUS: DONE
 Re-read README, AGENTS and the existing research handoff. Added NASA evidence report S9, p.67 Figure 13, distinguishing HLS comparison scenarios at 10.2/26.5 and 14.7/21 from the 8.2/34 reference selection. Narrowed the earlier missing-assignment wording. Reopened S5 final-slide timing table, S6 Revision D future-options section and S7 human-test abstract; their established/estimated/tested distinctions remain supported. S5 bare PDF URL timed out; attachment URL succeeded. No facts were inferred from the failed request. Rechecked fetched branches #18/#19 (no research files) and read #33 submission draft with git show. Verification: source-to-claim review and git diff --check; only research Markdown changed. No implementation or configuration changes.
 
 STATUS: DONE
+
+## Current review and rover clarification, 14 November 2026
+
+Preserved the existing research and handoff history. Added S10, NASA Exploration EVA System Concept of Operations Revision B, p.65: conceptual rover saturation set points at 14.7/21, 10.2/27 and 8.2/34. Distinguish its 27% from historical 26.5%. Consolidated the deliverable's access chronology into a current audit. The #18 research/evidence-spec.md is now available and was read via git show; no numerical claim relies on it. Reopened S1/S3/S5/S6/S7/S8/S9 and S10 at the cited locations. Preserved estimated planetary ranges and later 20-minute human-study evidence separately.
+
+Verification: source-to-claim review and git diff --check. Only research Markdown changed. Next: final scope/source-key check, commit completion and push task branch.
