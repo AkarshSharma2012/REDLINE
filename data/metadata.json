@@ -1,0 +1,211 @@
+{
+  "sources": {
+    "BASS2-TM": {
+      "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+      "authors": "Not stated in extraction",
+      "year": 2021,
+      "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf"
+    },
+    "US25": {
+      "title": "Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results (presentation)",
+      "authors": "Not stated in extraction",
+      "year": 2025,
+      "url": "https://ntrs.nasa.gov/api/citations/20250006779/downloads/ICES%202025-392%20Lunar%20Flam%20070725.pdf"
+    },
+    "OF12": {
+      "title": "Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test",
+      "authors": "Not stated in extraction",
+      "year": 2012,
+      "url": "https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf"
+    },
+    "M25": {
+      "title": "Material Ignition and Suppression Test (MIST) in Space Exploration Atmospheres, NASA Task Book FY2025",
+      "authors": "Not stated in extraction",
+      "year": 2025,
+      "url": "https://taskbook.nasaprs.com/tbp/tbpdf.cfm?id=16225"
+    },
+    "R7-S4": {
+      "title": "Modeling a 15-min extravehicular activity prebreathe protocol",
+      "authors": "Abercromby, Conkin and Gernhardt",
+      "year": 2015,
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/03/abercromby-8.2-34-atm-2015.pdf"
+    },
+    "R7-S5": {
+      "title": "Human Health and Performance, NASA EVA Exploration Workshop",
+      "authors": "NASA",
+      "year": 2020,
+      "url": "https://ntrs.nasa.gov/api/citations/20200001073/downloads/20200001073.pdf?attachment=true"
+    },
+    "R7-S7": {
+      "title": "Development, Validation and Approval of A Planetary Extravehicular Activity Prebreathe Protocol: NASA Exploration Atmosphere Tests 1 & 2",
+      "authors": "Garbino et al.",
+      "year": 2024,
+      "url": "https://ntrs.nasa.gov/citations/20230015380"
+    },
+    "R7-S12": {
+      "title": "Life Support Baseline Values and Assumptions Document",
+      "authors": "Ewert, Chen and Powell (editors)",
+      "year": 2022,
+      "url": "https://ntrs.nasa.gov/api/citations/20210024855/downloads/BVAD_2.15.22-final.pdf"
+    }
+  },
+  "materials": [
+    {
+      "material_id": "pmma",
+      "display_name": "PMMA (acrylic)",
+      "aliases": [
+        "acrylic"
+      ]
+    },
+    {
+      "material_id": "nomex",
+      "display_name": "Nomex",
+      "aliases": []
+    },
+    {
+      "material_id": "cotton",
+      "display_name": "Cotton",
+      "aliases": []
+    },
+    {
+      "material_id": "p213",
+      "display_name": "P213 tape",
+      "aliases": []
+    },
+    {
+      "material_id": "velcro",
+      "display_name": "Velcro",
+      "aliases": []
+    },
+    {
+      "material_id": "etfe",
+      "display_name": "ETFE",
+      "aliases": []
+    },
+    {
+      "material_id": "ptfe",
+      "display_name": "PTFE (Teflon)",
+      "aliases": []
+    },
+    {
+      "material_id": "sibal",
+      "display_name": "SIBAL composite fabric",
+      "aliases": []
+    },
+    {
+      "material_id": "polycarbonate",
+      "display_name": "Polycarbonate",
+      "aliases": []
+    }
+  ],
+  "cabin_presets": [
+    {
+      "preset_id": "iss-14.7-21",
+      "label": "101.3 kPa / 21% O2",
+      "pressure_kpa": 101.3,
+      "o2_pct": 21,
+      "status": "historical",
+      "context": "Source-dated atmosphere comparison; not a universal EVA procedure",
+      "source_key": "R7-S4",
+      "source_locator": "Table 1, journal p.77 / PDF p.2; ISS 21% rounded from 20.8%",
+      "prebreathe": [
+        {
+          "minutes": "240",
+          "regime": "microgravity comparison",
+          "kind": "historical comparison",
+          "assumptions": "2020 comparison; 6 h EVA at 4.3 psia suit pressure; preserve prior staging. Exploratory short protocols unvalidated/unavailable for flight use. Not total preparation time.",
+          "source_key": "R7-S5",
+          "source_locator": "PDF p.38, final slide, table, footnote and validation annotation"
+        },
+        {
+          "minutes": "390–420",
+          "regime": "planetary comparison",
+          "kind": "estimate",
+          "assumptions": "2020 comparison; 6 h EVA at 4.3 psia suit pressure; preserve prior staging. Exploratory short protocols unvalidated/unavailable for flight use. Not total preparation time.",
+          "source_key": "R7-S5",
+          "source_locator": "PDF p.38, final slide, table, footnote and validation annotation"
+        }
+      ]
+    },
+    {
+      "preset_id": "staged-10.2-26.5",
+      "label": "70.3 kPa / 26.5% O2",
+      "pressure_kpa": 70.3,
+      "o2_pct": 26.5,
+      "status": "historical",
+      "context": "Source-dated atmosphere comparison; not a universal EVA procedure",
+      "source_key": "R7-S4",
+      "source_locator": "Table 1, journal p.77 / PDF p.2; ISS 21% rounded from 20.8%",
+      "prebreathe": [
+        {
+          "minutes": "40–70",
+          "regime": "microgravity comparison",
+          "kind": "historical comparison",
+          "assumptions": "2020 comparison; 6 h EVA at 4.3 psia suit pressure; preserve prior staging. Exploratory short protocols unvalidated/unavailable for flight use. Not total preparation time.",
+          "source_key": "R7-S5",
+          "source_locator": "PDF p.38, final slide, table, footnote and validation annotation"
+        },
+        {
+          "minutes": "180–210",
+          "regime": "planetary comparison",
+          "kind": "estimate",
+          "assumptions": "2020 comparison; 6 h EVA at 4.3 psia suit pressure; preserve prior staging. Exploratory short protocols unvalidated/unavailable for flight use. Not total preparation time.",
+          "source_key": "R7-S5",
+          "source_locator": "PDF p.38, final slide, table, footnote and validation annotation"
+        },
+        {
+          "minutes": "40",
+          "regime": "2022 life-support baseline summary",
+          "kind": "recommendation",
+          "assumptions": "4.3 psia suit; generic surface habitat/rover (8.2/34) or intermediate/contingency EVA vehicle (10.2/26.5); summary is not a complete flight procedure.",
+          "source_key": "R7-S12",
+          "source_locator": "Section 4.6.3.6, printed p.142 / PDF p.156"
+        }
+      ]
+    },
+    {
+      "preset_id": "exploration-8.2-34",
+      "label": "56.5 kPa / 34% O2",
+      "pressure_kpa": 56.5,
+      "o2_pct": 34,
+      "status": "planned",
+      "context": "Source-dated atmosphere comparison; not a universal EVA procedure",
+      "source_key": "R7-S4",
+      "source_locator": "Table 1, journal p.77 / PDF p.2; ISS 21% rounded from 20.8%",
+      "prebreathe": [
+        {
+          "minutes": "0–15",
+          "regime": "microgravity comparison",
+          "kind": "estimate",
+          "assumptions": "2020 comparison; 6 h EVA at 4.3 psia suit pressure; preserve prior staging. Exploratory short protocols unvalidated/unavailable for flight use. Not total preparation time.",
+          "source_key": "R7-S5",
+          "source_locator": "PDF p.38, final slide, table, footnote and validation annotation"
+        },
+        {
+          "minutes": "0–30",
+          "regime": "planetary comparison",
+          "kind": "estimate",
+          "assumptions": "2020 comparison; 6 h EVA at 4.3 psia suit pressure; preserve prior staging. Exploratory short protocols unvalidated/unavailable for flight use. Not total preparation time.",
+          "source_key": "R7-S5",
+          "source_locator": "PDF p.38, final slide, table, footnote and validation annotation"
+        },
+        {
+          "minutes": "15",
+          "regime": "2022 life-support baseline summary",
+          "kind": "recommendation",
+          "assumptions": "4.3 psia suit; generic surface habitat/rover (8.2/34) or intermediate/contingency EVA vehicle (10.2/26.5); summary is not a complete flight procedure.",
+          "source_key": "R7-S12",
+          "source_locator": "Section 4.6.3.6, printed p.142 / PDF p.156"
+        },
+        {
+          "minutes": "20",
+          "regime": "simulated planetary EVA, chamber",
+          "kind": "human-test",
+          "assumptions": "48 h acclimation at 8.2 psia / 34% O2; prebreathe 85% O2; EVA 34 kPa / 85% O2 / 15% N2. Two mild Type I DCS cases in 50 subject EVA exposures. Specific protocol; not a universal 20-minute rule.",
+          "source_key": "R7-S7",
+          "source_locator": "Abstract, Methods; Results and Discussion (no fixed pagination)"
+        }
+      ]
+    }
+  ]
+}
