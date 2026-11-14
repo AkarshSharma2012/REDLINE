@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>REDLINE</title>
+  <link rel="stylesheet" href="src/styles.css">
+  <script type="module" src="src/main.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <h1 class="type-title">REDLINE</h1>
+    <p class="text-2">Cabin materials compared against NASA space fire experiments.</p>
+  </header>
+
+  <main class="layout">
+    <section class="region region-cabin" aria-labelledby="cabin-heading">
+      <h2 id="cabin-heading" class="type-heading">Cabin</h2>
+      <div id="o2-slider"></div>
+      <div id="cabin-form"></div>
+    </section>
+
+    <section class="region region-results" aria-labelledby="results-heading">
+      <h2 id="results-heading" class="type-heading">Results</h2>
+      <ul class="legend" aria-label="Label key">
+        <li><span class="chip chip-burned">Burned in comparable test</span></li>
+        <li><span class="chip chip-near">Near measured limit</span></li>
+        <li><span class="chip chip-ne">Not established</span></li>
+      </ul>
+      <div id="status" role="status" aria-live="polite" class="text-2"></div>
+      <div id="results-table" class="table-scroll"></div>
+      <div id="fixes"></div>
+    </section>
+
+    <section class="region region-evidence" aria-labelledby="evidence-heading">
+      <h2 id="evidence-heading" class="type-heading">Evidence</h2>
+      <div id="evidence-panel"><p class="text-3">Select a material to see the tests behind its label.</p></div>
+    </section>
+  </main>
+</body>
+</html>

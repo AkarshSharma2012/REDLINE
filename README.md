@@ -13,3 +13,15 @@ NASA Space Apps Challenge 2026, Seattle. Challenge: Flame in Freefall. Team: Int
 ## Status
 
 Stack and architecture are decided at kickoff. Work is tracked in GitHub Issues; see `AGENTS.md` for how agents pick up tasks.
+
+## Run locally
+
+No install step and no dependencies. Needs Python 3 (any recent version) and Node 22.12 or newer.
+
+```sh
+python -m http.server 8000     # from the repo root, then open http://localhost:8000/
+npm test                       # or: node --test
+```
+
+Open the page through the server, not as a `file://` path: browsers block ES modules loaded from `file://`.
+Until `data/evidence.json` exists (built by `scripts/build-evidence.mjs`), the page shows an "Evidence file could not be loaded" message; that is expected.
