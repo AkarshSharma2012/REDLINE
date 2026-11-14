@@ -8,7 +8,7 @@ Branch: task/20-r3-nasa-2025-lunar-gravity-flammability
 - Located and opened Urban et al., ICES-2025-392 (NTRS 20250002114, corrected-caption paper), its presentation (20250006779), and Olson/Ferkul 2012 (20130010991).
 
 ## Next
-- Validate the completed report/CSV, source locators and scope, then finalize and push this branch.
+- Research deliverables are complete. Downstream science review must resolve the documented source discrepancies before promoting 2025 rows into classifications. No human input is required to complete this research task.
 
 ## Decisions / limitations
 - Research only. No app code, configuration, or scaffolding.
@@ -24,5 +24,9 @@ Branch: task/20-r3-nasa-2025-lunar-gravity-flammability
 - NASA catalog records and PDF sections read. Locally rendered corrected-caption paper pp. 8, 9, 11; presentation slides 14-16; Olson/Ferkul Table I p. 6.
 - Digitized vector plot lines using separately calibrated axes, checked against rendered paper; editorial allowances are +/-0.5 pp for lunar references and +/-1.0 pp for extrapolated ordinates, not source confidence intervals.
 - Table 2 and historical Table I checked visually; preserve source rounding for compensation factors.
+- Import-Csv validation: 30 rows, unique evidence IDs, required provenance/uncertainty fields populated, NASA NTRS source URLs, and blank unknown lunar-flow values. Counts: 6 plot references, 12 fit extrapolations, 12 table transcriptions (6 factors + 6 historical endpoints).
+- Cross-checked report/CSV material values, figure numbers, Table 2 values and historical fabric endpoint pairs. git diff --check passed.
+- Scope check: only research/lunar-2025.md, research/lunar-2025-rows.csv and root HANDOFF.md changed. No app code, configuration, scaffolding, dependencies or temporary extraction tools committed.
+- Commits: f9fa7d0 (research plan); 4756d3b (evidence report and rows); final handoff verification committed separately. Push targets only the assigned task branch.
 
-STATUS: IN PROGRESS
+STATUS: DONE
