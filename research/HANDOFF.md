@@ -51,3 +51,11 @@ STATUS: DONE
 Re-read the existing deliverable and handoff. Read fetched issue #18 evidence-spec.md via git show; #22 has no research files. Reopened S4 atmosphere table, S5 timing comparison and S7 human-test abstract. S1 fetch failed in this pass; documented reliance on the prior successful extraction without guessing contents. Preserved protocol conditions and estimate labels. Only research Markdown changed. Verification: source-key completeness, preset coverage and git diff --check. No implementation tests apply.
 
 STATUS: DONE
+
+## Final independent audit
+
+Rechecked S5 PDF p.38 and S7 Methods / Results directly against NASA text. Added S7's ten excluded planned exposures to retain the human-study denominator caveat. S1 PDF requests failed in this pass; retained prior successful-review provenance and existing access limitation. Updated the cross-branch audit: #19 now contains BASS-II research; read research/bass2.md via git show. It does not supply pre-breathe values. #18 evidence specification was also read; #22 has no research files in the fetched tree.
+
+Verification: exact S5 timing rows and suit/EVA footnote, S7 conditions and study exclusions, source-key completeness, research-only changed paths and git diff --check. No code, configs or scaffolding changed.
+
+STATUS: DONE
