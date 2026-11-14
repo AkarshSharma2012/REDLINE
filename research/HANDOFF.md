@@ -8,6 +8,7 @@
 - All PDFs text-extracted locally with pdftotext and checked line by line for page locators.
 - Second-pass spot check (re-downloaded STD6001, JSC27301, SAF21): Test 1 pass criteria, "Air shall not be allowed to flow", JSC §5.1.1 e note and i quotes, and SAF21 Test 1 quotes all match. Corrected one error: the standard does mention microgravity once (App. A.2.1.3, Test 2, pp. 59–60), not zero times.
 - Cross-checked against branches #18, #19, #24 and #33 (consistent; #19 re-checked after it gained research/bass2.md).
+- Re-checked #19 at 3db4813 (BASS-II revalidation): only overlap is its "not lunar predictions" scope note, consistent with this file.
 
 ## Key decisions
 - FM2 has two published test plans (2024: 21%/14.7 psia + 34%/8.2 psia, SIBAL + PMMA; 2026: 8.2 psia at
