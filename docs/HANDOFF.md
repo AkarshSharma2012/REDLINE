@@ -15,12 +15,16 @@
 - PSI-98 direct access produced no readable content; catalog availability is not presented as raw-data verification.
 - Avoided quantitative material outcomes and unsupported blanket absence claims. Any 0 g/1 g range is explicitly a proposed estimate, not a proven physical bound.
 
-## Next
+## Next (final submission owner)
 
-- Review the draft for claim/citation consistency, verify Markdown changes and commit.
 - Final submission owner must reconcile the shipped data manifest and actual AI contributions after kickoff. These expected draft updates do not block issue #33's pre-kickoff deliverable.
 
 ## Verification
 
 - NASA catalog, NTRS slides, standard landing page/PDF and SoFIE source descriptions reviewed through web tools.
-- No app tests applicable; documentation checks pending.
+- Manually reviewed scientific claims against the cited source passages and checked planned/completed language.
+- PowerShell assertions passed: all citation IDs resolve, eight reference entries, five separate PSI entries, required AI names/disclosure and required missing-evidence wording present.
+- git diff --check passed. Only docs/submission-draft.md and docs/HANDOFF.md changed. No app tests applicable.
+- Python was unavailable; documentation assertions were rerun successfully in PowerShell.
+
+STATUS: DONE
