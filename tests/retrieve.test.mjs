@@ -201,4 +201,3 @@ test('unit: shuffled rows preserve complete hits and limited tie selection witho
   }
   assert.deepEqual(rows, before);
 });
-
