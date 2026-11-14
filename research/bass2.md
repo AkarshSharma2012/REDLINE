@@ -26,7 +26,7 @@ The version-4 public file tree contained 695 file leaves: 296 MP4, 265 ZIP, 127 
 | README | `PSI-25_Science Documents_BASS-II_ReadMe.docx`, Science Documents | HTTP 200, 21,538 bytes; opened ZIP/XML and read paragraphs [S3] |
 | B1 video | `PSI-25_Raw Data_BASS_GMT50_SAMPLE_147_TEST_B1.mp4` | HTTP 200, 5,803,980 bytes; MP4 signature checked [S4] |
 | B1 still sequence / still archive | `PSI-25_Raw Data_BASS_GMT50_SAMPLE_147_TEST_B1_Still_Sequence.mp4`; `PSI-25_Raw Data_iss038e051108.zip` | Listed; downloads and archive contents not checked [S1, matching file leaves] |
-| Test matrices / fan calibration | `PSI-25_Science Documents_BASS-II_Test.Matrices.xlsx`; `PSI-25_Reference Data_Fan calibration data.xlsx` | Listed; workbook contents and downloads not checked [S1, matching file leaves] |
+| Test matrices / fan calibration | `PSI-25_Science Documents_BASS-II_Test.Matrices.xlsx`; `PSI-25_Reference Data_Fan calibration data.xlsx` | Both anonymously downloaded, HTTP 200: 28,956 and 23,973 bytes. Test-matrix workbook sheet names and T'ien header/first records inspected in memory; calibration contents not reviewed [S1, matching file leaves; additional audit below] |
 | Summary report | `PSI-25_Reports_BASS-II Summary Report.pdf`; NTRS `TM-20210011385.pdf` | NTRS HTTP download succeeded, 48,972,416 bytes; text extracted [S1, S5] |
 | Other supporting files | Engineering requirements PPTX, operations DOCX, science requirements PDF, proof-sheet PDFs and original-video ZIPs | Listed; not individually downloaded [S1, Engineering Documents / Science Documents / Raw Data leaves] |
 
@@ -80,3 +80,44 @@ Fresh downloads of S2, S3, S4 and the NTRS S5 PDF match all four SHA-256 hashes 
 The public version-4 file tree was fetched again: 695 file leaves, with the same extension counts and no restricted leaves. Parsed S2 again: 129 records and 17 fields. All 150 copied source fields across the 15 draft rows match after the documented `none` conversion. Every selected observation paraphrase was checked against S5 Table A.1, printed pp. 103-104. The 15 identifiers are unique, all rows have condition/observation provenance, and unresolved endpoint fields remain empty. These checks validate transcription and attribution; they do not validate a physical extinction boundary.
 
 For R1 cross-reference: S5 Table 7.1 (printed p. 96 / PDF p. 104) identifies **GMT45-T4**, not GMT45-T15, as the 18.7% O2 quench run (flow 10 to 2.2 cm/s). GMT45-T15 instead has flow 10 to 29 cm/s and no blowoff. This resolves R1 section 5 example 3's explicitly tentative run match. Neither result is an oxygen extinction threshold. [S5, Table 7.1; section 7.1.4, printed pp. 97-99.] These additional cross-reference facts are not extra CSV rows.
+
+## Additional access and source audit, 2026-11-14 UTC
+
+This pass preserves the existing 15 PMMA draft rows. Fresh anonymous GETs again
+retrieved the experiment CSV, README and complete B1 MP4, with the byte sizes
+listed above. Requests supplied no cookies or credentials. HEAD requests for
+the README and video signed URLs returned 403 even though GET succeeded;
+**inference:** HEAD alone is insufficient to determine download availability.
+[S2-S4, named files and access results]
+
+The two XLSX files also downloaded without login. Reproducible resolvers:
+
+- **BASS-II Test Matrices**, NASA PSI:
+  https://psi.nasa.gov/geode-py/ws/studies/PSI-25/download?file=PSI-25_Science%20Documents_BASS-II_Test.Matrices.xlsx&redirect=false .
+  Locator: workbook sheet list; T'ien worksheet header and first six test rows.
+- **Fan calibration data**, NASA PSI:
+  https://psi.nasa.gov/geode-py/ws/studies/PSI-25/download?file=PSI-25_Reference%20Data_Fan%20calibration%20data.xlsx&redirect=false .
+  Locator: file response, 23,973-byte XLSX body; calibration values not extracted.
+
+The test-matrix workbook has worksheets named Bhattacharjee, Ferkul, Miller,
+Olson, Fernandez-Pello and T'ien. The inspected T'ien header contains the same
+identity, ventilation, imaging and gas-reading groups described above.
+[BASS-II Test Matrices, workbook sheet list and T'ien row 1]
+
+An independent NASA-hosted paper also resolves R1's tentative T4/T15 match:
+**Concurrent flame growth, spread and extinction over composite fabric samples
+in low speed purely forced flow in microgravity**, Zhao, T'ien, Ferkul and Olson
+(2015), https://ntrs.nasa.gov/api/citations/20150008962/downloads/20150008962.pdf ,
+p. 9 Appendix: GMT45-T4 quenched at the reported final flow of 2.2 cm/s;
+GMT45-T15 reports no blow-off at 29 cm/s. Both list 18.7% O2. These are
+flow-endpoint observations, not oxygen extinction thresholds (inference).
+No fabric rows were added to the CSV because the requested maximum of 15
+draft rows is already occupied by the PMMA series.
+
+The current web reader could not parse the PSI application and rejected the
+48,972,416-byte report as too large. Direct anonymous NTRS GET succeeded;
+its SHA-256 matched S5. An existing temporary PDF with the same hash was
+then read using `pdftotext`, and all 15 observation paraphrases were rechecked
+against Table A.1, printed pp. 103-104. The web-reader failure therefore does
+not establish that the report is inaccessible or requires login.
+[S5, Table A.1 and this pass's download/hash check]
