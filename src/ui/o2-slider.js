@@ -268,3 +268,6 @@ export function mountO2Slider(root, options) {
     destroy() { destroyed = true; listeners.forEach(remove => remove()); panel.remove(); },
   };
 }
+
+// main.js and the S1 smoke test call it renderO2Slider
+export { mountO2Slider as renderO2Slider };
