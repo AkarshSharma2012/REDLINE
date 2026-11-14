@@ -5,26 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>REDLINE</title>
   <link rel="stylesheet" href="src/styles.css">
+  <style>
+    /* Tab layout only; colors and type come from styles.css tokens. */
+    .tabs { display: flex; flex-wrap: wrap; gap: var(--space-4, 4px); padding: 0 var(--space-24, 24px); border-bottom: 1px solid var(--divider); }
+    .tabs [role="tab"][aria-selected="true"] { border-color: var(--accent); color: var(--accent); }
+    .framing { margin: 4px 0 0; }
+    [hidden] { display: none !important; }
+  </style>
   <script type="module" src="src/main.js"></script>
 </head>
 <body>
   <header class="app-header">
     <h1 class="type-title">REDLINE</h1>
-    <p class="text-2">Cabin materials compared against NASA space fire experiments.</p>
+    <p class="text-2">PSI combustion investigations and cabin materials, compared against NASA space fire experiments. Evidence review, not cabin certification.</p>
+    <p class="text-2 framing"><strong>Prevention · Detection · Suppression:</strong> each investigation and label is read for what it tells a crew about preventing, detecting or putting out a cabin fire.</p>
+    <p class="text-3 framing">Partial gravity (Moon 0.16 g, Mars 0.38 g): no partial-gravity data in PSI yet. REDLINE shows those cases only as an estimate beside 0 g and 1 g results, never as a lunar measurement.</p>
+    <p id="dataset" class="text-3 framing"></p>
   </header>
 
-  <main class="layout">
+  <nav id="tabs" class="tabs" role="tablist" aria-label="REDLINE screens">
+    <button type="button" role="tab" id="tab-investigations" aria-controls="panel-investigations" aria-selected="true">Investigations</button>
+    <button type="button" role="tab" id="tab-ask" aria-controls="panel-ask" aria-selected="false" tabindex="-1">Ask REDLINE</button>
+    <button type="button" role="tab" id="tab-cabin" aria-controls="panel-cabin" aria-selected="false" tabindex="-1">Cabin Check</button>
+    <button type="button" role="tab" id="tab-gravity" aria-controls="panel-gravity" aria-selected="false" tabindex="-1">Gravity view</button>
+    <button type="button" role="tab" id="tab-oxygen" aria-controls="panel-oxygen" aria-selected="false" tabindex="-1">O2 tradeoff</button>
+    <button type="button" role="tab" id="tab-accuracy" aria-controls="panel-accuracy" aria-selected="false" tabindex="-1">Accuracy</button>
+  </nav>
+
+  <section id="panel-investigations" role="tabpanel" aria-labelledby="tab-investigations" class="region region-investigations">
+    <h2 class="type-heading">PSI combustion investigations</h2>
+    <p class="text-2">Summarize, rank and compare NASA Physical Sciences Informatics (PSI) combustion investigations for fire prevention, detection and suppression. Every value links to its source.</p>
+    <div id="investigations-root"></div>
+  </section>
+
+  <section id="panel-ask" role="tabpanel" aria-labelledby="tab-ask" class="region" hidden>
+    <div id="ask-root"></div>
+  </section>
+
+  <main id="panel-cabin" role="tabpanel" aria-labelledby="tab-cabin" class="layout" hidden>
     <section class="region region-cabin" aria-labelledby="cabin-heading">
       <h2 id="cabin-heading" class="type-heading">Cabin</h2>
-      <div id="o2-slider"></div>
+      <p><button type="button" id="rover-demo" disabled>Load lunar rover demo</button></p>
+      <p class="text-3">Illustrative pressurized rover cabin; item uses are hypothetical, not a real rover manifest.</p>
       <div id="cabin-form"></div>
     </section>
 
     <section class="region region-results" aria-labelledby="results-heading">
       <h2 id="results-heading" class="type-heading">Results</h2>
       <ul class="legend" aria-label="Label key">
-        <li><span class="chip chip-burned">Burned in comparable test</span></li>
-        <li><span class="chip chip-near">Near measured limit</span></li>
+        <li><span class="chip chip-burned">Burned in testing at these conditions</span></li>
+        <li><span class="chip chip-near">Close to a measured limit</span></li>
         <li><span class="chip chip-ne">Not established</span></li>
       </ul>
       <div id="status" role="status" aria-live="polite" class="text-2"></div>
@@ -38,10 +68,16 @@
     </section>
   </main>
 
-  <section class="region region-investigations" aria-labelledby="investigations-heading">
-    <h2 id="investigations-heading" class="type-heading">PSI combustion investigations</h2>
-    <p class="text-2">Summarize, rank and compare NASA Physical Sciences Informatics (PSI) combustion investigations for fire prevention, detection and suppression. Every value links to its source.</p>
-    <div id="investigations-root"></div>
+  <section id="panel-gravity" role="tabpanel" aria-labelledby="tab-gravity" class="region" hidden>
+    <div id="gravity-view"></div>
+  </section>
+
+  <section id="panel-oxygen" role="tabpanel" aria-labelledby="tab-oxygen" class="region" hidden>
+    <div id="o2-slider"></div>
+  </section>
+
+  <section id="panel-accuracy" role="tabpanel" aria-labelledby="tab-accuracy" class="region" hidden>
+    <div id="accuracy-view"></div>
   </section>
   <script type="module" src="src/ui/investigations.js"></script>
 </body>
