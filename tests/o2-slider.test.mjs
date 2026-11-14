@@ -112,6 +112,21 @@ test('slider changes only oxygen at every input, preserves caller and clears pro
   assert.ok(all(root).some(node => node.attrs['aria-live'] === 'polite'));
 });
 
+test('all 51 sweep steps rerun the engine; duplicate material lines are counted separately', () => {
+  const duplicate = structuredClone(cabin);
+  duplicate.materials.push(structuredClone(duplicate.materials[0]));
+  const { root, input, calls } = setup({ cabinQuery: duplicate });
+  const before = calls.length;
+  for (let oxygen = 15; oxygen <= 40; oxygen += 0.5) {
+    input('range').value = String(oxygen); input('range').dispatch('input');
+    assert.equal(calls.at(-1).conditions.o2_pct, oxygen);
+    assert.equal(calls.at(-1).conditions.pressure_kpa, 56.5);
+    if (oxygen !== 34) assert.doesNotMatch(root.textContent, /Published duration:/);
+  }
+  assert.equal(calls.length - before, 51);
+  assert.match(root.textContent, /2 — Burned in testing at these conditions/);
+});
+
 test('presets pair pressure and oxygen; source protocols stay distinct; no interpolation', () => {
   const { root, button, input, calls } = setup();
   button('14.7 psia').dispatch('click');
@@ -168,6 +183,7 @@ test('draft exclusion and traceability failure, engine failure and retry are exp
     assert.equal(e.evidence.length, 1); return engine(q);
   });
   assert.throws(() => buildO2Preview(cabin, data, () => []), /incomplete/);
+  assert.throws(() => buildO2Preview(cabin, data, q => engine(q).map(r => ({ ...r, label: 'toString' }))), /invalid/);
   assert.throws(() => buildO2Preview(cabin, data, q => engine(q).map(r => ({ ...r, cited: ['missing'] }))), /Unverified/);
   let failing = true;
   const { root, button } = setup({ labelCabin(q) { if (failing) throw new Error('fixture failure'); return engine(q); } });
@@ -175,6 +191,17 @@ test('draft exclusion and traceability failure, engine failure and retry are exp
   assert.match(root.textContent, /Published duration: 15 min/);
   failing = false; button('Retry').dispatch('click');
   assert.match(root.textContent, /computed by REDLINE/);
+});
+
+test('engine mutations cannot modify the caller query or evidence', () => {
+  const query = structuredClone(cabin), evidence = structuredClone(data);
+  buildO2Preview(query, evidence, (q, e) => {
+    const result = engine(q);
+    q.materials.length = 0; q.conditions.pressure_kpa = -1;
+    e.evidence.length = 0; e.cabin_presets.length = 0;
+    return result;
+  });
+  assert.deepEqual(query, cabin); assert.deepEqual(evidence, data);
 });
 
 test('zero verified rows and empty materials do not present zero-risk counts', () => {
