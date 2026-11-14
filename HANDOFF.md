@@ -31,4 +31,20 @@ All 11 baselineLabel cases pass. Failures expose existing scaffold behavior:
 These are reported rather than fixed because issue #81 forbids src changes.
 Passing empty/missing-data tests do not establish that these stubs are correct.
 
-Next: run full suite, serve/open the page, record results, and push this branch.
+## Final verification
+
+- `node --test`: 139 tests, 115 pass, 24 fail; all failures are the new contracts
+  listed above. The other 96 existing tests pass. Exit status is failing;
+  this is not a merge-ready passing engine.
+- `git diff --check`: clean.
+- `python -m http.server` could not start: Python is unavailable on PATH
+  (also no py/python3 launcher). Served the unchanged app with a temporary
+  Node built-in HTTP server instead: `/` and `/src/main.js` both returned 200.
+- Attempted to open `http://127.0.0.1:8081/` through the browser tool; it reports
+  "The browser access host is unavailable". Visual page verification remains
+  unavailable in this environment; no UI files were changed.
+
+Test deliverable complete; source owners must implement the documented stubs
+before the new contract tests can pass. No human decision is needed for #81.
+
+STATUS: DONE
