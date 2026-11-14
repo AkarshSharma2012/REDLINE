@@ -23,3 +23,11 @@ Branch: task/77-b14-more-evidence-rows-saffire-bass-same
 1. Test owner: replace both fixed 29-row assertions with CSV-derived counts.
 2. Integration owner: regenerate data/evidence.json and rerun node --test; perform browser check when available.
 3. Human scientific review before upgrading any additions to verified; inspect documented Saffire airflow and nominal/measured-condition discrepancies.
+
+## Fresh resume verification (2026-11-14)
+
+- Re-ran build: succeeds with 45 draft rows, 0 verified.
+- Re-ran node --test: 86 pass, 2 fail, 1 TODO (89 total). Failures remain the fixed 29-row assertions in tests/schema.test.mjs:21 and :74; no test changes authorized by file ownership.
+- Independently compared parsed original 29 rows and existing metadata against b0000b0 parent: unchanged. All 16 additions have draft status, empty verifiers, locators and registered sources.
+- Python remains unavailable on PATH. Prior HTTP smoke check and browser limitation above remain the available page verification; no new visual verification claimed.
+- No additional evidence edits needed on resume. Integration remains blocked by test ownership and visual verification availability.

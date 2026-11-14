@@ -49,3 +49,5 @@ Primary repository context: [NASA PSI Data Repository](https://psi.nasa.gov/); [
 - Python is unavailable on PATH. A temporary dependency-free Node static server returned HTTP 200 for /, /src/main.js and /data/evidence.json. Browser opening failed because the browser access host is unavailable; visual/interactive verification remains incomplete.
 
 BRE/SAME endpoint support and fresh lunar digitization remain separate work, for the scientific reasons above. These additions must not drive labels or evaluation truth before human verification.
+
+Fresh resume check (2026-11-14): build and preservation checks pass again; node --test remains 86 pass, 2 fixed-count failures, 1 TODO. Python remains unavailable. No additional scientific values or source entries changed.
