@@ -1,0 +1,232 @@
+/* REDLINE styles. Tokens and rules from DESIGN.md (S2). Dark theme only. */
+
+:root {
+  /* 2.1 Neutrals */
+  --bg: #0E1013;
+  --surface-1: #16191E;
+  --surface-2: #1E2228;
+  --surface-selected: #262B33;
+  --divider: #2C313A;
+  --border-control: #737B88;
+  --text-1: #E8EAED;
+  --text-2: #A9B0BB;
+  --text-3: #8A929E;
+  --accent: #7CB8FF;
+
+  /* 2.2 Evidence labels (reserved: use only for the three label results) */
+  --ev-burned: #FF6A33;
+  --ev-near: #F0D545;
+  --ev-ne: #8EC5F0;
+
+  /* 3 Typography */
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* 4 Spacing scale (px): 2, 4, 8, 12, 16, 24, 32. Nothing else. */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+
+  --radius-control: 4px;
+  --radius-panel: 6px;
+
+  /* Chip glyphs (DESIGN.md 2.2): filled square, outlined triangle, hollow circle */
+  --glyph-square: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect x='1' y='1' width='8' height='8'/%3E%3C/svg%3E");
+  --glyph-triangle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 1.2 9.2 8.8H.8Z' fill='none' stroke='%23000' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --glyph-circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Ccircle cx='5' cy='5' r='3.9' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--bg); color: var(--text-1); }
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Type scale */
+.type-title   { font-size: 20px; line-height: 28px; font-weight: 600; margin: 0; }
+.type-heading { font-size: 16px; line-height: 24px; font-weight: 600; margin: 0 0 var(--space-12); }
+.type-body    { font-size: 14px; line-height: 20px; font-weight: 400; }
+.type-small   { font-size: 13px; line-height: 18px; font-weight: 400; }
+.type-label   { font-size: 12px; line-height: 16px; font-weight: 500; }
+.type-data    { font-family: var(--font-mono); font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
+
+.text-1 { color: var(--text-1); }
+.text-2 { color: var(--text-2); }
+.text-3 { color: var(--text-3); }
+
+p { margin: 0 0 var(--space-8); }
+
+/* Links: accent + always underlined */
+a { color: var(--accent); text-decoration: underline; }
+
+/* Focus ring (DESIGN.md 6) */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Layout: cabin (left) / results (centre) / evidence (right) */
+.app-header {
+  padding: var(--space-16) var(--space-24);
+  border-bottom: 1px solid var(--divider);
+}
+.app-header p { margin: var(--space-4) 0 0; }
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr) 380px;
+  align-items: start;
+}
+
+.region {
+  min-width: 0;
+  padding: var(--space-16) var(--space-24);
+}
+.region-cabin    { border-right: 1px solid var(--divider); }
+.region-evidence { border-left: 1px solid var(--divider); }
+
+@media (max-width: 1080px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .region-cabin, .region-evidence { border: 0; border-bottom: 1px solid var(--divider); }
+}
+
+@media (max-width: 480px) {
+  .region, .app-header { padding: var(--space-12); }
+}
+
+/* Panels: borders over shadows */
+.panel {
+  background: var(--surface-1);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-panel);
+  padding: var(--space-16);
+}
+
+/* Results table (DESIGN.md 5.1) */
+.table-scroll { overflow-x: auto; }
+
+table { border-collapse: collapse; width: 100%; background: var(--surface-1); }
+th, td {
+  padding: var(--space-8) var(--space-12);
+  border-bottom: 1px solid var(--divider);
+  text-align: left;
+  vertical-align: top;
+}
+thead th {
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr[aria-selected="true"] { background: var(--surface-selected); box-shadow: inset 2px 0 0 var(--accent); }
+
+/* Buttons and inputs (DESIGN.md 5.7) */
+button, input, select {
+  font: inherit;
+  color: var(--text-1);
+  background: var(--surface-2);
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-control);
+  min-height: 24px;
+  min-width: 24px;
+  padding: var(--space-4) var(--space-8);
+}
+button { cursor: pointer; }
+label { display: block; color: var(--text-2); font-size: 12px; line-height: 16px; font-weight: 500; margin-bottom: var(--space-4); }
+
+/* Label chips (DESIGN.md 2.2, 5.2): text + glyph + fill style, always */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-control);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  white-space: normal;
+}
+.chip::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 10px;
+  background: currentColor;
+  -webkit-mask: var(--glyph) center / contain no-repeat;
+  mask: var(--glyph) center / contain no-repeat;
+}
+.chip-burned {
+  --glyph: var(--glyph-square);
+  background: var(--ev-burned);
+  color: var(--bg);
+  border: 1.5px solid var(--ev-burned);
+}
+.chip-near {
+  --glyph: var(--glyph-triangle);
+  background: transparent;
+  color: var(--ev-near);
+  border: 1.5px solid var(--ev-near);
+}
+.chip-ne {
+  --glyph: var(--glyph-circle);
+  background: transparent;
+  color: var(--ev-ne);
+  border: 1.5px dashed var(--ev-ne);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  list-style: none;
+  margin: 0 0 var(--space-12);
+  padding: 0;
+}
+
+/* Qualifiers (DESIGN.md 2.3): neutrals and line style only */
+.flag {
+  display: inline-block;
+  min-width: 20px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-control);
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+}
+.tag-cross-gravity {
+  display: inline-block;
+  padding: 0 var(--space-4);
+  border: 1px dashed var(--border-control);
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  font-size: 12px;
+  line-height: 16px;
+}
+.estimate-hatch {
+  background-image: repeating-linear-gradient(45deg, var(--text-3) 0 1px, transparent 1px 6px);
+}
+
+/* Mismatch warning (DESIGN.md 5.6) */
+.caveat {
+  background: var(--surface-2);
+  border-left: 2px solid var(--text-1);
+  padding: var(--space-8) var(--space-12);
+}
+
+/* Motion (DESIGN.md 6): opacity/colour only, <= 150 ms, off for reduced motion */
+button, a, tr { transition: background-color 150ms, color 150ms, opacity 150ms; }
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
