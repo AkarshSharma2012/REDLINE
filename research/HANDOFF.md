@@ -45,3 +45,9 @@ Reviewed existing completed work before editing. Added S11, the 2019 NASA resear
 Verification: NASA source text and exact Table 4 locator reviewed; source-key, Markdown-only scope and whitespace checks performed before commit. No app code, configs or scaffolding changed. Next: conductor integration only.
 
 STATUS: DONE
+
+## Completion verification
+
+Re-read the existing deliverable and handoff. Read fetched issue #18 evidence-spec.md via git show; #22 has no research files. Reopened S4 atmosphere table, S5 timing comparison and S7 human-test abstract. S1 fetch failed in this pass; documented reliance on the prior successful extraction without guessing contents. Preserved protocol conditions and estimate labels. Only research Markdown changed. Verification: source-key completeness, preset coverage and git diff --check. No implementation tests apply.
+
+STATUS: DONE
