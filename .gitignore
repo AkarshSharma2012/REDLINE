@@ -1,0 +1,27 @@
+﻿# dependencies and builds
+node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# secrets and local config
+.env
+.env.*
+!.env.example
+
+# editor and OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Amoeba and local agent files (machine-specific)
+.mcp.json
+.claude/settings.local.json
+CLAUDE.md
