@@ -19,6 +19,7 @@ function sourceURL(source) {
   catch { return null; }
 }
 const isNASA = u => u && (u.hostname === 'nasa.gov' || u.hostname.endsWith('.nasa.gov'));
+const gravityClass = g => !Number.isFinite(g) ? null : g <= 0.01 ? 'micro' : g >= 0.9 ? 'earth' : 'partial';
 
 // S1 entry point. Supply result.query (immutable selected-item snapshot), or options.query.
 // options.compareRow is an integration/test adapter; eligibility and wording stay in the engine.
@@ -59,6 +60,7 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
   function draw() {
     root.replaceChildren(); root.append(make('h3', `Evidence: ${snapshot.material_id}`));
     p(root, `Request: ${result.item_id ?? snapshot.material_id} · revision ${result.revision ?? 'not stated'}. Cabin values are user inputs.`);
+    p(root, FIELDS.map(([key, name, unit]) => `${name}: ${format(key === 'o2_partial_kpa' ? partial(snapshot) : snapshot[key], unit)}`).join('; '));
     if (result.cross_gravity) p(root, 'Cross-gravity comparison', 'tag-cross-gravity');
     if (result.estimate) {
       p(root, 'Lunar estimate shown beside 0 g and 1 g results; these references are not a verified lunar bound.', 'caveat');
@@ -71,11 +73,11 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
       if (!Array.isArray(evidence?.evidence)) throw new Error('Missing evidence');
       candidates = evidence.evidence.filter(r => r.material_id === snapshot.material_id).map(row => {
         const ctx = { quench_speeds_cm_s: evidence.evidence.filter(r => r.material_id === row.material_id
-          && r.review_status === 'verified' && r.gravity_g === row.gravity_g && r.endpoint === 'quench-limit'
+          && r.review_status === 'verified' && gravityClass(r.gravity_g) === gravityClass(row.gravity_g) && r.endpoint === 'quench-limit'
           && r.value_unit === 'cm/s').map(r => r.value) };
         const comparison = compare({ ...snapshot }, row, ctx);
         if (!['OK', 'FLAG', 'INVALID'].includes(comparison?.grade) || !comparison.rules?.length) throw new Error('Comparison unavailable');
-        return { row, comparison, inspectOnly: row.review_status !== 'verified' || !isNASA(sourceURL(sourceFor(row))) };
+        return { row, comparison, inspectOnly: row.review_status !== 'verified' || !isNASA(sourceURL(sourceFor(row))) || !row.source_locator };
       });
     } catch {
       p(root, 'Comparison unavailable. This is a data or engine failure, not a coverage conclusion.', 'caveat');
@@ -107,6 +109,8 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
       const b = button(li, `${c.row.evidence_id} · ${c.inspectOnly ? 'Inspection only' : { OK: 'Comparable', FLAG: 'Comparable with notes', INVALID: 'Excluded' }[c.comparison.grade]}`, () => { selected = c.row.evidence_id; draw(); });
       b.setAttribute('aria-pressed', String(selected === c.row.evidence_id));
       p(li, `${sourceFor(c.row)?.title ?? 'Source not stated'} · ${c.comparison.rules.find(r => r.grade !== 'OK')?.why ?? 'No comparison notes'}`);
+      source(li, c.row);
+      p(li, `${c.row.material} · ${c.row.form} · ${c.row.facility} · ${format(c.row.gravity_g, 'g')} · ${c.row.endpoint} · ${c.row.outcome ?? 'Outcome not stated'} · ${c.row.review_status}`);
       if (result.conflicts?.includes(c.row.evidence_id)) p(li, 'Other comparable tests disagree');
       if (c.comparison.rules.some(r => r.rule === 'E' && r.grade === 'INVALID')) p(li, 'Related test (different endpoint, not used for the label)');
     });
