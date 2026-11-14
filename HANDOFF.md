@@ -28,3 +28,9 @@ STATUS: BLOCKED: Required browser opening could not be verified because the brow
 ## Next
 
 Open the served page once browser access is restored and record the result here. Then replace the blocked status with `STATUS: DONE`. No source changes are requested by these results.
+
+## Resume verification � 2026-11-14
+
+- Re-ran node --test: 109 passed, 0 failed (13 static accessibility tests).
+- Retried browser inventory through cua_repl: no browsers available; returned 'The browser access host is unavailable'. Required rendered-page opening remains blocked.
+- Implementation remains unchanged; no src/ edits. Retaining STATUS: BLOCKED until browser verification can be completed.
