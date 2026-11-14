@@ -1,0 +1,24 @@
+{
+  "_fixture": "Test fixture for #68 retrieval only, until data/investigations.json (#66) lands. Values copied from data/evidence.json BASS-II rows; FIXTURE-SYNTH is synthetic. Not for display.",
+  "investigations": [
+    {
+      "id": "BASS-II",
+      "name": { "value": "Burning and Suppression of Solids-II", "source": "BASS2-TM" },
+      "psi_id": { "value": "PSI-25", "source": "BASS2-TM" },
+      "psi_url": "https://psi.nasa.gov/geode-py/ws/studies/PSI-25/download?redirect=false&file=67a3a17b09ed061032c19775&version=1&studyVersion=4",
+      "fire_safety_area": { "value": ["suppression"], "source": "BASS2-TM" },
+      "fuel": { "value": "PMMA sheet, 0.1-0.4 mm thick, 10-20 mm wide", "source": "BASS2-TM" },
+      "gravity": { "value": "ISS microgravity", "source": "BASS2-TM" },
+      "airflow": { "value": "opposed flow, fan setting varied", "source": "BASS2-TM" }
+    },
+    {
+      "id": "FIXTURE-SYNTH",
+      "name": { "value": "Synthetic droplet test", "source": "FIXTURE" },
+      "psi_id": { "value": "PSI-0", "source": "FIXTURE" },
+      "psi_url": "https://psi.nasa.gov/",
+      "fire_safety_area": { "value": ["detection"], "source": "FIXTURE" },
+      "fuel": { "value": "heptane droplet", "source": "FIXTURE" },
+      "gravity": { "value": null, "note": "not found in the sources reviewed" }
+    }
+  ]
+}
