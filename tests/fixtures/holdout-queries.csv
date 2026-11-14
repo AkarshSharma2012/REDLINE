@@ -1,0 +1,11 @@
+query_id,query_type,from_evidence_id,holdout_group,invalid_rule,material_id,display_name,form,thickness_mm,width_mm,flow_speed_cm_s,flow_direction,o2_pct,pressure_kpa,gravity_g,external_heat_flux_kw_m2,endpoint,truth,truth_source_key,truth_source_locator,adjudicator_1,adjudicator_2,notes
+FX-A1,answerable,LINK2018-UG-B19,,,pmma,PMMA (acrylic),rod,6.4,,,opposed,17.5,,0,0,burn/no-burn,burned,Link2018,"Results with Figs. 4, 6a (sample B19)",fixture-only,fixture-only,fixture truth for code checks only
+FX-A2,answerable,LINK2018-1G-18,,,pmma,PMMA (acrylic),rod,,,,opposed,18,,1,0,burn/no-burn,no-burn,Link2018,"Results, Fig. 8 discussion",fixture-only,fixture-only,fixture truth for code checks only
+FX-A3,answerable,OSORIO2014-ETFE-1G,,,etfe,ETFE,wire,0.30,,12,opposed,31.5,100,1,0,LOC-FS,burned,Osorio2014,"pp. 74, 79, 84",fixture-only,fixture-only,fixture truth for code checks only
+FX-A4,answerable,OSORIO2014-ETFE-UG,,,etfe,ETFE,wire,0.30,,12,opposed,26,100,0,0,LOC-FS,burned,Osorio2014,"pp. 84, 100",fixture-only,fixture-only,fixture truth for code checks only
+FX-A5,answerable,ZHAO2015-SIBAL-T4,,,sibal,SIBAL (cotton/fiberglass),fabric,0.32,22,2.2,concurrent,18.7,101.3,0,0,quench-limit,no-burn,Zhao2015,"pp. 2, 3, 5; p. 9 appendix",fixture-only,fixture-only,fixture truth for code checks only
+FX-I1,incompatible,,,F,pmma,PMMA (acrylic),sheet,0.2,10,,opposed,21,,0,0,,,,,,,S4 T13: rod evidence only for a sheet query
+FX-I2,incompatible,,,D,pmma,PMMA (acrylic),rod,6.4,,2,concurrent,21,56.5,0,0,,,,,,,S4 T14: opposed-flow evidence only for a concurrent query
+FX-I3,incompatible,,,H,etfe,ETFE,wire,0.30,,12,opposed,34,100,1,25,,,,,,,S4 T10: heated query vs unheated evidence
+FX-I4,incompatible,,,E,sibal,SIBAL (cotton/fiberglass),fabric,0.32,22,2.2,concurrent,21,101.3,0,0,,,,,,,S4 T11: quench limit is not a spread endpoint
+FX-N1,absent,,,,nomex,Nomex,fabric,,,,,34,56.5,1,0,,,,,,,S4 T12: no row for this material
