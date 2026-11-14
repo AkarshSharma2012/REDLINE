@@ -1,0 +1,1082 @@
+{
+  "B14-GMT100-T13": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 22,
+      "o2_pct": 17.5,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 2.2,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-GMT175-T10": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 22,
+      "o2_pct": 16.4,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 5,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-GMT175-T18": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 22,
+      "o2_pct": 17.4,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 2.6,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-GMT175-T9": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 22,
+      "o2_pct": 16.4,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 10,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-GMT178-T12": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 22,
+      "o2_pct": 16.8,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 5,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-GMT178-T14": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 22,
+      "o2_pct": 16.9,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 2.8,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-GMT190-T20": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 12,
+      "o2_pct": 17.2,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 3,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-GMT190-T21": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 12,
+      "o2_pct": 17.2,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 47,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-GMT190-T22": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 12,
+      "o2_pct": 17.1,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 5,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-GMT45-T4": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 22,
+      "o2_pct": 18.7,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 2.2,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-GMT96-T7": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 22,
+      "o2_pct": 21,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 10,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-GMT96-T8": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": 0.32,
+      "width_mm": 22,
+      "o2_pct": 21,
+      "pressure_kpa": 101.325,
+      "flow_speed_cm_s": 5,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-SAFFIRE-I-1": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": 410,
+      "o2_pct": 21,
+      "pressure_kpa": 100,
+      "flow_speed_cm_s": 20,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-SAFFIRE-II-5": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": 50,
+      "o2_pct": 21,
+      "pressure_kpa": 100,
+      "flow_speed_cm_s": 20,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-SAFFIRE-II-6": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": 50,
+      "o2_pct": 21,
+      "pressure_kpa": 100,
+      "flow_speed_cm_s": 25,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "B14-SAFFIRE-III-1": {
+    "query": {
+      "material_id": "sibal",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": 410,
+      "o2_pct": 21,
+      "pressure_kpa": 100,
+      "flow_speed_cm_s": 25,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "M25-FS-G": {
+    "query": {
+      "material_id": "pmma",
+      "form": "rod",
+      "thickness_mm": 12.7,
+      "width_mm": null,
+      "o2_pct": 18.8,
+      "pressure_kpa": 100,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 1,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "M25-FS-M": {
+    "query": {
+      "material_id": "pmma",
+      "form": "rod",
+      "thickness_mm": 12.7,
+      "width_mm": null,
+      "o2_pct": 16.2,
+      "pressure_kpa": 100,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "OF12-NOMEX-0G-MOCSTAR": {
+    "query": {
+      "material_id": "nomex",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": null,
+      "o2_pct": 22,
+      "pressure_kpa": 101.3,
+      "flow_speed_cm_s": 30,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "OF12-NOMEX-0G-ULOISTAR": {
+    "query": {
+      "material_id": "nomex",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": null,
+      "o2_pct": 23,
+      "pressure_kpa": 101.3,
+      "flow_speed_cm_s": 30,
+      "flow_direction": "concurrent",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "OF12-NOMEX-1G-MOC": {
+    "query": {
+      "material_id": "nomex",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": null,
+      "o2_pct": 22.1,
+      "pressure_kpa": 101.3,
+      "flow_speed_cm_s": null,
+      "flow_direction": "upward-buoyant",
+      "gravity_g": 1,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "OF12-NOMEX-1G-ULOI": {
+    "query": {
+      "material_id": "nomex",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": null,
+      "o2_pct": 23.5,
+      "pressure_kpa": 101.3,
+      "flow_speed_cm_s": null,
+      "flow_direction": "upward-buoyant",
+      "gravity_g": 1,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "OF12-NOMEX-L-MOCSTAR": {
+    "query": {
+      "material_id": "nomex",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": null,
+      "o2_pct": 19.9,
+      "pressure_kpa": 101.3,
+      "flow_speed_cm_s": null,
+      "flow_direction": "concurrent",
+      "gravity_g": 0.16,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "OF12-NOMEX-L-ULOISTAR": {
+    "query": {
+      "material_id": "nomex",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": null,
+      "o2_pct": 21,
+      "pressure_kpa": 101.3,
+      "flow_speed_cm_s": null,
+      "flow_direction": "concurrent",
+      "gravity_g": 0.16,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B1": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.1,
+      "width_mm": 20,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B10": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.2,
+      "width_mm": 10,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B11": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.2,
+      "width_mm": 20,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B12": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.3,
+      "width_mm": 20,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B13": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.4,
+      "width_mm": 20,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B14": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.2,
+      "width_mm": 10,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B15": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.1,
+      "width_mm": 20,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B16": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.1,
+      "width_mm": 20,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B17": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.2,
+      "width_mm": 10,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B18": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.2,
+      "width_mm": 10,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B19": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.1,
+      "width_mm": 20,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B20": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.1,
+      "width_mm": 20,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B21": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.2,
+      "width_mm": 10,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B22": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.2,
+      "width_mm": 10,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "PSI25-B6": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.1,
+      "width_mm": 20,
+      "o2_pct": null,
+      "pressure_kpa": null,
+      "flow_speed_cm_s": null,
+      "flow_direction": "opposed",
+      "gravity_g": 0,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "U25-01-L": {
+    "query": {
+      "material_id": "pmma",
+      "form": "sheet",
+      "thickness_mm": 0.8,
+      "width_mm": null,
+      "o2_pct": 13.5,
+      "pressure_kpa": 56.5,
+      "flow_speed_cm_s": null,
+      "flow_direction": "concurrent",
+      "gravity_g": 0.16,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "U25-02-L": {
+    "query": {
+      "material_id": "p213",
+      "form": "tape",
+      "thickness_mm": null,
+      "width_mm": null,
+      "o2_pct": 13,
+      "pressure_kpa": 56.5,
+      "flow_speed_cm_s": null,
+      "flow_direction": "concurrent",
+      "gravity_g": 0.16,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "U25-03-L": {
+    "query": {
+      "material_id": "cotton",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": null,
+      "o2_pct": 11,
+      "pressure_kpa": 56.5,
+      "flow_speed_cm_s": null,
+      "flow_direction": "concurrent",
+      "gravity_g": 0.16,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "U25-04-L": {
+    "query": {
+      "material_id": "cotton",
+      "form": "fabric",
+      "thickness_mm": null,
+      "width_mm": null,
+      "o2_pct": 11,
+      "pressure_kpa": 56.5,
+      "flow_speed_cm_s": null,
+      "flow_direction": "concurrent",
+      "gravity_g": 0.16,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "U25-05-L": {
+    "query": {
+      "material_id": "polycarbonate",
+      "form": "sheet",
+      "thickness_mm": null,
+      "width_mm": null,
+      "o2_pct": 21,
+      "pressure_kpa": 56.5,
+      "flow_speed_cm_s": null,
+      "flow_direction": "concurrent",
+      "gravity_g": 0.16,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  },
+  "U25-06-L": {
+    "query": {
+      "material_id": "nomex",
+      "form": "other",
+      "thickness_mm": null,
+      "width_mm": null,
+      "o2_pct": 24,
+      "pressure_kpa": 56.5,
+      "flow_speed_cm_s": null,
+      "flow_direction": "concurrent",
+      "gravity_g": 0.16,
+      "external_heat_flux_kw_m2": null
+    },
+    "result": {
+      "label": "NOT_ESTABLISHED",
+      "reason": "NE-no-data",
+      "cited": [],
+      "flags": [],
+      "flag_details": [],
+      "cross_gravity": false,
+      "estimate": null,
+      "wording": "Not found in the sources reviewed"
+    }
+  }
+}
