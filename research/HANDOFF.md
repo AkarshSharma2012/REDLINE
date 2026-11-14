@@ -1,4 +1,4 @@
-﻿# Issue 19 handoff
+# Issue 19 handoff
 
 Scope: BASS-II / PSI-25 research only. Branch: task/19-r2-bass-ii-psi-25-data-access-and-draft.
 
@@ -11,8 +11,7 @@ Scope: BASS-II / PSI-25 research only. Branch: task/19-r2-bass-ii-psi-25-data-ac
 - Wrote research/bass2-rows.csv with 15 selected run IDs, copied NASA CSV conditions, and individually cited report observation paraphrases.
 
 ## Next
-- Finish independent field/provenance validation; inspect final diff and scope.
-- Commit verification results, mark STATUS: DONE, and push assigned branch.
+- Research complete. Integrating agent can map the provisional schema to R1 when available.
 
 ## Decisions and limits
 - All tracked output stays in research/, including this handoff, to honor the issue's folder-only scope.
@@ -26,3 +25,11 @@ Scope: BASS-II / PSI-25 research only. Branch: task/19-r2-bass-ii-psi-25-data-ac
 - README: DOCX ZIP/XML opened and paragraphs read.
 - MP4: full download size matches listed bytes; signature ftypisom.
 - Report: printed Table A.1 pp. 103-104 confirmed as PDF pp. 111-112; selected run/sample IDs and oxygen values reviewed against those tables.
+
+## Final validation
+- PASS: 15 unique evidence IDs; all 150 copied source fields match the original NASA CSV after the documented none-to-empty conversion.
+- PASS: each row has source titles, URLs, run-specific locators, observation paraphrase, and caveat.
+- PASS: git diff --check; all issue changes are Markdown/CSV under research/. No app files or configuration changed.
+- Draft conditions and report observations were reviewed together; recorded B14/B16 source differences remain explicitly flagged.
+
+STATUS: DONE
