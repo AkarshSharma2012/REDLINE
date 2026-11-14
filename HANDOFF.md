@@ -1,6 +1,18 @@
 # Issue #77 handoff
 
-STATUS: BLOCKED: Data integration is complete, but two schema tests hard-code 29 rows outside task ownership; browser verification host is unavailable.
+STATUS: DONE
+
+## Final resolution (2026-11-14; supersedes historical blockers below)
+
+- Updated issue authorization permits replacing only the two hard-coded 29-row assertions in tests/schema.test.mjs. Both now compare against parseCsv(csv).length.
+- node scripts/build-evidence.mjs: succeeds, 45 rows, 0 verified.
+- node --test: exit 0; 89 tests, 88 pass, 0 fail, 1 existing TODO for catalog insight coverage.
+- Independent preservation checks against b0000b0 parent: original 29 parsed rows/header and existing metadata unchanged; exactly ZHAO15 and SAFFIRE21 added; all 16 additions are drafts with registered NASA URLs, nonempty locators and empty verifiers.
+- Browser verification and a local web server were not run on this resume: the updated issue explicitly requires only the build and node --test.
+- Generated data/evidence.json was rebuilt for tests, then restored to respect file ownership. The integration owner must rebuild it from the CSV before publication.
+- Human scientific review remains required before promoting additions to verified. BRE/SAME endpoint support and fresh lunar digitization remain separate work for the reasons in research/evidence-additions.md.
+
+## Historical handoff (before updated authorization)
 
 Branch: task/77-b14-more-evidence-rows-saffire-bass-same
 

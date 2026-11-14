@@ -45,9 +45,10 @@ Primary repository context: [NASA PSI Data Repository](https://psi.nasa.gov/); [
 - Added ZHAO15 and SAFFIRE21 to data/metadata.json. Existing source entries and all other metadata are unchanged.
 - Original 29 CSV rows and header are unchanged; the only changes to the saved B14 rows are their review statuses. Parsed output contains 45 rows, all drafts with registered sources and locators.
 - node scripts/build-evidence.mjs succeeds: 45 rows, 0 verified. Generated data/evidence.json was used for verification, then restored because it is outside this issue's owned files; the integration owner must rebuild it for publication.
-- node --test: 89 tests, 86 pass, 2 fail, 1 TODO. Both failures are hard-coded 29-row assertions in tests/schema.test.mjs (published CSV/JSON test and build-output test). Tests are outside B14 ownership; their owner should replace fixed counts with the parsed CSV length. The catalog-insights coverage TODO is separate.
-- Python is unavailable on PATH. A temporary dependency-free Node static server returned HTTP 200 for /, /src/main.js and /data/evidence.json. Browser opening failed because the browser access host is unavailable; visual/interactive verification remains incomplete.
+- Updated issue authorization permits replacing only the two hard-coded 29-row assertions in tests/schema.test.mjs. Both now compare against parseCsv(csv).length.
+- node --test: exit 0; 89 tests, 88 pass, 0 fail, 1 existing TODO for catalog-insights coverage.
+- Browser verification and a local web server were not run on this resume, as explicitly allowed by the updated issue. Verification consists of the build, node --test and local preservation/source-registration checks.
 
 BRE/SAME endpoint support and fresh lunar digitization remain separate work, for the scientific reasons above. These additions must not drive labels or evaluation truth before human verification.
 
-Fresh resume check (2026-11-14): build and preservation checks pass again; node --test remains 86 pass, 2 fixed-count failures, 1 TODO. Python remains unavailable. No additional scientific values or source entries changed.
+Fresh resume check (2026-11-14): build and preservation checks pass; node --test reports 88 pass, 0 fail, 1 TODO. Original 29 rows/header and existing metadata remain unchanged. No additional scientific values or source entries changed.
