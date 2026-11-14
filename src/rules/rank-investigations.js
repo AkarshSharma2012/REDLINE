@@ -139,7 +139,7 @@ export function scoreInvestigation(inv, { habitat, need } = {}, sources = {}) {
       const d = gap(r, h.o2_pct);
       pts = d === 0 ? WEIGHTS.o2 : d <= O2_CLOSE_PCT ? 1 : 0;
       why = `Tested at ${fmtRange(r, '% O2')}; habitat ${fmtRange(h.o2_pct, '% O2')}: `
-        + (d === 0 ? 'ranges overlap.' : `${round1(d)} points apart${pts ? ` (within ${O2_CLOSE_PCT})` : ''}.`);
+        + (d === 0 ? 'ranges overlap.' : `${round1(d)} point${round1(d) === 1 ? "" : "s"} apart${pts ? ` (within ${O2_CLOSE_PCT})` : ''}.`);
     }
     add('o2', pts, WEIGHTS.o2, why, [f.source, ...h.sources]);
   }
