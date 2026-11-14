@@ -13,6 +13,14 @@ Issue #24; NASA sources reviewed 14 November 2026. Research only. This supports 
 
 ## Published pre-breathe durations: preserve the protocol context
 
+### Later human-test evidence
+
+NASA reports a **20-minute pre-breathe at 85% O2**, after **48 hours** acclimation to **8.2 psia / 34% O2**, preceding simulated planetary EVAs at **34 kPa / 85% O2 / 15% N2**. Two mild Type I DCS cases occurred in 50 subject EVA exposures. The abstract reports that acceptance criteria were met and describes transition to operational use for upcoming lunar missions. This is chamber-test evidence for a specific protocol, not a universal 20-minute rule or evidence of a completed lunar EVA. [S7, Methods; Results and Discussion]
+
+**Inference:** present this tested protocol separately from the older comparison below. Retain its gas, suit pressure and acclimation conditions; do not replace a table entry assuming a different suit pressure with its 20 minutes.
+
+### Older comparison (2020 source)
+
 All durations below are oxygen pre-breathe or source-defined protocol comparison values, not total time from deciding to leave a cabin to starting EVA.
 
 | Starting / saturation atmosphere | Published microgravity comparison | Published planetary comparison | Interpretation |
@@ -34,7 +42,7 @@ S6 describes a past resting in-suit protocol: 4 h breathing 100% oxygen at 14.7 
 - **Established historical operation:** the ISS reference atmosphere and Shuttle/ISS staging settings above; their documented procedures remain tied to their own conditions. [S3; S4 Table 1; S6 p.11]
 - **Proposed / planned atmosphere:** the exploration preset is explicitly associated with surface vehicles, but atmosphere selection alone does not validate a pre-breathe procedure. [S1 p.24; S2 Table 7; S4 abstract]
 - **Modeled / estimated duration:** S4's 15 min result is a preliminary model assessment, not a human trial of that protocol. S5's planetary ranges are explicitly estimates. [S4 abstract, journal p.76 / PDF p.1; S5 PDF p.38]
-- **Current source limitation:** S6 Revision D still describes Exploration Atmosphere studies and working/step-down pre-breathe as future options. A final flight-approved planetary protocol for each preset was not found in the sources reviewed. This is a bounded search result, not a claim that no further tests or approvals exist. [S6 p.13]
+- **Approval boundary:** S7 reports acceptance and transition to operational use for its specific human-tested protocol. S6 Revision D still describes exploration studies among future options; that overview does not erase S7's reported results. A complete flight-approved procedure covering each preset and mission configuration was not found in the sources reviewed. [S7, Results and Discussion; S6 p.13]
 
 **REDLINE recommendation / inference:** show discrete pressure-and-oxygen presets with separate microgravity and estimated-planetary labels. Display ranges and a protocol-context note; do not fit a continuous oxygen-to-time curve. At intermediate slider positions, show “pre-breathe duration not found in the sources reviewed.” Do not interpolate a medical result, equate the lower endpoint with permission to skip pre-breathe, or compute mission-specific DCS risk. This is an author recommendation based on the protocol differences and assumptions above, not a NASA requirement.
 
@@ -48,6 +56,10 @@ S6 describes a past resting in-suit protocol: 4 h breathing 100% oxygen at 14.7 
 - **S6 — NASA OCHMO, _Decompression Sickness (DCS) Risk Mitigation_**, NASA-STD-3001 Technical Brief OCHMO-TB-037, Revision D, 5 October 2026. https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-037-decompression-sickness.pdf . Locators: p.11, past protocols; p.13, future options. The URL's directory date is not its revision date. This brief is reference material and does not supersede requirements (page footers).
 
 ## Access and cross-branch review
+
+**Follow-up source S7 — Garbino et al., _Development, Validation and Approval of A Planetary Extravehicular Activity Prebreathe Protocol: NASA Exploration Atmosphere Tests 1 & 2_**, AsMA 2024 abstract, NASA NTRS 20230015380. https://ntrs.nasa.gov/citations/20230015380 . Locators: abstract, Methods and Results and Discussion. HTML has no fixed page/figure/table numbering. The linked DOCX could not be rendered by the web tool (unsupported content type); only the accessible published abstract is used.
+
+**Follow-up access check:** S2, S5 and S6 PDFs were accessible again. The S1 PDF was inaccessible to the web tool on this follow-up; its claims above retain the original handoff's extraction provenance rather than representing a fresh check. No new content was inferred from that failure.
 
 All six cited PDFs yielded readable text. S5 initially timed out without its query parameter; the linked attachment URL succeeded. A screenshot request for S5 failed with a cache miss; the comparison was transcribed from the accessible PDF text, not an inspected image. No content was inferred from the failed fetch.
 
