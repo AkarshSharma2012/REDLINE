@@ -69,3 +69,11 @@ Read README, AGENTS and existing research handoff before editing. Read fetched #
 Verification: source-to-claim correspondence and exact S12 page/section checked; S5 values and S7 conditions checked directly. Whitespace and changed-path scope checked before commit. No implementation tests apply to this research-only change.
 
 STATUS: DONE
+
+## Study uncertainty verification, 14 November 2026
+
+Re-read project guidance, existing deliverable and fetched #18/#19 research. Rechecked S5 final-slide timing rows and S7 Methods / Results directly against NASA. Added S7's reported confidence interval alongside the observed incidence so the acceptance statement retains sampling uncertainty. No new operational recommendation or implementation was introduced. Source locators remain unchanged.
+
+Verification: source-to-claim correspondence, source-key completeness, Markdown-only changed paths and git diff --check. No implementation tests apply. Next: conductor integration.
+
+STATUS: DONE

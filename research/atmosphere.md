@@ -21,7 +21,7 @@ The 2022 NASA baseline recommends **8.2 psia / 34% O2** for pressurized rovers a
 
 ### Later human-test evidence
 
-NASA reports a **20-minute pre-breathe at 85% O2**, after **48 hours** acclimation to **8.2 psia / 34% O2**, preceding simulated planetary EVAs at **34 kPa / 85% O2 / 15% N2**. Two mild Type I DCS cases occurred in 50 subject EVA exposures; ten planned exposures were excluded for mask-fit, metabolic-rate or subject-safety concerns. The abstract reports that acceptance criteria were met and describes transition to operational use for upcoming lunar missions. This is chamber-test evidence for a specific protocol, not a universal 20-minute rule or evidence of a completed lunar EVA. [S7, Methods; Results and Discussion]
+NASA reports a **20-minute pre-breathe at 85% O2**, after **48 hours** acclimation to **8.2 psia / 34% O2**, preceding simulated planetary EVAs at **34 kPa / 85% O2 / 15% N2**. Two mild Type I DCS cases occurred in 50 subject EVA exposures (reported incidence 4%; 95% confidence interval 1.1–13.5%); ten planned exposures were excluded for mask-fit, metabolic-rate or subject-safety concerns. The abstract reports that acceptance criteria were met and describes transition to operational use for upcoming lunar missions. This is chamber-test evidence for a specific protocol, not a universal 20-minute rule or evidence of a completed lunar EVA. [S7, Methods; Results and Discussion]
 
 **Inference:** present this tested protocol separately from the older comparison below. Retain its gas, suit pressure and acclimation conditions; do not replace a table entry assuming a different suit pressure with its 20 minutes.
 
