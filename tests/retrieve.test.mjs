@@ -114,3 +114,91 @@ test('no-key view: table shows sources, unknowns as "not stated", and related in
   assert.match(hitsTableHtml([]), /not found in the sources reviewed/);
   assert.equal(esc('<a "x">'), '&lt;a &quot;x&quot;&gt;');
 });
+
+// #129: isolated synthetic search fixtures, not scientific observations.
+// Keep numeric-distance behavior explicit: retrieve() scores tokens, not proximity.
+const searchRow = (evidence_id, fields = {}) => ({
+  evidence_id,
+  material_id: 'nomex',
+  endpoint: 'spread',
+  gravity_g: null,
+  pressure_kpa: null,
+  ...fields,
+});
+const searchData = (rows) => ({ evidence: { evidence: rows, materials: [], sources: {} } });
+const ranked = (question, rows, options) => retrieve(question, searchData(rows), options).hits;
+
+test('unit: descending ranking follows weighted identity, material, endpoint and text fields', () => {
+  const rows = [
+    searchRow('D', { notes: 'needle' }),
+    searchRow('C', { endpoint: 'needle' }),
+    searchRow('B', { material_id: 'needle' }),
+    searchRow('needle'),
+  ];
+  assert.deepEqual(ranked('needle', rows).map(({ id, score }) => [id, score]),
+    [['needle', 4], ['B', 3], ['C', 2], ['D', 1]]);
+  assert.deepEqual(ranked('needle', rows, { limit: 2 }).map(({ id }) => id), ['needle', 'B']);
+  assert.deepEqual(ranked('needle', rows, { limit: 0 }), []);
+});
+
+test('unit: equal scores use ascending IDs rather than input order', () => {
+  const hits = ranked('spread', [searchRow('C'), searchRow('A'), searchRow('B')]);
+  assert.deepEqual(hits.map(({ id, score }) => [id, score]), [['A', 2], ['B', 2], ['C', 2]]);
+});
+
+test('unit: empty, stop-word-only, unmatched and absent-data searches have no results', () => {
+  const rows = [searchRow('A')];
+  for (const question of ['', 'what is the', 'zzqunmatched']) {
+    assert.deepEqual(ranked(question, rows), [], question);
+  }
+  assert.deepEqual(retrieve('spread').hits, []);
+  assert.deepEqual(ranked('spread', []), []);
+});
+
+test('unit: exact material outranks a synonym and a condition-only match', () => {
+  const rows = [searchRow('A'), searchRow('B', { material_id: 'acrylic' }),
+    searchRow('C', { material_id: 'pmma' })];
+  assert.deepEqual(ranked('pmma spread', rows).map(({ id, score }) => [id, score]),
+    [['C', 5], ['B', 3.5], ['A', 2]]);
+  // A synonym alone is insufficient: at least one original query term must match.
+  assert.deepEqual(ranked('pmma', rows).map(({ id }) => id), ['C']);
+  assert.deepEqual(ranked('pmm', rows), [], 'material substrings are not fuzzy matches');
+});
+
+test('unit: material display names and aliases provide exact search matches', () => {
+  const fixture = searchData([searchRow('A', { material_id: 'polymer' })]);
+  fixture.evidence.materials = [{ material_id: 'polymer', display_name: 'Example polymer', aliases: ['lucite'] }];
+  const { hits } = retrieve('lucite', fixture);
+  assert.deepEqual(hits.map(({ id, score }) => [id, score]), [['A', 3]]);
+  assert.deepEqual(hits[0].matched, [{ term: 'lucite', field: 'display_name' }]);
+});
+
+test('unit: gravity matches exact numeric tokens; nearer nonmatches receive no distance bonus', () => {
+  const rows = [searchRow('A', { gravity_g: 1 }), searchRow('B', { gravity_g: 0 }),
+    searchRow('C', { gravity_g: 0.16 })];
+  assert.deepEqual(ranked('spread 0.16', rows).map(({ id, score }) => [id, score]),
+    [['C', 6], ['A', 2], ['B', 2]]);
+  assert.equal(ranked('spread microgravity', rows)[0].id, 'B');
+});
+
+test('unit: pressure matches exact numeric tokens; nearer nonmatches receive no distance bonus', () => {
+  const rows = [searchRow('A', { pressure_kpa: 101.3 }),
+    searchRow('B', { pressure_kpa: 57 }), searchRow('C', { pressure_kpa: 56.5 })];
+  assert.deepEqual(ranked('spread 56.5', rows).map(({ id, score }) => [id, score]),
+    [['C', 3], ['A', 2], ['B', 2]]);
+});
+
+test('unit: shuffled rows preserve complete hits and limited tie selection without mutating inputs', () => {
+  const rows = [searchRow('D', { notes: 'needle' }), searchRow('C', { endpoint: 'needle' }),
+    searchRow('B', { material_id: 'needle' }), searchRow('A', { material_id: 'needle' })];
+  const before = structuredClone(rows);
+  const expected = ranked('needle', rows);
+  for (const order of [[3, 2, 1, 0], [1, 3, 0, 2], [2, 0, 3, 1]]) {
+    const shuffled = order.map((index) => rows[index]);
+    assert.deepEqual(ranked('needle', shuffled), expected);
+    assert.deepEqual(ranked('needle', shuffled, { limit: 1 }), expected.slice(0, 1));
+    assert.deepEqual(shuffled, order.map((index) => before[index]));
+  }
+  assert.deepEqual(rows, before);
+});
+
