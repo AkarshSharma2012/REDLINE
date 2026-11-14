@@ -1,6 +1,6 @@
-# Issue #85 — static accessibility tests
+﻿# Issue #85 â€” static accessibility tests
 
-STATUS: BLOCKED: Required browser opening could not be verified because the browser access host is unavailable. Implementation and Node tests are complete.
+STATUS: DONE
 
 ## Done
 
@@ -25,12 +25,10 @@ STATUS: BLOCKED: Required browser opening could not be verified because the brow
 - Dynamic expressions are text candidates, not proof of nonempty runtime strings. aria-labelledby targets and explicit labels resolve within the same source file; actual mounted relationships require rendered review.
 - Empty alt is accepted for decorative images. Chips require visible letters/numbers, so glyph-only or aria-label-only chips fail. This does not evaluate CSS-generated content, contrast, keyboard behavior, all conditional states, or dynamic DOM construction.
 
-## Next
+## Final verification under issue #85 update - 2026-11-14
 
-Open the served page once browser access is restored and record the result here. Then replace the blocked status with `STATUS: DONE`. No source changes are requested by these results.
-
-## Resume verification � 2026-11-14
-
-- Re-ran node --test: 109 passed, 0 failed (13 static accessibility tests).
-- Retried browser inventory through cua_repl: no browsers available; returned 'The browser access host is unavailable'. Required rendered-page opening remains blocked.
-- Implementation remains unchanged; no src/ edits. Retaining STATUS: BLOCKED until browser verification can be completed.
+- The issue update explicitly removes the browser/server requirement. Visual browser checks were skipped; no browser was opened and no server was started during this final verification.
+- Re-ran `node --test`: **109 passed, 0 failed**, including all **13** static accessibility tests. No static accessibility failures were reported.
+- Reviewed the existing test implementation; it already covers every requested rule with Node built-ins, so no test or `src/` edits were needed in this completion pass.
+- Earlier server/browser attempts above are historical records from before the issue update and are not part of final verification.
+- Nothing remains for issue #85. Runtime accessibility, visual layout and dynamic-value verification remain outside this static-only task.
