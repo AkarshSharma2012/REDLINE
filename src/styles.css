@@ -37,19 +37,27 @@
   /* Chip glyphs (DESIGN.md 2.2): filled square, outlined triangle, hollow circle */
   --glyph-square: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect x='1' y='1' width='8' height='8'/%3E%3C/svg%3E");
   --glyph-triangle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 1.2 9.2 8.8H.8Z' fill='none' stroke='%23000' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --glyph-external: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M4 1.5H1.5v7h7V6M6 1.5h2.5V4M8.5 1.5 4.5 5.5' fill='none' stroke='%23000' stroke-width='1.2'/%3E%3C/svg%3E");
   --glyph-circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Ccircle cx='5' cy='5' r='3.9' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E");
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { background: var(--bg); color: var(--text-1); }
+/* Native controls, scrollbars and pickers render dark (audit #61) */
+html { background: var(--bg); color: var(--text-1); color-scheme: dark; }
 
 body {
   margin: 0;
   font-family: var(--font-ui);
   font-size: 14px;
   line-height: 20px;
+  overflow-wrap: break-word; /* long URLs wrap at 320 px (SC 1.4.10) without squeezing table columns */
 }
+
+/* Bare headings follow the type scale (DESIGN.md 3); weights stop at 600 */
+h2, h3 { font-size: 16px; line-height: 24px; font-weight: 600; }
+h4 { font-size: 14px; line-height: 20px; font-weight: 600; }
+strong, b, tbody th { font-weight: 600; }
 
 /* Type scale */
 .type-title   { font-size: 20px; line-height: 28px; font-weight: 600; margin: 0; }
@@ -67,6 +75,28 @@ p { margin: 0 0 var(--space-8); }
 
 /* Links: accent + always underlined */
 a { color: var(--accent); text-decoration: underline; }
+
+/* Source links open in a new tab: small external-link line glyph (DESIGN.md 5.5) */
+a[target="_blank"]::after {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: var(--space-2);
+  background: currentColor;
+  -webkit-mask: var(--glyph-external) center / contain no-repeat;
+  mask: var(--glyph-external) center / contain no-repeat;
+}
+
+/* Screen-reader-only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
 
 /* Focus ring (DESIGN.md 6) */
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -98,7 +128,11 @@ a { color: var(--accent); text-decoration: underline; }
 
 @media (max-width: 480px) {
   .region, .app-header { padding: var(--space-12); }
+  nav.tabs { padding: 0 var(--space-12); }
 }
+
+/* Active tab: bar + fill, not border colour alone (SC 1.4.1) */
+[role="tab"][aria-selected="true"] { background: var(--surface-selected); box-shadow: inset 0 -2px 0 var(--accent); }
 
 /* Panels: borders over shadows */
 .panel {
@@ -126,7 +160,11 @@ thead th {
   font-weight: 500;
 }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-tr[aria-selected="true"] { background: var(--surface-selected); box-shadow: inset 2px 0 0 var(--accent); }
+/* Selected row: fill + 2 px accent left bar (DESIGN.md 2.1). Rows are selected by a pressed button in the row. */
+tr[aria-selected="true"] > *,
+tbody tr:has(button[aria-pressed="true"]) > * { background: var(--surface-selected); }
+tr[aria-selected="true"] > :first-child,
+tbody tr:has(button[aria-pressed="true"]) > :first-child { box-shadow: inset 2px 0 0 var(--accent); }
 
 /* Buttons and inputs (DESIGN.md 5.7) */
 button, input, select {
@@ -139,7 +177,47 @@ button, input, select {
   min-width: 24px;
   padding: var(--space-4) var(--space-8);
 }
+input, select, textarea { max-width: 100%; font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
+::placeholder { color: var(--text-3); opacity: 1; }
 button { cursor: pointer; }
+button:not(:disabled):hover { background: var(--surface-selected); }
+/* Disabled: dimmer text and dashed border, so it is not shown by colour alone */
+button:disabled { color: var(--text-3); border-style: dashed; cursor: default; }
+/* Presets / segmented controls (DESIGN.md 5.3) */
+button[aria-pressed="true"] { background: var(--surface-selected); box-shadow: inset 0 -2px 0 var(--accent); }
+summary { cursor: pointer; min-height: 24px; padding: var(--space-2) 0; }
+fieldset { min-width: 0; margin: 0 0 var(--space-16); padding: var(--space-12); border: 1px solid var(--divider); border-radius: var(--radius-panel); }
+legend { padding: 0 var(--space-4); color: var(--text-2); }
+dt { color: var(--text-2); }
+dd { margin: 0 0 var(--space-8); }
+
+/* O2 slider (DESIGN.md 5.3): 4 px border-control track, text-2 fill, 16 px accent thumb, 24 px tall target */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 24px;
+  margin: var(--space-4) 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+input[type="range"]::-webkit-slider-runnable-track { height: 4px; background: var(--border-control); }
+input[type="range"]::-moz-range-track { height: 4px; background: var(--border-control); }
+input[type="range"]::-moz-range-progress { height: 4px; background: var(--text-2); }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+}
+input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 50%; background: var(--accent); }
+input[type="range"]:disabled::-webkit-slider-thumb { background: var(--text-3); }
+input[type="range"]:disabled::-moz-range-thumb { background: var(--text-3); }
 label { display: block; color: var(--text-2); font-size: 12px; line-height: 16px; font-weight: 500; margin-bottom: var(--space-4); }
 
 /* Label chips (DESIGN.md 2.2, 5.2): text + glyph + fill style, always */
@@ -217,6 +295,8 @@ label { display: block; color: var(--text-2); font-size: 12px; line-height: 16px
 .estimate-hatch {
   background-image: repeating-linear-gradient(45deg, var(--text-3) 0 1px, transparent 1px 6px);
 }
+/* Text over the hatch: give outline chips a solid fill so lines do not cross the text (text-1 vs text-3 = 2.6:1) */
+.estimate-hatch .chip-near, .estimate-hatch .chip-ne { background: var(--surface-1); }
 
 /* Mismatch warning (DESIGN.md 5.6) */
 .caveat {
@@ -230,3 +310,12 @@ button, a, tr { transition: background-color 150ms, color 150ms, opacity 150ms; 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+/* Screen fixes from the design audit (#61); see research/design-audit.md */
+/* Consecutive source links were rendered with no gap between titles */
+a[target="_blank"] + a { margin-left: var(--space-8); }
+/* Investigations: long option text in pickers pushed the page to 1020 px at 320 px wide (SC 1.4.10) */
+.inv-controls > div, .inv-compare-pickers > div { max-width: 100%; }
+/* O2 tradeoff: preset button and its source link were touching; action buttons had no gap */
+.o2-slider [role="group"] > div { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-8); margin-bottom: var(--space-4); }
+.o2-slider > button { margin: var(--space-4) var(--space-4) 0 0; }
