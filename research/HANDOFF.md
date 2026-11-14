@@ -11,7 +11,7 @@ Scope: BASS-II / PSI-25 research only. Branch: task/19-r2-bass-ii-psi-25-data-ac
 - Wrote research/bass2-rows.csv with 15 selected run IDs, copied NASA CSV conditions, and individually cited report observation paraphrases.
 
 ## Next
-- Research complete. Integrating agent can map the provisional schema to R1 when available.
+- Research complete. Endpoint extraction and video/calibration analysis are follow-on work before these draft narratives can drive quantitative labels.
 
 ## Decisions and limits
 - All tracked output stays in research/, including this handoff, to honor the issue's folder-only scope.
@@ -31,5 +31,12 @@ Scope: BASS-II / PSI-25 research only. Branch: task/19-r2-bass-ii-psi-25-data-ac
 - PASS: each row has source titles, URLs, run-specific locators, observation paraphrase, and caveat.
 - PASS: git diff --check; all issue changes are Markdown/CSV under research/. No app files or configuration changed.
 - Draft conditions and report observations were reviewed together; recorded B14/B16 source differences remain explicitly flagged.
+
+## R1 schema follow-up (2026-11-14)
+- Read R1's now-available evidence-spec.md on origin/task/18-r1-evidence-table-spec-and-comparability at 278d60b0a20a354cd88bc8c84e3762d4f39f78c8.
+- Added its 17 required columns in order plus notes, preserving all original source/provenance columns and all 15 run IDs. Geometry uses explicit source-string unit conversions; film-to-sheet classification is labeled editorial inference.
+- Left endpoint/result, single flow/O2 and pressure fields empty where this transcription does not establish them. Initial/final oxygen remains separate. These are incomplete draft endpoint rows, not quantitative boundary records.
+- Refetched public PSI metadata and experiment CSV anonymously; version 4, DOI and CSV hash match the original investigation. Previously downloaded README/report hashes match, and their caveat paragraphs and selected Table A.1 observations were rechecked.
+- Revalidated all 150 copied source fields, row uniqueness, required-column order, numeric geometry, missing endpoint fields and source locators. No app/config files changed.
 
 STATUS: DONE
