@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-11-14",
+  "generated_by": "AI: Claude Opus 5.5 (claude-opus-5-5) working as a Claude Code agent on issue #68",
+  "method": "docs/ai-use.md, section 1. Written only from the fields of the cited rows in data/evidence.json; every id in square brackets is listed in cited_ids.",
+  "catalog_note": "data/investigations.json (issue #66) was not yet merged when these were written, so each insight covers one evidence group (holdout_group in data/evidence.json). Regenerate per catalog investigation when it lands (see HANDOFF.md).",
+  "insights": [
+    {
+      "insight_id": "INS-BASS-II",
+      "subject": { "kind": "evidence-group", "id": "BASS-II", "name": "BASS-II (PSI-25)", "psi_id": "PSI-25" },
+      "habitat_focus": "lunar base and pressurized rover",
+      "fire_safety_areas": ["suppression", "prevention"],
+      "text": "BASS-II (PSI-25) burned thin PMMA sheets (0.1 to 0.4 mm thick, 1 to 2 cm wide) aboard the ISS in microgravity with an opposed airflow [BASS2-TM]. In several runs the flame spread steadily and then went out as the flow was turned down [PSI25-B10, PSI25-B21, PSI25-B22], in one run it went out quickly after the flow was stopped [PSI25-B1], and other samples blew out at high fan settings [PSI25-B18, PSI25-B19]. For a lunar habitat or rover this makes cabin airflow a fire lever: very low flow starved these flames in microgravity, while a cabin on the Moon also has weak buoyant flow that these 0 g tests did not include. These rows are draft: their oxygen values are initial and final chamber readings and the fan settings are uncalibrated, so no oxygen or flow limit is taken from them [PSI25-B6, PSI25-B11, PSI25-B12, PSI25-B13, PSI25-B14, PSI25-B15, PSI25-B16, PSI25-B17, PSI25-B20].",
+      "cited_ids": ["BASS2-TM", "PSI25-B1", "PSI25-B6", "PSI25-B10", "PSI25-B11", "PSI25-B12", "PSI25-B13", "PSI25-B14", "PSI25-B15", "PSI25-B16", "PSI25-B17", "PSI25-B18", "PSI25-B19", "PSI25-B20", "PSI25-B21", "PSI25-B22"],
+      "generated_by_ai": true,
+      "checked_by_team": false,
+      "checked_by": null
+    },
+    {
+      "insight_id": "INS-US25",
+      "subject": { "kind": "evidence-group", "id": "US25", "name": "NASA 2025 solid fuel ignition testing for lunar applications" },
+      "habitat_focus": "lunar base and pressurized rover",
+      "fire_safety_areas": ["prevention"],
+      "text": "NASA's 2025 lunar-application tests measured the oxygen level at which six materials went out within a 5 s drop at simulated lunar gravity and 56.5 kPa (8.2 psia) [US25]. The reported levels run from 11% O2 for cotton fabric [U25-03-L, U25-04-L], 13% for P213 tape [U25-02-L] and 13.5% for PMMA [U25-01-L] up to 21% for polycarbonate [U25-05-L] and 24% for Nomex Velcro [U25-06-L]. The 34% O2 of the 8.2 psia exploration atmosphere preset is above every one of these measured extinction levels [exploration-8.2-34], so material choice for a lunar cabin at that atmosphere cannot rely on these materials going out on their own. These are simulated-gravity results under scientific review, read from plots, and one cotton value is a smolder endpoint, so treat them as close-to-limit evidence rather than an on-Moon rating.",
+      "cited_ids": ["US25", "U25-01-L", "U25-02-L", "U25-03-L", "U25-04-L", "U25-05-L", "U25-06-L", "exploration-8.2-34"],
+      "generated_by_ai": true,
+      "checked_by_team": false,
+      "checked_by": null
+    },
+    {
+      "insight_id": "INS-OF12",
+      "subject": { "kind": "evidence-group", "id": "OF12", "name": "Olson and Ferkul 2012: Nomex fabric at 1 g, simulated lunar gravity and microgravity" },
+      "habitat_focus": "lunar base",
+      "fire_safety_areas": ["prevention"],
+      "text": "Olson and Ferkul (2012) compared Nomex HT90-40 fabric at 101.3 kPa (14.7 psia) in Earth gravity, simulated lunar gravity and microgravity with forced flow [OF12]. Its maximum oxygen concentration (MOC) was 22.1% O2 at 1 g [OF12-NOMEX-1G-MOC], 19.9% at simulated lunar gravity [OF12-NOMEX-L-MOCSTAR] and 22% in microgravity with 30 cm/s concurrent flow [OF12-NOMEX-0G-MOCSTAR], and its upward limiting oxygen index followed the same order: 23.5%, 21% and 23% [OF12-NOMEX-1G-ULOI, OF12-NOMEX-L-ULOISTAR, OF12-NOMEX-0G-ULOISTAR]. The lunar-gravity value is the lowest, so a 1 g result alone placed this fabric's limit higher than the lunar-gravity test found. The low-gravity and 1 g pass criteria differ, so these are close-to-limit indicators across gravity, not a one-to-one comparison.",
+      "cited_ids": ["OF12", "OF12-NOMEX-1G-MOC", "OF12-NOMEX-L-MOCSTAR", "OF12-NOMEX-0G-MOCSTAR", "OF12-NOMEX-1G-ULOI", "OF12-NOMEX-L-ULOISTAR", "OF12-NOMEX-0G-ULOISTAR"],
+      "generated_by_ai": true,
+      "checked_by_team": false,
+      "checked_by": null
+    },
+    {
+      "insight_id": "INS-M25",
+      "subject": { "kind": "evidence-group", "id": "M25", "name": "MIST: Material Ignition and Suppression Test in space exploration atmospheres" },
+      "habitat_focus": "spacecraft, station and lunar base",
+      "fire_safety_areas": ["prevention", "suppression"],
+      "text": "The MIST project reported an approximate limiting oxygen concentration for flame spread over a 12.7 mm black PMMA rod with opposed flow of about 18.8% O2 in a 1 g ground test and about 16.2% O2 aboard the ISS, both near 100 kPa [M25-FS-G, M25-FS-M]. The lower microgravity value means this material kept a flame at less oxygen in orbit than on the ground, so a ground test alone could understate the fire risk in a spacecraft. For a lunar base, where gravity lies between these cases, the 0 g and 1 g values only bound an estimate; no lunar measurement is in these rows. Flow speed, heating and uncertainty for this pair are unresolved, so both values are draft [M25].",
+      "cited_ids": ["M25", "M25-FS-G", "M25-FS-M"],
+      "generated_by_ai": true,
+      "checked_by_team": false,
+      "checked_by": null
+    }
+  ]
+}
