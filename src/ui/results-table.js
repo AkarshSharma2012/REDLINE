@@ -41,8 +41,12 @@ export function styleUI(root) {
     .cabin-ui button[aria-pressed=true] { background:#262B33; border-bottom:2px solid #7CB8FF; }
     .cabin-ui :focus-visible { outline:2px solid #7CB8FF; outline-offset:2px; }
     .cabin-ui a { color:#7CB8FF; text-decoration:underline; }
-    .cabin-ui table { border-collapse:collapse; width:100%; text-align:left; }
+    .cabin-ui table { border-collapse:collapse; width:100%; min-width:760px; text-align:left; }
     .cabin-ui th,.cabin-ui td { padding:8px 12px; vertical-align:top; border-bottom:1px solid #2C313A; }
+    .cabin-ui th:first-child { min-width:140px; }
+    .cabin-ui td:nth-child(2) { min-width:180px; }
+    .cabin-ui td:nth-child(3) { min-width:200px; }
+    .cabin-ui td:nth-child(5),.cabin-ui td:nth-child(6) { min-width:240px; }
     .cabin-ui thead { background:#1E2228; color:#A9B0BB; }
     .cabin-ui .mismatch-flag { border:1px solid #737B88; padding:2px 4px; font-family:monospace; }
     .cabin-ui .gravity-estimate { border:1px dashed #737B88; }
@@ -113,7 +117,7 @@ export function renderResultsTable(root, results = [], options = {}) {
       button.setAttribute('aria-pressed', 'true');
       onSelect?.(result, { item, index });
     });
-    name.append(button, element(d, 'div', [item.use, item.form].filter(Boolean).join(' · '))); row.append(name);
+    name.append(button, element(d, 'div', material?.display_name || result.material_id), element(d, 'div', [item.use, item.form].filter(Boolean).join(' · '))); row.append(name);
     const label = element(d, 'td'); label.append(chip(d, result)); row.append(label);
     row.append(element(d, 'td', result.wording || 'Result wording unavailable'));
     const flags = element(d, 'td');

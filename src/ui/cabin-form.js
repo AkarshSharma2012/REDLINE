@@ -6,7 +6,12 @@ export function labelCabin(query, fixture) {
   return query.materials.map(item => {
     const result = fixture.ui_results.find(r => r.material_id === item.material_id) || fixture.ui_default_result;
     if (!result) throw new Error('UI fixture result unavailable');
-    return { ...structuredClone(result), material_id: item.material_id };
+    const output = { ...structuredClone(result), material_id: item.material_id };
+    if (query.conditions?.gravity_g === 0.16 && !output.estimate) {
+      output.estimate = { g0: structuredClone(result), g1: structuredClone(result) };
+      output.cross_gravity = true;
+    }
+    return output;
   });
 }
 
