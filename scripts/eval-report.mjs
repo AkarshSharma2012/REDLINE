@@ -21,7 +21,12 @@ function source(key, locator, sources) {
     : `${cell(key || 'Not stated')} (source link unavailable) ${cell(locator)}`;
 }
 
-export function renderReport(rows, { sources = {} } = {}) {
+export function renderReport(rows, { sources = {}, evidence = [] } = {}) {
+  const byId = new Map(evidence.map((r) => [r.evidence_id, r]));
+  const citations = (ids) => String(ids || '').split(/\s+/).filter(Boolean).map((id) => {
+    const r = byId.get(id);
+    return r ? source(r.source_key, id + ': ' + (r.source_locator || ''), sources) : cell(id);
+  }).join('; ') || 'None';
   const summary = summarizeResults(rows);
   const test = rows.filter((r) => r.split === 'test');
   const meta = rows[0] ?? {};
@@ -51,15 +56,15 @@ export function renderReport(rows, { sources = {} } = {}) {
       if (correct(score)) continue;
       const predicted = method === 'redline' ? answerCategory(r.redline_answer, r.redline_reason_code) : r.baseline_answer;
       wrong.push([r.query_id, r.split, method, r.material_id, r.holdout_group, expected(r), predicted, score,
-        source(r.truth_source_key, r.truth_source_locator, sources), r[`${method}_cited_row`] || 'None']);
+        source(r.truth_source_key, r.truth_source_locator, sources), citations(r[`${method}_cited_row`])]);
     }
   }
   // Source links are already escaped Markdown, so preserve them in the source column.
   const headers = ['Query', 'Split', 'Method', 'Material', 'Held-out group', 'Expected', 'Predicted', 'Score', 'Truth source / locator', 'Cited evidence IDs'];
   if (wrong.length) {
-    lines.push(table(headers, []).concat('\n', wrong.map((r) => `| ${r.map((v, i) => i === 8 ? v : cell(v)).join(' | ')} |`).join('\n')));
+    lines.push(table(headers, []).concat('\n', wrong.map((r) => `| ${r.map((v, i) => (i === 8 || i === 9) ? v : cell(v)).join(' | ')} |`).join('\n')));
   } else lines.push('No wrong answers in evaluated queries.');
-  lines.push('', '## Evaluation checks', '', ...((summary.kills ?? []).map((k) => `- ${k.id}: ${k.state} — ${k.text}`)), '',
+  lines.push('', '## Evaluation checks', '', ...((summary.kills ?? []).map((k) => `- ${k.id}: ${k.state} - ${k.text}`)), '',
     'Label codes are evaluator categories. Truth links and locators above supply provenance for individual cases; control absences are scoped to the sources reviewed. Arithmetic is computed by REDLINE.', '');
   return lines.join('\n');
 }
@@ -82,7 +87,7 @@ export function main(argv = process.argv.slice(2)) {
     run_at: new Date().toISOString(), evidence_built_from: evidence.built_from ?? args.evidence,
     evidence_kind: verified.length && verified.every((r) => r.verified_by === 'fixture-only') ? 'fixture' : 'real',
   } });
-  writeFileSync(args.out, renderReport(rows, { sources: evidence.sources }));
+  writeFileSync(args.out, renderReport(rows, { sources: evidence.sources, evidence: evidence.evidence }));
   console.log(`Wrote ${args.out}: ${rows.length} queries (${summarizeResults(rows).status}).`);
 }
 
