@@ -32,12 +32,15 @@ async function start() {
   const results = labelCabin(cabinQuery, evidence);
 
   // TODO (B5/B7/B8/B9): real wiring of form changes -> labelCabin -> table/panel/slider/fixes.
-  renderO2Slider(document.getElementById('o2-slider'), { presets: evidence.cabin_presets });
-  renderCabinForm(document.getElementById('cabin-form'), { materials: evidence.materials, presets: evidence.cabin_presets });
-  renderResultsTable(document.getElementById('results-table'), results, {
+  // Each screen is mounted on its own: if one throws, the rest of the dashboard still works.
+  const mount = (name, fn) => { try { fn(); } catch (err) { console.error(`[REDLINE] ${name} failed to load:`, err); } };
+  const lunarCabin = { conditions: { o2_pct: 34, pressure_kpa: 56.5 }, materials: [] };   // 8.2 psia / 34% O2 preset (R7)
+  mount('o2-slider', () => renderO2Slider(document.getElementById('o2-slider'), { cabinQuery: lunarCabin, evidence, labelCabin }));
+  mount('cabin-form', () => renderCabinForm(document.getElementById('cabin-form'), { materials: evidence.materials, presets: evidence.cabin_presets }));
+  mount('results-table', () => renderResultsTable(document.getElementById('results-table'), results, {
     onSelect: (result) => renderEvidencePanel(document.getElementById('evidence-panel'), result, evidence),
-  });
-  renderFixes(document.getElementById('fixes'), results);
+  }));
+  mount('fixes', () => renderFixes(document.getElementById('fixes'), results));
 }
 
 if (typeof document !== 'undefined') start();
