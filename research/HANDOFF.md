@@ -21,3 +21,9 @@ Added NASA NTRS 20230015380 human-test evidence for a 20-minute protocol with it
 Added S8 (NASA NTRS 20220013669), section II p.2: the conceptual Surface Habitat supports both 8.2/34 and 10.2/26.5. Corrected the missing-habitat-assignment statement while keeping the flight-selection caveat. Successfully reopened S1 and directly checked atmosphere bullets, resolving the inherited access gap. Rechecked S5 final-slide ranges, S6 protocol/future-options pages, and S7 abstract. Cross-branch inventories remain unchanged. No code or configuration changed.
 
 STATUS: DONE
+
+## Candidate-scenario audit, 14 November 2026
+
+Re-read README, AGENTS and the existing research handoff. Added NASA evidence report S9, p.67 Figure 13, distinguishing HLS comparison scenarios at 10.2/26.5 and 14.7/21 from the 8.2/34 reference selection. Narrowed the earlier missing-assignment wording. Reopened S5 final-slide timing table, S6 Revision D future-options section and S7 human-test abstract; their established/estimated/tested distinctions remain supported. S5 bare PDF URL timed out; attachment URL succeeded. No facts were inferred from the failed request. Rechecked fetched branches #18/#19 (no research files) and read #33 submission draft with git show. Verification: source-to-claim review and git diff --check; only research Markdown changed. No implementation or configuration changes.
+
+STATUS: DONE
