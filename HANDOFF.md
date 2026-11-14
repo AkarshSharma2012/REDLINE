@@ -1,6 +1,6 @@
 # Issue #54 — Gravity view
 
-STATUS: IN PROGRESS
+STATUS: DONE
 
 Scope: `src/ui/gravity-view.js`, `data/gravity-points.json`,
 `tests/gravity-view.test.mjs`, and this required root handoff. Current branch is
@@ -37,7 +37,24 @@ Implemented:
 Verification so far: `node --test` passed 16/16 tests on Node v24.17.0. Tests cover
 source/value preservation, review gates, SVG source/page links, unknown flow,
 endpoint/specimen separation, partial/malformed/empty/error states, callbacks,
-focus restoration, late loads, injection resistance and wording. Browser check pending.
+focus restoration, late loads, injection resistance and wording.
+
+Browser verification completed:
+- Served a temporary harness with exact copies of this module and dataset using the
+  installed Python interpreter, `-m http.server 8055 --bind 127.0.0.1 --directory <temp>`.
+  No harness or app-shell file was added to the repository.
+- Headless Chrome: 13 desktop checks passed at 1258 px inner width; 14 checks passed
+  with content explicitly constrained to 320 CSS px (browser minimum viewport was
+  512 px). Checked review gate/default closed research detail, SVG mark/source links,
+  unknown lunar flow, historical endpoint categories, cotton smolder separation,
+  request preservation, evidence disclosure/Escape/focus restoration, equivalent
+  table, no page overflow, computed SVG text fill and rendered minimum label size.
+- Inspected desktop and narrow screenshots. Fixed SVG text fill, zero-flow label/axis
+  overlap and minimum chart width; final chart/table scroll within their containers.
+  Final `node --test`: 16 passed, 0 failed. `git diff --check` passed.
+- Native browser control timed out; isolated headless Chrome succeeded. The initial
+  sandboxed Chrome run could not start its GPU subprocess; elevated isolated test
+  runs completed with browser exit 0. No user browser profile was used.
 
 Integration needed outside owned files (do not edit here): scaffold/main router must
 import `renderGravityView` and provide a root plus navigation callbacks. This branch
@@ -46,7 +63,6 @@ The S3 airflow-axis/no-continuous-gravity-curve requirement resolves the issue t
 loose “against gravity” wording. Scientific review is still needed to promote R3
 records; none were promoted by this issue.
 
-Next: finish the isolated browser harness check through Python's HTTP server, record
-results, and push the issue branch. Standard `python`/`py` aliases are unusable;
+No remaining work within this issue's owned files. Standard `python`/`py` aliases are unusable;
 the installed Python interpreter is at
 `C:/Users/Neeraj Sharma/AppData/Local/Python/pythoncore-3.14-64/python.exe`.

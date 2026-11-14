@@ -94,6 +94,7 @@ test('SVG never invents a zero-flow lunar point; each plotted point links its NA
   assert.match(root.innerHTML, /approximately 13\.5 % O2/);
   assert.match(root.innerHTML, /<table>/);
   assert.match(root.innerHTML, /<caption>Oxygen limits for these tested setups/);
+  assert.match(root.innerHTML, /<svg[^>]+fill="#A9B0BB"/); // SVG text needs fill; CSS color alone leaves it black.
   assert.doesNotMatch(root.innerHTML, /<polyline|<linearGradient|<canvas|<script/);
 });
 

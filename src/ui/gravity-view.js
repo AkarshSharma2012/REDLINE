@@ -113,10 +113,10 @@ function chart(points, historical, research) {
       : `<circle cx="${px}" cy="${py}" r="5" fill="#E8EAED"/>`;
     const page = p.source_locator.match(/(?:slide|p\.?|page)\s*(\d+)/i)?.[1];
     const href = nasaUrl(p.source_url);
-    return `<a href="${escape(href)}${page && !href.includes('#') ? `#page=${page}` : ''}" target="_blank" rel="noopener noreferrer" aria-label="${escape(label)} (opens in new tab)" data-point="${escape(p.evidence_id)}"><title>${escape(label)}</title>${marker}<text x="${px}" y="${py - 12}" text-anchor="middle">${p.value.toFixed(1)}</text>${historical ? `<text x="${px}" y="292" text-anchor="middle">${escape(p.gravity)} · ${escape(p.endpoint)}</text>` : ''}</a>`;
+    return `<a href="${escape(href)}${page && !href.includes('#') ? `#page=${page}` : ''}" target="_blank" rel="noopener noreferrer" fill="#7CB8FF" aria-label="${escape(label)} (opens in new tab)" data-point="${escape(p.evidence_id)}"><title>${escape(label)}</title>${marker}<text x="${px < 100 ? px + 10 : px}" y="${py - 12}" text-anchor="${px < 100 ? 'start' : 'middle'}">${p.value.toFixed(1)}</text>${historical ? `<text x="${px}" y="292" text-anchor="middle">${escape(p.gravity)} · ${escape(p.endpoint)}</text>` : ''}</a>`;
   }).join('');
   return `<figure><figcaption>${escape(name)}. ${historical ? 'Discrete gravity/endpoint categories; criteria differ.' : 'Oxygen (vol%) versus forced airflow comparison coordinate (cm/s).'}</figcaption>
-    <div class="gv-scroll" tabindex="0" role="region" aria-label="Oxygen chart viewport"><svg viewBox="0 0 640 336" role="img" aria-label="${escape(name)}; full values and provenance in adjacent data table" style="width:100%;min-width:480px;display:block;background:#16191E;color:#A9B0BB;font:13px system-ui">
+    <div class="gv-scroll" tabindex="0" role="region" aria-label="Oxygen chart viewport"><svg viewBox="0 0 640 336" fill="#A9B0BB" role="img" aria-label="${escape(name)}; full values and provenance in adjacent data table" style="width:100%;min-width:640px;display:block;background:#16191E;color:#A9B0BB;font:13px system-ui">
     ${axes}<path d="M64 48 V270 H584" fill="none" stroke="#737B88"/><text x="64" y="24">Oxygen (vol%)</text>${ticks}${dots}
     <text x="320" y="326" text-anchor="middle">${historical ? 'Gravity / endpoint (categorical; no interpolation)' : 'Forced airflow comparison coordinate (cm/s)'}</text></svg></div>
     <p>Hollow diamond: REDLINE extrapolation. Solid circle: tabulated measurement. No continuous gravity curve or connecting line.</p>
