@@ -29,7 +29,7 @@
     },
     {
       "insight_id": "INS-OF12",
-      "subject": { "kind": "evidence-group", "id": "OF12", "name": "Olson and Ferkul 2012: Nomex in microgravity, Martian and lunar gravity vs the NASA 1 g test" },
+      "subject": { "kind": "evidence-group", "id": "OF12", "name": "Olson and Ferkul 2012: Nomex fabric at 1 g, simulated lunar gravity and microgravity" },
       "habitat_focus": "lunar base",
       "fire_safety_areas": ["prevention"],
       "text": "Olson and Ferkul (2012) compared Nomex HT90-40 fabric at 101.3 kPa (14.7 psia) in Earth gravity, simulated lunar gravity and microgravity with forced flow [OF12]. Its maximum oxygen concentration (MOC) was 22.1% O2 at 1 g [OF12-NOMEX-1G-MOC], 19.9% at simulated lunar gravity [OF12-NOMEX-L-MOCSTAR] and 22% in microgravity with 30 cm/s concurrent flow [OF12-NOMEX-0G-MOCSTAR], and its upward limiting oxygen index followed the same order: 23.5%, 21% and 23% [OF12-NOMEX-1G-ULOI, OF12-NOMEX-L-ULOISTAR, OF12-NOMEX-0G-ULOISTAR]. The lunar-gravity value is the lowest, so a 1 g result alone placed this fabric's limit higher than the lunar-gravity test found. The low-gravity and 1 g pass criteria differ, so these are close-to-limit indicators across gravity, not a one-to-one comparison.",

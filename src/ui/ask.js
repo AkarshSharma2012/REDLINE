@@ -3,7 +3,7 @@
 // source links. Optional live mode: with the user's own Anthropic API key (kept in a closure
 // variable only, never stored, never committed) the question plus ONLY the retrieved rows go
 // to the Claude API from the browser. Without a key: retrieved rows + pre-generated insights.
-import { retrieve, buildPrompt, citationsIn, isNotFound, investigationList, NOT_FOUND } from '../rules/retrieve.js';
+import { retrieve, buildPrompt, groundingHits, citationsIn, isNotFound, investigationList, NOT_FOUND } from '../rules/retrieve.js';
 
 export const INSIGHTS_URL = 'data/insights.json';
 export const INVESTIGATIONS_URL = 'data/investigations.json';
@@ -148,7 +148,7 @@ const FORM = `
     <label for="ask-key">Anthropic API key</label>
     <input id="ask-key" type="password" autocomplete="off" spellcheck="false" data-role="key">
     <button type="button" data-action="forget">Forget key</button>
-    <p class="type-small text-3">The key stays in this page's memory only: it is not saved, and it is cleared when you reload. With a key, your question and only the rows shown below are sent from your browser to api.anthropic.com, and Claude is told to answer only from those rows.</p>
+    <p class="type-small text-3">The key stays in this page's memory only: it is not saved, and it is cleared when you reload. With a key, your question and only the catalog and evidence rows shown below (not the AI-written insights) are sent from your browser to api.anthropic.com, and Claude is told to answer only from those rows.</p>
   </details>
   <div role="status" aria-live="polite" class="text-2 type-small" data-role="status"></div>
   <div data-role="answer"></div>
@@ -181,15 +181,16 @@ export function renderAsk(root, data = {}) {
       $('status').textContent = `${hits.length} rows retrieved. Add an API key for a live answer, or read the rows and insights below.`;
       return { hits, answer: null };
     }
-    if (!hits.length) {
+    const ground = groundingHits(hits);
+    if (!ground.length) {
       $('answer').innerHTML = `<p class="type-body">${NOT_FOUND}.</p>`;
-      $('status').textContent = 'No rows retrieved, so nothing was sent to Claude.';
+      $('status').textContent = 'No catalog or evidence rows retrieved, so nothing was sent to Claude.';
       return { hits, answer: NOT_FOUND };
     }
     $('status').textContent = 'Asking Claude using only the retrieved rows…';
     try {
-      const answer = await askClaude({ apiKey, question, hits });
-      $('answer').innerHTML = `<section class="panel"><h3 class="type-heading">Answer <span class="flag">AI-generated from the rows below</span></h3>${answerHtml(answer, hits)}</section>`;
+      const answer = await askClaude({ apiKey, question, hits: ground });
+      $('answer').innerHTML = `<section class="panel"><h3 class="type-heading">Answer <span class="flag">AI-generated from the rows below</span></h3>${answerHtml(answer, ground)}</section>`;
       $('status').textContent = '';
       return { hits, answer };
     } catch (err) {

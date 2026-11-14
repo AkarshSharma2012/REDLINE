@@ -54,15 +54,16 @@ test('retrieval is deterministic and respects the limit', () => {
 });
 
 test('prompt contains only the retrieved rows and the grounding rules', () => {
-  const { hits } = retrieve('nomex lunar', data, { limit: 3 });
+  const { hits } = retrieve('nomex lunar', data, { limit: 8 });
   const { system, messages } = buildPrompt('nomex lunar', hits);
   assert.match(system, /ONLY from the rows/);
   assert.ok(system.includes(NOT_FOUND));
   assert.match(system, /cite/i);
   const user = messages[0].content;
-  for (const h of hits) assert.ok(user.includes(`"id":"${h.id}"`));
   const sent = [...user.matchAll(/"id":"([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(sent, hits.map((h) => h.id));
+  assert.deepEqual(sent, hits.filter((h) => h.kind !== 'insight').map((h) => h.id));
+  assert.ok(hits.some((h) => h.kind === 'insight'), 'question retrieves an insight');
+  assert.ok(!sent.some((id) => id.startsWith('INS-')), 'AI-written insights are never sent as sources');
   assert.ok(!user.includes('null'), 'null fields are not sent');
 });
 
