@@ -55,6 +55,7 @@ S3 documents the Shuttle sequence: initial 60 min mask oxygen breathing (45 min 
 
 S6 describes a past resting in-suit protocol: 4 h breathing 100% oxygen at 14.7 psia. It also describes exercise and campout alternatives; therefore 4 h is a particular protocol, not the unique time implied by that cabin atmosphere. [S6, p.11]
 
+**Implementation handoff / inference (specification only):** each displayed duration should carry the starting pressure, oxygen fraction, prior acclimation/staging, pre-breathe gas, EVA pressure and duration, gravity context, evidence category, source date and locator. Treat an unspecified field as not stated, not zero. Selecting an atmosphere should reveal applicable published protocols rather than select a single universal time. Keep the S5 historical comparison and S7 chamber protocol as separate records; neither supplies missing conditions for the other. This proposed structure follows their differing assumptions [S5, PDF p.38; S7, Methods] and is not a NASA data standard.
 ## Status, uncertainty and illustrative-slider specification
 
 - **Established historical operation:** the ISS reference atmosphere and Shuttle/ISS staging settings above; their documented procedures remain tied to their own conditions. [S3; S4 Table 1; S6 p.11]

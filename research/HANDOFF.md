@@ -93,3 +93,11 @@ Re-read existing research and project guidance. Read fetched #18 evidence specif
 Verification: required three presets, S1-S13 source definitions, research-only changed paths and git diff --check. No implementation changes. Next: conductor integration only.
 
 STATUS: DONE
+
+## Protocol-context handoff audit, 14 November 2026
+
+Re-read README, AGENTS and existing handoff. Preserved completed NASA research; added a specification-only checklist so duration records retain atmosphere, staging, gas, EVA conditions, evidence status and provenance. Rechecked S5 PDF p.38, S7 public Methods/Results and S13 PDF p.1. S5 screenshot failed (cache miss); accessible PDF text was used. A supplementary 2024 presentation exceeded the web reader size limit and was not used. Read fetched #18 evidence-spec.md, #19 bass2.md and #22 nasa-context.md with git show; no new pre-breathe dataset was imported.
+
+Verification: source-to-claim checks for the added specification references, changed-path scope and git diff --check. Only research Markdown changed. No app/config/scaffold work. Next: conductor integration only.
+
+STATUS: DONE
