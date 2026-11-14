@@ -1,4 +1,4 @@
-﻿# PMMA endpoints and the Marcum counter-example
+# PMMA endpoints and the Marcum counter-example
 
 Issue #21; research only; reviewed 2026-11-14. Draft evidence: [pmma-rows.csv](pmma-rows.csv). Source keys resolve to titles, URLs and locators below. PDF pages are one-based. Unknown numeric fields are blank, not zero.
 
@@ -91,5 +91,3 @@ No earlier PMMA deliverable or misplaced handoff existed on the current branch. 
 | R26 | *Opposed flame spread limit over PMMA rods in normal and micro gravity*. [Publisher](https://www.sciencedirect.com/science/article/pii/S0379711226000871) | Abstract/Highlights search preview only; title corroborated by M26 p. 4; direct access failed |
 | G26 | *Gravity and thickness effects on the path from ignition to extinction in opposed flame spread over PMMA Rods*. [Publisher](https://www.sciencedirect.com/science/article/pii/S1540748926004566) | Title and Introduction/Conclusions preview only; direct access failed; not a numerical source |
 | T25 | *Extinction of Opposed Flame Spread and Regression Burning of Thick Solid Fuels*. [Official ICES 2025 program](https://ices.space/wp-content/uploads/2025/07/ICES_2025_program_final_WEB_spreads_minus-PR-back-page.pdf); [DOI](https://doi.org/10.32865/2346/102744) | PDF p. 21, technical-session entry ICES-2025-323; full-paper DOI access failed |
-
-

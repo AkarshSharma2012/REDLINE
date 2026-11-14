@@ -1,6 +1,6 @@
-﻿# Issue 21 handoff
+# Issue 21 handoff
 
-STATUS: IN PROGRESS
+STATUS: DONE
 
 Completed: research/pmma-endpoints.md and six draft rows in research/pmma-rows.csv. Read README.md/AGENTS.md first; reviewed fetched issue 18 schema, issue 19 row format and issue 20 lunar report with git show. No prior local handoff or misplaced research/docs handoff existed.
 
@@ -10,4 +10,4 @@ Decisions: preserve the issue 18 first 17 columns and add explicit provenance/ex
 
 Validation: Import-Csv round-trip checked six unique IDs, complete title/URL/locator/uncertainty fields, FS transcription, blank FR values and excluded extrapolation. Explicit NASA prose values only; no graph digitization. Web screenshot service failed; PDF text was accessible. git diff --check passed. Only research deliverables and root HANDOFF.md changed.
 
-Next: final scope/provenance checks, final completion commit and push current task branch.
+Completed verification: CSV checks repeated after removing unresolved FR condition fields; all passed. Final whitespace check passed after removing an extra trailing blank line. Source access and page locators are recorded in the report. No app code, UI, configuration or scaffolding changed. Push the current task branch; no main-branch changes.
