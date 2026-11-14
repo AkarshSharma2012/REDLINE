@@ -16,9 +16,20 @@ Only implementation files owned by this issue will be changed, plus this require
 root handoff. Test fixtures stay inside the owned test file because creating
 `tests/fixtures/` files would exceed file ownership.
 
-Next: implement, run `node --test`, and serve a temporary fixture harness for an
-actual browser check. Python launcher availability needs checking: `python.exe`
-currently resolves to an inaccessible Windows alias.
+Implemented `src/ui/o2-slider.js` and `tests/o2-slider.test.mjs`. Eight Node tests
+pass: counts/engine contract, fixed-pressure sweep, paired presets and separate
+protocol records, Apply/Cancel/reset/rebase, invalid numbers, source/engine
+failure and retry, empty states, lunar endpoint disclosures. No dependencies.
+
+The module exports `mountO2Slider(root, { cabinQuery, evidence, labelCabin,
+onApply?, onCancel? })`, `buildO2Preview` and sweep constants. `cabinQuery` uses
+V2 U5's `{ conditions, materials }`; `evidence` is the S1 dataset object.
+Callbacks receive scenario copies. `update(query)` rebases the preview; remount
+when the dataset changes. `destroy()` detaches listeners and removes the panel.
+
+Next: actual browser verification using an opt-in temporary fixture harness.
+The Windows Python alias is inaccessible; the installed Python executable was
+located under AppData/Local/Python/pythoncore-3.14-64.
 
 Integration needed outside scope: scaffold/app owner must mount the component,
 pass the real engine/dataset, handle Apply/Cancel and supply shared styles.
