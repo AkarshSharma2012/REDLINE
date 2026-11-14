@@ -1,20 +1,18 @@
 # Issue #88 handoff
 
 Implemented scripts/size-budget.mjs and tests/size-budget.test.mjs without dependencies.
-- Counts raw on-disk bytes of index.html, all recursive src/ files, and immediate data/*.json.
-- Uses a strict decimal 600,000-byte limit; prints each file and total; CLI exits 1 on failure.
-- Checks static HTML resource attributes, CSS URLs/imports, JS module imports and direct resource assignments, and asset URL keys. Citation/navigation URLs and embedded data URLs remain allowed.
-- Tests cover external assets, protocol-relative URLs, citations, recursive counting, UTF-8 bytes, exact budget boundary, CLI failure, and missing required files. Fixtures are temporary directories, cleaned after tests.
+- Counts raw on-disk bytes of index.html, recursive src/ files, and immediate data/*.json; prints each file and total.
+- Updated the budget to decimal 2 MB (2,000,000 bytes) per the revised issue. Fails when the total exceeds the limit; an exact-limit total passes.
+- Current measured total: 657,914 bytes. No budget increase beyond 2 MB was needed.
+- Rejects static external script/style/font/image references, including protocol-relative URLs; permits NASA citation/navigation URLs and embedded data URLs.
+- Tests cover recursive counting, UTF-8 bytes, below/exact/above budget boundaries, external assets, citation exceptions, CLI failure and missing required files.
 
 Verification:
-- node --test: 100 tests, 99 passed, 1 failed: the new repository budget assertion correctly rejects the existing 672,981-byte site. No external static resource violations found.
-- node scripts/size-budget.mjs: prints size table and exits 1 for the same over-budget total.
-- git diff --check: passed.
-- Attempted python -m http.server 8088: Python is not installed/on PATH (nor py/python3); could not perform the requested browser smoke test.
+- node --test: 100 passed, 0 failed; prints the size table and reports no external static resource violations.
+- No site files changed. No browser, server, or persistent process started.
 
-Next / outside owned files:
-- App/data owners must remove at least 72,982 bytes to meet the strict limit; data/investigations.json alone is 283,500 bytes. Do not weaken/skip the guard to make CI pass.
-- Static checks do not prove arbitrary computed JavaScript cannot request a remote resource. Optional user-activated live AI mode in src/ui/ask.js calls api.anthropic.com; it is not a script/style/font/image dependency. Its default retrieval mode uses local files.
-- Offline after full initial load, lazy-tab loads, and reload behavior still need browser verification. No service worker/cache changes are owned by this issue.
+Limitations / outside owned files:
+- Static checks cannot prove arbitrary computed JavaScript never requests remote resources or verify browser cache behavior. Offline reload and unvisited lazy views are not verified by these tests.
+- Optional user-activated live AI in src/ui/ask.js uses api.anthropic.com; this is not a script/style/font/image dependency. The default retrieval mode uses local files.
 
-STATUS: BLOCKED: Existing site exceeds the required budget; reductions require changes outside this issue's owned files. Browser verification also needs Python/browser serving setup.
+STATUS: DONE

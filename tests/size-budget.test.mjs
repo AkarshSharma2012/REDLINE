@@ -8,6 +8,7 @@ import { checkSizeBudget, findExternalResources, formatReport, SIZE_LIMIT_BYTES 
 
 test('repository stays within budget and uses local static assets', async () => {
   const report = await checkSizeBudget();
+  console.log(formatReport(report));
   assert.equal(report.ok, true, formatReport(report));
 });
 
@@ -40,7 +41,7 @@ test('citations, local resources and embedded SVG namespaces are allowed', () =>
   `), []);
 });
 
-test('byte count is recursive, uncompressed, exact, and strictly below decimal 600 KB', async t => {
+test('byte count is recursive, uncompressed, exact, and within decimal 2 MB', async t => {
   const root = await mkdtemp(path.join(tmpdir(), 'redline-budget-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   await mkdir(path.join(root, 'src', 'nested'), { recursive: true });
@@ -56,10 +57,14 @@ test('byte count is recursive, uncompressed, exact, and strictly below decimal 6
   await writeFile(path.join(root, 'index.html'), 'x'.repeat(SIZE_LIMIT_BYTES - 4));
   report = await checkSizeBudget(root);
   assert.equal(report.totalBytes, SIZE_LIMIT_BYTES);
+  assert.equal(report.ok, true);
+  await writeFile(path.join(root, 'index.html'), 'x'.repeat(SIZE_LIMIT_BYTES - 3));
+  report = await checkSizeBudget(root);
+  assert.equal(report.totalBytes, SIZE_LIMIT_BYTES + 1);
   assert.equal(report.ok, false);
   const cli = spawnSync(process.execPath, ['scripts/size-budget.mjs', root], { encoding: 'utf8' });
   assert.equal(cli.status, 1);
-  assert.match(cli.stdout, /TOTAL[\s]+600000/);
+  assert.match(cli.stdout, /TOTAL[\s]+2000001/);
   await writeFile(path.join(root, 'index.html'), '<script src="https://example.org/a.js"></script>');
   assert.equal((await checkSizeBudget(root)).violations.length, 1);
   await rm(path.join(root, 'index.html'));

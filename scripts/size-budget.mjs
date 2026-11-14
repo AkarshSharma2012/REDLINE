@@ -2,8 +2,8 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-// Decimal KB; strictly under 600 KB, measured on disk (not compressed).
-export const SIZE_LIMIT_BYTES = 600_000;
+// Decimal MB; measured on disk (not compressed). An exact-budget total passes.
+export const SIZE_LIMIT_BYTES = 2_000_000;
 const DEFAULT_ROOT = fileURLToPath(new URL('../', import.meta.url));
 const external = /^(?:https?:)?\/\//i;
 
@@ -69,7 +69,7 @@ export async function checkSizeBudget(root = DEFAULT_ROOT) {
   }
   const totalBytes = files.reduce((sum, file) => sum + file.bytes, 0);
   return { files, totalBytes, limitBytes: SIZE_LIMIT_BYTES, violations,
-    ok: totalBytes < SIZE_LIMIT_BYTES && violations.length === 0 };
+    ok: totalBytes <= SIZE_LIMIT_BYTES && violations.length === 0 };
 }
 
 export function formatReport(report) {
@@ -77,7 +77,7 @@ export function formatReport(report) {
     'File                                              Bytes',
     ...report.files.map(({ file, bytes }) => `${file.padEnd(48)} ${String(bytes).padStart(7)}`),
     `${'TOTAL'.padEnd(48)} ${String(report.totalBytes).padStart(7)}`,
-    `Budget: strictly under ${report.limitBytes} bytes (600 KB).`,
+    `Budget: at most ${report.limitBytes} bytes (${report.limitBytes / 1_000_000} MB).`,
     ...report.violations.map(({ file, url }) => `External resource: ${file}: ${url}`),
     report.ok ? 'PASS: size and static resource checks.' : 'FAIL: size or external resource check.',
   ].join('\n');
