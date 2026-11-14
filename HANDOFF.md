@@ -47,7 +47,16 @@ an intermediate oxygen step, keyboard range operation, Apply and Cancel. The
 temporary harness contains only synthetic engine results and is visibly marked
 as such; it is not production scientific data or an implementation of labelCabin.
 
-STATUS: BLOCKED: browser verification requires Chrome-access approval or restoration of the dedicated browser host.
+Current verification refresh (2026-11-14): reread the required branch specs and R7
+research. `node --test` passes all 10 tests; `node --check src/ui/o2-slider.js`
+and `git diff --check` pass. The running temporary HTTP harness still returns
+200 for `/` and `/o2-slider.js`. Fresh-tab attempts through the supported browser
+tool for both `iab` and `chrome` return "The browser access host is unavailable".
+No existing private browser window was selected. Actual browser interaction
+verification remains incomplete; HTTP responses and the synthetic DOM tests do
+not substitute for it. Restore the browser host to finish the remaining gate.
+
+STATUS: BLOCKED: supported browser access host unavailable; actual browser verification remains incomplete.
 
 Integration needed outside scope: scaffold/app owner must mount the component,
 pass the real engine/dataset, handle Apply/Cancel and supply shared styles.
