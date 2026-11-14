@@ -75,6 +75,10 @@ const FIELD_KEYS = new Set(FIELDS.map((f) => f.key));
 const PROV_KEYS = new Set(PROVENANCE_KEYS);
 const isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== '';
+const nasaUrl = (v) => {
+  try { const u = new URL(v); return u.protocol === 'https:' && (u.hostname === 'nasa.gov' || u.hostname.endsWith('.nasa.gov') || u.hostname === 'taskbook.nasaprs.com'); }
+  catch { return false; }
+};
 
 function checkRow(row, i, ctx, errors) {
   const id = isObj(row) && nonEmpty(row.evidence_id) ? row.evidence_id : `#${i}`;
@@ -131,12 +135,12 @@ function checkPreset(p, i, ctx, errors) {
   for (const key of ['preset_id', 'label', 'status', 'context', 'source_key', 'source_locator']) {
     if (!nonEmpty(p[key])) err(`"${key}" must be a non-empty string`);
   }
-  if (typeof p.pressure_kpa !== 'number' || !(p.pressure_kpa > 0)) err('"pressure_kpa" must be a number > 0');
+  if (!Number.isFinite(p.pressure_kpa) || !(p.pressure_kpa > 0)) err('"pressure_kpa" must be a number > 0');
   if (typeof p.o2_pct !== 'number' || !(p.o2_pct >= 0 && p.o2_pct <= 100)) err('"o2_pct" must be a number in 0-100');
   if (nonEmpty(p.source_key) && !ctx.sources.has(p.source_key)) err(`source_key "${p.source_key}" not in sources`);
   if (!Array.isArray(p.prebreathe)) { err('"prebreathe" must be an array'); return; }
   p.prebreathe.forEach((b, j) => {
-    for (const key of ['minutes', 'regime', 'kind', 'source_key', 'source_locator']) {
+    for (const key of ['minutes', 'regime', 'kind', 'assumptions', 'source_key', 'source_locator']) {
       if (!isObj(b) || !nonEmpty(b[key])) err(`prebreathe[${j}] "${key}" must be a non-empty string`);
     }
     if (isObj(b) && nonEmpty(b.source_key) && !ctx.sources.has(b.source_key)) err(`prebreathe[${j}] source_key "${b.source_key}" not in sources`);
@@ -155,9 +159,16 @@ export function validateEvidence(data) {
     if (!Array.isArray(data[key])) errors.push(`top level "${key}" must be an array`);
   }
   if (errors.length) return { ok: false, errors };
+  if (data.schema_version !== '1.0.0') errors.push('unsupported schema_version');
+  if (!/^\d{4}-\d\d-\d\dT/.test(data.built_at) || !Number.isFinite(Date.parse(data.built_at))) errors.push('built_at must be an ISO timestamp');
 
   for (const [key, s] of Object.entries(data.sources)) {
     if (!isObj(s) || !nonEmpty(s.title) || !nonEmpty(s.url)) errors.push(`sources[${key}]: needs non-empty "title" and "url"`);
+    if (isObj(s)) {
+      if (!nasaUrl(s.url)) errors.push(`sources[${key}]: url must link to a NASA source`);
+      if (typeof s.authors !== 'string') errors.push(`sources[${key}]: authors must be a string`);
+      if (!Number.isInteger(s.year) || s.year < 1900) errors.push(`sources[${key}]: year must be a publication year`);
+    }
   }
   const materials = new Set();
   data.materials.forEach((m, i) => {
@@ -166,7 +177,7 @@ export function validateEvidence(data) {
       return;
     }
     if (materials.has(m.material_id)) errors.push(`materials[${m.material_id}]: duplicate material_id`);
-    if (m.aliases !== undefined && !(Array.isArray(m.aliases) && m.aliases.every(nonEmpty))) {
+    if (!(Array.isArray(m.aliases) && m.aliases.every(nonEmpty))) {
       errors.push(`materials[${m.material_id}]: "aliases" must be an array of strings`);
     }
     materials.add(m.material_id);
@@ -174,6 +185,13 @@ export function validateEvidence(data) {
 
   const ctx = { ids: new Set(), sources: new Set(Object.keys(data.sources)), materials };
   data.evidence.forEach((row, i) => checkRow(row, i, ctx, errors));
-  data.cabin_presets.forEach((p, i) => checkPreset(p, i, ctx, errors));
+  const presetIds = new Set();
+  data.cabin_presets.forEach((p, i) => {
+    checkPreset(p, i, ctx, errors);
+    if (isObj(p)) {
+      if (presetIds.has(p.preset_id)) errors.push(`duplicate preset_id ${p.preset_id}`);
+      presetIds.add(p.preset_id);
+    }
+  });
   return { ok: errors.length === 0, errors };
 }

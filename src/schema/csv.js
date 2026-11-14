@@ -7,21 +7,24 @@ export function parseCsv(text) {
   let record = [];
   let field = '';
   let quoted = false;
+  let closed = false;
   for (let i = 0; i < src.length; i++) {
     const c = src[i];
     if (quoted) {
       if (c === '"' && src[i + 1] === '"') { field += '"'; i++; }
-      else if (c === '"') quoted = false;
+      else if (c === '"') { quoted = false; closed = true; }
       else field += c;
     } else if (c === '"') {
+      if (field !== '' || closed) throw new Error('CSV: unexpected quote');
       quoted = true;
     } else if (c === ',') {
-      record.push(field); field = '';
+      record.push(field); field = ''; closed = false;
     } else if (c === '\n' || c === '\r') {
       if (c === '\r' && src[i + 1] === '\n') i++;
       record.push(field); records.push(record);
-      record = []; field = '';
+      record = []; field = ''; closed = false;
     } else {
+      if (closed) throw new Error('CSV: unexpected character after closing quote');
       field += c;
     }
   }
@@ -31,6 +34,9 @@ export function parseCsv(text) {
   const rows = records.filter((r) => !(r.length === 1 && r[0] === ''));
   if (!rows.length) return [];
   const [header, ...body] = rows;
+  if (header.some((h) => !h.trim()) || new Set(header).size !== header.length) {
+    throw new Error('CSV: empty or duplicate column header');
+  }
   return body.map((r, n) => {
     if (r.length !== header.length) {
       throw new Error(`CSV: data line ${n + 1} has ${r.length} fields, header has ${header.length}`);
