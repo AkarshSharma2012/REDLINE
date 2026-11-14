@@ -1,10 +1,10 @@
 # B14: evidence additions and review queue
 
-Issue #77. Extracted 2026-11-14. **Unverified: human scientific review required.**
+Issue #77. Extracted 2026-11-14. **Draft evidence: human scientific review required.**
 
 ## Appended evidence
 
-16 new rows, taking the CSV from 29 to 45. The original 29 rows and header are preserved (checked against Git with line endings normalized). All new rows have literal `review_status=unverified`, an empty `verified_by`, NASA source URLs and specific locators. No new dependencies or application changes.
+16 new rows, taking the CSV from 29 to 45. The original 29 rows and header are preserved (checked against Git with line endings normalized). All new rows have `review_status=draft`, an empty `verified_by`, NASA source URLs and specific locators. No new dependencies or application changes.
 
 | IDs (prefix B14-) | Count | Investigation | Endpoint and locator |
 |---|---:|---|---|
@@ -14,10 +14,10 @@ Issue #77. Extracted 2026-11-14. **Unverified: human scientific review required.
 | GMT96-T7, GMT96-T8 | 2 | BASS / PSI-26 | burn/no-burn / spread; Zhao2015 Figs. 2-3, pp. 3-5, Appendix p. 9 |
 | SAFFIRE-I-1, SAFFIRE-II-5, SAFFIRE-II-6, SAFFIRE-III-1 | 4 | Saffire-I/-II/-III | burn/no-burn / spread; Urban2021 Table 2 p. 8, section C pp. 7-8 |
 
-### Source register (metadata owner must register these keys)
+### Source register (registered in data/metadata.json)
 
-- **ZHAO15** — Zhao, T'ien, Ferkul and Olson (2015), *Concurrent flame growth, spread and extinction over composite fabric samples in low speed purely forced flow in microgravity*. [NASA NTRS PDF](https://ntrs.nasa.gov/api/citations/20150008962/downloads/20150008962.pdf). Methods pp. 2-3, Figs. 2-3 pp. 3-5, quenching pp. 5-7, Appendix p. 9. The Appendix has no table number; the named test row is the locator.
-- **SAFFIRE21** — Urban et al. (2021), *Fire Safety Implications of Preliminary Results from Saffire IV and V Experiments on Large Scale Spacecraft Fires*, ICES-2021-266. [NASA NTRS PDF](https://ntrs.nasa.gov/api/citations/20210011521/downloads/ICES%202021-266%200503-2021%20final.pdf). This later report reproduces I/II/III conditions in Table 2 p. 8 and discusses their observed spread in section C pp. 7-8. Concurrent direction is corroborated by [NASA 20180005168 presentation, p. 30 Table 1](https://ntrs.nasa.gov/api/citations/20180005168/downloads/20180005168.pdf).
+- **ZHAO15** ï¿½ Zhao, T'ien, Ferkul and Olson (2015), *Concurrent flame growth, spread and extinction over composite fabric samples in low speed purely forced flow in microgravity*. [NASA NTRS PDF](https://ntrs.nasa.gov/api/citations/20150008962/downloads/20150008962.pdf). Methods pp. 2-3, Figs. 2-3 pp. 3-5, quenching pp. 5-7, Appendix p. 9. The Appendix has no table number; the named test row is the locator.
+- **SAFFIRE21** ï¿½ Urban et al. (2021), *Fire Safety Implications of Preliminary Results from Saffire IV and V Experiments on Large Scale Spacecraft Fires*, ICES-2021-266. [NASA NTRS PDF](https://ntrs.nasa.gov/api/citations/20210011521/downloads/ICES%202021-266%200503-2021%20final.pdf). This later report reproduces I/II/III conditions in Table 2 p. 8 and discusses their observed spread in section C pp. 7-8. Concurrent direction is corroborated by [NASA 20180005168 presentation, p. 30 Table 1](https://ntrs.nasa.gov/api/citations/20180005168/downloads/20180005168.pdf).
 
 Primary repository context: [NASA PSI Data Repository](https://psi.nasa.gov/); [BASS-II PSI-25](https://psi.nasa.gov/physci/repo/data/investigations/PSI-25), [BASS PSI-26](https://psi.nasa.gov/physci/repo/data/investigations/PSI-26), [Saffire-I PSI-98](https://psi.nasa.gov/physci/repo/data/investigations/PSI-98), [Saffire-II PSI-99](https://psi.nasa.gov/physci/repo/data/investigations/PSI-99), [Saffire-III PSI-100](https://psi.nasa.gov/physci/repo/data/investigations/PSI-100). Published NTRS results supply the new row values; repository summaries are not substituted for run outcomes. Existing research/bass2.md documents PSI-25 access and initial/final oxygen caveats. No new PSI raw-video interpretation is claimed.
 
@@ -39,19 +39,13 @@ Primary repository context: [NASA PSI Data Repository](https://psi.nasa.gov/); [
 
 **SAME/SAME-R:** [NASA 20130000422, abstract p. 1 and experimental results section C](https://ntrs.nasa.gov/api/citations/20130000422/downloads/20130000422.pdf) describes smoke particles produced by heating below ignition. Particle-size/concentration endpoints and corresponding units are absent from R1/S1. Pyrolysis cannot be translated to `spread` or `no-spread`. No SAME CSV rows appended; the appropriate extension is a separate detection-evidence schema owned by the architecture/data team.
 
-## Integration blockers and owner actions
+## Integration and verification (resumed 2026-11-14)
 
-1. `src/schema/validate.js` must accept `unverified` while ensuring it remains excluded from labels, suggestions and holdout truth. Alternatively the issue owner must explicitly reconcile the requested status with S1's `draft`; B14 does not silently rewrite the request.
-2. `data/metadata.json` must register ZHAO15 and SAFFIRE21 using the titles, authors, years and URLs above. Inline row URLs do not satisfy the current source-key lookup.
-3. Rebuild `data/evidence.json` after these changes. The build is atomic and leaves the last usable artifact intact on failure. B14 owns only the append-only CSV and this review document, plus the required root handoff.
+- Corrected all 16 saved additions to the schema-supported draft status, as requested. Empty verifiers retained; no row promoted to verified.
+- Added ZHAO15 and SAFFIRE21 to data/metadata.json. Existing source entries and all other metadata are unchanged.
+- Original 29 CSV rows and header are unchanged; the only changes to the saved B14 rows are their review statuses. Parsed output contains 45 rows, all drafts with registered sources and locators.
+- node scripts/build-evidence.mjs succeeds: 45 rows, 0 verified. Generated data/evidence.json was used for verification, then restored because it is outside this issue's owned files; the integration owner must rebuild it for publication.
+- node --test: 89 tests, 86 pass, 2 fail, 1 TODO. Both failures are hard-coded 29-row assertions in tests/schema.test.mjs (published CSV/JSON test and build-output test). Tests are outside B14 ownership; their owner should replace fixed counts with the parsed CSV length. The catalog-insights coverage TODO is separate.
+- Python is unavailable on PATH. A temporary dependency-free Node static server returned HTTP 200 for /, /src/main.js and /data/evidence.json. Browser opening failed because the browser access host is unavailable; visual/interactive verification remains incomplete.
 
-No new row is human verified, and none should drive a label until separate review. BRE/SAME endpoint support and fresh lunar digitization are further work, not delivered coverage.
-
-
-## Verification (2026-11-14)
-
-- Append-only check against committed CSV, with Git CRLF/LF normalization: original header and all 29 rows unchanged. 16 appended; 45 total. Unique IDs, required review status, empty verifier, NASA URL and locator checks passed.
-- `node scripts/build-evidence.mjs`: fails with exactly 32 validation errors, one unrecognized `unverified` status and one unregistered source key per new row. Last usable generated JSON was not changed.
-- In-memory diagnostic only: representing the new rows as draft and registering the two sources yields `validateEvidence(...).ok=true`. No changes to status, schema, metadata or generated files were saved by that diagnostic. This isolates the integration blocker without claiming a production build passed.
-- `node --test`: 89 tests; 86 pass, 2 fail, 1 TODO, 0 skipped. Failures are `published CSV and JSON agree; every imported row is source-linked draft evidence` and `build validates before replacing output and supports an explicit output path`; both are affected by the blocked build/source integration. There is no successful regenerated artifact to commit.
-- Python is absent from PATH, so the requested `python -m http.server` could not run. A temporary dependency-free Node static server returned HTTP 200 for `/`, `/src/main.js` and the unchanged `/data/evidence.json`. Browser open was attempted but the browser access host was unavailable. Visual/interactive verification remains incomplete. HTTP checks do not establish browser rendering or visibility of the new rows.
+BRE/SAME endpoint support and fresh lunar digitization remain separate work, for the scientific reasons above. These additions must not drive labels or evaluation truth before human verification.
