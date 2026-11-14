@@ -290,7 +290,7 @@ export function accuracyViewHtml(summary, { sources = {} } = {}) {
       + '<li>Run: node scripts/eval-holdout.mjs --seed &lt;n&gt;</li></ul></section>';
   }
   const m = summary.meta;
-  const run = `<p class="text-3 type-small">Evaluation ${esc(m.evaluation)}; seed ${esc(m.seed)}; code ${esc(m.commit)}; evidence ${esc(m.built_from)}; run ${esc(m.run_at)}; `
+  const run = `<p class="panel text-3 type-small">Evaluation ${esc(m.evaluation)}; seed ${esc(m.seed)}; code ${esc(m.commit)}; evidence ${esc(m.built_from)}; run ${esc(m.run_at)}; `
     + `${summary.groups} independent source group(s) in the test split; ${summary.devQueries} dev-split or excluded queries not in the metrics.</p>`;
 
   const R = summary.redline;
