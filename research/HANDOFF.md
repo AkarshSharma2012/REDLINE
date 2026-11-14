@@ -1,11 +1,21 @@
-# HANDOFF — issue #22 (R5: NASA's position: standards, FM2, Saffire)
+# HANDOFF: issue #22 (R5: NASA's position: standards, FM2, Saffire)
 
 ## Done
-- Read README/AGENTS; reviewed other branches (#18 evidence-spec, #24 atmosphere, #33 submission draft) for reusable citations.
-- Fetching primary sources: NASA-STD-6001B Chg 3, JSC 27301J, FM2 pages/NTRS, Saffire NTRS papers.
+- research/nasa-context.md: NASA-STD-6001B Test 1 (purpose, method, pass/fail, MOC), JSC 27301J §5.1.1
+  (reduced-gravity wording, pp. 51-53), FM2 (objectives, hypothesis, 2024 vs 2026 test plans, delivery/status,
+  no flight date), Saffire I-VI (conditions table, measurements, Test 1 findings, public reports list),
+  knows-vs-open paragraph, REDLINE wording rules, full source register.
+- All PDFs text-extracted locally with pdftotext and checked line by line for page locators.
+- Cross-checked against branches #18, #24 and #33 (consistent). Branch #19 had no files.
 
-## Next
-- Write research/nasa-context.md with locators for every fact.
+## Key decisions
+- FM2 has two published test plans (2024: 21%/14.7 psia + 34%/8.2 psia, SIBAL + PMMA; 2026: 8.2 psia at
+  37/33/29/25% O2, one fabric). Kept separate, not merged.
+- FM2 vehicle: 2024 says CLPS CP-21, 2026 says SpaceX uncrewed demo. No official flight date found, so none given.
+- Saffire = microgravity + forced flow; never present it as lunar data.
 
-## Decisions
-- HANDOFF lives in research/ (task folder rule), matching issue #24's convention.
+## Known gaps
+- PSI Saffire raw data not accessed (psi.nasa.gov is a JS app); Saffire IV-VI not in PSI catalog page.
+- NTRS 20210017780 / 20240007488 (Saffire presentations) found but not opened.
+
+STATUS: DONE
