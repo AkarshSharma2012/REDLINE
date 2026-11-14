@@ -1,0 +1,128 @@
+{
+  "schema_version": "investigations-fixture-1",
+  "fixture": true,
+  "fixture_note": "Development fixture for B11 until B10 ships data/investigations.json. Values copied from research/nasa-context.md and research/bass2.md; not the full PSI catalog.",
+  "sources": {
+    "PSI25": {
+      "title": "NASA PSI, Burning and Suppression of Solids - II (PSI-25)",
+      "url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-25"
+    },
+    "BASS2-TM": {
+      "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report, NASA/TM-20210011385",
+      "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf"
+    },
+    "SAF17": {
+      "title": "Results of Large-Scale Spacecraft Flammability Tests (ICES 2017)",
+      "url": "https://ntrs.nasa.gov/api/citations/20170008805/downloads/20170008805.pdf"
+    },
+    "SAF21": {
+      "title": "Fire Safety Implications of Preliminary Results from Saffire IV and V (ICES-2021-266)",
+      "url": "https://ntrs.nasa.gov/api/citations/20210011521/downloads/ICES%202021-266%200503-2021%20final.pdf"
+    },
+    "SAF24": {
+      "title": "Preliminary Results from the Saffire VI Experiment (ICES-2024-365)",
+      "url": "https://ntrs.nasa.gov/api/citations/20240002981/downloads/Saffire-ICES-2024-ICES-365-accepted%20final.pdf"
+    },
+    "PSICAT": {
+      "title": "NASA, PSI Investigations by Research Area",
+      "url": "https://www.nasa.gov/physical-sciences-informatics-psi/psi-investigations-by-research-area/"
+    }
+  },
+  "investigations": [
+    {
+      "id": "bass-ii",
+      "name": "BASS-II",
+      "psi_id": { "value": "PSI-25", "source": "PSI25", "locator": "investigation page" },
+      "objectives": { "value": "Flame spread and extinction over thin and thick solid samples in low-speed forced flow in microgravity", "source": "BASS2-TM", "locator": "printed pp. 5-6" },
+      "hardware": { "value": ["MSG", "BASS-II flow duct"], "source": "BASS2-TM", "locator": "printed pp. 5-6 (apparatus)" },
+      "fire_safety_areas": { "value": ["prevention", "suppression"], "source": "BASS2-TM", "locator": "title; printed pp. 66-67 (flow response)" },
+      "fuel_type": { "value": ["solid"], "source": "PSI25", "locator": "Experimental table, Fuel Sample Material" },
+      "fuel_sample": { "value": "Thin PMMA-family films, e.g. 100 micron PMMA film 2 cm wide", "source": "PSI25", "locator": "Experimental table, Fuel Sample Material (test B1)" },
+      "o2_pct": { "value": null, "note": "Initial/final O2 readings exist per run; a single range for the investigation was not found in the sources reviewed", "source": "PSI25", "locator": "Experimental table, calibrated O2 columns" },
+      "pressure_kpa": { "value": null, "note": "Not in the experimental table; not found in the sources reviewed", "source": "PSI25", "locator": "Experimental table header" },
+      "airflow_cm_s": { "value": { "min": 2.2, "max": 29 }, "source": "BASS2-TM", "locator": "Table 7.1, printed p. 96 (GMT45-T4, GMT45-T15)" },
+      "gravity": { "value": ["0g"], "source": "BASS2-TM", "locator": "section 2.1" },
+      "variables_varied": { "value": ["flow speed", "oxygen concentration", "sample material"], "source": "PSI25", "locator": "README, Test Matrix explanation" },
+      "variables_fixed": { "value": ["microgravity", "opposed-flow geometry (thin-film series)"], "source": "BASS2-TM", "locator": "section 2.1; Table A.1" },
+      "sensors": { "value": ["video", "radiometer", "O2 sensor", "CO2 sensor", "CO sensor", "air-speed display"], "source": "PSI25", "locator": "Experimental table header" },
+      "key_findings": { "value": "Flow reduction can quench flames near a limit (GMT45-T4 at 18.7% O2, flow 10 to 2.2 cm/s)", "source": "BASS2-TM", "locator": "Table 7.1, printed p. 96" },
+      "habitat_relevance": { "value": ["spacecraft", "station"], "note": "Microgravity ventilation-flow results", "source": "BASS2-TM", "locator": "section 2.1" }
+    },
+    {
+      "id": "saffire-iv",
+      "name": "Saffire-IV",
+      "psi_id": { "value": null, "note": "Not listed in the PSI catalog page reviewed", "source": "PSICAT", "locator": "Combustion Science" },
+      "objectives": { "value": "Large-scale fire spread, heat release and effects on the vehicle atmosphere", "source": "SAF21", "locator": "abstract pp. 1-2" },
+      "hardware": { "value": ["Saffire flow unit (Cygnus)"], "source": "SAF21", "locator": "abstract p. 1" },
+      "fire_safety_areas": { "value": ["prevention", "detection"], "source": "SAF21", "locator": "abstract pp. 1-2" },
+      "fuel_type": { "value": ["solid"], "source": "SAF21", "locator": "Table 1, p. 3" },
+      "fuel_sample": { "value": "SIBAL cotton-fiberglass 50 cm; two-sided PMMA 18 cm (40 cm wide)", "source": "SAF21", "locator": "Table 1, p. 3" },
+      "o2_pct": { "value": { "min": 22.0, "max": 22.0 }, "source": "SAF21", "locator": "Table 1, p. 3" },
+      "pressure_kpa": { "value": { "min": 100.0, "max": 100.0 }, "source": "SAF21", "locator": "Table 1, p. 3" },
+      "airflow_cm_s": { "value": { "min": 20, "max": 20 }, "source": "SAF21", "locator": "Table 1, p. 3" },
+      "gravity": { "value": ["0g"], "source": "SAF21", "locator": "abstract p. 1" },
+      "variables_varied": { "value": ["sample material", "sample geometry"], "source": "SAF21", "locator": "Table 1, p. 3" },
+      "variables_fixed": { "value": ["flow speed", "concurrent flow", "atmosphere"], "source": "SAF21", "locator": "Table 1, p. 3" },
+      "sensors": { "value": ["video", "flame temperature", "radiometer", "O2 calorimetry", "CO2", "CO", "O2", "HF", "HCl", "aerosols", "vehicle temperature"], "source": "SAF21", "locator": "abstract pp. 1-2" },
+      "key_findings": { "value": "Heat release reached up to 10 kW; average vehicle conditions did not reach unacceptable levels", "source": "SAF21", "locator": "abstract p. 2" },
+      "habitat_relevance": { "value": ["spacecraft", "station"], "source": "SAF21", "locator": "section IV, p. 11" }
+    },
+    {
+      "id": "saffire-v",
+      "name": "Saffire-V",
+      "psi_id": { "value": null, "note": "Not listed in the PSI catalog page reviewed", "source": "PSICAT", "locator": "Combustion Science" },
+      "objectives": { "value": "Large-scale fire spread, heat release and effects on the vehicle atmosphere", "source": "SAF21", "locator": "abstract pp. 1-2" },
+      "hardware": { "value": ["Saffire flow unit (Cygnus)"], "source": "SAF21", "locator": "abstract p. 1" },
+      "fire_safety_areas": { "value": ["prevention", "detection"], "source": "SAF21", "locator": "abstract pp. 1-2" },
+      "fuel_type": { "value": ["solid"], "source": "SAF21", "locator": "Table 1, p. 3" },
+      "fuel_sample": { "value": "Cotton jersey 50 cm; one-sided PMMA 18 cm; structured PMMA 20 cm", "source": "SAF21", "locator": "Table 1, p. 3" },
+      "o2_pct": { "value": { "min": 25.4, "max": 26.2 }, "source": "SAF21", "locator": "Table 1, p. 3" },
+      "pressure_kpa": { "value": { "min": 70.7, "max": 72.6 }, "source": "SAF21", "locator": "Table 1, p. 3" },
+      "airflow_cm_s": { "value": { "min": 20, "max": 20 }, "source": "SAF21", "locator": "Table 1, p. 3" },
+      "gravity": { "value": ["0g"], "source": "SAF21", "locator": "abstract p. 1" },
+      "variables_varied": { "value": ["sample material", "sample surface structure", "flow direction (one opposed test)"], "source": "SAF21", "locator": "Table 1, p. 3; p. 10" },
+      "variables_fixed": { "value": ["flow speed", "atmosphere"], "source": "SAF21", "locator": "Table 1, p. 3" },
+      "sensors": { "value": ["video", "flame temperature", "radiometer", "O2 calorimetry", "CO2", "CO", "O2", "HF", "HCl", "aerosols", "vehicle temperature"], "source": "SAF21", "locator": "abstract pp. 1-2" },
+      "key_findings": { "value": "Surface structure mattered for flame spread", "source": "SAF21", "locator": "p. 10" },
+      "habitat_relevance": { "value": ["spacecraft", "lunar-base"], "note": "Reduced-pressure, raised-O2 atmosphere", "source": "SAF21", "locator": "section IV, p. 11" }
+    },
+    {
+      "id": "saffire-vi",
+      "name": "Saffire-VI",
+      "psi_id": { "value": null, "note": "Not listed in the PSI catalog page reviewed", "source": "PSICAT", "locator": "Combustion Science" },
+      "objectives": { "value": "Heat release of large fires compared with vehicle CO2, CO and temperature", "source": "SAF24", "locator": "abstract pp. 1-2" },
+      "hardware": { "value": ["Saffire flow unit (Cygnus)"], "source": "SAF24", "locator": "abstract p. 1" },
+      "fire_safety_areas": { "value": ["prevention", "detection"], "source": "SAF24", "locator": "section IV, p. 6" },
+      "fuel_type": { "value": ["solid"], "source": "SAF24", "locator": "Table 1, p. 3" },
+      "fuel_sample": { "value": "SIBAL 50 cm; two-sided PMMA 18 cm; one-sided PMMA 18 cm; Nomex 7 cm (all 41 cm wide)", "source": "SAF24", "locator": "Table 1, p. 3" },
+      "o2_pct": { "value": { "min": 28.8, "max": 31.0 }, "source": "SAF24", "locator": "Table 1, p. 3" },
+      "pressure_kpa": { "value": { "min": 54.1, "max": 55.2 }, "source": "SAF24", "locator": "Table 1, p. 3" },
+      "airflow_cm_s": { "value": { "min": 20, "max": 20 }, "source": "SAF24", "locator": "Table 1, p. 3" },
+      "gravity": { "value": ["0g"], "source": "SAF24", "locator": "abstract p. 1" },
+      "variables_varied": { "value": ["sample material", "sample sidedness"], "source": "SAF24", "locator": "Table 1, p. 3" },
+      "variables_fixed": { "value": ["flow speed", "concurrent flow", "sample width"], "source": "SAF24", "locator": "Table 1, p. 3" },
+      "sensors": { "value": ["video", "O2 calorimetry", "CO2", "CO", "vehicle temperature", "smoke detector"], "source": "SAF24", "locator": "abstract pp. 1-2; section IV, p. 6" },
+      "key_findings": { "value": "Fires of 1.5-3.2 kW raised temperature significantly only near the fire; a typical smoke-alarm threshold was reached only at 981 s", "source": "SAF24", "locator": "section IV Conclusion, p. 6" },
+      "habitat_relevance": { "value": ["lunar-base", "pressurized-rover", "mars-base"], "note": "Atmosphere close to, but not the same as, 56.5 kPa / 34% O2; microgravity, not lunar gravity", "source": "SAF24", "locator": "section IV, p. 6" }
+    },
+    {
+      "id": "saffire-ii",
+      "name": "Saffire-II",
+      "psi_id": { "value": "SAFFIRE-II (Complete)", "source": "PSICAT", "locator": "Combustion Science" },
+      "objectives": { "value": "Verify oxygen flammability limits in low gravity", "source": "SAF17", "locator": "PDF p. 4" },
+      "hardware": { "value": ["Saffire flow unit (Cygnus)"], "source": "SAF17", "locator": "PDF p. 4" },
+      "fire_safety_areas": { "value": ["prevention"], "source": "SAF17", "locator": "PDF p. 4" },
+      "fuel_type": { "value": ["solid"], "source": "SAF17", "locator": "Table I, PDF p. 29" },
+      "fuel_sample": { "value": "9 samples, 5 cm wide: silicone, SIBAL, PMMA, PMMA with Nomex HT90-40", "source": "SAF17", "locator": "Table I, PDF p. 29" },
+      "o2_pct": { "value": { "min": 22, "max": 22 }, "note": "Approximate ISS reading", "source": "SAF17", "locator": "PDF p. 9" },
+      "pressure_kpa": { "value": null, "note": "Not found in the sources reviewed", "source": "SAF17", "locator": "Table I, PDF p. 29" },
+      "airflow_cm_s": { "value": { "min": 20, "max": 25 }, "source": "SAF17", "locator": "Table I, PDF p. 29" },
+      "gravity": { "value": ["0g"], "source": "SAF17", "locator": "PDF p. 4" },
+      "variables_varied": { "value": ["sample material", "flow speed (one test)"], "source": "SAF17", "locator": "Table I, PDF p. 29" },
+      "variables_fixed": { "value": ["sample width", "atmosphere"], "source": "SAF17", "locator": "Table I, PDF p. 29" },
+      "sensors": { "value": ["video"], "note": "Other sensors not found in the sources reviewed", "source": "SAF17", "locator": "PDF pp. 9, 24" },
+      "key_findings": { "value": "Silicone flammability appeared reduced compared with 1 g at the flows tested", "source": "SAF17", "locator": "PDF p. 26" },
+      "habitat_relevance": { "value": ["spacecraft", "station"], "source": "SAF17", "locator": "PDF p. 4" }
+    }
+  ]
+}
