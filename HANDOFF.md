@@ -1,7 +1,7 @@
 # HANDOFF — issue #29 (S4: Evidence Engine build spec)
 
 ## Done
-- `docs/specs/evidence-engine.md` (~330 lines, no code): inputs, extraction + hand-check workflow,
+- `docs/specs/evidence-engine.md` (409 lines, no code): inputs, extraction + hand-check workflow,
   output JSON (S1 schema + two additive fields), compareRow rule table (R1 rules E M F T W D V P G X H A U,
   exact conditions), labelMaterial algorithm with reason codes, uncertainty handling, lunar 0 g / 1 g
   estimate, wording table, 14 label test cases + 3 compareRow golden cases + 2 baseline cases +
