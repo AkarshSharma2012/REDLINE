@@ -10,6 +10,7 @@
 - Cross-checked against branches #18, #19, #24 and #33 (consistent; #19 re-checked after it gained research/bass2.md).
 - Re-checked #19 at 3db4813 (BASS-II revalidation): only overlap is its "not lunar predictions" scope note, consistent with this file.
 - Re-checked #19 at 38bb557: new bass2.md/HANDOFF changes have no Saffire/FM2/STD-6001/JSC 27301 content; no conflict. Branch #20 has no research commits yet (gap noted, not used).
+- Re-checked #24 at 143de66 (8.2 psia / 34% O2 rows, FERKUL26 p.24) and #33 at 3be0fae (cites NASA-STD-6001B w/Change 3, same PDF URL; says Test 1 criteria still need a verified page): consistent; this file supplies those Test 1 pages. #20 still has no research commits.
 
 ## Key decisions
 - FM2 has two published test plans (2024: 21%/14.7 psia + 34%/8.2 psia, SIBAL + PMMA; 2026: 8.2 psia at
