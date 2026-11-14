@@ -312,4 +312,5 @@ Untested combinations become candidate questions for the work NASA already has u
   cites the same Test 1 locators (§7.1.2–7.1.4, pp. 27–29), consistent with this file.
   `origin/task/24-r7-cabin-atmosphere-and-pre-breathe-valu:research/atmosphere.md` uses FERKUL26 p. 24 for 8.2 psia / 34% O2,
   consistent with PDF p. 25 here. `origin/task/33-w1-draft-the-submission-write-up-data-ai:docs/submission-draft.md` lists
-  SAFFIRE PSI entries without data; consistent with PSICAT. Branch #19 had no research files.
+  SAFFIRE PSI entries without data; consistent with PSICAT. `origin/task/19-r2-bass-ii-psi-25-data-access-and-draft:research/bass2.md`
+  (re-checked 14 Nov 2026) covers ISS microgravity PMMA data only and makes no claims about Test 1, JSC 27301, FM2 or Saffire; no conflict.
