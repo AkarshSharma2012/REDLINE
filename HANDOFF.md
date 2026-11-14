@@ -2,12 +2,12 @@
 
 STATUS: IN PROGRESS
 
-Scope: research/pmma-endpoints.md and research/pmma-rows.csv only, plus this root handoff. No implementation or configuration changes.
+Completed: research/pmma-endpoints.md and six draft rows in research/pmma-rows.csv. Read README.md/AGENTS.md first; reviewed fetched issue 18 schema, issue 19 row format and issue 20 lunar report with git show. No prior local handoff or misplaced research/docs handoff existed.
 
-Completed: read README.md and AGENTS.md; no existing local HANDOFF.md or misplaced handoff existed. Verified current task/21 branch and clean starting tree. Reviewed fetched issue 18 evidence schema, issue 19 draft-row format and issue 20 lunar research with git show. Opened NASA-hosted Marcum 2016 paper and MIST FY2025/FY2026 reports.
+Findings: accessible NASA MIST prose gives approximate LOC-FS 18.8% (1g) and 16.2% (ISS) for 12.7 mm rods at 100 kPa. Numerical LOC-FR not found in the sources reviewed; CSV records that gap without fabricated values. Marcum transfer requires geometry/stretch/blockage/buoyancy corrections and was empirically aligned to flight data. Extrapolation and sampled stable-flame observation are explicitly distinct from measured oxygen limits. No lunar label or implementation written.
 
-Findings to preserve: separate LOC-FS from LOC-FR; retain approximate reported values and unresolved conditions; empirical corrected blowoff agreement is not universal Earth-to-space transfer. Journal access failures must be explicit.
+Decisions: preserve the issue 18 first 17 columns and add explicit provenance/exclusion fields. Earlier numeric pair flow/heating remain unresolved rather than borrowing later apparatus settings. Publication access failures and conflicting pressure summaries are documented. Other agents' files were not edited.
 
-Next: finish source-access inventory, write report and draft rows, validate CSV/provenance and scope, commit and push task branch.
+Validation: Import-Csv round-trip checked six unique IDs, complete title/URL/locator/uncertainty fields, FS transcription, blank FR values and excluded extrapolation. Explicit NASA prose values only; no graph digitization. Web screenshot service failed; PDF text was accessible. git diff --check passed. Only research deliverables and root HANDOFF.md changed.
 
-Verification so far: NASA PDF text sections read; web PDF screenshot requests failed. Numerical rows will use explicit prose values, not graph digitization.
+Next: final scope/provenance checks, final completion commit and push current task branch.
