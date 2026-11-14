@@ -61,4 +61,3 @@ Author strings are abbreviated from each report's title page. Keys are new and l
 ## Verification
 
 CSV integrity checks passed (exact header, row lengths, unique IDs, draft status, blank unknown fields and page-level provenance). `node --test`: 98 passed, none failed. Python static-server/browser smoke check unavailable because Python is absent from PATH; no UI was modified. Full results are recorded in root `HANDOFF.md`.
-
