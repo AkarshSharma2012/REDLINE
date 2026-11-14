@@ -37,3 +37,11 @@ Verification: source-to-claim review and git diff --check. Only research Markdow
 Final verification: all S1–S10 source keys have definitions; committed paths are research/atmosphere.md and research/HANDOFF.md only; whitespace check passed. Source locators and protocol distinctions reviewed. No implementation tests apply to this research-only task. Ready for conductor integration.
 
 STATUS: DONE
+
+## Dated-estimate comparison audit, 14 November 2026
+
+Reviewed existing completed work before editing. Added S11, the 2019 NASA research plan, with its Table 4 values and a warning that its estimates differ from the 2020 S5 table. Keep dated comparisons separate; do not merge endpoints or silently substitute a historical estimate for the later human-tested S7 protocol. Reopened S5 PDF p.38 and S7 Methods/Results; values in the existing draft agree with accessible text. S5 screenshot failed with cache miss; no image content inferred. Read fetched issue #18 evidence spec with git show; #19 and #22 have no research files in their fetched trees.
+
+Verification: NASA source text and exact Table 4 locator reviewed; source-key, Markdown-only scope and whitespace checks performed before commit. No app code, configs or scaffolding changed. Next: conductor integration only.
+
+STATUS: DONE

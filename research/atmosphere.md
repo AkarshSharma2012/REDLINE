@@ -1,4 +1,4 @@
-﻿# Cabin atmospheres and EVA pre-breathe evidence
+# Cabin atmospheres and EVA pre-breathe evidence
 
 Issue #24; NASA sources reviewed 14 November 2026. Research only. This supports an illustrative comparison, not mission planning or medical decisions. Source IDs below resolve to titles, URLs and exact locators. No direct quotations are used.
 
@@ -30,6 +30,12 @@ All durations below are oxygen pre-breathe or source-defined protocol comparison
 | 8.2 psia / 34% O2 | 0–15 min | 0–30 min | S5 short-protocol estimates, not a demonstrated zero-time lunar procedure. S4 separately models a 15 min protocol and requires ground validation before operational implementation. |
 
 **Source and assumptions for the whole comparison table:** [S5, final slide, PDF p.38, “Beyond 8.2/34 for Exploration Prebreathe”]. Its footnote assumes a 6 h EVA at 4.3 psia suit pressure; it includes an unvalidated / unavailable-for-flight-use annotation. Preserve that limitation for the exploratory short-time values. Do not present the planetary column as measured lunar results or apply it to other suit pressures.
+
+### Earlier published estimates differ
+
+The 2019 NASA research plan gives a different estimated planetary comparison at 4.3 psi suit pressure: 14.7 psi / 21% O2 requires a minimum 4 h 30 min and likely more than 5 h; 10.2 psi / 26.5% O2 is listed at 3 h; 8.2 psi / 34% O2 at 0–15 min. Its microgravity column lists 4 h (or approximately 2 h 40 min for ISLE, requiring intermediate 10.2 psi / 26.5% O2), 40 min, and 0–15 min respectively. These are the values of that dated trade study, not replacements for S5 or S7. [S11, Table 4, printed p.42 / PDF p.52]
+
+**Inference:** differences between S11 and S5 show why an illustrative slider must retain source date and protocol assumptions. Do not combine their endpoints into a new range or describe either historical comparison as a current mission requirement. The reason for every numerical difference was not established in the sources reviewed.
 
 ### Why 40 minutes is not the complete 10.2 psia procedure
 
@@ -68,3 +74,6 @@ S6 describes a past resting in-suit protocol: 4 h breathing 100% oxygen at 14.7 
 **Current cross-branch audit:** Inspected fetched branches with git branch -r and git ls-tree. Read origin/task/18-r1-evidence-table-spec-and-comparability:research/evidence-spec.md using git show; it is now available. Its separation of pressure, oxygen and source locators supports the illustrative-control recommendation, but no atmosphere/PB number relies on this secondary research. The fetched #19 branch has no research file; #33 has a submission draft outside research, not an atmosphere dataset. These observations supersede earlier branch-availability notes in the handoff history.
 
 **S10 — NASA, _Exploration EVA System Concept of Operations_**, EVA-EXP-0042 Revision B, October 19, 2020. https://ntrs.nasa.gov/api/citations/20205008200/downloads/EVA-EXP-0042%20xEVA%20System%20Con%20Ops%20Rev%20B%20Final%20dtd%2010192020_REF%20DOC.pdf . Locator: section 4.6.2, printed/PDF p.65, atmosphere bullets immediately before Figure 4.6.2-1. Conceptual pressurized-rover capability; no flight certification inferred.
+
+
+**S11 — Abercromby et al., _Integrated Extravehicular Activity Human Research & Testing Plan: 2019_**, NASA/TP-2019-220232. https://www.nasa.gov/wp-content/uploads/2018/11/nasa-tp-2019-220232.pdf . Locator: section I.1, Table 4, printed p.42 / PDF p.52; section I.2, printed p.43 / PDF p.53. The table reports estimated durations; adjacent text calls for ground validation. Its validation-status statements describe the 2019 plan and must be read alongside later S7 results.
