@@ -141,9 +141,12 @@ export function sourceFor(kind, row, sources = {}) {
 export function retrieve(question, data = {}, { limit = 8 } = {}) {
   const terms = queryTerms(question);
   const sources = data.evidence?.sources || {};
+  // Material display names and aliases (evidence.json materials) are search help only (S1 §4.1).
+  const aliases = new Map((data.evidence?.materials || []).map((m) => [m.material_id, [m.display_name, ...(m.aliases || [])].join(' ')]));
   const docs = [];
   for (const row of data.evidence?.evidence || []) {
     const fields = fieldTokens(row);
+    if (aliases.has(row.material_id)) fields.push({ field: 'display_name', tokens: new Set(tokenize(aliases.get(row.material_id))) });
     const g = gravityWords(row.gravity_g);
     if (g) fields.push({ field: '_gravity', tokens: new Set(tokenize(g)) });
     docs.push({ kind: 'evidence', id: row.evidence_id, row, fields });
