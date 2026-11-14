@@ -14,6 +14,7 @@
   37/33/29/25% O2, one fabric). Kept separate, not merged.
 - FM2 vehicle: 2024 says CLPS CP-21, 2026 says SpaceX uncrewed demo. No official flight date found, so none given.
 - Saffire = microgravity + forced flow; never present it as lunar data.
+- Wording conflict: AGENTS.md lists "never tested" as allowed wording; the #22 issue rules forbid it. This file follows the issue ("not found in the sources reviewed"). Flag for a human to align AGENTS.md.
 
 ## Known gaps
 - PSI Saffire raw data not accessed (psi.nasa.gov is a JS app); Saffire IV-VI not in PSI catalog page.
