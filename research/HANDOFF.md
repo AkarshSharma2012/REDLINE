@@ -59,3 +59,13 @@ Rechecked S5 PDF p.38 and S7 Methods / Results directly against NASA text. Added
 Verification: exact S5 timing rows and suit/EVA footnote, S7 conditions and study exclusions, source-key completeness, research-only changed paths and git diff --check. No code, configs or scaffolding changed.
 
 STATUS: DONE
+
+## NASA baseline follow-up, 14 November 2026
+
+Added S12, NASA Life Support Baseline Values and Assumptions Document Rev2 (2022), section 4.6.3.6, printed p.142 / PDF p.156. It maps 8.2/34 to frequent-EVA rovers/habitats and 10.2/26.5 to intermediate/contingency-EVA vehicles including landers, and summarizes 15/40-minute durations assuming a 4.3 psia suit. Kept these dated recommendations separate from HLS planning evidence, estimated planetary ranges and the later human-tested protocol.
+
+Read README, AGENTS and existing research handoff before editing. Read fetched #18 evidence specification and #19 BASS-II research via git show; #22 contains no research files. Reopened S5 comparison, S7 abstract and S12. No app/config/scaffold changes. Next: conductor review and integration only.
+
+Verification: source-to-claim correspondence and exact S12 page/section checked; S5 values and S7 conditions checked directly. Whitespace and changed-path scope checked before commit. No implementation tests apply to this research-only change.
+
+STATUS: DONE

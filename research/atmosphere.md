@@ -13,6 +13,12 @@ Issue #24; NASA sources reviewed 14 November 2026. Research only. This supports 
 
 ## Published pre-breathe durations: preserve the protocol context
 
+### NASA life-support baseline: vehicle roles and summary values
+
+The 2022 NASA baseline recommends **8.2 psia / 34% O2** for pressurized rovers and surface habitats with frequent EVAs, and assigns **10.2 psia / 26.5% O2** to landers and vehicles with intermediate or contingency EVA needs. It summarizes pre-breathe as **15 min** and **40 min**, respectively, assuming a **4.3 psia** suit. These are baseline recommendations and summary values, not evidence that either duration is a validated planetary procedure. [S12, section 4.6.3.6, printed p.142 / PDF p.156]
+
+**Inference:** retain this dated generic lander assignment alongside the HLS-specific planning sources above; do not treat all landers or mission generations as sharing one selected atmosphere. Do not combine these summary times with S5 planetary estimates or S7 chamber results.
+
 ### Later human-test evidence
 
 NASA reports a **20-minute pre-breathe at 85% O2**, after **48 hours** acclimation to **8.2 psia / 34% O2**, preceding simulated planetary EVAs at **34 kPa / 85% O2 / 15% N2**. Two mild Type I DCS cases occurred in 50 subject EVA exposures; ten planned exposures were excluded for mask-fit, metabolic-rate or subject-safety concerns. The abstract reports that acceptance criteria were met and describes transition to operational use for upcoming lunar missions. This is chamber-test evidence for a specific protocol, not a universal 20-minute rule or evidence of a completed lunar EVA. [S7, Methods; Results and Discussion]
@@ -79,3 +85,7 @@ S6 describes a past resting in-suit protocol: 4 h breathing 100% oxygen at 14.7 
 **S11 — Abercromby et al., _Integrated Extravehicular Activity Human Research & Testing Plan: 2019_**, NASA/TP-2019-220232. https://www.nasa.gov/wp-content/uploads/2018/11/nasa-tp-2019-220232.pdf . Locator: section I.1, Table 4, printed p.42 / PDF p.52; section I.2, printed p.43 / PDF p.53. The table reports estimated durations; adjacent text calls for ground validation. Its validation-status statements describe the 2019 plan and must be read alongside later S7 results.
 
 **Latest verification pass (14 November 2026):** Rechecked S4 Table 1, S5 PDF p.38 and S7 Methods / Results against accessible NASA text. S1 could not be fetched in this pass; its citation is retained from the earlier successful review documented above, not inferred from this failed request. S7 remains an abstract-only source without fixed pagination.
+
+**S12 - Ewert, Chen and Powell (editors), _Life Support Baseline Values and Assumptions Document_**, NASA/TP-2015-218570/REV2, February 2022. https://ntrs.nasa.gov/api/citations/20210024855/downloads/BVAD_2.15.22-final.pdf . Locator: section 4.6.3.6, Exploration Prebreathe, printed p.142 / PDF p.156. Vehicle-role recommendations and summary durations; not a complete flight procedure.
+
+**Baseline follow-up audit (14 November 2026):** Opened S12 directly and checked its vehicle roles, durations and suit-pressure assumption at the cited page. Reopened S5 final-slide comparison and S7 public abstract; their different conditions and evidence categories remain separate. Read fetched #18 evidence specification and #19 BASS-II research with git show; neither supplies a replacement pre-breathe dataset. Earlier access notes are historical records, not claims of fresh access to every source.
