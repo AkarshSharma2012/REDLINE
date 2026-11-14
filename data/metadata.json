@@ -1,5 +1,17 @@
 {
   "sources": {
+    "ZHAO15": {
+      "title": "Concurrent flame growth, spread and extinction over composite fabric samples in low speed purely forced flow in microgravity",
+      "authors": "Zhao, T'ien, Ferkul and Olson",
+      "year": 2015,
+      "url": "https://ntrs.nasa.gov/api/citations/20150008962/downloads/20150008962.pdf"
+    },
+    "SAFFIRE21": {
+      "title": "Fire Safety Implications of Preliminary Results from Saffire IV and V Experiments on Large Scale Spacecraft Fires",
+      "authors": "Urban et al.",
+      "year": 2021,
+      "url": "https://ntrs.nasa.gov/api/citations/20210011521/downloads/ICES%202021-266%200503-2021%20final.pdf"
+    },
     "BASS2-TM": {
       "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
       "authors": "Not stated in extraction",

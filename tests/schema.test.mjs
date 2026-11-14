@@ -18,7 +18,7 @@ function fixture() {
 test('published CSV and JSON agree; every imported row is source-linked draft evidence', () => {
   assert.deepEqual(validateEvidence(artifact), { ok: true, errors: [] });
   assert.deepEqual(convertRows(csv), artifact.evidence);
-  assert.equal(artifact.evidence.length, 29);
+  assert.equal(artifact.evidence.length, parseCsv(csv).length);
   assert.ok(artifact.evidence.every((r) => r.review_status === 'draft' && r.source_locator.trim() && artifact.sources[r.source_key]));
   assert.ok(!artifact.evidence.some((r) => /-E0$|-E35$|-CF$|INTERCEPT|M25-FR|STABLE/.test(r.evidence_id)));
   assert.ok(!artifact.materials.find((m) => m.material_id === 'etfe').aliases.includes('Teflon'));
@@ -71,7 +71,7 @@ test('build validates before replacing output and supports an explicit output pa
   try {
     const output = join(dir, 'evidence.json');
     const data = await buildEvidence({ output, builtAt: '2026-11-14T12:00:00Z' });
-    assert.equal(data.evidence.length, 29);
+    assert.equal(data.evidence.length, parseCsv(csv).length);
     const before = await readFile(output, 'utf8');
     const input = join(dir, 'invalid.csv');
     await writeFile(input, csv.replace('"draft"', '"invalid-status"'));
