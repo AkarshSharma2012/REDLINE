@@ -22,3 +22,9 @@
 - All issue deliverables are complete. No human dependency remains for the planning document.
 
 STATUS: DONE
+
+## Resumed verification (14 November 2026)
+
+- Reopened both NASA sources and reviewed the fetched NASA-context research branch. Narrowed the spoken standards claim to the JSC flight-hardware plan to preserve its scope.
+- Rechecked six timed beats, five criterion rows, source register, falsifiable audit and docs-only changes. Timing remains a rehearsal target.
+- STATUS: DONE remains applicable.
