@@ -1,4 +1,4 @@
-﻿# Issue #24 handoff
+# Issue #24 handoff
 
 STATUS: DONE
 
@@ -15,3 +15,9 @@ Next: conductor can review/integrate the research; no implementation is authoriz
 ## Follow-up review, 14 November 2026
 
 Added NASA NTRS 20230015380 human-test evidence for a 20-minute protocol with its gas, pressure and acclimation conditions. Revised the blanket approval caveat: this abstract reports acceptance and transition to operational use for its specific protocol; a full procedure for each preset/configuration was not found. This supersedes the broader approval wording in the preceding handoff. The accessible NTRS abstract has section locators but no fixed page numbers; linked DOCX rendering failed. Reopened S2/S5/S6 successfully; S1 failed this time and is explicitly retained as inherited extraction evidence. Rechecked fetched branch inventories and read issue #33 draft; no new atmosphere dataset was available. Only research Markdown changed. Verification: source-to-claim review, source-ID review and git diff --check.
+
+## Final source correction, 14 November 2026
+
+Added S8 (NASA NTRS 20220013669), section II p.2: the conceptual Surface Habitat supports both 8.2/34 and 10.2/26.5. Corrected the missing-habitat-assignment statement while keeping the flight-selection caveat. Successfully reopened S1 and directly checked atmosphere bullets, resolving the inherited access gap. Rechecked S5 final-slide ranges, S6 protocol/future-options pages, and S7 abstract. Cross-branch inventories remain unchanged. No code or configuration changed.
+
+STATUS: DONE
