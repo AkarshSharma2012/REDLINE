@@ -51,8 +51,10 @@ least five specimens pass the acceptance criteria." [§7.1.4 c, p. 29] Finding t
 recommended when the worst-case environment is uncertain. [§7.1.4 f(1), pp. 29–30]
 
 **Gravity.** A text search of the extracted standard for "gravity" (which also matches
-"microgravity") returned no hits. Nothing about reduced gravity was found in the extracted
-text of NASA-STD-6001B w/Change 3. The reduced-gravity caveat comes from JSC 27301 (section 2).
+"microgravity") found one hit, and it is not in Test 1. Appendix A.2.1.3 (Test 2, Heat and Visible
+Smoke Release Rates, supplemental data) lists microgravity among factors a fire risk assessment
+should consider. [STD6001 App. A.2.1.3, pp. 59–60] No reduced-gravity wording was found in
+section 7.1 (Test 1). The reduced-gravity caveat for Test 1 comes from JSC 27301 (section 2).
 
 **Test atmospheres used in practice.** A 2026 NASA presentation says Test 1 has historically been
 run at 30% O2, 10.2 psia, described as the Shuttle pre-EVA atmosphere. [FERKUL26, PDF p. 27]
@@ -265,7 +267,7 @@ Untested combinations become candidate questions for the work NASA already has u
 - **[STD6001]** NASA, *Flammability, Offgassing, and Compatibility Requirements and Test
   Procedures*, NASA-STD-6001B w/Change 3 (approved 2011-08-26; Change 3 revalidated 2025-6-9).
   https://standards.nasa.gov/sites/default/files/standards/NASA/B-w/CHANGE-3/3/2025_06_25_NASA-STD-6001B_w_Change_3_FINAL_Admin-Change-FINAL.pdf
-  Locators: cover p. 1; history log p. 2; §7.1 pp. 27–30.
+  Locators: cover p. 1; history log p. 2; §7.1 pp. 27–30; App. A.2.1.3 pp. 59–60.
 - **[JSC27301]** NASA JSC, *Materials and Processes Selection, Control, and Implementation Plan
   for JSC Flight Hardware*, JSC 27301 Rev J, 31 July 2025.
   PDF: https://standards.nasa.gov/system/files/tmp/JSC-27301J_Final.pdf .
