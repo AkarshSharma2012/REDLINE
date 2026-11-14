@@ -23,8 +23,19 @@ schema validity and scientific review remain separate from this stricter audit.
 ## Verification
 
 - Before changes: `node --test` — 96 passed, zero failed.
-- Final audit, full suite and local HTTP page check: pending.
+- `node --test tests/data-integrity.test.mjs` — 9 tests, 6 passed, 3 failed:
+  O2 completeness, pressure completeness and known endpoint. Each lists all 15
+  PSI25 IDs above. These are data findings, not suppressed or marked TODO.
+- `node --test --test-reporter=tap` — 105 tests, 102 passed, 3 failed, exactly
+  the new completeness findings. All 96 pre-existing tests still pass.
+- `python -m http.server 8087 --bind 127.0.0.1` — could not start: Python is
+  not on PATH; neither `py` nor `python3` was available. Browser/page verification
+  was therefore not performed. This task changes tests only, no UI.
 
 ## Next
 
-Run final verification; record results and push this issue branch.
+Data owners / issue owner: address the documented completeness-policy conflict
+before merging a suite that requires every draft row to be quantitatively complete.
+Test implementation and execution are finished; a green full suite is not claimed.
+
+STATUS: DONE
