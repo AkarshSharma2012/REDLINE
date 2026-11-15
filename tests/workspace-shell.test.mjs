@@ -272,3 +272,20 @@ test('motion: reduced motion is honored live and a failed GSAP import never bloc
   assert.equal(createMotion({ window: null, importer: async () => gsap }).enter({}), false, 'no animation before load');
   assert.equal(prefersReducedMotion(null), false);
 });
+
+test('Pages subpath: page and workspace modules use only relative, existing local paths', async () => {
+  const { existsSync } = await import('node:fs');
+  for (const m of html.matchAll(/\b(?:src|href)="([^"#]+)"/g)) {
+    if (/^https?:/.test(m[1])) continue;
+    assert.doesNotMatch(m[1], /^\//, `${m[1]} must be relative for a /REDLINE/ subpath`);
+    assert.ok(existsSync(new URL(m[1], root)), m[1]);
+  }
+  for (const f of ['workspace.js', 'workspace-evidence.js', 'workspace-motion.js']) {
+    const src = await read(`src/ui/${f}`);
+    for (const m of src.matchAll(/(?:from\s+|import\()\s*'([^']+)'/g)) {
+      assert.match(m[1], /^\.\.?\//, `${f}: ${m[1]} relative`);
+      if (m[1] === './rover-viewer.js') continue; // optional viewer lane module; absence is handled
+      assert.ok(existsSync(new URL(`src/ui/${m[1]}`, root)), `${f}: ${m[1]}`);
+    }
+  }
+});
