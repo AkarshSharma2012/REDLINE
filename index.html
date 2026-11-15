@@ -106,18 +106,20 @@
     </section>
     <div id="ws-sep-controls" class="ws-sep" role="separator" aria-orientation="vertical" aria-label="Resize setup pane" aria-controls="ws-pane-controls" aria-valuemin="220" aria-valuemax="400" aria-valuenow="240" tabindex="0"></div>
 
-    <section id="ws-pane-sources" class="region region-results ws-pane" aria-labelledby="results-heading" tabindex="-1">
-      <h2 id="results-heading" class="region-title">Results</h2>
-      <ul class="legend" aria-label="Label key">
-        <li><span class="chip chip-burned">Burned in testing at these conditions</span></li>
-        <li><span class="chip chip-near">Close to a measured limit</span></li>
-        <li><span class="chip chip-ne">Not established</span></li>
-      </ul>
+    <section id="ws-pane-sources" class="region region-results ws-pane" aria-labelledby="sources-heading" tabindex="-1">
+      <h2 id="sources-heading" class="region-title">NASA source records</h2>
       <div id="status" role="status" aria-live="polite" class="text-2"></div>
-      <div id="results-table" class="table-scroll"></div>
-      <h2 id="sources-heading" class="region-title ws-subtitle">NASA source records</h2>
-      <p class="region-note">Rows from the evidence file, cited to NASA PSI investigations and NTRS reports.</p>
       <div id="ws-sources"><p class="text-3">Loading source records…</p></div>
+      <p class="region-note">Rows from the evidence file, cited to NASA PSI investigations and NTRS reports.</p>
+      <details id="ws-results-disclosure" class="ws-disclosure ws-results" open>
+        <summary><span id="results-heading">Results</span> and label key</summary>
+        <ul class="legend" aria-label="Label key">
+          <li><span class="chip chip-burned">Burned in testing at these conditions</span></li>
+          <li><span class="chip chip-near">Close to a measured limit</span></li>
+          <li><span class="chip chip-ne">Not established</span></li>
+        </ul>
+        <div id="results-table" class="table-scroll"></div>
+      </details>
       <details id="ws-fixes-disclosure" class="ws-disclosure">
         <summary>What changes the label and candidate experiments</summary>
         <div id="fixes"></div>
@@ -128,7 +130,6 @@
     <section id="ws-pane-visual" class="region region-evidence ws-pane" aria-labelledby="evidence-heading" tabindex="-1">
       <h2 id="evidence-heading" class="region-title">Model and evidence</h2>
       <div class="ws-visual">
-        <p class="ws-model-label">Illustrative cabin model - not a fire simulation</p>
         <div id="ws-stage-empty" class="ws-stage-empty">
           <p class="ws-stage-title">Rover cabin model not loaded</p>
           <p class="ws-stage-text">Loads on request. Pick a cabin item in the model or the list to scope the NASA records.</p>

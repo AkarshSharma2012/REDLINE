@@ -42,6 +42,10 @@ luminance", "contrast ratio"); the numbers are our calculation, not a source's.
 Dark theme only. Hex values are **[Inference]** choices; the ratios are computed (see note at
 top). "On" columns = contrast against that background.
 
+### 2.0 Amendment (#306, user-authorized black/white neutral theme)
+
+The user required a high-contrast black and white UI with no blue theme. Live tokens in `src/styles.css` now are: `bg` and `surface-1` `#000000`, `surface-2` `#141414`, `surface-selected` `#262626`, `divider` `#333333`, `border-control` `#8C8C8C` (6.25:1 on black), `text-1` `#FFFFFF` (21:1), `text-2` `#D0D0D0` (13.62:1), `text-3` `#ADADAD` (9.36:1), `accent` `#FFFFFF` (selection/focus/links, neutral). `ev-ne` (Not established) becomes neutral `#C8C8C8` (12.55:1); its hollow-circle glyph and dashed outline still distinguish it. `ev-burned` and `ev-near` stay unchanged and remain reserved for the defined label outcomes. Where this section conflicts with the tables below, this section wins.
+
 ### 2.1 Neutrals
 
 | Token | Hex | Use | On `bg` | On `surface-1` | On `surface-2` |

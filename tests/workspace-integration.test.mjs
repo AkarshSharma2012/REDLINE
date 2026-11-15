@@ -14,11 +14,13 @@ const viewerCss = await read('src/styles/rover-viewer.css');
 const sources = html.match(/<section\b[^>]*id="ws-pane-sources"[^>]*>([\s\S]*?)<\/section>/)[1];
 const at = id => sources.indexOf(`id="${id}"`);
 
-test('middle pane is source-first: results state, then NASA source browser, then fixes disclosure', () => {
-  for (const id of ['status', 'results-table', 'sources-heading', 'ws-sources', 'fixes']) assert.ok(at(id) > -1, id);
-  assert.ok(at('status') < at('results-table'));
-  assert.ok(at('results-table') < at('sources-heading'), 'source browser follows compact results state');
-  assert.ok(at('ws-sources') < at('fixes'), 'fixes/experiment planning sits below the source browser');
+test('middle pane is source-first (#306): records heading, status, NASA records, then Results disclosure, then fixes', () => {
+  for (const id of ['status', 'results-table', 'sources-heading', 'ws-sources', 'ws-results-disclosure', 'results-heading', 'fixes']) assert.ok(at(id) > -1, id);
+  assert.ok(at('sources-heading') < at('status'));
+  assert.ok(at('status') < at('ws-sources'));
+  assert.ok(at('ws-sources') < at('ws-results-disclosure'), 'records come before the results/legend block');
+  assert.match(sources, /<details id="ws-results-disclosure" class="ws-disclosure ws-results" open>\s*<summary><span id="results-heading">Results<\/span>[^<]*<\/summary>\s*<ul class="legend"[\s\S]*<div id="results-table"/, 'legend and results in a native open disclosure');
+  assert.ok(at('results-table') < at('fixes'), 'fixes/experiment planning sits below results');
   const disclosure = sources.match(/<details\b[^>]*id="ws-fixes-disclosure"[^>]*>\s*<summary>([^<]+)<\/summary>([\s\S]*?)<\/details>/);
   assert.ok(disclosure, 'native details disclosure wraps fixes');
   assert.doesNotMatch(disclosure[0], /<details\b[^>]*\bopen/, 'collapsed by default');

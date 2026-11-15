@@ -1,22 +1,22 @@
-/* REDLINE styles. Tokens and rules from DESIGN.md (S2). Dark theme only. */
+/* REDLINE styles. Tokens and rules from DESIGN.md (S2). Dark theme only; #306 user-authorized black/white neutral token amendment. */
 
 :root {
   /* 2.1 Neutrals */
-  --bg: #0E1013;
-  --surface-1: #16191E;
-  --surface-2: #1E2228;
-  --surface-selected: #262B33;
-  --divider: #2C313A;
-  --border-control: #737B88;
-  --text-1: #E8EAED;
-  --text-2: #A9B0BB;
-  --text-3: #8A929E;
-  --accent: #7CB8FF;
+  --bg: #000000;
+  --surface-1: #000000;
+  --surface-2: #141414;
+  --surface-selected: #262626;
+  --divider: #333333;
+  --border-control: #8C8C8C;
+  --text-1: #FFFFFF;
+  --text-2: #D0D0D0;
+  --text-3: #ADADAD;
+  --accent: #FFFFFF;
 
   /* 2.2 Evidence labels (reserved: use only for the three label results) */
   --ev-burned: #FF6A33;
   --ev-near: #F0D545;
-  --ev-ne: #8EC5F0;
+  --ev-ne: #C8C8C8;
 
   /* 3 Typography */
   --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

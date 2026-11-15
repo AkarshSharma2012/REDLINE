@@ -29,30 +29,30 @@ export function styleUI(root) {
   if (d.getElementById('cabin-ui-styles')) return;
   const style = d.createElement('style'); style.id = 'cabin-ui-styles';
   style.textContent = `
-    .cabin-ui { color:#E8EAED; background:#16191E; font:14px/20px system-ui,sans-serif; padding:16px; min-width:0; overflow-wrap:anywhere; }
+    .cabin-ui { color:#FFFFFF; background:#000000; font:14px/20px system-ui,sans-serif; padding:16px; min-width:0; overflow-wrap:anywhere; }
     .cabin-ui * { box-sizing:border-box; }
     .cabin-ui h2 { font-size:16px; line-height:24px; margin:0 0 16px; }
     .cabin-ui .concern-heading h3 { font-size:16px; line-height:24px; margin:0; }
-    .cabin-ui .concern-heading { background:#1E2228; }
+    .cabin-ui .concern-heading { background:#141414; }
     .cabin-ui .concern-heading p { color:#A9B0BB; font-weight:400; margin:4px 0 0; }
     .cabin-ui p { margin:4px 0 12px; }
     .cabin-ui p:empty { display:none; }
     .cabin-ui label { display:block; color:#A9B0BB; margin-top:12px; }
     .cabin-ui fieldset { border:1px solid #737B88; border-radius:6px; margin:16px 0; min-width:0; padding:12px; }
-    .cabin-ui input,.cabin-ui select,.cabin-ui button { background:#1E2228; color:#E8EAED; border:1px solid #737B88; border-radius:4px; font:inherit; min-height:24px; padding:4px 8px; max-width:100%; }
+    .cabin-ui input,.cabin-ui select,.cabin-ui button { background:#141414; color:#FFFFFF; border:1px solid #737B88; border-radius:4px; font:inherit; min-height:24px; padding:4px 8px; max-width:100%; }
     .cabin-ui input,.cabin-ui select { width:100%; }
     .cabin-ui button { cursor:pointer; margin:4px 4px 4px 0; white-space:normal; }
     .cabin-ui button:disabled { cursor:default; color:#8A929E; }
-    .cabin-ui button[aria-pressed=true] { background:#262B33; border-bottom:2px solid #7CB8FF; }
-    .cabin-ui :focus-visible { outline:2px solid #7CB8FF; outline-offset:2px; }
-    .cabin-ui a { color:#7CB8FF; text-decoration:underline; }
+    .cabin-ui button[aria-pressed=true] { background:#262626; border-bottom:2px solid #FFFFFF; }
+    .cabin-ui :focus-visible { outline:2px solid #FFFFFF; outline-offset:2px; }
+    .cabin-ui a { color:#FFFFFF; text-decoration:underline; }
     .cabin-ui table { border-collapse:collapse; width:100%; min-width:760px; text-align:left; }
     .cabin-ui th,.cabin-ui td { padding:8px 12px; vertical-align:top; border-bottom:1px solid #2C313A; }
     .cabin-ui th:first-child { min-width:140px; }
     .cabin-ui td:nth-child(2) { min-width:180px; }
     .cabin-ui td:nth-child(3) { min-width:200px; }
     .cabin-ui td:nth-child(5),.cabin-ui td:nth-child(6) { min-width:240px; }
-    .cabin-ui thead { background:#1E2228; color:#A9B0BB; }
+    .cabin-ui thead { background:#141414; color:#A9B0BB; }
     .cabin-ui .mismatch-flag { border:1px solid #737B88; padding:2px 4px; font-family:monospace; }
     .cabin-ui .gravity-estimate { border:1px dashed #737B88; }
   `;
@@ -74,9 +74,9 @@ function chip(document, result) {
   const node = element(document, 'span', `${glyph} ${text}`, `label-chip label-${result.label}`);
   node.setAttribute('aria-label', result.wording || 'Result wording unavailable');
   node.style.cssText = 'display:inline-block;padding:2px 4px;border-radius:4px;border:1.5px solid;white-space:normal;';
-  if (result.label === 'BURNED') node.style.cssText += 'background:#FF6A33;color:#0E1013;border-color:#FF6A33;';
+  if (result.label === 'BURNED') node.style.cssText += 'background:#FF6A33;color:#000000;border-color:#FF6A33;';
   else if (result.label === 'NEAR') node.style.color = '#F0D545';
-  else { node.style.color = '#8EC5F0'; node.style.borderStyle = 'dashed'; }
+  else { node.style.color = '#C8C8C8'; node.style.borderStyle = 'dashed'; }
   return node;
 }
 
