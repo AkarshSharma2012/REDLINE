@@ -16,6 +16,7 @@ test('CLI prints exactly 12 reproducible examples and matches the checked-in doc
   assert.match(output, /https:\/\/psi\.nasa\.gov\//);
   assert.match(output, /https:\/\/ntrs\.nasa\.gov\//);
   assert.match(output, /Evidence rows used \/ cited by the engine:/);
+  assert.ok(output.split('\n').length < 500, 'generated document stays under the 500-line repository limit');
   assert.doesNotMatch(output, /\bsafe\b|never burns|never tested|stub/i);
   console.log(output);
 });

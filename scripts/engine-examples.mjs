@@ -54,10 +54,8 @@ export function renderExamples(data) {
   for (const example of examples) {
     const { number, title, seed, query, result, rows } = example;
     lines.push(`## Example ${number}: ${title}`, '', `Query seed: ${source(data, seed)}.`, '',
-      '```json', JSON.stringify(query, null, 2), '```', '',
-      `Engine label: **${result.label}**; reason: ${result.reason ?? 'none'}.`, '',
-      `Engine wording: ${result.wording ? inline(result.wording) : '(not supplied)'}.`, '',
-      `Flags: ${result.flags.join(', ') || 'none'}; cross-gravity: ${result.cross_gravity}.`, '',
+      `Query: \`${JSON.stringify(query)}\``, '',
+      `Engine label: **${result.label}**; reason: ${result.reason ?? 'none'}. Engine wording: ${result.wording ? inline(result.wording) : '(not supplied)'}. Flags: ${result.flags.join(', ') || 'none'}; cross-gravity: ${result.cross_gravity}.`, '',
       'Evidence rows used / cited by the engine:', '');
     if (!result.cited.length) lines.push('- None. No NASA row supports this current engine output; do not interpret it as an experimental finding.');
     for (const id of result.cited) {
@@ -68,7 +66,7 @@ export function renderExamples(data) {
     lines.push('', 'Candidate-row diagnostics (including rows not cited):', '');
     for (const { row, comparison } of rows) {
       lines.push(`- ${source(data, row)}. Endpoint: ${inline(row.endpoint)}; outcome: ${inline(row.outcome)}; limit: ${inline(row.value)} ${inline(row.value_unit)}. Grade: ${comparison.grade}.`,
-        ...comparison.rules.map(rule => `  - ${rule.rule}: ${rule.grade} — ${inline(rule.why)}`));
+        `  - Rules: ${comparison.rules.map(rule => `${rule.rule}: ${rule.grade} — ${inline(rule.why)}`).join(' | ')}`);
     }
     if (result.estimate) {
       lines.push('', 'Separate gravity results bounding the estimate (no direct lunar data):', '');
