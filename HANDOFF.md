@@ -36,3 +36,4 @@ STATUS: DONE
 
 - Native regeneration: node scripts/build-evidence.mjs (45 draft/0 verified), node scripts/export-datapackage.mjs, node scripts/verification-worksheet.mjs: exit 0. node --test: 1249 tests, 1204 pass, 1 stale pitch provenance failure, 44 TODO. Corrected pitch build reference; targeted pitch/review tests rerun. node scripts/size-budget.mjs PASS. node scripts/lint-csv.mjs reports 1 existing diagnostic; no unrelated evidence corrected. git diff --check clean. No build script exists; vendor integrity covered by full suite.
 STATUS: DONE
+- Follow-up: initial pitch update encountered an encoding error; corrected with byte-preserving replacement. node --test tests/pitch-demo.test.mjs tests/review-293.test.mjs: exit 0 (all pass). PR #294 opened; no merge/deploy.

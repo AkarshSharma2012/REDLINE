@@ -31,7 +31,7 @@ Claim boundary: no measured physical outcome, completed human verification, accu
 
 Start with an illustrative pressurized lunar rover, inspect published research, distinguish draft evidence from reviewed results, preview oxygen while holding other conditions fixed, and turn missing coverage into a candidate experiment question.
 
-The checked-in `data/evidence.json` has **45 rows and zero verified rows**, built from `data/evidence.csv@c78b68c2b7ae1c952eb9feb0d51c1a6e7f08b5aa`. These are repository metadata, not NASA measurements. `src/rules/label.js` implements evidence matching, review-status filtering and labels; the Node suite exercises that logic. The current rover evaluation returns four **NOT_ESTABLISHED / NE-no-data** results. Its four materials have no verified evidence in this inventory; this does not establish measured material outcomes. Cabin Check's zero-verified notice and legend must not be presented as combustion findings. Ask retrieval works without a key; retrieval is not a live generated answer. No measured accuracy or completed scientific validation is established here.
+The checked-in `data/evidence.json` has **45 rows and zero verified rows**, built from `data/evidence.csv@c4e68732269e8986849109612a5d806fea401d15`. These are repository metadata, not NASA measurements. `src/rules/label.js` implements evidence matching, review-status filtering and labels; the Node suite exercises that logic. The current rover evaluation returns four **NOT_ESTABLISHED / NE-no-data** results. Its four materials have no verified evidence in this inventory; this does not establish measured material outcomes. Cabin Check's zero-verified notice and legend must not be presented as combustion findings. Ask retrieval works without a key; retrieval is not a live generated answer. No measured accuracy or completed scientific validation is established here.
 
 The historical Investigations capture had tied zero scores and missing-source fields; the current capture (ui267-01) shows 26 investigations ranked for a pressurized rover, with per-field Source links and rankings held for scientific review. Catalog scores are navigation aids, not scientific rankings.
 
@@ -92,7 +92,7 @@ Six five-second segments; narration is approximately 53 words. This is an editin
 
 ## Current screenshot manifest (`6455a3c`)
 
-Captured 2026-11-15 at about 08:49 PST from `main` at `6455a3c`, in Chrome with a **1600 x 1000 CSS-pixel** viewport at 100% zoom, served at `localhost:5199`. Header: **Evidence 45**, **Verified 0**; O2 tradeoff shows inventory `data/evidence.csv@c78b68c2b7ae1c952eb9feb0d51c1a6e7f08b5aa`. Unedited viewport captures; counts are build metadata, not NASA measurements.
+Captured 2026-11-15 at about 08:49 PST from `main` at `6455a3c`, in Chrome with a **1600 x 1000 CSS-pixel** viewport at 100% zoom, served at `localhost:5199`. Header: **Evidence 45**, **Verified 0**; O2 tradeoff shows inventory `data/evidence.csv@c4e68732269e8986849109612a5d806fea401d15`. Unedited viewport captures; counts are build metadata, not NASA measurements.
 
 | Shot | State | Image |
 | --- | --- | --- |
@@ -110,7 +110,7 @@ Recapture after any UI or dataset change. Load the rover before Gravity and Oxyg
 
 The seven unprefixed PNGs below are kept unchanged as a historical record only; use the `ui267-*` set above for presentation. Captured 2026-11-14 from historical commit `31a6acdd778e766d6a896201f376473155c51bc6`, in installed Microsoft Edge headless through DevTools Protocol. Viewport **1600 x 1000 CSS pixels**, device scale 1. PNGs are unedited viewport captures; scroll where indicated. The app was served over HTTP at `http://127.0.0.1:8063/` with a temporary Node server because `python` and `py` were unavailable on PATH. No dependencies were installed. These images document integration defects observed then, not the current checkout. No recapture was performed for #233.
 
-Dataset header: `data/evidence.csv@dbb9db601a4a8d07ad77ec5097f8b6231a3f0e41`; built `2026-11-14T18:22:32.413Z`; 29 rows, zero verified. Gravity research revision: `0d0cb9aeba1c93640cedaab916b7a7acc816a9c5`. Counts and revisions are build metadata, not NASA measurements.
+Dataset header: `data/evidence.csv@c4e68732269e8986849109612a5d806fea401d15`; built `2026-11-14T18:22:32.413Z`; 29 rows, zero verified. Gravity research revision: `0d0cb9aeba1c93640cedaab916b7a7acc816a9c5`. Counts and revisions are build metadata, not NASA measurements.
 
 | Shot | Capture / recapture state | Image |
 | --- | --- | --- |
