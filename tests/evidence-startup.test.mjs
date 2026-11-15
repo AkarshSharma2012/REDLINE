@@ -39,6 +39,7 @@ test('invalid evidence startup shows Retry, preserves tabs, and has no unhandled
         append(...nodes) { this.children.push(...nodes); }
         replaceChildren(...nodes) { this.children = nodes; }
         setAttribute(key, value) { this.attrs[key] = value; }
+        removeAttribute(key) { delete this.attrs[key]; }
         addEventListener(key, handler) { this.listeners[key] = handler; }
         querySelector() { return null; }
       }
@@ -50,7 +51,7 @@ test('invalid evidence startup shows Retry, preserves tabs, and has no unhandled
       globalThis.window = { addEventListener(event, handler) { if (event === 'hashchange') hashchange = handler; } };
       globalThis.location = { hash: '', reload() { reloads++; } };
       globalThis.fetch = async url => {
-        if (url === 'data/evidence.json') return { ok: true, json: async () => ${JSON.stringify(data)} };
+        if (url === 'data/evidence.json') return { ok: true, json: async () => (${JSON.stringify(data)}) };
         throw new Error('optional report unavailable');
       };
       await import('./src/main.js');
@@ -69,8 +70,8 @@ test('invalid evidence startup shows Retry, preserves tabs, and has no unhandled
       assert.equal(doc.getElementById('panel-investigations').hidden, false);
       assert.equal(doc.getElementById('panel-cabin').hidden, true);
     `;
-    const result = spawnSync(process.execPath, ['--unhandled-rejections=strict', '--input-type=module', '--eval', script], {
-      cwd: new URL('../', import.meta.url), encoding: 'utf8', timeout: 10000,
+    const result = spawnSync(process.execPath, ['--unhandled-rejections=strict', '--input-type=module'], {
+      cwd: new URL('../', import.meta.url), input: script, encoding: 'utf8', timeout: 10000,
     });
     assert.equal(result.status, 0, result.stderr || String(result.error));
   }
