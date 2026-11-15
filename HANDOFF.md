@@ -5,5 +5,6 @@
 - `docs/engine-examples.md` regenerated with `node scripts/engine-examples.mjs --write`.
 - Tests: `tests/engine-examples.test.mjs` (5 tests: CLI/doc parity + prints output, wording guard, real rule diagnostics, cited ⊆ candidates, synthetic-title ⇔ modified-query, lunar estimate). Full `node --test`: 1157 tests, 1074 pass, 0 fail, 83 todo. No server/browser started.
 - Review 07:56 fix: compacted doc formatting only (one-line query JSON, label/wording/flags on one line, each row's rule diagnostics grouped on one line with every rule reason kept). Doc 825 -> 261 lines; test asserts < 500 lines. All 12 examples, cited/candidate split, disclaimers and CLI/doc parity unchanged. Full `node --test`: 1157 tests, 1074 pass, 0 fail, 83 todo.
+- Re-merged origin/main (kept this HANDOFF on add/add conflict). Full `node --test`: 1163 tests, 1080 pass, 0 fail, 83 todo (todo = pre-existing data-integrity checks).
 
 STATUS: DONE
