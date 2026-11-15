@@ -119,12 +119,23 @@ test.todo('labelMaterial: duplicate NEAR rows do not duplicate citations', () =>
 test.todo('labelMaterial: draft and unrelated rows cannot supply a label', () => {
   answer(labelMaterial(query(), [row({ review_status: 'draft' }), row({ material_id: 'pmma' })]), 'NOT_ESTABLISHED', 'NE-no-data', []);
 });
-test.todo('labelMaterial: a spread point above query O2 is not a measured limit or covering test (V2 U1)', () => {
+test('labelMaterial: a spread point above query O2 is not a measured limit or covering test (V2 U1)', () => {
   answer(labelMaterial(query({ o2_pct: 19.5 }), [row()]), 'NOT_ESTABLISHED', 'NE-incompatible', ['SYNTHETIC-SPREAD']);
 });
-test.todo('labelMaterial: no-spread at query O2 covers; lower O2 does not (V2 U1)', () => {
+test('labelMaterial: no-spread at query O2 covers; lower O2 does not (V2 U1)', () => {
   answer(labelMaterial(query(), [row({ outcome: 'no-spread' })]), 'NOT_ESTABLISHED', 'NE-no-burn', ['SYNTHETIC-SPREAD']);
   answer(labelMaterial(query(), [row({ outcome: 'no-spread', o2_pct: 19 })]), 'NOT_ESTABLISHED', 'NE-incompatible', ['SYNTHETIC-SPREAD']);
+});
+test('labelMaterial: oxygen coverage requires known oxygen and cites only covering rows (V2 U1)', () => {
+  const covering = row({ evidence_id: 'SYNTHETIC-NO-SPREAD', outcome: 'no-spread', o2_pct: 21 });
+  answer(labelMaterial(query(), [covering, row({ o2_pct: 22 })]), 'NOT_ESTABLISHED', 'NE-no-burn', [covering.evidence_id]);
+  for (const o2_pct of [null, undefined]) {
+    answer(labelMaterial(query(), [row({ outcome: 'no-spread', o2_pct })]), 'NOT_ESTABLISHED', 'NE-incompatible');
+    answer(labelMaterial(query({ o2_pct }), [covering]), 'NOT_ESTABLISHED', 'NE-incompatible');
+  }
+  for (const r of [limit({ value: 22 }), limit({ value: 22, value_unit: 'kPa O2' })]) {
+    answer(labelMaterial(query(), [r]), 'NOT_ESTABLISHED', 'NE-no-burn', [r.evidence_id]);
+  }
 });
 for (const pressure_kpa of [null, 110.001]) {
   test.todo(`labelMaterial: pressure ${pressure_kpa} cannot cover no-spread but retains burning evidence (V2 U2)`, () => {
