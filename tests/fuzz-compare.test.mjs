@@ -89,6 +89,9 @@ fuzz('random comparisons and labels never throw and obey result contracts', 0, (
 fuzz('symmetric field rules keep their grade when operands swap', 1, (g) => {
   const a = sample(g);
   const b = sample(g);
+  // F flags missing query form; W exempts a row-side rod/wire. Hold forms equal
+  // and present so neither query-side defaults nor row-side exemptions differ.
+  a.form = b.form = g.pick(['fabric', 'sheet', 'rod']);
   const context = { quench_speeds_cm_s: [g.random() * 30] };
   const forward = compareRow(a, b, context);
   const reverse = compareRow(b, a, context);
