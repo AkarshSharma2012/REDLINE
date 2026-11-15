@@ -15,6 +15,6 @@
 - Science lead: lunar top label wording when cited O2 < cabin O2 (B2-13); MOC/ULOI exclusion by rule E (B2-14).
 
 ## How verified
-- `node --test`: 1102 tests (1013 pass, rest skipped), all green except 2 that also fail on unmodified `main` in this Windows checkout (`missing-fields`, `verification-worksheet`: CRLF from `core.autocrlf=true` vs LF generated report; unrelated to this task, pass on LF checkouts).
+- `node --test`: 1102 tests (1013 pass, 87 todo), all green except 2 that also fail on unmodified `main` in this Windows checkout (`missing-fields`, `verification-worksheet`: CRLF from `core.autocrlf=true` vs LF generated report; unrelated to this task, pass on LF checkouts).
 
 STATUS: DONE
