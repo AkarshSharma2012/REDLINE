@@ -29,3 +29,7 @@ STATUS: DONE
 - Next: coordinator review of existing PR #290; no merge/deploy.
 
 STATUS: DONE
+
+# Issue #293
+- Recorded user-relayed Lakshya CORRECTION NEEDED review separately; retained HOLD/draft and B16. Nominal/inferred provenance carried in row notes and relevant displays/worksheet. A1 remains stopped. No server/browser.
+- Validation pending.

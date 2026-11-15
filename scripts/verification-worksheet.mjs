@@ -78,8 +78,8 @@ export async function generateWorksheet({
     const refs = citations(row, sources);
     const result = [row.endpoint, [row.value_qualifier, row.value, row.value_unit].filter(present).join(' '),
       row.outcome, row.observation_paraphrase].filter(present).join('; ') || 'not stated';
-    lines.push(`| ${cell(row.evidence_id)} | ${cell(row.material_id)} | ${cell(oxygen(row))} | ${cell(withUnit(row.pressure_kpa, 'kPa'))} | ${cell(withUnit(row.gravity_g, 'g'))} | ${cell(result)} | ${refs.map((r, i) => link(r.url, `S${i + 1}`)).join(' ')} | ${refs.map((r, i) => `S${i + 1}: ${cell(r.locator || 'not stated')}`).join('; ')} | [ ] |  |`);
-    for (const text of [row.caveat, row.gravity_context, present(row.uncertainty) && row.uncertainty !== 'not stated' ? `Uncertainty: ${row.uncertainty}` : '']) {
+    lines.push(`| ${cell(row.evidence_id)} | ${cell(row.material_id)} | ${cell(oxygen(row))} | ${cell(withUnit(row.pressure_kpa, 'kPa'))} | ${cell(row.evidence_id === 'U25-01-L' ? '1/6 g NASA nominal; 0.16 g project normalization' : withUnit(row.gravity_g, 'g'))} | ${cell(result)} | ${refs.map((r, i) => link(r.url, `S${i + 1}`)).join(' ')} | ${refs.map((r, i) => `S${i + 1}: ${cell(r.locator || 'not stated')}`).join('; ')} | [ ] |  |`);
+    for (const text of [row.evidence_id === 'U25-01-L' ? row.notes : '', row.caveat, row.gravity_context, present(row.uncertainty) && row.uncertainty !== 'not stated' ? `Uncertainty: ${row.uncertainty}` : '']) {
       if (!present(text)) continue;
       if (!caveats.has(text)) caveats.set(text, []);
       caveats.get(text).push(row.evidence_id);

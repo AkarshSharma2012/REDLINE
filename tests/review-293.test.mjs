@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { reviewedGravity } from '../src/ui/evidence-provenance.js';
+test('293 correction preserves review hold and B16', () => {
+ const data = JSON.parse(readFileSync('data/evidence.json')).evidence;
+ const row = data.find(r => r.evidence_id === 'U25-01-L');
+ assert.equal(row.gravity_g, 0.16);
+ assert.equal(row.gravity_source, '1/6 g');
+ assert.match(reviewedGravity(row), /1\/6 g NASA nominal.*0.16 g project normalization/);
+ for (const text of ['sheet is inferred', '13.5 mol% O2', 'five-second', '0.8 mm', '56.5 kPa absolute']) assert.ok(row.notes.includes(text));
+ assert.equal(row.review_status, 'draft');
+ assert.ok(Object.values(row).includes('HOLD_scientific_review'));
+ assert.match(row.uncertainty, /0.5/);
+ const record = readFileSync('research/reviews/U25-01-L-2026-11-15.md', 'utf8');
+ for (const text of ['Lakshya', 'CORRECTION NEEDED', '2026-11-15', 'relayed by the user through this chat']) assert.ok(record.includes(text));
+ const before = JSON.parse(execFileSync('git', ['show', 'HEAD:data/evidence.json'], {encoding:'utf8'})).evidence;
+ assert.deepEqual(data.find(r=>r.evidence_id==='PSI25-B16'), before.find(r=>r.evidence_id==='PSI25-B16'));
+});

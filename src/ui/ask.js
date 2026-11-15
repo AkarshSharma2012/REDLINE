@@ -1,3 +1,4 @@
+import { reviewedGravity } from './evidence-provenance.js';
 // Ask REDLINE (issue #68): the user types a question; src/rules/retrieve.js picks the most
 // relevant catalog + evidence + insight rows client-side and this screen shows them with their
 // source links. Optional live mode: with the user's own Anthropic API key (kept in a closure
@@ -37,7 +38,7 @@ export function summarize(hit) {
       `${shown(r.material)} (${shown(r.form)})`,
       `O2 ${shown(r.o2_pct, '%')}`,
       `${shown(r.pressure_kpa, ' kPa')}`,
-      GRAVITY[r.gravity_g] ?? (r.gravity_g == null ? 'gravity not stated' : `${r.gravity_g} g`),
+      reviewedGravity(r) ?? GRAVITY[r.gravity_g] ?? (r.gravity_g == null ? 'gravity not stated' : `${r.gravity_g} g`),
       `flow ${shown(r.flow_direction)}${r.flow_speed_cm_s != null ? ` ${r.flow_speed_cm_s} cm/s` : ''}`,
       r.endpoint ? `${r.endpoint} ${shown(r.value, r.value_unit ? ` ${r.value_unit}` : '')}` : 'endpoint not stated',
     ].join(' | ');

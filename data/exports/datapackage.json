@@ -81,7 +81,7 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "bytes": 71910
+      "bytes": 72375
     },
     {
       "name": "evidence-json",
@@ -89,7 +89,7 @@
       "format": "json",
       "mediatype": "application/json",
       "encoding": "utf-8",
-      "bytes": 152606
+      "bytes": 150053
     }
   ]
 }

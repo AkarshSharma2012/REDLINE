@@ -1,3 +1,4 @@
+import { reviewedGravity } from './evidence-provenance.js';
 import { compareRow } from '../rules/compare.js';
 
 const FIELDS = [
@@ -122,7 +123,7 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
       b.setAttribute('aria-pressed', String(selected === c.row.evidence_id));
       p(li, `${sourceFor(c.row)?.title ?? 'Source not stated'} · ${c.comparison.rules.find(r => r.grade !== 'OK')?.why ?? 'No comparison notes'}`);
       source(li, c.row);
-      p(li, `${c.row.material} · ${c.row.form} · ${c.row.facility} · ${format(c.row.gravity_g, 'g')} · ${c.row.endpoint} · ${c.row.outcome ?? 'Outcome not stated'} · ${c.row.review_status}`);
+      p(li, `${c.row.material} · ${c.row.form} · ${c.row.facility} · ${(reviewedGravity(c.row) ?? format(c.row.gravity_g, 'g'))} · ${c.row.endpoint} · ${c.row.outcome ?? 'Outcome not stated'} · ${c.row.review_status}`);
       if (result.conflicts?.includes(c.row.evidence_id)) p(li, 'Other comparable tests disagree');
       if (c.comparison.rules.some(r => r.rule === 'E' && r.grade === 'INVALID')) p(li, 'Related test (different endpoint, not used for the label)');
     });
@@ -145,7 +146,7 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
     const q = { ...snapshot, o2_partial_kpa: partial(snapshot) }, r = { ...row, o2_partial_kpa: partial(row) };
     FIELDS.forEach(([key, name, unit, rule]) => {
       const tr = make('tr'), th = make('th', name); th.scope = 'row'; tr.append(th);
-      tr.append(make('td', format(q[key], unit)), make('td', format(r[key], unit)));
+      tr.append(make('td', format(q[key], unit)), make('td', (key === 'gravity_g' && reviewedGravity(r) || key === 'form' && r.evidence_id === 'U25-01-L' && 'sheet (inferred, not source-stated)' || format(r[key], unit))));
       const v = comparison.rules.find(n => n.rule === rule);
       tr.append(make('td', `${!known(q[key]) || !known(r[key]) ? 'Unknown; ' : ''}${v ? `${v.grade}: ${v.why}` : 'Context only; no field verdict'}`)); body.append(tr);
     });

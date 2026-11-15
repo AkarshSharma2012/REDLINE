@@ -1,3 +1,4 @@
+import { reviewedGravity } from './evidence-provenance.js';
 // Research display adapter, deliberately separate from S1 evidence/label inputs.
 const SOURCES = {
   urban: ['Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results',
@@ -76,7 +77,7 @@ export function requestText(r = {}) {
     has(r.pressure_kpa) ? `${r.pressure_kpa} kPa absolute` : 'pressure not stated',
     has(r.flow_speed_cm_s) ? `forced airflow ${r.flow_speed_cm_s} cm/s` : 'forced airflow not specified',
     r.flow_direction ? `${r.flow_direction} flow` : 'flow direction not specified',
-    has(r.gravity_g) ? (GRAVITY_TEXT[r.gravity_g] ?? `${r.gravity_g} g`) : 'gravity not stated',
+    has(r.gravity_g) ? (reviewedGravity(r) ?? GRAVITY_TEXT[r.gravity_g] ?? `${r.gravity_g} g`) : 'gravity not stated',
   ].join('; ');
 }
 

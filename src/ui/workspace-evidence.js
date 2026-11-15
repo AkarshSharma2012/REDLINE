@@ -1,3 +1,4 @@
+import { reviewedGravity } from './evidence-provenance.js';
 // #277 workspace source browser: filters, counts, record cards, record detail and the
 // HTML cabin-material controls. Reads the loaded evidence file only; never changes review
 // state, never promotes drafts and never derives a label. All data goes in via textContent.
@@ -62,7 +63,7 @@ export function describeRecord(row, sources = {}) {
     conditions: [
       ['Oxygen', formatCondition(r.o2_pct, '% O2')],
       ['Pressure', formatCondition(r.pressure_kpa, 'kPa')],
-      ['Gravity', formatCondition(r.gravity_g, 'g')],
+      ['Gravity', (reviewedGravity(r) ?? formatCondition(r.gravity_g, 'g'))],
       ['Form', formatCondition(r.form)],
       ['Facility', formatCondition(r.facility)],
     ],
