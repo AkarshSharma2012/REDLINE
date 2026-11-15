@@ -2,7 +2,7 @@
 //
 // Catalog shape (B10 data/investigations.json; fixture in tests/fixtures/investigations.json):
 //   { sources: { <id>: { title, url } }, investigations: [ { id, name, <field>: { value, source, locator, note } } ] }
-// A field may also be a bare value; then it has no source and the UI says so.
+// Production uses bare values plus provenance[key].sources references. Legacy fixtures use wrappers.
 
 export const NEEDS = ['prevention', 'detection', 'suppression'];
 
@@ -53,10 +53,34 @@ export const WEIGHTS = { need: 3, habitat: 2, o2: 2, pressure: 1, gravity: 2 };
 export const O2_CLOSE_PCT = 3;
 
 const NOT_FOUND = 'not found in the sources reviewed';
+const CATALOG_FIELDS = {
+  fire_safety_areas: 'fire_safety_area', o2_pct: 'oxygen_range_pct',
+  pressure_kpa: 'pressure_range_kpa', airflow_cm_s: 'airflow_range_cm_s',
+  variables_varied: 'varied', variables_fixed: 'fixed', sensors: 'measurements',
+  fuel_sample: 'sample_shape',
+};
 
 // field(inv, key, sources) -> { value, source: {title,url,locator}|null, note }
 export function field(inv, key, sources = {}) {
-  const raw = inv?.[key];
+  if (inv?.provenance && key === 'fuel_sample') {
+    const parts = ['sample_shape', 'sample_size'].map(k => field(inv, k, sources));
+    const refs = parts.flatMap(f => f.sources ?? (f.source ? [f.source] : []));
+    const values = parts.map(f => f.value).filter(v => v != null);
+    return { value: values.length ? values.join('; ') : null, source: refs[0] ?? null,
+      sources: refs, note: parts.map(f => f.note).filter(Boolean).join('; ') };
+  }
+  const catalogKey = inv?.provenance ? (CATALOG_FIELDS[key] ?? key) : key;
+  const raw = inv?.[catalogKey];
+  const provenance = inv?.provenance?.[catalogKey];
+  if (provenance) {
+    const resolved = (provenance.sources ?? []).flatMap(ref => {
+      const s = sources[ref.source_id];
+      return s ? [{ title: s.title, url: s.url ?? null, locator: ref.locator ?? s.locator ?? '' }] : [];
+    });
+    return { value: raw ?? null, source: resolved[0] ?? null, sources: resolved,
+      basis: provenance.basis,
+      note: provenance.note ?? (raw == null ? NOT_FOUND : resolved.length ? '' : 'no source given in the catalog') };
+  }
   if (raw === undefined || raw === null) return { value: null, source: null, note: NOT_FOUND };
   if (typeof raw !== 'object' || Array.isArray(raw) || !('value' in raw)) {
     return { value: raw, source: null, note: 'no source given in the catalog' };
@@ -118,49 +142,54 @@ export function scoreInvestigation(inv, { habitat, need } = {}, sources = {}) {
     add('need', hit ? WEIGHTS.need : 0, WEIGHTS.need,
       f.value == null ? `Fire-safety area ${NOT_FOUND}.`
         : hit ? `Lists ${need} among its fire-safety areas.` : `Lists ${asList(f.value).join(', ')}, not ${need}.`,
-      [f.source]);
+      f.sources ?? [f.source]);
   }
 
   {
-    const f = field(inv, 'habitat_relevance', sources);
-    const hit = asList(f.value).some((x) => norm(x) === h.id);
+    const f = field(inv, inv.provenance ? `${h.id.replaceAll('-', '_')}_relevance` : 'habitat_relevance', sources);
+    const hit = inv.provenance ? f.value != null : asList(f.value).some((x) => norm(x) === h.id);
     add('habitat', hit ? WEIGHTS.habitat : 0, WEIGHTS.habitat,
       f.value == null ? `Habitat relevance ${NOT_FOUND}.`
         : hit ? `Catalog relevance notes name ${h.name.toLowerCase()}.` : `Catalog relevance notes do not name ${h.name.toLowerCase()}.`,
-      [f.source]);
+      f.sources ?? [f.source]);
   }
 
   {
     const f = field(inv, 'o2_pct', sources);
-    const r = rangeOf(f.value);
+    const r = f.value?.scope === 'planned' ? null : rangeOf(f.value);
     let pts = 0;
     let why = `Test O2 ${NOT_FOUND}; no points.`;
+    if (f.value?.scope === 'planned') why = 'Planned O2 conditions, not reported test conditions; no points.';
     if (r) {
       const d = gap(r, h.o2_pct);
       pts = d === 0 ? WEIGHTS.o2 : d <= O2_CLOSE_PCT ? 1 : 0;
-      why = `Tested at ${fmtRange(r, '% O2')}; habitat ${fmtRange(h.o2_pct, '% O2')}: `
+      why = `${r.scope === 'protocol' ? 'Protocol conditions' : 'Tested at'} ${fmtRange(r, '% O2')}; habitat ${fmtRange(h.o2_pct, '% O2')}: `
         + (d === 0 ? 'ranges overlap.' : `${round1(d)} point${round1(d) === 1 ? "" : "s"} apart${pts ? ` (within ${O2_CLOSE_PCT})` : ''}.`);
     }
-    add('o2', pts, WEIGHTS.o2, why, [f.source, ...h.sources]);
+    add('o2', pts, WEIGHTS.o2, why, [...(f.sources ?? [f.source]), ...h.sources]);
   }
 
   {
     const f = field(inv, 'pressure_kpa', sources);
-    const r = rangeOf(f.value);
+    const r = f.value?.scope === 'planned' ? null : rangeOf(f.value);
     let pts = 0;
     let why = `Test pressure ${NOT_FOUND}; no points.`;
+    if (f.value?.scope === 'planned') why = 'Planned pressure conditions, not reported test conditions; no points.';
     if (r) {
       const d = gap(r, h.pressure_kpa);
       pts = d === 0 ? WEIGHTS.pressure : 0;
-      why = `Tested at ${fmtRange(r, ' kPa')}; habitat ${fmtRange(h.pressure_kpa, ' kPa')}: `
+      why = `${r.scope === 'protocol' ? 'Protocol conditions' : 'Tested at'} ${fmtRange(r, ' kPa')}; habitat ${fmtRange(h.pressure_kpa, ' kPa')}: `
         + (d === 0 ? 'ranges overlap.' : `${round1(d)} kPa apart.`);
     }
-    add('pressure', pts, WEIGHTS.pressure, why, [f.source, ...h.sources]);
+    add('pressure', pts, WEIGHTS.pressure, why, [...(f.sources ?? [f.source]), ...h.sources]);
   }
 
   {
     const f = field(inv, 'gravity', sources);
-    const g = asList(f.value).map(norm);
+    // Production prose is retained for display; only explicit flight microgravity supports test points.
+    const g = inv.provenance
+      ? (inv.record_type === 'flight' && /^microgravity(?:;|$)/i.test(f.value ?? '') ? ['0g'] : [])
+      : asList(f.value).map(norm);
     let pts = 0;
     let why;
     if (!g.length) why = `Gravity ${NOT_FOUND}.`;
@@ -180,7 +209,7 @@ export function scoreInvestigation(inv, { habitat, need } = {}, sources = {}) {
       if (analog) parts.push('mimicked partial gravity');
       why = `No partial-gravity tests in PSI yet. ${parts.length ? parts.join('; ') + '.' : 'No 0 g bound listed.'}`;
     }
-    add('gravity', pts, WEIGHTS.gravity, why, [f.source]);
+    add('gravity', pts, WEIGHTS.gravity, why, f.sources ?? [f.source]);
   }
 
   const score = reasons.reduce((s, r) => s + r.points, 0);

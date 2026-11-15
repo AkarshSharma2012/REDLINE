@@ -78,6 +78,9 @@ export function formatValue(key, value) {
 
 // DESIGN.md 5.5: Title — locator, underlined, new tab with a hint.
 function sourceLink(src, { short = false } = {}) {
+  if (Array.isArray(src)) return src.length
+    ? el('span', {}, src.flatMap((s, i) => [i ? '; ' : '', sourceLink(s, { short })]))
+    : sourceLink(null, { short });
   if (!src) return el('span', { class: 'inv-unknown' }, 'No source given in the catalog');
   const label = short ? 'Source' : src.title;
   const name = `${src.title}${src.locator ? `, ${src.locator}` : ''} (opens in new tab)`;
@@ -92,7 +95,7 @@ function valueCell(f, key, tag = 'td') {
   return el(tag, { class: NUMERIC.has(key) ? 'num' : null },
     el('span', { class: known ? null : 'inv-unknown' }, formatValue(key, f.value)),
     f.note && known ? el('span', { class: 'inv-cell-src' }, f.note) : null,
-    el('span', { class: 'inv-cell-src' }, sourceLink(f.source, { short: true })));
+    el('span', { class: 'inv-cell-src' }, sourceLink(f.sources ?? f.source, { short: true })));
 }
 
 function select(id, labelText, options, value, onchange) {
@@ -189,7 +192,7 @@ export function renderInvestigations(root, rawCatalog, { fixture = false } = {})
             class: 'inv-name-btn', type: 'button', 'aria-expanded': String(open), 'aria-controls': `inv-why-${s.id}`,
             onclick: () => { open ? state.open.delete(s.id) : state.open.add(s.id); drawSummary(); },
           }, s.name),
-          el('span', { class: 'inv-cell-src' }, psi.value ?? 'PSI id not found in the sources reviewed', ' · ', sourceLink(psi.source, { short: true }))),
+          el('span', { class: 'inv-cell-src' }, psi.value ?? 'PSI id not found in the sources reviewed', ' · ', sourceLink(psi.sources ?? psi.source, { short: true }))),
         el('td', { class: 'num' }, el('span', { class: 'inv-pts' }, `${s.score}/${s.max}`), el('span', { class: 'inv-cell-src' }, open ? 'Reasons shown below' : 'Open the name for reasons')),
         SUMMARY_COLUMNS.map(([key]) => valueCell(field(inv, key, sources), key)));
       return open ? [row, whyRow(s, habitat, colspan)] : [row];
