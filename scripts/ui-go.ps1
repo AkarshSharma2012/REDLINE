@@ -1,4 +1,4 @@
-﻿# ui-go.ps1 - Fable designs a polished REDLINE UI in a THROWAWAY copy of the repo and exports a preview to Downloads.
+# ui-go.ps1 - Fable designs a polished REDLINE UI in a THROWAWAY copy of the repo and exports a preview to Downloads.
 # Nothing touches the real repo or main. You give feedback, then run again with -Feedback to revise. Shipping (push + PR) is a separate manual step.
 #   .\ui-go.ps1                              round 1 (fresh clone, design, export preview)
 #   .\ui-go.ps1 -Feedback "text or file"     next round (keeps the same work copy, applies your feedback, re-exports)
@@ -69,7 +69,7 @@ if (-not $revise) {
     Set-UiIdentity
     G checkout -b $Branch | Out-Null
     G fetch origin task/55-f1-evidence-engine 2>&1 | Out-Null
-    $anc = G merge-base --is-ancestor origin/task/55-f1-evidence-engine HEAD; 
+    $anc = G merge-base --is-ancestor origin/task/55-f1-evidence-engine HEAD;
     if ($script:gcode -ne 0) { Log "F1 engine not on main yet; merging its branch into the throwaway copy so the UI shows real labels"; G merge --no-edit origin/task/55-f1-evidence-engine | Out-Null }
     Push-Location $W; $t = & node.exe --test 2>&1 | Out-String; $tc = $LASTEXITCODE; Pop-Location
     if ($tc -ne 0) { Fail "baseline tests are not green before the UI run" }
@@ -144,6 +144,3 @@ Log "UI preview ready: $Preview"
     if ($ownsUiMutex) { $uiMutex.ReleaseMutex() }
     $uiMutex.Dispose()
 }
-
-
-
