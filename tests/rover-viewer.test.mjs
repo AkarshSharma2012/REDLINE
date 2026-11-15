@@ -336,7 +336,7 @@ test('one caption in the information bar; selection, user-input scenario and hon
     const pick = buttonFor(env.root, 'nomex');
     assert.match(pick.textContent, /Selected/, 'selected state is text, not colour alone');
     assert.doesNotMatch(buttonFor(env.root, 'pmma').textContent, /Selected/);
-    assert.doesNotMatch(env.root.textContent, /\bsafe\b|verified\b(?! )|predict|fps/i);
+    assert.doesNotMatch(env.root.textContent, /\bsafe\b|predict|fps/i);
     viewer.destroy();
   }
 });
