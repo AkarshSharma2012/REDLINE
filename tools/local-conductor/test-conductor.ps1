@@ -194,7 +194,7 @@ Check "auto-merge: clean merge + tests pass -> merge" { (Get-MergeDecision $true
 Check "auto-merge: tests fail -> do NOT merge" { (Get-MergeDecision $true $false) -eq "tests-failed" }
 Check "auto-merge: conflict -> do NOT merge" { (Get-MergeDecision $false $false) -eq "conflict" }
 Check "auto-merge only pushes inside the 'merge' decision" {
-    $t = Get-Content $script -Raw; ([regex]::Matches($t, 'push -q origin HEAD:main')).Count -eq 2 -and $t -match '"merge" \{\s*\r?\n\s*git -C \$m push -q origin HEAD:main' -and $t -match 'if \(\$testsOk\) \{\s*\r?\n\s*git -C \$m push -q origin HEAD:main'
+    $t = Get-Content $script -Raw; ([regex]::Matches($t, 'push -q origin HEAD:main')).Count -eq 1 -and $t -match 'if \(-not \(Test-MergedTree \$m\)\)' -and $t -match 'Invoke-IsolatedMerges \$m \$baseSha \$prs' -and $t -match 'main changed during tests; discard tested batch'
 }
 Check "auto-merge runs the tests before deciding" { (Get-Content $script -Raw) -match 'Invoke-Native "node" @\("--test"\)' }
 
@@ -216,6 +216,11 @@ $script:CodexEffort = ""; $script:HeavyEffort = ""
 Check "a crash within 2 minutes shows its reason, pauses, and does not count as a strike or block the task" {
     $s = Get-Content $script -Raw
     $s -match 'agent failed fast' -and $s -match '\$fastFail = \(\$script:lastExit -ne 0 -and \$script:lastSeconds -lt 120\)' -and $s -match 'elseif \(-not \$fastFail\) \{ Release' -and $s -match 'Set-Cooldown \(Get-Date\)\.AddMinutes\(10\)'
+}
+Check "SHA retries, locks, handoff conflicts and real node failure isolation regressions" {
+    $r = Invoke-Native 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $here 'test-merger.ps1'))
+    Write-Host ($r.Out -join "`n")
+    $r.Code -eq 0
 }
 Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
 Write-Host "`n$pass passed, $fail failed" -ForegroundColor $(if ($fail) { "Red" } else { "Green" })

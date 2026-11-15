@@ -20,6 +20,7 @@ param(
     [switch]$Once,              # handle at most one task, then exit
     [switch]$DryRun,            # claim and release without running the agent (for testing)
     [switch]$AutoMerge,         # while idle, merge finished task PRs whose merged result passes `node --test` (no AI usage)
+    [switch]$MergeVerifyOnly,   # test/record integrated queue without publishing or posting comments
     [switch]$MergeOnly,  # run ONLY the auto-merge loop every 2 minutes (no agent, no AI usage)
 [switch]$ClaudeFullAccess   # Claude only: skip permission prompts (same idea as Codex full access); use on your own machine only
 )
@@ -30,7 +31,7 @@ $work = Join-Path $root "work"; $state = Join-Path $root "state"
 New-Item -ItemType Directory $work, $state -Force | Out-Null
 $who = "$env:COMPUTERNAME/$Agent"
 $cooldownFile = Join-Path $state "$Agent.cooldown"
-# Codex: "usage limit", "rate limit"; Claude: "You've hit your session limit · resets 12:30pm", "weekly limit", "hit your limit".
+# Codex: "usage limit", "rate limit"; Claude: "You've hit your session limit Â· resets 12:30pm", "weekly limit", "hit your limit".
 $limitPattern = "usage limit|rate limit|hit your (\w+ )?limit|session limit|weekly limit|limit reached|quota exceeded"
 
 function Log($m) { $l = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') [$who] $m"; Write-Host $l; Add-Content (Join-Path $state "$Agent.log") $l }
@@ -224,96 +225,169 @@ function Get-PriorStops($n) {
     @($c | Where-Object { $_.body -match 'stopped before finishing' }).Count
 }
 
-# Auto-merge (no AI): for each open PR from a task/* branch, merge it into a scratch copy of main, keep each task's
-# HANDOFF.md under docs/handoffs/, run `node --test`; push to main only if every test passes. Anything else is left for a human.
+# SHA-aware merger. Only fresh, uniquely named scratch trees are modified.
 function Get-MergeDecision($mergeOk, $testsOk) {
-    if (-not $mergeOk) { return "conflict" }
-    if (-not $testsOk) { return "tests-failed" }
-    return "merge"
+    if (-not $mergeOk) { return 'conflict' }
+    if (-not $testsOk) { return 'tests-failed' }
+    return 'merge'
 }
-function Merge-ReadyPRs {
-    $prs = Invoke-Gh pr list -R $Repo --state open --json "number,headRefName,title,comments" --limit 30 | ConvertFrom-Json
-    foreach ($pr in ($prs | Where-Object { $_.headRefName -like "task/*" } | Sort-Object number)) {
-        if ($pr.comments | Where-Object { $_.body -match '^auto-merge: skipped' }) { continue }   # already reported; a human decides
-        $m = Join-Path $root "merge"
-        if (-not (Test-Path (Join-Path $m ".git"))) { if (Test-Path $m) { Remove-Item $m -Recurse -Force }; git clone -q "https://github.com/$Repo.git" $m }
-        git -C $m fetch -q --prune origin
-        git -C $m checkout -q -B main origin/main
-        git -C $m reset -q --hard origin/main
-        git -C $m clean -qfd
-        $n = if ($pr.headRefName -match '^task/(\d+)') { $matches[1] } else { $pr.number }
-        $mergeOk = $true
-        try { git -C $m -c user.name="REDLINE conductor" -c user.email="redline-conductor@users.noreply.github.com" merge -q --no-ff --no-edit -m "Merge PR #$($pr.number): $($pr.title)" "origin/$($pr.headRefName)" }
-        catch { $mergeOk = $false; try { git -C $m merge --abort } catch { } }
-        $testsOk = $false
-        if ($mergeOk) {
-            if (Test-Path (Join-Path $m "HANDOFF.md")) {
-                New-Item -ItemType Directory (Join-Path $m "docs\handoffs") -Force | Out-Null
-                git -C $m mv -f HANDOFF.md "docs/handoffs/issue-$n.md"
-                git -C $m -c user.name="REDLINE conductor" -c user.email="redline-conductor@users.noreply.github.com" commit -q -m "Keep #$n handoff notes under docs/handoffs"
-            }
-            Push-Location $m; try { $t = Invoke-Native "node" @("--test"); $testsOk = ($t.Code -eq 0) } finally { Pop-Location }
-        }
-        switch (Get-MergeDecision $mergeOk $testsOk) {
-            "merge" {
-                git -C $m push -q origin HEAD:main
-                if ($pr.headRefName -match '^task/(\d+)') { try { Invoke-Gh issue close $matches[1] -R $Repo --reason completed | Out-Null } catch { } }
-                Log "auto-merged PR #$($pr.number) ($($pr.title)); tests pass; site redeploys"
-            }
-            "conflict" {
-                Invoke-Gh pr comment $pr.number -R $Repo --body "auto-merge: skipped. Merge conflict with main; needs a human." | Out-Null
-                Log "auto-merge skipped PR #$($pr.number): merge conflict"
-            }
-            "tests-failed" {
-                Invoke-Gh pr comment $pr.number -R $Repo --body "auto-merge: skipped. ``node --test`` fails after merging into main; needs a human." | Out-Null
-                Log "auto-merge skipped PR #$($pr.number): tests fail after merge"
-            }
+function Open-MergerLock {
+    $key = $Repo -replace '[^a-zA-Z0-9.-]', '_'
+    try { return [IO.File]::Open((Join-Path $state "merger-$key.lock"), 'OpenOrCreate', 'ReadWrite', 'None') }
+    catch [IO.IOException] { return $null }
+}
+function Test-MergeRetry($old, $head, $baseSha) {
+    if (-not $old -or $old.head -ne $head -or $old.base -ne $baseSha) { return $true }
+    return ([DateTimeOffset]::UtcNow -ge [DateTimeOffset]::Parse($old.next))
+}
+function New-MergeFailure($old, $head, $baseSha, $reason) {
+    $same = $old -and $old.head -eq $head -and $old.base -eq $baseSha
+    $attempt = if ($same) { [int]$old.attempts + 1 } else { 1 }
+    $delay = [int][Math]::Min(900, 30 * [Math]::Pow(2, [Math]::Min($attempt - 1, 5)))
+    return @{ head=$head; base=$baseSha; reason=$reason; attempts=$attempt; delay=$delay; next=[datetime]::UtcNow.AddSeconds($delay).ToString('o'); notify=(-not $same) }
+}
+function Register-MergeFailure($pr, $baseSha, $reason) {
+    $key = [string]$pr.number
+    $entry = New-MergeFailure $script:mergeFailures[$key] $pr.headRefOid $baseSha $reason
+    $script:mergeFailures[$key] = $entry
+    Save-MergeFailures
+    if ($entry.notify -and -not $MergeVerifyOnly) {
+        Invoke-Gh pr comment $pr.number -R $Repo --body "auto-merge: skipped ($reason). head=$($pr.headRefOid) base=$baseSha. Changed head/base retries immediately; unchanged failures back off to 15 minutes. Source conflicts and failing tests require repair." | Out-Null
+    }
+    Log "PR #$($pr.number) $reason head=$($pr.headRefOid) base=$baseSha retry=$($entry.next)"
+}
+function Save-MergeFailures {
+    $tempState = "$script:mergeFailureFile.$PID.tmp"
+    [IO.File]::WriteAllText($tempState, (ConvertTo-Json -InputObject $script:mergeFailures -Depth 8))
+    if (Test-Path $script:mergeFailureFile) { [IO.File]::Replace($tempState, $script:mergeFailureFile, $null) }
+    else { [IO.File]::Move($tempState, $script:mergeFailureFile) }
+}
+function Get-MergeSha($m) { (git -C $m rev-parse HEAD | Select-Object -First 1).Trim() }
+function Export-Handoff($m, $sha, $tag) {
+    $probe = Invoke-Native 'git.exe' @('-C', $m, 'rev-parse', '--verify', "${sha}:HANDOFF.md")
+    if ($probe.Code -ne 0) { return }
+    $rel = "docs/handoffs/merger-$tag-$sha.md"
+    $file = Join-Path $m $rel
+    New-Item -ItemType Directory (Split-Path $file) -Force | Out-Null
+    # Copy raw bytes to preserve encoding, CRLF and final newline exactly.
+    $psi = New-Object Diagnostics.ProcessStartInfo
+    $psi.FileName = 'git.exe'; $psi.Arguments = "-C `"$m`" cat-file blob ${sha}:HANDOFF.md"
+    $psi.UseShellExecute = $false; $psi.CreateNoWindow = $true; $psi.RedirectStandardOutput = $true
+    $p = [Diagnostics.Process]::Start($psi)
+    $stream = [IO.File]::Create($file)
+    try { $p.StandardOutput.BaseStream.CopyTo($stream) } finally { $stream.Dispose() }
+    $p.WaitForExit(); $code = $p.ExitCode; $p.Dispose()
+    if ($code -ne 0) { throw 'Cannot archive HANDOFF blob' }
+    git -C $m add -- $rel
+}
+function Merge-Candidate($m, $pr) {
+    $before = Get-MergeSha $m
+    $identity = @('-c', 'gc.auto=0', '-c', 'user.name=akarshsharma2012', '-c', 'user.email=219518258+AkarshSharma2012@users.noreply.github.com')
+    $r = Invoke-Native 'git.exe' (@('-C', $m) + $identity + @('merge', '--no-ff', '--no-commit', $pr.headRefOid))
+    if ($r.Code -ne 0) {
+        $conflicts = @(git -C $m diff --name-only --diff-filter=U)
+        if ($conflicts.Count -ne 1 -or $conflicts[0] -cne 'HANDOFF.md') {
+            git -C $m merge --abort
+            return $false
         }
     }
+    Export-Handoff $m $before "pr-$($pr.number)-base"
+    Export-Handoff $m $pr.headRefOid "pr-$($pr.number)-head"
+    if (Test-Path (Join-Path $m 'HANDOFF.md')) { git -C $m rm -f -- HANDOFF.md | Out-Null }
+    $pending = Invoke-Native 'git.exe' @('-C', $m, 'rev-parse', '-q', '--verify', 'MERGE_HEAD')
+    if ((git -C $m status --porcelain) -or $pending.Code -eq 0) {
+        git -C $m @identity commit -q -m "Merge PR #$($pr.number): $($pr.title)"
+    }
+    return $true
+}
+function Test-MergedTree($m) {
+    $tested = Get-MergeSha $m
+    Push-Location $m
+    try { $t = Invoke-Native "node" @("--test") } finally { Pop-Location }
+    $logFile = Join-Path $state "merger-test-$tested.log"
+    [IO.File]::WriteAllText($logFile, (($t.Out -join "`n") + "`n" + $t.Err))
+    Log "node --test integrated=$tested exit=$($t.Code) output=$logFile"
+    return ($t.Code -eq 0 -and -not (git -C $m status --porcelain --untracked-files=no) -and (Get-MergeSha $m) -eq $tested)
+}
+function New-MergeTrial($source, $sha) {
+    $trial = Join-Path $script:mergeRun "trial-$([guid]::NewGuid().ToString('N'))"
+    git -C $source worktree add -q --detach $trial $sha
+    return $trial
+}
+function Invoke-IsolatedMerges($source, $baseSha, $prs) {
+    $accepted = $baseSha; $taken = @(); $lastTree = $null
+    foreach ($pr in $prs) {
+        $trial = New-MergeTrial $source $accepted
+        if (-not (Merge-Candidate $trial $pr)) { Register-MergeFailure $pr $baseSha 'conflict'; continue }
+        if (-not (Test-MergedTree $trial)) { Register-MergeFailure $pr $baseSha 'tests-failed'; continue }
+        $accepted = Get-MergeSha $trial; $lastTree = $trial; $taken += $pr
+    }
+    return @{ sha=$accepted; taken=$taken; tree=$lastTree }
+}
+function Merge-ReadyPRs { Merge-ReadyPRsBatch }
+function Merge-ReadyPRsBatch {
+    $lock = Open-MergerLock
+    if (-not $lock) { Log 'merger already owned; skipping scan'; return }
+    try {
+        $key = $Repo -replace '[^a-zA-Z0-9.-]', '_'
+        if ($MergeVerifyOnly) { $key += '-verify' }
+        $script:mergeFailureFile = Join-Path $state "merger-$key-failures.json"
+        $script:mergeFailures = @{}
+        if (Test-Path $script:mergeFailureFile) {
+            $saved = Get-Content $script:mergeFailureFile -Raw | ConvertFrom-Json
+            foreach ($prop in $saved.PSObject.Properties) { $script:mergeFailures[$prop.Name] = $prop.Value }
+        }
+        $queue = Invoke-Gh pr list -R $Repo --state open --json 'number,headRefName,headRefOid,baseRefName,title' --limit 100 | ConvertFrom-Json
+        $prs = @($queue | Where-Object { $_.baseRefName -eq 'main' -and $_.headRefName -like 'task/*' -and $_.headRefName -ne 'task/ui-polish' } | Sort-Object number)
+        if (-not $prs.Count) { return }
+        $remote = git ls-remote "https://github.com/$Repo.git" refs/heads/main
+        $baseSha = ($remote -split '\s+')[0]
+        if ($baseSha -notmatch '^[0-9a-f]{40}$') { throw 'Cannot resolve main snapshot' }
+        Log "queue before=$(($prs | ForEach-Object { "$($_.number):$($_.headRefOid)" }) -join ',') base=$baseSha"
+        $prs = @($prs | Where-Object { Test-MergeRetry $script:mergeFailures[[string]$_.number] $_.headRefOid $baseSha })
+        if (-not $prs.Count) { return }
+        $script:mergeRun = Join-Path $root "merger-scratch/run-$PID-$([guid]::NewGuid().ToString('N'))"
+        New-Item -ItemType Directory $script:mergeRun -Force | Out-Null
+        $m = Join-Path $script:mergeRun 'batch'
+        git clone -q --no-checkout "https://github.com/$Repo.git" $m
+        git -C $m checkout -q --detach $baseSha
+        Log "owned scratch=$script:mergeRun"
+        $taken = @()
+        foreach ($pr in $prs) {
+            git -C $m fetch -q origin $pr.headRefOid
+            if (Merge-Candidate $m $pr) { $taken += $pr }
+            else { Register-MergeFailure $pr $baseSha 'conflict' }
+        }
+        if (-not $taken.Count) { return }
+        if (-not (Test-MergedTree $m)) {
+            Log 'batch tests failed; isolating candidates in fresh owned worktrees'
+            $isolated = Invoke-IsolatedMerges $m $baseSha $prs
+            $taken = @($isolated.taken); $m = $isolated.tree
+        }
+        if (-not $taken.Count) { return }
+        $testedSha = Get-MergeSha $m
+        if ($MergeVerifyOnly) {
+            $after = Invoke-Gh pr list -R $Repo --state open --json number,headRefOid --limit 100
+            Log "verified only base=$baseSha tested-integrated=$testedSha heads=$(($taken | ForEach-Object { "$($_.number):$($_.headRefOid)" }) -join ',') queue after=$($after -join '')"
+            return
+        }
+        foreach ($pr in $taken) {
+            $current = Invoke-Gh pr view $pr.number -R $Repo --json headRefOid,state,baseRefName | ConvertFrom-Json
+            if ($current.state -ne 'OPEN' -or $current.baseRefName -ne 'main' -or $current.headRefOid -ne $pr.headRefOid) { Log "PR #$($pr.number) changed during tests; discard tested batch"; return }
+        }
+        $remote = git -C $m ls-remote origin refs/heads/main
+        if (($remote -split '\s+')[0] -ne $baseSha) { Log 'main changed during tests; discard tested batch'; return }
+        git -C $m push -q origin HEAD:main
+        foreach ($pr in $taken) {
+            $script:mergeFailures.Remove([string]$pr.number)
+            if ($pr.headRefName -match '^task/(\d+)') { try { Invoke-Gh issue close $matches[1] -R $Repo --reason completed | Out-Null } catch { Log "issue close failed: $_" } }
+        }
+        Save-MergeFailures
+        $after = Invoke-Gh pr list -R $Repo --state open --json number,headRefOid --limit 100
+        Log "published base=$baseSha tested-integrated=$testedSha heads=$(($taken | ForEach-Object { "$($_.number):$($_.headRefOid)" }) -join ',') queue after=$($after -join '')"
+    } finally { $lock.Dispose() }
 }
 
-function Merge-ReadyPRsBatch {
-    # Fast path: ONE fetch, merge every finished task PR locally, run the tests ONCE, push ONCE. If the combined result fails the tests, fall back to the slow one-by-one path so the bad PR is found and skipped.
-    $prList = Invoke-Gh pr list -R $Repo --state open --json "number,headRefName,title,comments" --limit 50 | ConvertFrom-Json   # store first: PowerShell 5.1 passes a JSON array as ONE object until it is piped
-    $prs = @($prList | ForEach-Object { $_ })
-    $prs = @($prs | Where-Object { $_.headRefName -like "task/*" -and -not ($_.comments | Where-Object { $_.body -match '^auto-merge: skipped' }) } | Sort-Object number)
-    if ($prs.Count -eq 0) { return }
-    $m = Join-Path $root "merge"
-    if (-not (Test-Path (Join-Path $m ".git"))) { if (Test-Path $m) { Remove-Item $m -Recurse -Force }; git clone -q "https://github.com/$Repo.git" $m }
-    git -C $m fetch -q --prune origin
-    git -C $m checkout -q -B main origin/main
-    git -C $m reset -q --hard origin/main
-    git -C $m clean -qfd
-    $taken = @()
-    foreach ($pr in $prs) {
-        $n = if ($pr.headRefName -match '^task/(\d+)') { $matches[1] } else { $pr.number }
-        $mergeOk = $true
-        try { git -C $m -c gc.auto=0 -c user.name="REDLINE conductor" -c user.email="redline-conductor@users.noreply.github.com" merge -q --no-ff --no-edit -m "Merge PR #$($pr.number): $($pr.title)" "origin/$($pr.headRefName)" }
-        catch { $mergeOk = $false; try { git -C $m merge --abort } catch { } }
-        if (-not $mergeOk) {
-            Invoke-Gh pr comment $pr.number -R $Repo --body "auto-merge: skipped. Merge conflict with main; needs a human." | Out-Null
-            Log "auto-merge skipped PR #$($pr.number): merge conflict"
-            continue
-        }
-        if (Test-Path (Join-Path $m "HANDOFF.md")) {
-            New-Item -ItemType Directory (Join-Path $m "docs\handoffs") -Force | Out-Null
-            git -C $m mv -f HANDOFF.md "docs/handoffs/issue-$n.md"
-            git -C $m -c gc.auto=0 -c user.name="REDLINE conductor" -c user.email="redline-conductor@users.noreply.github.com" commit -q -m "Keep #$n handoff notes under docs/handoffs"
-        }
-        $taken += [pscustomobject]@{ pr = $pr.number; issue = $n; title = $pr.title }
-    }
-    if ($taken.Count -eq 0) { return }
-    $testsOk = $false
-    Push-Location $m; try { $t = Invoke-Native "node" @("--test"); $testsOk = ($t.Code -eq 0) } finally { Pop-Location }
-    if ($testsOk) {
-        git -C $m push -q origin HEAD:main
-        foreach ($x in $taken) { try { Invoke-Gh issue close $x.issue -R $Repo --reason completed | Out-Null } catch { } }
-        Log "auto-merged $($taken.Count) PRs in one batch ($(($taken | ForEach-Object { '#' + $_.pr }) -join ', ')); tests pass; site redeploys"
-    } else {
-        Log "batch failed the tests; falling back to one-by-one merging to find the bad PR"
-        Merge-ReadyPRs
-    }
-}
 function Save-Progress($wt, $i) {
     if (git -C $wt.Path status --porcelain) { git -C $wt.Path add -A; git -C $wt.Path commit -q -m "wip: checkpoint for #$($i.number) ($who)" }
     git -C $wt.Path push -q origin $wt.Branch
