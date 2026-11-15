@@ -167,6 +167,10 @@ a[target="_blank"]::after {
 /* Results table (DESIGN.md 5.1) */
 .table-scroll { overflow-x: auto; }
 
+/* Keep absolute screen-reader citation text inside the Ask table's scrollport.
+   Without a containing block here, it can escape local overflow clipping. */
+#ask-root .table-scroll { position: relative; }
+
 table { border-collapse: collapse; width: 100%; background: var(--surface-1); }
 th, td {
   padding: var(--space-8) var(--space-12);

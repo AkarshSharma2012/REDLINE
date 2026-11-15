@@ -1,6 +1,6 @@
 # REDLINE: final-app demo and video plan
 
-Issue #249 update, 2026-11-15, written against `main` at `9b7250a346c86f9f491d15cb82389dbe4d1facc9` (includes merged PRs #238, #239, #244, #246, #248, #250 and #251). The current 60-second script below follows a browser path reported in #249 as checked three times; this documentation task re-ran only the Node suite, not a browser. The two-minute script, storyboard and screenshots further down are historical captures from 2026-11-14 at `31a6acdd778e766d6a896201f376473155c51bc6`; they do not establish current UI behavior. Delivery time remains an unmeasured target. The Opus UI polish pass is separate and not yet approved; recheck the click labels below against any build that includes it.
+Issue #249 update, 2026-11-15, corrected against `main` at `2655346` (includes merged PRs #238, #239, #244, #246, #248, #250, #251, #253 and #254). The current 60-second script below follows a browser path reported in #249 as checked three times; this documentation task re-ran only the Node suite, not a browser. The two-minute script, storyboard and screenshots further down are historical captures from 2026-11-14 at `31a6acdd778e766d6a896201f376473155c51bc6`; they do not establish current UI behavior. Delivery time remains an unmeasured target. The Opus UI pass (release PR #255) is separate and not yet approved; recheck the click labels below against any build that includes it.
 
 ## Current 60-second demo (2026-11-15)
 
@@ -8,11 +8,11 @@ Path reported in #249: verified three times; all six tabs and Escape focus resto
 
 | Time | Exact click and visible state | Narration |
 | --- | --- | --- |
-| 0:00–0:12 | **Cabin Check → Load lunar rover demo**. Point to **34% O2, 56.5 kPa**, **Lunar scenario (0.16 g, estimate)** and the zero-verified notice. | This illustrative pressurized lunar rover lists four cabin materials. REDLINE matches them against forty-five evidence rows. None is human-verified yet, so each result reads: not found in the sources reviewed. |
-| 0:12–0:24 | **Gravity** tab. Keep **PMMA sheet · flaming**. Expand **Inspect draft research detail · excluded from cabin results**. | Gravity shows PMMA research from NASA simulated lunar-gravity tests, held as draft and excluded from cabin results. |
+| 0:00–0:12 | **Cabin Check → Load lunar rover demo**. Point to **34% O2, 56.5 kPa**, **Lunar scenario (0.16 g, estimate)** and the zero-verified notice. | This illustrative pressurized lunar rover lists four cabin materials. REDLINE matches them against forty-five evidence rows. None is human-verified yet, so Cabin labels remain unavailable; we expose missing coverage rather than guessing. |
+| 0:12–0:24 | **Gravity view** tab. Keep **PMMA sheet · flaming**. Expand **Inspect draft research detail · excluded from cabin results**. | Gravity shows PMMA research from NASA simulated lunar-gravity tests, held as draft and excluded from cabin results. |
 | 0:24–0:42 | Click **Open evidence record** for `U25-01-L`. Point to `HOLD_scientific_review`, the NASA source link and its source locator. | Each record carries a NASA citation and a page or slide locator. This one is on scientific-review hold, so it cannot drive a cabin label. Simulated lunar gravity is not a measurement on the Moon. |
-| 0:42–0:52 | Return to **Cabin Check**. Point to the results; evidence-row selection is intentionally unavailable. | Row selection stays off until reviewed evidence exists. Unknown airflow stays blank, never zero, so missing conditions cannot fake a match. |
-| 0:52–1:00 | Hold on the results and the candidate experiment card. | Every value traces to a NASA source; every gap stays visible as a candidate experiment question, not a conclusion. |
+| 0:42–0:52 | Return to **Cabin Check**. Point to **No verified evidence rows loaded**; evidence-row selection is intentionally unavailable. | Row selection stays off until reviewed evidence exists. Unknown airflow stays blank, never zero, so missing conditions cannot fake a match. |
+| 0:52–1:00 | Hold on the Cabin Check panel. | Research records retain NASA URLs and locators; requested conditions and inferences remain separate, and every gap stays an open question. |
 
 Do not open **Accuracy** in the 60-second cut. Its optional `research/validation-results.csv` returns 404 because held-out evaluation has not been run; no accuracy is claimed.
 
@@ -23,7 +23,7 @@ Do not open **Accuracy** in the 60-second cut. Its optional `research/validation
 - **Unknown-condition safeguards.** Blank airflow or heat flux stays `null`, never zero. Missing coverage returns **NOT_ESTABLISHED** (`NE-no-data`, `NE-incompatible`) instead of a guess. Lunar values are labeled estimates, not on-Moon measurements.
 - **Static ES modules.** The dashboard is plain HTML, CSS and browser ES modules under `src/`, with no build step and no runtime dependencies. `data/evidence.json` is generated from `data/evidence.csv` by `scripts/build-evidence.mjs`.
 - **Node tests.** `node --test` runs the full suite with Node's built-in runner: data integrity, labels, wording, accessibility statics and this demo's data path. Tests check software behavior only; they do not validate material behavior.
-- **GitHub task workflow.** Agent lanes A1, A2, B1 and B2 each claim one GitHub issue, work on a `task/<number>-<slug>` branch and open a pull request. The full Node suite gates each merge; nobody pushes to `main` directly.
+- **GitHub task workflow.** Agent lanes A1, A2, B1 and B2 each claim one GitHub issue, work on a `task/<number>-<slug>` branch and open a pull request. Development agents work on task branches; the merger integrates tested PR heads into `main` with head/base guards, after the full Node suite passes.
 
 Claim boundary: no measured physical outcome, completed human verification, accuracy score or bug-free status is claimed.
 
