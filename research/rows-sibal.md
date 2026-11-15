@@ -1,4 +1,4 @@
-﻿# SIBAL evidence extraction — issue #116
+# SIBAL evidence extraction — issue #116
 
 ## Result and provenance
 
@@ -22,7 +22,7 @@ Shared conditions: approximately 0.32 mm fabric; width 2.2 cm converted to 22 mm
 ## Source inventory and exclusions
 
 - **Extraction source:** public NASA-hosted conference paper below. Appendix text was read directly; its PDF screenshot tool returned no usable image. Independent visual verification remains outstanding; all rows remain draft.
-- **NASA summary:** [Burning and Suppression of Solids–II (BASS-II) Summary Report, chapter 7, printed pp. 94–100, especially Fig. 7.7 on p. 100](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=102). Searchable chapter text corroborates the SIBAL study; no additional rows were extracted from this overlapping report.
+- **NASA summary:** [Burning and Suppression of Solids–II (BASS-II) Summary Report, chapter 7, Fig. 7.7 on printed p. 100](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=108). Searchable chapter text corroborates the SIBAL study; no additional rows were extracted from this overlapping report.
 - **Peer-reviewed report found:** Zhao, Liao, Johnston, T'ien, Ferkul and Olson, *Concurrent flame growth, spread, and quenching over composite fabric samples in low speed purely forced flow in microgravity*, Proceedings of the Combustion Institute, publisher record: [volume 36, issue 2, 2017, pp. 2971–2978; DOI 10.1016/j.proci.2016.06.028](https://www.sciencedirect.com/science/article/abs/pii/S1540748916300864). Publisher metadata/abstract were available through search; direct retrieval returned HTTP 403. Full-text numerical agreement is **unverified**. No rows attributed to that article.
 - **Earlier concept report:** [Solid Inflammability Boundary At Low-Speed (SIBAL), NTRS record](https://ntrs.nasa.gov/citations/20040053507), Abstract. Describes a planned experiment; excluded as a source of completed ISS outcomes.
 - Skipped reused samples, uncertain-oxygen runs, blank-comment runs, ignition failures, blowoff cases and other widths to keep a focused set of explicit wide-fabric quench outcomes. Reuse limitations: [p. 3 Results](https://ntrs.nasa.gov/api/citations/20150008962/downloads/20150008962.pdf#page=3); oxygen warning and comments: [p. 9 Appendix](https://ntrs.nasa.gov/api/citations/20150008962/downloads/20150008962.pdf#page=9).
@@ -48,3 +48,7 @@ Proposed entry under `sources` in `data/metadata.json` (proposal only):
 ```
 
 Bibliographic transcription: [title page, p. 1](https://ntrs.nasa.gov/api/citations/20150008962/downloads/20150008962.pdf#page=1). This short source key distinguishes the conference version from the later journal article.
+
+## Validation
+
+Project CSV parser check passed: exact header, four records, run/flow/oxygen transcription, draft status and blank unknown flux. Repository node --test: 826 tests, 739 pass, 0 fail, 87 existing TODO. No server or browser started. Independent science review remains required before data integration.
