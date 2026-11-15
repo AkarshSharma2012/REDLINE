@@ -1,8 +1,11 @@
 # Issue #241
 
-- Clean assigned branch; no prior handoff. Named `f1-go.ps1` / `pane-doctor.ps1` not found under user directory; reuse remains unavailable.
-- Plan: dependency-free Node structured intake, persistent dedup/budgets, exclusive lock, bounded read-only probes, owner-first escalation queue, PowerShell entry/display wrappers, synthetic tests.
-- No model or repair worker launched; no checkout modifications outside this issue. Persistent monitoring launch reserved for coordinator because no process may remain after this task.
-- Author verified from repository history: akarshsharma2012 <lakshyakhandelwal28@gmail.com>.
-- Implemented intake, persistent dedup/retry/global budgets, owner-first local escalation requests, exclusive lock, fixed read-only timeout probe, one-shot monitoring and PowerShell wrappers. No repair/model dispatch exists; coordinator owns actionable diagnosis and isolated tested repair PRs.
-- Full `node --test` run exited 1: watchdog PowerShell parser harness passed filename incorrectly. Fixed harness to pass a data-only environment variable; focused rerun pending. Windows read-only process probe passed in full run.
+STATUS: BLOCKED: Existing f1-go.ps1 / pane-doctor.ps1 not found in checkout or user-directory filename search; need their locations and coordinator dispatch integration to complete upstream reuse and enforce external repair timeouts.
+
+- Implemented zero-AI structured intake, durable dedup, exclusive lock, two attempts/incident, four global requests, 60s retry spacing, fixed read-only 2s process probes, one-shot monitor, doctor and PowerShell wrappers. Absolute cutoff Nov 15 06:20 PST. No dependencies added.
+- Requests route claimed failures to owner first, then orchestrator. They persist locally; no messages/models/repairs/integration workers launched. External repair timeout is a request contract only. No active checkouts, credentials, worktrees or evidence flags altered.
+- Validation: full `node --test` run once exited 1 with our PowerShell parser-harness error. Corrected filename passing; final focused `node --test tests/failure-watchdog.test.mjs`: 9 passed, 0 failed. Includes malformed intake, dedup, budgets/deadline, cross-process lock, timeout/reaping, durable requests, PowerShell syntax, CLI and real Windows process metadata (test node PID 28492). Full suite not rerun.
+- After tests, actual PowerShell `watch` and doctor commands both exited 0; empty production pass returned requests=[], remainingBudget=4, modelCalls=0. No persistent monitoring or server left running. Coordinator verifies/schedules launch.
+- Logs: `C:\Users\nehap\redline-conductor\state\issue-241-evidence\watchdog-tests.log`, `launch.log`, `doctor.log`. Production state: `C:\Users\nehap\redline-conductor\state\failure-watchdog-241\state.json`.
+- Commands/schema/limits: `scripts/failure-watchdog.md`. No claim that task 655450vvjp was independently located, hung, repaired or killed; its synthetic reports are explicitly test data. Real evidence is process metadata and local launch/state logs.
+- Commits use repository-established author akarshsharma2012 <lakshyakhandelwal28@gmail.com>, no AI trailers. Next: locate upstream doctors, wire existing coordinator acknowledgement/actionable dispatch and enforced bounded isolated repair execution. No automatic submission.
