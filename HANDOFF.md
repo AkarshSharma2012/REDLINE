@@ -47,3 +47,14 @@ STATUS: DONE
 - Full node --test on 2a41a2da300a0a2501e3c27f81a30926971c82b7 (Node v26.13.1): 1250 tests, 1206 pass, 0 fail, 44 existing TODO, 0 skipped/cancelled; exit 0. git diff --check clean. Native worksheet/export regenerated with no content changes beyond evidence build metadata. No server/browser or persistent process started.
 - Complete; push current branch HEAD to existing PR294 source branch only. Coordinator retains review/release ownership.
 STATUS: DONE
+
+# Issue #313: B1 local merger repair
+- Ran on this machine (LAPTOP-AM). The issue named `C:/Users/Neeraj Sharma/...`, but that path does not exist here, so the root runtime files used were `C:\Users\nehap\redline-conductor\conductor.ps1` and `test-conductor.ps1`. They sit outside the repo, so this branch holds only this record. Backups: `state\*.bak-313`.
+- Save-MergeFailures: replaced `File.Replace(temp,dest,$null)` (PS 5.1 error "path not of a legal form") with a copy-overwrite and temp-file cleanup.
+- Queue is default closed: `Test-MergeCandidate`/`Select-MergeCandidates` accept only open, non-draft `task/*` PRs into main that carry the exact label `merge-approved` and have no hold label or title. A missing isDraft field counts as draft. The same check runs again right before publish, alongside the existing head/base/main rechecks.
+- Integrated tests: `Initialize-MergeDeps` runs `npm ci` (or `npm install` when there is no lockfile) whenever package.json declares dependencies, and checks that react, react-dom and jsdom are present. If a `build-ui` script exists, `Test-MergeBuild` runs it and requires no tracked changes afterwards. Lock, conflict refusal, backoff and verify-only behaviour are unchanged.
+- Tests: `test-conductor.ps1` gained 6 regressions (state create and overwrite, queue filtering incl. draft/HOLD/unapproved, fail-closed isDraft, wiring, no-npm path). Result: 68 passed, 0 failed (includes test-merger 10/10). Script parses with 0 errors.
+- Proof: `-MergeOnly -MergeVerifyOnly -Once` exited 0. All 8 open PRs (312,311,309,307,304,303,301,300) were skipped because none is labeled `merge-approved`. Nothing was published or commented, and no daemon or server was started.
+- Next (coordinator): create the `merge-approved` label, approve the reviewed PRs, restart the merger daemon.
+
+STATUS: DONE
