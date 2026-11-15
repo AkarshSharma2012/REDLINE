@@ -8,10 +8,14 @@ function matches(query, row) {
   return fields.filter(f => f !== 'o2_pct').every(f => query[f] != null && row[f] === query[f]);
 }
 
-export function suggestFixes(results = [], { cabinQuery = {}, evidence = {} } = {}) {
-  const rows = (evidence.evidence ?? []).filter(row => row.review_status === 'verified' &&
+export function suggestFixes(results = [], context = {}) {
+  // Judge click-through (#169): tolerate null/malformed inputs; an empty list is a valid answer.
+  results = Array.isArray(results) ? results.filter(r => r && typeof r === 'object') : [];
+  const cabinQuery = context?.cabinQuery ?? {};
+  const evidence = context?.evidence ?? {};
+  const rows = (Array.isArray(evidence.evidence) ? evidence.evidence : []).filter(row => row && row.review_status === 'verified' &&
     row.source_locator && nasaURL(evidence.sources?.[row.source_key]?.url));
-  const queryFor = id => ({ ...cabinQuery.conditions, ...cabinQuery.materials?.find(m => m.material_id === id) });
+  const queryFor = id => ({ ...cabinQuery.conditions, ...(Array.isArray(cabinQuery.materials) ? cabinQuery.materials : []).find(m => m?.material_id === id) });
   const citations = list => list.map(row => ({ evidence_id: row.evidence_id,
     url: evidence.sources[row.source_key].url, title: evidence.sources[row.source_key].title,
     locator: row.source_locator }));
@@ -43,6 +47,8 @@ export function suggestFixes(results = [], { cabinQuery = {}, evidence = {} } = 
 // Optional context is additive to the scaffold's two-argument interface.
 export function renderFixes(root, results = [], context = {}) {
   if (!root) return;
+  results = Array.isArray(results) ? results.filter(r => r && typeof r === 'object') : [];
+  context = { ...context, cabinQuery: context?.cabinQuery ?? {}, evidence: context?.evidence ?? {} };
   const doc = root.ownerDocument;
   root.replaceChildren();
   const add = (parent, tag, text, className) => {
@@ -59,17 +65,22 @@ export function renderFixes(root, results = [], context = {}) {
     add(card, 'p', fix.text);
     for (const source of fix.citations) link(card, source.url, `${source.title} — ${source.locator} (${source.evidence_id})`);
   }
-  for (const experiment of suggestExperiments(results, context)) {
+  // Experiment cards are optional: a malformed result must not take down the fixes above.
+  let experiments = [];
+  try { experiments = suggestExperiments(results, context); } catch { experiments = []; }
+  for (const experiment of experiments) {
     const card = add(root, 'article', '', 'region');
     add(card, 'h3', 'Candidate experiment question / REDLINE inference', 'type-heading');
-    add(card, 'p', experiment.material_ids.join(', '));
+    add(card, 'p', (experiment.material_ids ?? []).join(', '));
     add(card, 'p', experiment.hypothesis);
-    add(card, 'p', `Planning priority: ${experiment.dependency_count} distinct cabin materials share this protocol gap. Each specimen needs its own measurement.`);
+    add(card, 'p', `Planning priority: ${experiment.dependency_count ?? experiment.material_ids?.length ?? 0} distinct cabin materials share this protocol gap. Each specimen needs its own measurement.`);
     const list = add(card, 'dl', '');
-    for (const field of fields) { add(list, 'dt', field); add(list, 'dd', experiment.conditions[field] == null ? 'Not specified; define before testing' : `${experiment.conditions[field]} (requested scenario, not a measured result)`); }
-    add(card, 'p', experiment.facility.note);
-    link(card, experiment.facility.source_url, `${experiment.facility.name} — ${experiment.facility.source_locator}`);
+    for (const field of fields) { add(list, 'dt', field); add(list, 'dd', experiment.conditions?.[field] == null ? 'Not specified; define before testing' : `${experiment.conditions[field]} (requested scenario, not a measured result)`); }
+    if (experiment.facility) {
+      add(card, 'p', experiment.facility.note ?? '');
+      link(card, experiment.facility.source_url, `${experiment.facility.name} — ${experiment.facility.source_locator}`);
+    }
     add(card, 'p', `Not found in the sources reviewed. Inventory: ${experiment.inventory}.`);
-    for (const source of experiment.sources) link(card, source.url, source.title);
+    for (const source of experiment.sources ?? []) link(card, source.url, source.title);
   }
 }
