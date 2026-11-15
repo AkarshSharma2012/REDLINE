@@ -23,7 +23,7 @@ export function buildExamples(data) {
     ['Different endpoint: quench speed', 'ZHAO2015-SIBAL-T4', {}],
     ['Form mismatch', 'LINK2018-UG-B19', { form: 'fabric' }],
     ['Flow-direction mismatch', 'LINK2018-UG-B19', { flow_direction: 'concurrent' }],
-    ['Pressure not specified', 'LINK2018-UG-17', { pressure_kpa: null }],
+    ['Illustrative pressure of 56.5 kPa', 'LINK2018-UG-17', { pressure_kpa: 56.5 }],
     ['Lunar estimate query', 'LINK2018-UG-B19', { gravity_g: 0.16 }],
   ];
   return cases.map(([title, id, overrides], index) => {

@@ -378,7 +378,7 @@ Candidate-row diagnostics (including rows not cited):
 - [LINK2018-1G-18](https://www.nature.com/articles/s41598-017-18398-4) — Results, Fig. 8 discussion. Endpoint: burn/no-burn; outcome: no-spread; limit: null null. Grade: FLAG.
   - No rule explanations returned; dependency #55 is incomplete.
 
-## Example 11: Pressure not specified
+## Example 11: Illustrative pressure of 56.5 kPa
 
 Query seed: [LINK2018-UG-17](https://www.nature.com/articles/s41598-017-18398-4) — Results, Fig. 8 discussion; Abstract.
 
@@ -389,7 +389,7 @@ Query seed: [LINK2018-UG-17](https://www.nature.com/articles/s41598-017-18398-4)
   "thickness_mm": null,
   "width_mm": null,
   "o2_pct": 17,
-  "pressure_kpa": null,
+  "pressure_kpa": 56.5,
   "flow_speed_cm_s": null,
   "flow_direction": "opposed",
   "gravity_g": 0,
