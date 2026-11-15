@@ -15,3 +15,7 @@ Verification completed:
 Next: none for this research deliverable. Catalog registration and resolver implementation belong to their respective owners; proposed IDs must not be used as registered production IDs.
 
 STATUS: DONE
+
+Revalidation on 2026-11-14 (Node v26.13.1): alias assertions passed again (44 unique normalized aliases; all current production material IDs covered). Spot-checked NASA identity tables for PMMA/Plexiglas, Kapton and silicone/polysiloxane. Full `node --test` now exits 1: 782 pass, 1 fail, 87 TODO. The failure is `checked-in report matches current evidence`; its diff shows CRLF in the checked-in missing-field audit versus LF in generated text. This supersedes the earlier full-suite result above. No out-of-scope report/test files were changed; its owner should review newline normalization. Research deliverable remains complete. No persistent process started.
+
+STATUS: DONE
