@@ -34,7 +34,12 @@ $cooldownFile = Join-Path $state "$Agent.cooldown"
 # Codex: "usage limit", "rate limit"; Claude: "You've hit your session limit Â· resets 12:30pm", "weekly limit", "hit your limit".
 $limitPattern = "usage limit|rate limit|hit your (\w+ )?limit|session limit|weekly limit|limit reached|quota exceeded"
 
-function Log($m) { $l = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') [$who] $m"; Write-Host $l; Add-Content (Join-Path $state "$Agent.log") $l }
+function Log($m) {
+    $l = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') [$who] $m"
+    Write-Host $l
+    $logName = if ($MergeOnly) { "merger-$PID.log" } else { "$Agent.log" }
+    Add-Content (Join-Path $state $logName) $l
+}
 # Windows PowerShell 5.1 turns ANY stderr line from a native program into a fatal error when ErrorActionPreference is Stop,
 # but git, gh and the agents print normal progress on stderr. So: run them with a local Continue, keep stderr separately,
 # and fail only on a real non-zero exit code, with the real message.
@@ -269,6 +274,11 @@ function Export-Handoff($m, $sha, $tag) {
     $rel = "docs/handoffs/merger-$tag-$sha.md"
     $file = Join-Path $m $rel
     New-Item -ItemType Directory (Split-Path $file) -Force | Out-Null
+    if (Test-Path $file) {
+        $existing = git -C $m hash-object -- $file
+        if ($existing -ne $probe.Out[0]) { throw "Archive destination collision: $rel" }
+        return
+    }
     # Copy raw bytes to preserve encoding, CRLF and final newline exactly.
     $psi = New-Object Diagnostics.ProcessStartInfo
     $psi.FileName = 'git.exe'; $psi.Arguments = "-C `"$m`" cat-file blob ${sha}:HANDOFF.md"
@@ -367,12 +377,12 @@ function Merge-ReadyPRsBatch {
         if (-not $taken.Count) { return }
         $testedSha = Get-MergeSha $m
         if ($MergeVerifyOnly) {
-            $after = Invoke-Gh pr list -R $Repo --state open --json number,headRefOid --limit 100
+            $after = Invoke-Gh pr list -R $Repo --state open --json 'number,headRefOid' --limit 100
             Log "verified only base=$baseSha tested-integrated=$testedSha heads=$(($taken | ForEach-Object { "$($_.number):$($_.headRefOid)" }) -join ',') queue after=$($after -join '')"
             return
         }
         foreach ($pr in $taken) {
-            $current = Invoke-Gh pr view $pr.number -R $Repo --json headRefOid,state,baseRefName | ConvertFrom-Json
+            $current = Invoke-Gh pr view $pr.number -R $Repo --json 'headRefOid,state,baseRefName' | ConvertFrom-Json
             if ($current.state -ne 'OPEN' -or $current.baseRefName -ne 'main' -or $current.headRefOid -ne $pr.headRefOid) { Log "PR #$($pr.number) changed during tests; discard tested batch"; return }
         }
         $remote = git -C $m ls-remote origin refs/heads/main
@@ -383,7 +393,7 @@ function Merge-ReadyPRsBatch {
             if ($pr.headRefName -match '^task/(\d+)') { try { Invoke-Gh issue close $matches[1] -R $Repo --reason completed | Out-Null } catch { Log "issue close failed: $_" } }
         }
         Save-MergeFailures
-        $after = Invoke-Gh pr list -R $Repo --state open --json number,headRefOid --limit 100
+        $after = Invoke-Gh pr list -R $Repo --state open --json 'number,headRefOid' --limit 100
         Log "published base=$baseSha tested-integrated=$testedSha heads=$(($taken | ForEach-Object { "$($_.number):$($_.headRefOid)" }) -join ',') queue after=$($after -join '')"
     } finally { $lock.Dispose() }
 }
@@ -395,7 +405,7 @@ function Save-Progress($wt, $i) {
 
 if ($MergeOnly) {
     $who = "$env:COMPUTERNAME/merger"; Log "auto-merge loop started (repo $Repo): merges finished task PRs that pass node --test"
-    while ($true) { try { Merge-ReadyPRsBatch } catch { Log "auto-merge error: $_ | $(($_.ScriptStackTrace -split "[\r\n]+")[0..2] -join ' / ')" }; if ($Once) { break }; Start-Sleep 15 }
+    while ($true) { try { Merge-ReadyPRsBatch } catch { Log "auto-merge error: $_ | $(($_.ScriptStackTrace -split "[\r\n]+" | Select-Object -First 3) -join ' / ')"; if ($Once) { throw } }; if ($Once) { break }; Start-Sleep 15 }
     return
 }
 Log "started (repo $Repo, reserve $Reserve%)"

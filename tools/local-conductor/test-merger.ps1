@@ -6,6 +6,16 @@ New-Item -ItemType Directory $tmp | Out-Null
 $state = $tmp; $root = $tmp; $Repo = 'test/repo'; $who = 'test'; $Agent = 'codex'
 $pass = 0; $fail = 0
 function Check($name, [scriptblock]$test) { try { if (-not (& $test)) { throw 'assertion failed' }; $script:pass++; Write-Host "PASS $name" } catch { $script:fail++; Write-Host "FAIL $name : $_" } }
+Check 'GitHub JSON field lists stay single arguments through PowerShell functions' {
+    $commands = $ast.FindAll({ $args[0] -is [System.Management.Automation.Language.CommandAst] }, $true)
+    $bad = @($commands | Where-Object { $_.GetCommandName() -eq 'Invoke-Gh' } | ForEach-Object {
+        $elements = $_.CommandElements
+        for ($i = 0; $i -lt $elements.Count - 1; $i++) {
+            if ($elements[$i].Extent.Text -eq '--json' -and $elements[$i+1] -is [System.Management.Automation.Language.ArrayLiteralAst]) { $_ }
+        }
+    })
+    $bad.Count -eq 0
+}
 Check 'changed head retries immediately despite historical skip' {
     $old = @{ head = 'old'; base = 'base'; next = [datetime]::UtcNow.AddHours(1).ToString('o'); attempts = 1; reason = 'tests-failed' }
     (Test-MergeRetry $old 'new' 'base') -and -not (Test-MergeRetry $old 'old' 'base')
@@ -20,6 +30,11 @@ Check 'unchanged failure deduplicates comments and caps backoff' {
 Check 'single merger lock excludes second owner' {
     $a = Open-MergerLock
     try { $b = Open-MergerLock; if ($b) { $b.Dispose(); return $false }; return $true } finally { if ($a) { $a.Dispose() } }
+}
+Check 'merger logging never contends with active agent log' {
+    $MergeOnly = $true
+    $held = [IO.File]::Open((Join-Path $state 'codex.log'), 'OpenOrCreate', 'ReadWrite', 'None')
+    try { Log 'merger logging isolation'; Test-Path (Join-Path $state "merger-$PID.log") } finally { $held.Dispose() }
 }
 $repoDir = Join-Path $tmp 'repo'
 git init -q $repoDir
