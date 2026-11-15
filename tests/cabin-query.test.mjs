@@ -34,7 +34,12 @@ class Element {
   }
   set textContent(v) { this.text = String(v); this.children = []; }
   get textContent() { return this.text + this.children.map(c => c.textContent).join(' '); }
-  append(...nodes) { for (const node of nodes) { node.parent = this; this.children.push(node); } }
+  set value(v) { this.rawValue = String(v); }
+  get value() { return this.rawValue; }
+  append(...nodes) { for (const node of nodes) {
+    if (this.tagName === 'SELECT' && !this.children.length) this.value = node.value;
+    node.parent = this; this.children.push(node);
+  } }
   replaceChildren(...nodes) { this.children = []; this.text = ''; this.append(...nodes); }
   setAttribute(k, v) { this.attrs[k] = String(v); }
   removeAttribute(k) { delete this.attrs[k]; }
@@ -51,7 +56,7 @@ class Element {
   all() { return this.children.flatMap(c => [c, ...c.all()]); }
   querySelectorAll(selector) {
     return this.all().filter(c => selector.startsWith('[')
-      ? c[selector.match(/\[(\w+)=/)[1]] === selector.match(/="([^"]*)"/)[1]
+      ? (c[selector.match(/\[([\w-]+)=/)[1]] ?? c.attrs[selector.match(/\[([\w-]+)=/)[1]]) === selector.match(/="([^"]*)"/)[1]
       : c.tagName === selector.toUpperCase());
   }
   querySelector(selector) { return this.querySelectorAll(selector)[0] ?? null; }

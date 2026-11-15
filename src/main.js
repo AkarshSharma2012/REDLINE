@@ -4,6 +4,7 @@
 // so the first screen still works if evidence.json fails to load.
 import { labelCabin } from './rules/label.js';
 import { renderCabinForm } from './ui/cabin-form.js';
+import { buildCabinQuery } from './ui/cabin-query.js';
 import { renderResultsTable } from './ui/results-table.js';
 import { renderEvidencePanel } from './ui/evidence-panel.js';
 import { renderO2Slider } from './ui/o2-slider.js';
@@ -90,8 +91,8 @@ function wireTabs() {
   showTab(tabFromHash(location.hash));
 }
 
-function wireCabin(evidence) {
-  const $ = (id) => document.getElementById(id);
+export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, document: doc = globalThis.document } = {}) {
+  const $ = (id) => doc.getElementById(id);
   const verified = verifiedOnly(evidence);
   let cabinQuery = null;
   let form = null;
@@ -101,7 +102,7 @@ function wireCabin(evidence) {
     cabinQuery = query;
     const withQ = withQueries(results, query);
     const context = { cabinQuery: query, evidence };
-    $('evidence-panel').replaceChildren(Object.assign(document.createElement('p'),
+    $('evidence-panel').replaceChildren(Object.assign(doc.createElement('p'),
       { className: 'text-3', textContent: 'Select a material to see the tests behind its label.' }));
     renderResultsTable($('results-table'), withQ, {
       evidence,
@@ -112,6 +113,29 @@ function wireCabin(evidence) {
     slider?.update(query);
   }
 
+  // labelCabin's second argument is the evidence ROW ARRAY, not the dataset.
+  // Keep metadata for row names and the evidence panel, outside the pure query.
+  function evaluateForm(state) {
+    return evaluate(buildCabinQuery(state), verified.evidence);
+  }
+
+  function changed(state, { valid }) {
+    if (!state.materials.length || !valid) {
+      cabinQuery = null;
+      slider?.destroy(); slider = null;
+      $('evidence-panel').replaceChildren();
+      $('fixes').replaceChildren();
+      // Empty input takes precedence over the dataset's zero-verified-row state.
+      renderResultsTable($('results-table'), [], { evidence: {} });
+      if (state.materials.length) {
+        $('results-table').querySelector('[role="status"]').textContent =
+          'Correct the cabin fields to update results. Previous labels have been cleared.';
+      }
+      return;
+    }
+    showResults(evaluateForm(state), state);
+  }
+
   function mountForm(items = []) {
     form?.destroy();
     form = renderCabinForm($('cabin-form'), {
@@ -120,9 +144,13 @@ function wireCabin(evidence) {
       sources: evidence.sources,
       evidence: verified,
       items,
-      evaluate: (query, ev) => labelCabin(query, ev),
+      evaluate: evaluateForm,
+      onChange: changed,
       onEvaluate: showResults,
     });
+    // Initialize results after the form has installed presets and demo items.
+    // The normal input path supplies validation without moving keyboard focus.
+    $('cabin-form').querySelector('form').dispatchEvent(new Event('input', { bubbles: true }));
   }
 
   // The form exposes no condition setter, so Apply from the O2 preview edits its inputs and
@@ -156,14 +184,15 @@ function wireCabin(evidence) {
     const root = $('o2-slider');
     if (!cabinQuery) {
       slider?.destroy(); slider = null;
-      root.replaceChildren(Object.assign(document.createElement('p'), { className: 'text-2',
+      root.replaceChildren(Object.assign(doc.createElement('p'), { className: 'text-2',
         textContent: 'Evaluate a cabin in Cabin Check first (or load the lunar rover demo). The preview holds that cabin\'s items, pressure, airflow and gravity fixed.' }));
       return;
     }
     if (slider) return;
     root.replaceChildren();
     slider = renderO2Slider(root, {
-      cabinQuery, evidence, labelCabin,
+      cabinQuery, evidence,
+      labelCabin: (query, dataset) => evaluate(buildCabinQuery(query), verifiedOnly(dataset).evidence),
       onApply: (next) => { applyConditions(next); location.hash = 'cabin'; },
       onCancel: () => { location.hash = 'cabin'; },
     });
@@ -213,6 +242,9 @@ async function start() {
     const retry = Object.assign(document.createElement('button'), { type: 'button', textContent: 'Retry' });
     retry.addEventListener('click', () => location.reload());
     status.append(retry);
+    renderResultsTable(document.getElementById('results-table'), [], {
+      state: 'error', onRetry: () => location.reload(),
+    });
     wireAccuracy(null);
     return;
   }
