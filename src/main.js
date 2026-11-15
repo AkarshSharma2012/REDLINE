@@ -1,9 +1,10 @@
 // Entry point: loads data/evidence.json and wires the UI to the rules (S1 §2-3).
 // Tabs follow screens.md §1 plus the PSI dashboard (B11) and Ask REDLINE (B12).
 // The Investigations tab mounts itself (src/ui/investigations.js has its own <script> tag),
-// so the first screen still works if evidence.json fails to load.
+// independently of the Cabin Check default if evidence.json fails to load.
 import { labelCabin } from './rules/label.js';
 import { renderCabinForm } from './ui/cabin-form.js';
+import { buildCabinQuery } from './ui/cabin-query.js';
 import { renderResultsTable } from './ui/results-table.js';
 import { renderEvidencePanel } from './ui/evidence-panel.js';
 import { renderO2Slider } from './ui/o2-slider.js';
@@ -11,10 +12,11 @@ import { renderFixes } from './ui/fixes.js';
 import { renderGravityView } from './ui/gravity-view.js';
 import { loadAccuracyReport, renderAccuracyView } from './ui/accuracy-view.js';
 import { mountAsk } from './ui/ask.js';
+import { validateEvidence } from './schema/validate.js';
 
 const EVIDENCE_URL = 'data/evidence.json';
 
-export const TABS = ['investigations', 'ask', 'cabin', 'gravity', 'oxygen', 'accuracy'];
+export const TABS = ['cabin', 'investigations', 'gravity', 'oxygen', 'accuracy', 'ask'];
 
 // Illustrative lunar pressurized rover cabin (screens.md §7, docs/pitch.md 0:00-0:20).
 // Item uses are hypothetical, not a real rover manifest. Atmosphere: the form's default
@@ -32,10 +34,14 @@ export const ROVER_DEMO = Object.freeze({
 export async function loadEvidence(url = EVIDENCE_URL) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
-  return res.json();
+  const evidence = await res.json();
+  // Reject invalid datasets before any UI or engine can mistake them for missing coverage.
+  const validation = validateEvidence(evidence);
+  if (!validation.ok) throw new Error(`${url}: validation failed: ${validation.errors[0]}`);
+  return evidence;
 }
 
-// tabFromHash('#gravity') -> 'gravity'; anything unknown -> the PSI dashboard.
+// tabFromHash('#gravity') -> 'gravity'; anything unknown -> Cabin Check.
 export function tabFromHash(hash = '') {
   const id = String(hash).replace(/^#/, '');
   return TABS.includes(id) ? id : TABS[0];
@@ -44,6 +50,11 @@ export function tabFromHash(hash = '') {
 // label.js takes only verified rows (S1 §3.2); drafts stay inspectable in the evidence panel.
 export function verifiedOnly(evidence) {
   return { ...evidence, evidence: (evidence?.evidence ?? []).filter((r) => r.review_status === 'verified') };
+}
+
+// The cabin form state -> engine labels, using verified rows and the material registry only.
+export function evaluateCabin(state, evidence, evaluate = labelCabin) {
+  return evaluate(buildCabinQuery(state), verifiedOnly(evidence));
 }
 
 // Each result carries an immutable query snapshot (material line + cabin conditions) so the
@@ -90,8 +101,8 @@ function wireTabs() {
   showTab(tabFromHash(location.hash));
 }
 
-function wireCabin(evidence) {
-  const $ = (id) => document.getElementById(id);
+export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, document: doc = globalThis.document } = {}) {
+  const $ = (id) => doc.getElementById(id);
   const verified = verifiedOnly(evidence);
   let cabinQuery = null;
   let form = null;
@@ -101,7 +112,7 @@ function wireCabin(evidence) {
     cabinQuery = query;
     const withQ = withQueries(results, query);
     const context = { cabinQuery: query, evidence };
-    $('evidence-panel').replaceChildren(Object.assign(document.createElement('p'),
+    $('evidence-panel').replaceChildren(Object.assign(doc.createElement('p'),
       { className: 'text-3', textContent: 'Select a material to see the tests behind its label.' }));
     renderResultsTable($('results-table'), withQ, {
       evidence,
@@ -112,6 +123,29 @@ function wireCabin(evidence) {
     slider?.update(query);
   }
 
+  // labelCabin (#55) takes the DATASET ({ evidence, materials }), not the row array: passing
+  // the array made every label "Not found in the sources reviewed" (persona B2 finding).
+  function evaluateForm(state) {
+    return evaluateCabin(state, evidence, evaluate);
+  }
+
+  function changed(state, { valid }) {
+    if (!state.materials.length || !valid) {
+      cabinQuery = null;
+      slider?.destroy(); slider = null;
+      $('evidence-panel').replaceChildren();
+      $('fixes').replaceChildren();
+      // Empty input takes precedence over the dataset's zero-verified-row state.
+      renderResultsTable($('results-table'), [], { evidence: {} });
+      if (state.materials.length) {
+        $('results-table').querySelector('[role="status"]').textContent =
+          'Correct the cabin fields to update results. Previous labels have been cleared.';
+      }
+      return;
+    }
+    showResults(evaluateForm(state), state);
+  }
+
   function mountForm(items = []) {
     form?.destroy();
     form = renderCabinForm($('cabin-form'), {
@@ -120,9 +154,13 @@ function wireCabin(evidence) {
       sources: evidence.sources,
       evidence: verified,
       items,
-      evaluate: (query, ev) => labelCabin(query, ev),
+      evaluate: evaluateForm,
+      onChange: changed,
       onEvaluate: showResults,
     });
+    // Initialize results after the form has installed presets and demo items.
+    // The normal input path supplies validation without moving keyboard focus.
+    $('cabin-form').querySelector('form').dispatchEvent(new Event('input', { bubbles: true }));
   }
 
   // The form exposes no condition setter, so Apply from the O2 preview edits its inputs and
@@ -156,14 +194,15 @@ function wireCabin(evidence) {
     const root = $('o2-slider');
     if (!cabinQuery) {
       slider?.destroy(); slider = null;
-      root.replaceChildren(Object.assign(document.createElement('p'), { className: 'text-2',
+      root.replaceChildren(Object.assign(doc.createElement('p'), { className: 'text-2',
         textContent: 'Evaluate a cabin in Cabin Check first (or load the lunar rover demo). The preview holds that cabin\'s items, pressure, airflow and gravity fixed.' }));
       return;
     }
     if (slider) return;
     root.replaceChildren();
     slider = renderO2Slider(root, {
-      cabinQuery, evidence, labelCabin,
+      cabinQuery, evidence,
+      labelCabin: (query, dataset) => evaluateCabin(query, dataset, evaluate),
       onApply: (next) => { applyConditions(next); location.hash = 'cabin'; },
       onCancel: () => { location.hash = 'cabin'; },
     });
@@ -213,7 +252,11 @@ async function start() {
     const retry = Object.assign(document.createElement('button'), { type: 'button', textContent: 'Retry' });
     retry.addEventListener('click', () => location.reload());
     status.append(retry);
+    renderResultsTable(document.getElementById('results-table'), [], {
+      state: 'error', onRetry: () => location.reload(),
+    });
     wireAccuracy(null);
+    mountAsk(document.getElementById('ask-root'), null);
     return;
   }
   status.textContent = '';

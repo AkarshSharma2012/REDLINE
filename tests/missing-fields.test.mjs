@@ -61,7 +61,7 @@ test('CLI writes deterministic report and reports malformed input with nonzero e
   } finally { await rm(dir, { recursive: true, force: true }); }
 });
 
-test('checked-in report matches current evidence', async () => {
+test('college student: checked-in report matches current evidence across checkout line endings', async () => {
   const data = JSON.parse(await readFile(new URL('../data/evidence.json', import.meta.url), 'utf8'));
-  assert.equal(await readFile(new URL('../docs/missing-fields.md', import.meta.url), 'utf8'), renderMissingFields(data));
+  assert.equal((await readFile(new URL('../docs/missing-fields.md', import.meta.url), 'utf8')).replace(/\r\n/g, '\n'), renderMissingFields(data).replace(/\r\n/g, '\n'));
 });
