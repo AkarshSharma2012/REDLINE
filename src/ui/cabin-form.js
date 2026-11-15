@@ -1,4 +1,5 @@
 import { element, sourceLink, styleUI } from './results-table.js';
+import { renderBomImport } from './bom-import.js';
 
 /** Explicit fixture-only stub. It never invents measurements or infers a cabin outcome. */
 export function labelCabin(query, fixture) {
@@ -62,6 +63,10 @@ export function renderCabinForm(root, options = {}) {
   controls.gravity = field(form, 'gravity', 'Gravity context', null, [['0.16', 'Lunar scenario (0.16 g, estimate)'], ['0', 'Microgravity reference (0 g)'], ['1', 'Earth reference (1 g)']]);
   const list = element(d, 'div'); form.append(list);
   const items = [];
+  const importer = renderBomImport(form, { materials, onImport: lines => {
+    for (const line of lines) addItem({ ...line, thickness: line.thickness_mm, width: line.width_mm });
+    changed();
+  } });
   const add = element(d, 'button', 'Add material'); add.type = 'button';
   const undo = element(d, 'button', 'Undo removal'); undo.type = 'button'; undo.hidden = true;
   const submit = element(d, 'button', 'Evaluate cabin'); submit.type = 'submit'; submit.disabled = true;
@@ -73,8 +78,15 @@ export function renderCabinForm(root, options = {}) {
   function addItem(values = {}) {
     const id = values.item_id || `${prefix}-item-${++nextId}`;
     const group = element(d, 'fieldset'); group.append(element(d, 'legend', 'Material and use'));
-    const entry = { item_id: id, group };
+    const entry = { item_id: id, group, quantity: values.quantity ?? null, note: values.note ?? '',
+      importedMaterial: values.material_recognised === false ? values.material_id : null };
     entry.material = field(group, `${id}-material`, 'Material', null, [['', 'Choose material'], ...materials.map(m => [m.material_id, m.display_name])]);
+    if (entry.importedMaterial) {
+      const option = element(d, 'option', `${values.name} — material not recognised; not found in the sources reviewed`);
+      option.value = entry.importedMaterial; entry.material.input.append(option);
+    }
+    if (values.quantity != null) group.append(element(d, 'p', `Quantity (user input): ${values.quantity}`));
+    if (values.note) group.append(element(d, 'p', `Note (user input): ${values.note}`));
     entry.name = field(group, `${id}-name`, 'Item name');
     entry.use = field(group, `${id}-use`, 'How it is used / location');
     entry.grade = field(group, `${id}-grade`, 'Exact grade / product (optional)');
@@ -116,11 +128,12 @@ export function renderCabinForm(root, options = {}) {
     }
     const lines = items.map(entry => {
       const material_id = entry.material.input.value;
-      const invalid = !materials.some(m => m.material_id === material_id);
+      const invalid = !materials.some(m => m.material_id === material_id) && material_id !== entry.importedMaterial;
       entry.material.error.textContent = invalid ? 'Error: Choose a material in the material list.' : '';
       entry.material.input.setAttribute('aria-invalid', String(invalid));
       if (invalid) messages.push({ input: entry.material.input, message: 'Choose a material in the material list.' });
       return { item_id: entry.item_id, material_id, name: entry.name.input.value, use: entry.use.input.value,
+        quantity: entry.quantity, note: entry.note,
         material_grade: entry.grade.input.value || null, form: entry.form.input.value || null,
         thickness_mm: number(entry.thickness, 'Enter positive thickness or leave blank.', { optional: true, strict: true }, messages),
         width_mm: number(entry.width, 'Enter positive width or leave blank.', { optional: true, strict: true }, messages) };
@@ -196,5 +209,5 @@ export function renderCabinForm(root, options = {}) {
   if (initial) applyPreset(initial);
   for (const item of options.items || []) addItem(item);
   if (!items.length) status.textContent = 'Add a material to compare evidence';
-  return { getQuery: () => read().query, addItem, destroy: () => { revision++; root.replaceChildren(); } };
+  return { getQuery: () => read().query, addItem, destroy: () => { revision++; importer.destroy(); root.replaceChildren(); } };
 }
