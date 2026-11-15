@@ -281,3 +281,77 @@ test('stored display preferences apply, and context loss falls back with working
   viewer.destroy();
   assert.equal(env.renderers[0].disposed, 1, 'not disposed twice');
 });
+
+// #299 compact tool strip and information bar contract.
+const TOOL_LABELS = ['Orbit left', 'Orbit right', 'Orbit up', 'Orbit down', 'Zoom in', 'Zoom out', 'Reset view', 'Show outer shell', 'Wireframe'];
+
+test('nine native camera/layer buttons: drawn icons carry label and tooltip, text buttons keep their word in the name', async () => {
+  const env = webglSetup();
+  const viewer = await mountRoverViewer(env.root, { loadThree: env.loadThree });
+  const tools = all(env.root).filter(el => el.tagName === 'BUTTON' && /rover-viewer__tool/.test(el.getAttribute('class')));
+  assert.deepEqual(tools.map(el => el.getAttribute('aria-label')), TOOL_LABELS);
+  for (const el of tools) {
+    assert.equal(el.type, 'button');
+    const icon = all(el).find(node => node.tagName === 'SVG');
+    if (icon) {
+      assert.equal(el.getAttribute('data-tip'), el.getAttribute('aria-label'));
+      assert.equal(icon.getAttribute('aria-hidden'), 'true');
+      assert.match(all(icon).find(node => node.tagName === 'PATH').getAttribute('d'), /^M/);
+    } else {
+      assert.ok(el.getAttribute('aria-label').toLowerCase().includes(el.text.toLowerCase()), `${el.text} in accessible name`);
+    }
+  }
+  assert.equal(tools.filter(el => !all(el).some(node => node.tagName === 'SVG')).map(el => el.text).join(','), 'Reset,Shell,Wire');
+  viewer.update({ materialIds: ALL });
+  env.observers[0].fire(640, 400);
+  env.flush();
+  for (const label of TOOL_LABELS) {
+    const before = env.renderers[0].renders;
+    byLabel(env.root, label).dispatch('click');
+    env.flush();
+    assert.equal(env.renderers[0].renders, before + 1, `${label} redraws`);
+  }
+  assert.equal(env.frames.size, 0, 'idle after the last control');
+  const canvas = all(env.root).find(el => el.tagName === 'CANVAS');
+  assert.equal(canvas.dispatch('keydown', { key: 'Escape' }).defaultPrevented, false, 'Escape left to the shell');
+  assert.match(canvas.getAttribute('aria-describedby'), /-caption .*-help$/);
+  viewer.destroy();
+});
+
+test('one caption in the information bar; selection, user-input scenario and honest verification are text', async () => {
+  const failed = { ...setup(), loadThree: () => Promise.reject(new Error('x')) };
+  for (const env of [failed, webglSetup()]) {
+    const viewer = await mountRoverViewer(env.root, { loadThree: env.loadThree });
+    const captions = all(env.root).filter(el => el.text === VIEWER_CAPTION);
+    assert.equal(captions.length, 1, 'caption appears exactly once');
+    assert.equal(captions[0].parentNode.getAttribute('class'), 'rover-viewer__bar');
+    assert.equal(captions[0].hidden, false);
+    assert.equal((env.root.textContent.match(/Illustrative/g) ?? []).length, 1, 'no duplicate illustrative label');
+    assert.match(env.root.textContent, /No cabin items requested yet/, 'empty first state says so');
+    assert.match(env.root.textContent, /Requested scenario \(user input\): not provided/);
+    assert.match(env.root.textContent, /Verification: none shown here/);
+    viewer.update({ materialIds: ALL, selectedMaterialId: 'nomex', conditions: { o2_pct: 30 } });
+    assert.doesNotMatch(env.root.textContent, /No cabin items requested yet/);
+    assert.match(env.root.textContent, /user input, not measured\): 30% O2/);
+    const pick = buttonFor(env.root, 'nomex');
+    assert.match(pick.textContent, /Selected/, 'selected state is text, not colour alone');
+    assert.doesNotMatch(buttonFor(env.root, 'pmma').textContent, /Selected/);
+    assert.doesNotMatch(env.root.textContent, /\bsafe\b|predict|fps/i);
+    viewer.destroy();
+  }
+});
+
+test('viewer CSS: black stage, right-edge strip only in wide containers, touch targets, no glow', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const css = await readFile(new URL('../src/styles/rover-viewer.css', import.meta.url), 'utf8');
+  assert.match(css, /--rv-stage:\s*#000000/);
+  assert.match(css, /container:\s*rover-viewer \/ inline-size/);
+  const wide = css.match(/@container rover-viewer \(min-width: \d+px\) \{([\s\S]*?)\n\}/)[1];
+  assert.match(wide, /grid-template-columns:\s*minmax\(0, 1fr\) auto/, 'strip sits beside the stage, not over it');
+  assert.match(wide, /tool--icon:focus-visible::after/, 'tooltips also on keyboard focus');
+  assert.match(css, /@media \(pointer: coarse\)[\s\S]*--rv-target:\s*44px/);
+  assert.match(css, /--rv-target:\s*36px/);
+  assert.doesNotMatch(css, /box-shadow:(?!\s*inset 0 0 0 1px)/, 'only a crisp inset ring, no glow');
+  assert.doesNotMatch(css, /animation|@keyframes|filter:/);
+  assert.doesNotMatch(css, /font-size:\s*(?:[0-9]|1[01])px/, 'no text below 12px');
+});

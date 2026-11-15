@@ -1,22 +1,22 @@
-/* REDLINE styles. Tokens and rules from DESIGN.md (S2). Dark theme only. */
+/* REDLINE styles. Tokens and rules from DESIGN.md (S2). Dark theme only; #306 user-authorized black/white neutral token amendment. */
 
 :root {
   /* 2.1 Neutrals */
-  --bg: #0E1013;
-  --surface-1: #16191E;
-  --surface-2: #1E2228;
-  --surface-selected: #262B33;
-  --divider: #2C313A;
-  --border-control: #737B88;
-  --text-1: #E8EAED;
-  --text-2: #A9B0BB;
-  --text-3: #8A929E;
-  --accent: #7CB8FF;
+  --bg: #000000;
+  --surface-1: #000000;
+  --surface-2: #141414;
+  --surface-selected: #262626;
+  --divider: #333333;
+  --border-control: #8C8C8C;
+  --text-1: #FFFFFF;
+  --text-2: #D0D0D0;
+  --text-3: #ADADAD;
+  --accent: #FFFFFF;
 
   /* 2.2 Evidence labels (reserved: use only for the three label results) */
   --ev-burned: #FF6A33;
   --ev-near: #F0D545;
-  --ev-ne: #8EC5F0;
+  --ev-ne: #C8C8C8;
 
   /* 3 Typography */
   --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -34,11 +34,20 @@
   --radius-control: 4px;
   --radius-panel: 6px;
 
+  /* Control height (DESIGN.md 4, #297): 32 px on a fine pointer, 44 px for touch or narrow screens.
+     Every control keeps the 24 px WCAG minimum; bar heights follow it. */
+  --control-h: 32px;
+  --bar-h: 36px;
+
   /* Chip glyphs (DESIGN.md 2.2): filled square, outlined triangle, hollow circle */
   --glyph-square: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect x='1' y='1' width='8' height='8'/%3E%3C/svg%3E");
   --glyph-triangle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 1.2 9.2 8.8H.8Z' fill='none' stroke='%23000' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E");
   --glyph-external: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M4 1.5H1.5v7h7V6M6 1.5h2.5V4M8.5 1.5 4.5 5.5' fill='none' stroke='%23000' stroke-width='1.2'/%3E%3C/svg%3E");
   --glyph-circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Ccircle cx='5' cy='5' r='3.9' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+
+@media (pointer: coarse), (max-width: 1080px) {
+  :root { --control-h: 44px; --bar-h: 44px; }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -103,13 +112,14 @@ a[target="_blank"]::after {
 
 [hidden] { display: none !important; }
 
-/* Mission header (#267): one wrapping row of title, two evidence counts, preview status, scope disclosure */
-.app-header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-16); padding: var(--space-8) var(--space-24); border-bottom: 1px solid var(--divider); }
+/* Masthead (#267, slimmed in #297): one black row of wordmark, two evidence counts, preview status
+   and the scope disclosure, whose text opens as a panel under the row on wide screens. */
+.app-header { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-16); min-height: var(--bar-h); padding: 0 var(--space-16); background: #000; border-bottom: 1px solid var(--divider); }
 .mission-id { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-12); min-width: 0; }
-.app-header .type-title { margin: 0; font-size: 24px; line-height: 32px; letter-spacing: 0.04em; }
-.mission-sub { margin: 0; color: var(--text-2); }
+.app-header .type-title { margin: 0; font-size: 16px; line-height: 24px; letter-spacing: 0.08em; }
+.mission-sub { margin: 0; color: var(--text-2); font-size: 13px; line-height: 18px; }
 .status-rail { display: flex; align-items: baseline; margin: 0; font-size: 14px; line-height: 20px; }
-.status-rail > div { display: flex; align-items: baseline; gap: var(--space-4); padding: var(--space-4) var(--space-8); }
+.status-rail > div { display: flex; align-items: baseline; gap: var(--space-4); padding: 0 var(--space-8); }
 .status-rail > div + div { border-left: 1px solid var(--border-control); }
 .status-rail dt { color: var(--text-2); }
 .status-rail dd { margin: 0; color: var(--text-1); }
@@ -118,12 +128,16 @@ a[target="_blank"]::after {
 .status-rail > div[data-state="none"], .status-rail > div[data-state="unavailable"] { outline: 1px dashed var(--border-control); outline-offset: -1px; }
 .rail-status { margin: 0; }
 .rail-status .hold-tag { font-size: 14px; line-height: 20px; color: var(--text-2); }
-.mission-notes { flex: 0 1 auto; }
-.mission-notes[open] { flex-basis: 100%; }
+.mission-notes { flex: 0 1 auto; margin-left: auto; }
+.mission-notes-body { padding: var(--space-8) 0; }
 .mission-notes p { max-width: 96ch; margin: 0 0 var(--space-8); color: var(--text-2); }
+@media (min-width: 1081px) {
+  .mission-notes-body { position: absolute; z-index: 20; top: 100%; right: var(--space-16); width: min(40rem, calc(100vw - 32px)); max-height: 70vh; overflow-y: auto; padding: var(--space-12) var(--space-16); background: var(--surface-1); border: 1px solid var(--border-control); }
+}
+@media (max-width: 1080px) { .mission-notes[open] { flex-basis: 100%; } }
 
 /* Disclosure (native details): visible chevron, 40 px target, no layout-moving motion */
-.mission-notes > summary, .research-preview summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-8); min-height: 40px; list-style: none; color: var(--text-2); }
+.mission-notes > summary, .research-preview summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-8); min-height: var(--control-h); list-style: none; color: var(--text-2); }
 .mission-notes > summary::-webkit-details-marker, .research-preview summary::-webkit-details-marker { display: none; }
 .mission-notes > summary::before, .research-preview summary::before {
   content: "";
@@ -161,8 +175,7 @@ a[target="_blank"]::after {
 @media (max-width: 480px) {
   .region, .app-header { padding: var(--space-12); }
   nav.tabs { padding: 0 var(--space-12); }
-  .app-header { padding: var(--space-8) var(--space-12); }
-  .app-header .type-title { font-size: 20px; line-height: 28px; }
+  .app-header { padding: 0 var(--space-12); }
 }
 
 /* Active tab: bar + fill, not border colour alone (SC 1.4.1) */
@@ -227,7 +240,7 @@ button, input, select {
   background: var(--surface-2);
   border: 1px solid var(--border-control);
   border-radius: var(--radius-control);
-  min-height: 40px;
+  min-height: var(--control-h);
   min-width: 24px;
   padding: var(--space-4) var(--space-8);
 }
@@ -382,17 +395,16 @@ td, th, dd, .num, input, select { font-variant-numeric: tabular-nums; }
 #dataset { font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--text-3); overflow-wrap: anywhere; }
 
 /* Tab bar: flat tabs, selected = text-1 + surface fill + 2 px accent underline (not colour alone) */
-.tabs { display: flex; gap: var(--space-4); padding: 0 var(--space-24); border-bottom: 1px solid var(--divider); overflow-x: auto; scrollbar-width: none; position: sticky; top: 0; z-index: 2; background: var(--bg); }
+.tabs { display: flex; gap: var(--space-2); padding: 0 var(--space-8); border-bottom: 1px solid var(--divider); overflow-x: auto; scrollbar-width: none; position: sticky; top: 0; z-index: 2; background: var(--bg); }
 .tabs [role="tab"][aria-selected="true"] { color: var(--text-1); }
 .tabs [role="tab"] {
   flex: none;
   border: 0;
-  border-radius: var(--radius-control) var(--radius-control) 0 0;
+  border-radius: 0;
   background: transparent;
   color: var(--text-2);
-  min-height: 44px;
-  padding: var(--space-8) var(--space-12);
-  margin-top: var(--space-4);
+  min-height: var(--bar-h);
+  padding: var(--space-4) var(--space-12);
   text-align: left;
   white-space: nowrap;
 }
@@ -404,8 +416,6 @@ td, th, dd, .num, input, select { font-variant-numeric: tabular-nums; }
 .region > .type-heading, .region > h2:first-child { margin: 0 0 var(--space-12); }
 .region-title { margin: 0 0 var(--space-12); padding-bottom: var(--space-8); border-bottom: 1px solid var(--divider); }
 .region-note { margin: var(--space-8) 0 var(--space-12); color: var(--text-3); }
-.region-evidence { position: sticky; top: 52px; max-height: calc(100vh - 52px); overflow-y: auto; }
-@media (max-width: 1080px) { .region-evidence { position: static; max-height: none; } }
 /* Cabin form and results modules render their own h2; the region heading already names them
    (aria-labelledby still resolves to a display:none heading). */
 #cabin-form form > h2:first-child, #results-table > h2:first-child { display: none; }
@@ -417,14 +427,14 @@ td, th, dd, .num, input, select { font-variant-numeric: tabular-nums; }
 .layout .cabin-ui label { margin-top: var(--space-8); }
 .layout .cabin-ui p { margin: var(--space-4) 0 var(--space-8); }
 .layout .cabin-ui button, .layout .cabin-ui select,
-.layout .cabin-ui input:not([type="range"]):not([type="checkbox"]):not([type="radio"]) { min-height: 40px; }
+.layout .cabin-ui input:not([type="range"]):not([type="checkbox"]):not([type="radio"]) { min-height: var(--control-h); }
 
 /* Primary action (DESIGN.md: no filled coloured primary; red is reserved for BURNED):
    neutral surface, set apart by a text-2 border and heavier weight */
 .btn-primary, .layout .cabin-ui button[type="submit"] { width: 100%; background: var(--surface-2); border-color: var(--text-2); color: var(--text-1); font-weight: 600; }
 .btn-primary:disabled, .layout .cabin-ui button[type="submit"]:disabled { border-color: var(--border-control); color: var(--text-3); font-weight: 400; }
 
-/* Buttons: one 40 px height family; primary actions read as controls, not links */
+/* Buttons: one --control-h height family; primary actions read as controls, not links */
 button { line-height: 20px; }
 button:active:not(:disabled) { background: var(--surface-1); }
 input:not([type="range"]), select { background: var(--surface-1); }
@@ -445,6 +455,14 @@ td .text-3, td .type-small { font-size: 12px; line-height: 16px; }
 /* Cards / notes used by Accuracy, Fixes and others */
 .panel + .panel { margin-top: var(--space-12); }
 .caveat { border-radius: 0 var(--radius-control) var(--radius-control) 0; }
+
+/* App shell (#297): on a wide, tall-enough window the page is one viewport; the active screen
+   fills the space under the masthead and tabs and scrolls inside itself. Otherwise the page scrolls. */
+@media (min-width: 1081px) and (min-height: 560px) {
+  body { display: flex; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; }
+  body > .app-header, body > .tabs { flex: none; }
+  body > [role="tabpanel"] { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+}
 
 /* Phone: keep tabs on one scrollable row; full-width controls */
 @media (max-width: 480px) {

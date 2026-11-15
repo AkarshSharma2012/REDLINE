@@ -322,4 +322,13 @@ async function start() {
   showTab(tabFromHash(location.hash));
 }
 
-if (typeof document !== 'undefined') start();
+if (typeof document !== 'undefined') {
+  // Minimal non-browser test fixtures have no DOM realm. In the browser wait for
+  // the local island, then mount synchronously before attaching native handlers.
+  if (document.defaultView?.HTMLElement && document.querySelectorAll) {
+    import('./vendor/react-controls.js').then(({ mountReactControls }) => {
+      mountReactControls();
+    }).catch(() => { /* Native controls remain usable if enhancement fails. */ })
+      .then(() => start());
+  } else start();
+}
