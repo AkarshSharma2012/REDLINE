@@ -1,4 +1,4 @@
-﻿# Adding and verifying an evidence row
+# Adding and verifying an evidence row
 
 The human-edited source is [data/evidence.csv](../data/evidence.csv); [data/metadata.json](../data/metadata.json) holds source and material dictionaries. Never hand-edit generated `data/evidence.json`. The primary dataset is the [NASA PSI Data Repository](https://psi.nasa.gov/); use its investigation records and linked NASA reports to trace each claim.
 
@@ -108,4 +108,3 @@ git diff -- data/evidence.csv data/metadata.json data/evidence.json
 The builder converts CSV blanks to null, validates the complete package and atomically replaces `data/evidence.json` only on success. Fix errors at the named row/column in the CSV or metadata, then rebuild. After any final review-status change, rebuild and run the tests again. Inspect generated changes, including expected `built_at`/`built_from` provenance; do not repair generated rows manually.
 
 Tests check schema and behavior, not whether a PDF supports the measurement. Include the independent review record and command results in the PR. Commit the CSV, any authorized metadata changes and regenerated JSON together on the task branch; submit a PR rather than pushing to main. If file ownership excludes a needed data/metadata change, document the dependency in root `HANDOFF.md` for the owning task. This workflow needs no web server or persistent process.
-
