@@ -40,11 +40,11 @@ export function summarize(hit) {
       GRAVITY[r.gravity_g] ?? (r.gravity_g == null ? 'gravity not stated' : `${r.gravity_g} g`),
       `flow ${shown(r.flow_direction)}${r.flow_speed_cm_s != null ? ` ${r.flow_speed_cm_s} cm/s` : ''}`,
       r.endpoint ? `${r.endpoint} ${shown(r.value, r.value_unit ? ` ${r.value_unit}` : '')}` : 'endpoint not stated',
-    ].join(' Ã‚Â· ');
+    ].join(' | ');
     return r.observation_paraphrase ? `${cond}. ${r.observation_paraphrase}` : cond;
   }
   if (hit?.kind === 'investigation') {
-    return [val(r.name), val(r.fuel), val(r.objective) ?? val(r.objectives)].filter(Boolean).join(' Ã‚Â· ');
+    return [val(r.name), val(r.fuel), val(r.objective) ?? val(r.objectives)].filter(Boolean).join(' | ');
   }
   return r.text ?? '';
 }
@@ -52,7 +52,7 @@ export function summarize(hit) {
 function sourceLink(src) {
   if (!src?.url) return '<span class="text-3">source link not found in the sources reviewed</span>';
   return `<a href="${esc(src.url)}" target="_blank" rel="noopener noreferrer">${esc(src.title)}<span ${SR}> (opens in new tab)</span></a>` +
-    (src.locator ? ` <span class="text-3">Ã¢â‚¬â€ ${esc(src.locator)}</span>` : '');
+    (src.locator ? ` <span class="text-3">- ${esc(src.locator)}</span>` : '');
 }
 
 function draftTag(row) {
@@ -225,7 +225,7 @@ export function renderAsk(root, data = {}, { requestAnswer = askClaude } = {}) {
       $('status').textContent = 'No catalog or evidence rows retrieved, so nothing was sent to Claude.';
       return { hits, answer: NOT_FOUND };
     }
-    $('status').textContent = 'Asking Claude using only the retrieved rowsÃ¢â‚¬Â¦';
+    $('status').textContent = 'Asking Claude using only the retrieved rows...';
     try {
       const answer = await requestAnswer({ apiKey, question, hits: ground });
       if (current !== revision) return { hits, answer: null, stale: true };
