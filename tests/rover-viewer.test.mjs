@@ -74,10 +74,13 @@ test('stylesheet link is added once across mounts', async () => {
 });
 
 test('WebGL context failure with the real library still falls back to HTML', async () => {
-  const { root } = setup();
+  const { doc, root } = setup();
+  let frames = 0;
+  doc.defaultView = { devicePixelRatio: 2, requestAnimationFrame: () => ++frames, cancelAnimationFrame() {} };
   const viewer = await mountRoverViewer(root, { loadThree: () => import('../src/vendor/three/three.module.min.js') });
   viewer.update({ materialIds: ALL });
-  assert.match(root.textContent, /3D view unavailable/i);
+  assert.match(root.textContent, /3D view unavailable \(WebGL is not available/i);
+  assert.equal(frames, 0, 'no frame requested after a failed context');
   assert.equal(all(root).filter(el => el.tagName === 'CANVAS').length, 0);
   assert.ok(buttonFor(root, 'pmma'));
   viewer.destroy();

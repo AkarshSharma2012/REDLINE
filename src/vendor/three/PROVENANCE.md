@@ -24,7 +24,7 @@ sed -i 's#from"\./three\.core\.js"#from"./three.core.min.js"#g' three.module.min
 | File | Bytes | SHA-256 |
 | --- | ---: | --- |
 | `three.core.min.js` | 395,915 | `04750c60541ce68acf84ea72bdaea4b2dc7696b0501d36faeaa9d1d0cc63ba78` |
-| `three.module.min.js` | 376,429 | `9d3faf332390190af0092aefeb6ad944cd4de3382cc0221b15d4f08ef1d353aa` |
+| `three.module.min.js` | 376,437 | `9d3faf332390190af0092aefeb6ad944cd4de3382cc0221b15d4f08ef1d353aa` |
 
 No addons (OrbitControls etc.) are vendored. `src/ui/rover-viewer.js` imports
 `../vendor/three/three.module.min.js` module-relatively, only inside `mountRoverViewer`, so the
