@@ -6,6 +6,6 @@ Done: `docs/submission-checklist.md` with the seven-item **Submission package** 
 
 Merge note: main's root HANDOFF.md (issue #267) conflicted; kept this task's version. #267 notes are in `docs/handoffs/issue-267.md` on main.
 
-Testing: a Node script checked that every checkbox matches its status. Ran the full `node --test` suite once. No server or browser was started.
+Testing: a Node script checked that every checkbox matches its status. Full `node --test`: exit 0, 1176 tests, 1132 pass, 0 fail, 44 todo (the assertion output comes from tests marked TODO). No server or browser was started.
 
 STATUS: DONE
