@@ -72,7 +72,7 @@ const etfe = { ...q, material_id: 'etfe', form: 'wire', thickness_mm: 0.3,
 const runs = [
   ['T1 BURNED', q, 'BURNED', null],
   ['T2 oxygen not covered (U1)', { ...q, o2_pct: 16.5 }, 'NOT_ESTABLISHED', 'NE-incompatible'],
-  ['T3 ground no-spread', { ...q, o2_pct: 17.5, pressure_kpa: null, flow_speed_cm_s: null, gravity_g: 1 }, 'NOT_ESTABLISHED', 'NE-no-burn'],
+  ['T3 ground no-spread', { ...q, o2_pct: 17.5, pressure_kpa: null, flow_speed_cm_s: null, gravity_g: 1 }, 'NOT_ESTABLISHED', 'NE-incompatible'],
   ['T4 lunar disagreement', { ...q, o2_pct: 34, gravity_g: 0.16 }, 'BURNED', null],
   ['T5 ETFE burned', etfe, 'BURNED', null],
   ['T6 NEAR', { ...etfe, o2_pct: 30.8 }, 'NEAR', null],
