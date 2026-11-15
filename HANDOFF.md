@@ -102,3 +102,12 @@ STATUS: DONE
 - If B2 already incorporated old #303, coordinator integrates this scalar patch.
 
 STATUS: DONE
+
+# Issue #310: Final React + neutral-black workspace integration
+- Continued React #307 source ec2e68d; merged black shell #301 f8fabcf, then neutral viewer #303 bd51b28. Only HANDOFF.md conflicted; all prior entries kept. Main 0aeaec1 science retained; no data/rules/research diffs.
+- React test updated for 240/400 defaults (400→380 narrow, 240→260 widen) and new "Narrow setup pane" label; disabled/pressed/lazy-model assertions unchanged; asserts all 14 toolbar buttons mount with Lucide icons.
+- `.ws-seg`/`.ws-jump` child-combinator selectors now also match through `display:contents` React hosts (+ regression test). Layout test regex tolerates CRLF checkouts.
+- Verified: npm ci, npm run build-ui (vendor bundle byte-identical), full node --test once: 1283 tests, 1239 pass, 0 fail, 44 TODO; size-budget PASS (React 371344/400000); git diff --check clean. No server/browser.
+- Next: coordinator native-Chrome final gate on the single PR; no merge/deploy.
+
+STATUS: DONE

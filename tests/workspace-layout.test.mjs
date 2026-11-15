@@ -40,7 +40,7 @@ test('default desktop geometry gives the model pane at least half of a 1440 px w
 });
 
 test('toolbar shows only the pane switch, view and one Layout disclosure; rare controls are tucked away', () => {
-  const toolbar = main.match(/<div id="workspace-toolbar"[\s\S]*?\n {4}<\/div>\n/)[0];
+  const toolbar = main.match(/<div id="workspace-toolbar"[\s\S]*?\r?\n {4}<\/div>\r?\n/)[0];
   const settings = toolbar.match(/<details id="ws-settings" class="ws-settings">\s*<summary>Layout<\/summary>([\s\S]*?)<\/details>/);
   assert.ok(settings, 'native details with a named summary');
   assert.doesNotMatch(settings[0], /<details[^>]*\bopen/);
