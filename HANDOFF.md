@@ -16,3 +16,12 @@ STATUS: DONE
 - Next: coordinator review/merge task-branch PR.
 
 STATUS: DONE
+
+## Issue #273
+
+- Cherry-picked only `49551a6` (seven `docs/screenshots/ui267-*.png`); historic unprefixed PNGs unchanged.
+- `docs/pitch.md`: provenance `6455a3c`, current screenshot manifest (2026-11-15 ~08:49 PST, Chrome 1600x1000 CSS, 100%, localhost:5199, Evidence 45 / Verified 0), coordinator 1440/390/320 check, launch preflight for Scope and limits and Source context and methods; `HOLD_scientific_review` retained; Opus #255 "not yet approved" line removed; fallback uses ui267 shots. Historical manifest kept and labelled.
+- `docs/pitch-variants.md`: shot-list provenance now points to ui267-02 and the local recording packages (`Downloads/REDLINE-recording-6455a3c`, fallback `52f6e73`); no video completion claimed.
+- Full `node --test`: 1176 tests, 1132 pass, 0 fail, 44 todo, exit 0. No server or browser started.
+
+STATUS: DONE

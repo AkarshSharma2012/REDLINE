@@ -1,16 +1,16 @@
 # REDLINE: final-app demo and video plan
 
-Issue #249 update, 2026-11-15, corrected against `main` at `2655346` (includes merged PRs #238, #239, #244, #246, #248, #250, #251, #253 and #254). The current 60-second script below follows a browser path reported in #249 as checked three times; this documentation task re-ran only the Node suite, not a browser. The two-minute script, storyboard and screenshots further down are historical captures from 2026-11-14 at `31a6acdd778e766d6a896201f376473155c51bc6`; they do not establish current UI behavior. Delivery time remains an unmeasured target. The Opus UI pass (release PR #255) is separate and not yet approved; recheck the click labels below against any build that includes it.
+Issue #273 update, 2026-11-15: current provenance is `main` at `6455a3c` (includes the compact header from #270 and the Gravity **Source context and methods** disclosure from #272). The [current screenshot manifest](#current-screenshot-manifest-6455a3c) records frozen captures of that build. This documentation task re-ran only the Node suite, not a browser. The two-minute script, storyboard and older screenshots further down are historical (2026-11-14, `31a6acdd778e766d6a896201f376473155c51bc6`). Delivery time remains an unmeasured target.
 
 ## Current 60-second demo (2026-11-15)
 
-Path reported in #249: verified three times; all six tabs and Escape focus restore pass at 1440 px and 320 px widths. Begin with the page loaded on **Cabin Check**. No API key, no typing. About 120 spoken words.
+Coordinator check on `6455a3c` (public build): all six tabs, Ask, source links, Escape, disclosures and Cancel passed at 1440, 390 and 320 px widths, with zero exceptions and no horizontal overflow. Begin with the page loaded on **Cabin Check**. No API key, no typing. About 120 spoken words.
 
 | Time | Exact click and visible state | Narration |
 | --- | --- | --- |
-| 0:00–0:12 | **Cabin Check → Load lunar rover demo**. Point to **34% O2, 56.5 kPa**, **Lunar scenario (0.16 g, estimate)** and the zero-verified notice. | This illustrative pressurized lunar rover lists four cabin materials. REDLINE matches them against forty-five evidence rows. None is human-verified yet, so Cabin labels remain unavailable; we expose missing coverage rather than guessing. |
+| 0:00–0:12 | **Cabin Check → Load lunar rover demo**. Point to the header counts **Evidence 45 · Verified 0**, **34% O2, 56.5 kPa**, **Lunar scenario (0.16 g, estimate)** and the zero-verified notice. Leave **Scope and limits** collapsed. | This illustrative pressurized lunar rover lists four cabin materials. REDLINE matches them against forty-five evidence rows. None is human-verified yet, so Cabin labels remain unavailable; we expose missing coverage rather than guessing. |
 | 0:12–0:24 | **Gravity view** tab. Keep **PMMA sheet · flaming**. Expand **Inspect draft research detail · excluded from cabin results**. | Gravity shows PMMA research from NASA simulated lunar-gravity tests, held as draft and excluded from cabin results. |
-| 0:24–0:42 | Click **Open evidence record** for `U25-01-L`. Point to `HOLD_scientific_review`, the NASA source link and its source locator. | Each record carries a NASA citation and a page or slide locator. This one is on scientific-review hold, so it cannot drive a cabin label. Simulated lunar gravity is not a measurement on the Moon. |
+| 0:24–0:42 | Click **Open evidence record** for `U25-01-L`. Point to `HOLD_scientific_review`, the NASA source link and its source locator. Leave **Source context and methods** collapsed. | Each record carries a NASA citation and a page or slide locator. This one is on scientific-review hold, so it cannot drive a cabin label. Simulated lunar gravity is not a measurement on the Moon. |
 | 0:42–0:52 | Return to **Cabin Check**. Point to **No verified evidence rows loaded**; evidence-row selection is intentionally unavailable. | Row selection stays off until reviewed evidence exists. Unknown airflow stays blank, never zero, so missing conditions cannot fake a match. |
 | 0:52–1:00 | Hold on the Cabin Check panel. | Research records retain NASA URLs and locators; requested conditions and inferences remain separate, and every gap stays an open question. |
 
@@ -33,7 +33,7 @@ Start with an illustrative pressurized lunar rover, inspect published research, 
 
 The checked-in `data/evidence.json` has **45 rows and zero verified rows**, built from `data/evidence.csv@c78b68c2b7ae1c952eb9feb0d51c1a6e7f08b5aa`. These are repository metadata, not NASA measurements. `src/rules/label.js` implements evidence matching, review-status filtering and labels; the Node suite exercises that logic. The current rover evaluation returns four **NOT_ESTABLISHED / NE-no-data** results. Its four materials have no verified evidence in this inventory; this does not establish measured material outcomes. Cabin Check's zero-verified notice and legend must not be presented as combustion findings. Ask retrieval works without a key; retrieval is not a live generated answer. No measured accuracy or completed scientific validation is established here.
 
-The historical Investigations capture has tied zero scores and missing-source fields. Those observations apply to that capture, not necessarily to the current catalog. Historical Gravity and Accuracy screens likewise require a fresh UI check before presenting their visible states as current.
+The historical Investigations capture had tied zero scores and missing-source fields; the current capture (ui267-01) shows 26 investigations ranked for a pressurized rover, with per-field Source links and rankings held for scientific review. Catalog scores are navigation aids, not scientific rankings.
 
 ## Before presenting
 
@@ -41,18 +41,18 @@ During conductor work, **do not start a server, browser or background process**.
 
 Short data-only statement (#233, still accurate; use the 60-second script above for the demo): “REDLINE implements evidence matching and labels, but this inventory contains 45 rows with none verified. This illustrative rover returns four results saying not found in the sources reviewed. Changing oxygen to 30% retains that missing-coverage result. Ask retrieves draft research and source links; neither retrieval nor these software tests validates material behavior.”
 
-A current live UI demo requires a separate authorized human walkthrough and fresh captures. Until then, use the dated recorded walkthrough below and identify it as historical. Do not substitute synthetic test outcomes for measured evidence.
+Recording material: the coordinator's local package `Downloads/REDLINE-recording-6455a3c` (app export and screenshots) matches this build; the older `Downloads/REDLINE-recording-52f6e73` package is kept as a fallback. Neither is in the repository, and no rendered or edited video is claimed. Do not substitute synthetic test outcomes for measured evidence.
 
-## Historical browser preflight (2026-11-14; not rerun for #233)
+## Launch preflight (`6455a3c`)
 
-The following steps describe the captured build only. They are not instructions to launch a browser or server during conductor work.
+The following steps describe the presenter's walkthrough of the captured build. They are not instructions to launch a browser or server during conductor work.
 
-1. The captured app was already served over HTTP; its browser setup is recorded in the historical screenshot manifest below.
-2. Use a 1600 x 1000 viewport at 100% zoom, matching the captures. Click **Load lunar rover demo**. This loads and evaluates four hypothetical items: PMMA sheet window/display panel, cotton fabric clothing, P213 tape and Nomex fabric seat cover. It is not a flight manifest. The loader resets the form to its default exploration atmosphere and lunar scenario.
+1. Serve the app over HTTP outside conductor work; the captures used `localhost:5199`.
+2. Use a 1600 x 1000 viewport at 100% zoom, matching the captures. Check the compact header: **Evidence 45**, **Verified 0** and **Research preview · not certification**. **Scope and limits** is collapsed by default; open it once to rehearse, then close it. Click **Load lunar rover demo**. Click **Load lunar rover demo**. This loads and evaluates four hypothetical items: PMMA sheet window/display panel, cotton fabric clothing, P213 tape and Nomex fabric seat cover. It is not a flight manifest. The loader resets the form to its default exploration atmosphere and lunar scenario.
 3. Confirm the inputs show **34% O2, 56.5 kPa** and **Lunar scenario (0.16 g, estimate)**. Atmosphere context: [Abercromby et al., Table 1, journal p.77 / PDF p.2](https://www.nasa.gov/wp-content/uploads/2023/03/abercromby-8.2-34-atm-2015.pdf). The choice of this scenario and item uses is REDLINE's illustration. Leave unknown airflow blank; blank does not mean zero.
-4. Preflight **Gravity view**: PMMA / **PMMA sheet · flaming**; expand **Inspect draft research detail · excluded from cabin results**, then **Open evidence record** for `U25-01-L`. Locate the source link, source locator and `HOLD_scientific_review` tag. Close the detail and collapse the draft section, then return to Cabin Check.
+4. Preflight **Gravity view**: PMMA / **PMMA sheet · flaming**; expand **Inspect draft research detail · excluded from cabin results**, then **Open evidence record** for `U25-01-L`. Locate the source link, source locator and `HOLD_scientific_review` tag. The closed **Source context and methods** disclosure holds the airflow and Marcum source articles; open it only if asked, and close it again. Close the detail and collapse the draft section, then return to Cabin Check.
 5. Preflight **Ask REDLINE** with `Which materials were tested at lunar gravity?`; submit **Ask**. Leave the optional API-key section closed and empty. Return to Cabin Check. No secret or live API call is needed.
-6. Check the dataset revision in the header. If it differs from the capture manifest, repeat the walkthrough and update captures before recording. Open the cited NASA PDF in advance if network access at judging is unreliable; keep its title and page visible.
+6. Check the header counts and the inventory revision shown on **O2 tradeoff**. If they differ from the current capture manifest, repeat the walkthrough and update captures before recording. Open the cited NASA PDF in advance if network access at judging is unreliable; keep its title and page visible.
 
 ## Historical two-minute demo click-path (2026-11-14)
 
@@ -75,7 +75,7 @@ Read only the narration column. Approximately 210 spoken words leave room for cl
 - Show lunar estimates only with their assumptions and separate 0 g / 1 g context. Here, the UI says **0 g / 1 g assumed envelope unavailable**. Do not invent a range or imply that the endpoints establish a universal physical bound. V2 D1 documents the limitation.
 - The oxygen value of 30% is an illustrative user edit, not a NASA recommendation. Intermediate pre-breathe coverage is not interpolated; show **pre-breathe duration not found in the sources reviewed** if visible. Do not narrate protocol durations.
 - If no verified rows remain available, keep the script as written. The legend's three states do not count as demonstrated results. Cabin evidence-row selection is unavailable in this state; Gravity detail supplies the inspectable source record.
-- If the app or network fails, say: **“These are captures of the local build; I will walk through its recorded states.”** Use shots in demo order: 02 → 01 → 03 → 04 → 05 → 06 → 07 → 02. Label the presentation **Recorded walkthrough**, not live interaction. Use a preloaded original PDF or its visible link/locator; do not claim a successful fresh source fetch.
+- If the app or network fails, say: **“These are captures of the local build; I will walk through its recorded states.”** Use the current `ui267-*` shots in demo order: 02 → 01 → 03 → 04 → 05 → 06 → 07 → 02. Label the presentation **Recorded walkthrough**, not live interaction. Use a preloaded original PDF or its visible link/locator; do not claim a successful fresh source fetch.
 
 ## Historical thirty-second video storyboard (2026-11-14)
 
@@ -90,9 +90,25 @@ Six five-second segments; narration is approximately 53 words. This is an editin
 | 0:20–0:25 | Shot 06: not-run banner, then Shot 07 retrieved rows. | No accuracy score is claimed. Ask retrieves source-linked records. | Retrieval shown · evaluation not run |
 | 0:25–0:30 | Shot 02: candidate experiment card; finish on REDLINE title and card. | The gap becomes a candidate experiment question for review. | Candidate question · REDLINE inference |
 
+## Current screenshot manifest (`6455a3c`)
+
+Captured 2026-11-15 at about 08:49 PST from `main` at `6455a3c`, in Chrome with a **1600 x 1000 CSS-pixel** viewport at 100% zoom, served at `localhost:5199`. Header: **Evidence 45**, **Verified 0**; O2 tradeoff shows inventory `data/evidence.csv@c78b68c2b7ae1c952eb9feb0d51c1a6e7f08b5aa`. Unedited viewport captures; counts are build metadata, not NASA measurements.
+
+| Shot | State | Image |
+| --- | --- | --- |
+| 01 | `#investigations`; **Rank for habitat = Pressurized rover**; 26 of 26 investigations with Source links; rankings held for scientific review. | [Investigations](screenshots/ui267-01-investigations.png) |
+| 02 | `#cabin` after **Load lunar rover demo**; **No verified evidence rows loaded**, legend and candidate experiment question. | [Lunar rover cabin](screenshots/ui267-02-cabin-rover.png) |
+| 03 | `#gravity`; PMMA sheet · flaming; scientific review state, collapsed draft detail, **0 g / 1 g assumed envelope unavailable**, closed **Source context and methods**. | [Gravity view](screenshots/ui267-03-gravity.png) |
+| 04 | Same tab, scrolled; **Selected evidence: U25-01-L** with NASA source, locator and `HOLD_scientific_review`. | [Evidence detail](screenshots/ui267-04-evidence-detail.png) |
+| 05 | `#oxygen`; preview **30%**, pressure 56.5 kPa, four items fixed; **No verified evidence loaded**; capture before **Cancel preview**. | [Oxygen preview](screenshots/ui267-05-oxygen-preview.png) |
+| 06 | `#accuracy`; **Held-out evaluation not run**; no scores shown. | [Accuracy](screenshots/ui267-06-accuracy.png) |
+| 07 | `#ask`; **Which materials were tested at lunar gravity?**; 8 retrieved rows with draft tags and source locators; API-key section closed. | [Ask REDLINE](screenshots/ui267-07-ask-redline.png) |
+
+Recapture after any UI or dataset change. Load the rover before Gravity and Oxygen; visiting those hashes alone does not reconstruct the scenario. Restore the cabin with Cancel after the preview. Never replace missing states with fixture outputs.
+
 ## Historical screenshot manifest (2026-11-14)
 
-Captured 2026-11-14 from historical commit `31a6acdd778e766d6a896201f376473155c51bc6`, in installed Microsoft Edge headless through DevTools Protocol. Viewport **1600 x 1000 CSS pixels**, device scale 1. PNGs are unedited viewport captures; scroll where indicated. The app was served over HTTP at `http://127.0.0.1:8063/` with a temporary Node server because `python` and `py` were unavailable on PATH. No dependencies were installed. These images document integration defects observed then, not the current checkout. No recapture was performed for #233.
+The seven unprefixed PNGs below are kept unchanged as a historical record only; use the `ui267-*` set above for presentation. Captured 2026-11-14 from historical commit `31a6acdd778e766d6a896201f376473155c51bc6`, in installed Microsoft Edge headless through DevTools Protocol. Viewport **1600 x 1000 CSS pixels**, device scale 1. PNGs are unedited viewport captures; scroll where indicated. The app was served over HTTP at `http://127.0.0.1:8063/` with a temporary Node server because `python` and `py` were unavailable on PATH. No dependencies were installed. These images document integration defects observed then, not the current checkout. No recapture was performed for #233.
 
 Dataset header: `data/evidence.csv@dbb9db601a4a8d07ad77ec5097f8b6231a3f0e41`; built `2026-11-14T18:22:32.413Z`; 29 rows, zero verified. Gravity research revision: `0d0cb9aeba1c93640cedaab916b7a7acc816a9c5`. Counts and revisions are build metadata, not NASA measurements.
 
@@ -105,8 +121,6 @@ Dataset header: `data/evidence.csv@dbb9db601a4a8d07ad77ec5097f8b6231a3f0e41`; bu
 | 05 | `#oxygen`; original rover is 34%; preview is **30%**; pressure remains 56.5 kPa, four items retained; page top. Capture before Cancel. | [Oxygen preview](screenshots/05-oxygen-preview.png) |
 | 06 | `#accuracy`; no report file, not-run banner; page top. | [Accuracy](screenshots/06-accuracy.png) |
 | 07 | `#ask`; submit **Which materials were tested at lunar gravity?**; eight retrieved rows in this revision; key absent; page top. Draft tags and source locators remain visible. | [Ask REDLINE](screenshots/07-ask-redline.png) |
-
-Recapture after any UI or dataset change. Load the rover before Gravity and Oxygen; visiting those hashes alone does not reconstruct the scenario. Restore the cabin with Cancel after the preview. Capture all six tabs plus the expanded detail; never replace missing states with fixture outputs.
 
 ## NASA source register and claim boundaries
 
