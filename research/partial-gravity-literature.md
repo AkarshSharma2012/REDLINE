@@ -32,7 +32,7 @@ Reported oxygen concentrations (% molar), copied from Table I; these are **diffe
 | Ultem 1000; 10.2 psia | 23.0 / 23.5 | 19.9 / 21.0 | 23.0 / 24.0 |
 | Nomex HT90-40; 14.7 psia | 22.1 / 23.5 | 19.9 / 21.0 | 22.0 / 23.0 |
 
-MOC*/ULOI* denote extinction during/survival through the drop. Ground MOC/ULOI use repeated burn-length outcomes. Some Martian-gravity flames were still shrinking at drop end. [OF, pp. 2, 4][OF]
+MOC*/ULOI* denote extinction during/survival through the drop. Ground MOC/ULOI use repeated burn-length outcomes. [OF, pp. 2, 4][OF]
 
 **Inference:** the table challenges endpoint bracketing; duration, criteria, PET identity and forced/buoyant-flow mismatches prevent a universal correction factor. [OF, pp. 2–7][OF]
 
