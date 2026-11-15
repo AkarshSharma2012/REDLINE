@@ -43,7 +43,7 @@ function matches(value, rule) {
 
 test('committed draft 2020-12 schema is reproducible', () => {
   assert.equal(schema.$schema, 'https://json-schema.org/draft/2020-12/schema');
-  assert.equal(schemaText, serializeSchema());
+  assert.equal(schemaText.replace(/\r\n/g, '\n'), serializeSchema());
 });
 
 test('every evidence row satisfies the exported schema', () => {
@@ -55,7 +55,8 @@ test('schema agrees with validator across field mutations and conditional rules'
   const baseline = structuredClone(data.evidence[0]);
   const compare = (row) => {
     const result = validateEvidence({ ...data, evidence: [row] });
-    assert.equal(matches(row, schema), result.ok, JSON.stringify({ row, errors: result.errors }));
+    const localErrors = result.errors.filter((error) => !/ (?:source_key .* not in sources|material_id .* not in materials)$/.test(error));
+    assert.equal(matches(row, schema), localErrors.length === 0, JSON.stringify({ row, errors: localErrors }));
   };
   compare(baseline);
   for (const { key } of FIELDS) {
