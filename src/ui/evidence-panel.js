@@ -8,7 +8,7 @@ const FIELDS = [
   ['o2_partial_kpa', 'Oxygen partial pressure (computed)', 'kPa O2', 'P'],
   ['flow_speed_cm_s', 'Forced flow speed', 'cm/s', 'V'], ['flow_direction', 'Flow direction', '', 'D'],
   ['gravity_g', 'Gravity', 'g', 'G'], ['facility', 'Facility', '', 'X'], ['test_duration_s', 'Duration', 's', 'X'],
-  ['external_heat_flux_kw_m2', 'External heat flux', 'kW/mÂ²', 'H'], ['endpoint', 'Endpoint', '', 'E'],
+  ['external_heat_flux_kw_m2', 'External heat flux', 'kW/m²', 'H'], ['endpoint', 'Endpoint', '', 'E'],
   ['limit_approach', 'Approach', '', 'A'], ['pass_criterion', 'Pass criterion', '', 'A'], ['uncertainty', 'Uncertainty', '', 'U'],
 ];
 const known = v => v !== null && v !== undefined && v !== '';
@@ -58,8 +58,8 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
     const s = sourceFor(row), u = sourceURL(s);
     if (!u || !row.source_locator) { p(parent, 'Source URL or locator unavailable; scientific values withheld.'); return false; }
     const a = make('a', s.title ?? row.source_key); a.href = u.href; a.target = '_blank'; a.rel = 'noopener noreferrer'; parent.append(a);
-    p(parent, `${s.authors ?? 'Authors not stated'} Â· ${s.year ?? 'Year not stated'} Â· ${row.source_locator}`);
-    if (!isNASA(u)) p(parent, '[non-NASA publication â€” not used for the label]');
+    p(parent, `${s.authors ?? 'Authors not stated'} · ${s.year ?? 'Year not stated'} · ${row.source_locator}`);
+    if (!isNASA(u)) p(parent, '[non-NASA publication — not used for the label]');
     return true;
   }
   function label(parent, value, prefix = '') {
@@ -72,7 +72,7 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
     root.replaceChildren(); root.append(make('h3', `Evidence: ${String(snapshot.material_id).startsWith('unrecognised:') ? `${snapshot.material_id.slice(13)} (material not recognised)` : snapshot.material_id}`));
     const closeButton = button(root, 'Close evidence', close);
     closeButton.setAttribute('aria-label', 'Close evidence and return to material');
-    p(root, `Request: ${result.item_id ?? snapshot.material_id} Â· revision ${result.revision ?? 'not stated'}. Cabin values are user inputs.`);
+    p(root, `Request: ${result.item_id ?? snapshot.material_id} · revision ${result.revision ?? 'not stated'}. Cabin values are user inputs.`);
     p(root, FIELDS.map(([key, name, unit]) => `${name}: ${format(key === 'o2_partial_kpa' ? partial(snapshot) : snapshot[key], unit)}`).join('; '));
     if (result.cross_gravity) p(root, 'Cross-gravity comparison', 'tag-cross-gravity');
     if (result.estimate) {
@@ -119,11 +119,11 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
     const list = make('ol'); root.append(list);
     visible.forEach(c => {
       const li = make('li'); list.append(li);
-      const b = button(li, `${c.row.evidence_id} Â· ${c.inspectOnly ? 'Inspection only' : { OK: 'Comparable', FLAG: 'Comparable with notes', INVALID: 'Excluded' }[c.comparison.grade]}`, () => { selected = c.row.evidence_id; draw(); });
+      const b = button(li, `${c.row.evidence_id} · ${c.inspectOnly ? 'Inspection only' : { OK: 'Comparable', FLAG: 'Comparable with notes', INVALID: 'Excluded' }[c.comparison.grade]}`, () => { selected = c.row.evidence_id; draw(); });
       b.setAttribute('aria-pressed', String(selected === c.row.evidence_id));
-      p(li, `${sourceFor(c.row)?.title ?? 'Source not stated'} Â· ${c.comparison.rules.find(r => r.grade !== 'OK')?.why ?? 'No comparison notes'}`);
+      p(li, `${sourceFor(c.row)?.title ?? 'Source not stated'} · ${c.comparison.rules.find(r => r.grade !== 'OK')?.why ?? 'No comparison notes'}`);
       source(li, c.row);
-      p(li, `${c.row.material} Â· ${reviewedForm(c.row) ?? c.row.form} Â· ${c.row.facility} Â· ${(reviewedGravity(c.row) ?? format(c.row.gravity_g, 'g'))} Â· ${reviewedEndpoint(c.row) ?? c.row.endpoint} Â· ${c.row.outcome ?? 'Outcome not stated'} Â· ${c.row.review_status}`);
+      p(li, `${c.row.material} · ${reviewedForm(c.row) ?? c.row.form} · ${c.row.facility} · ${(reviewedGravity(c.row) ?? format(c.row.gravity_g, 'g'))} · ${reviewedEndpoint(c.row) ?? c.row.endpoint} · ${c.row.outcome ?? 'Outcome not stated'} · ${c.row.review_status}`);
       if (result.conflicts?.includes(c.row.evidence_id)) p(li, 'Other comparable tests disagree');
       if (c.comparison.rules.some(r => r.rule === 'E' && r.grade === 'INVALID')) p(li, 'Related test (different endpoint, not used for the label)');
     });
