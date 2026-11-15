@@ -101,10 +101,11 @@ From the repository root, with Node ≥22.12 and no dependency installation:
 ```sh
 node scripts/build-evidence.mjs
 node --test
- git diff --check
- git diff -- data/evidence.csv data/metadata.json data/evidence.json
+git diff --check
+git diff -- data/evidence.csv data/metadata.json data/evidence.json
 ```
 
 The builder converts CSV blanks to null, validates the complete package and atomically replaces `data/evidence.json` only on success. Fix errors at the named row/column in the CSV or metadata, then rebuild. After any final review-status change, rebuild and run the tests again. Inspect generated changes, including expected `built_at`/`built_from` provenance; do not repair generated rows manually.
 
 Tests check schema and behavior, not whether a PDF supports the measurement. Include the independent review record and command results in the PR. Commit the CSV, any authorized metadata changes and regenerated JSON together on the task branch; submit a PR rather than pushing to main. If file ownership excludes a needed data/metadata change, document the dependency in root `HANDOFF.md` for the owning task. This workflow needs no web server or persistent process.
+
