@@ -133,7 +133,7 @@ export function renderInvestigations(root, rawCatalog, { fixture = false } = {})
   root.replaceChildren(
     fixture || catalog.fixture
       ? el('p', { class: 'inv-banner type-small' }, 'Development fixture: a few investigations copied from REDLINE research notes, not the full PSI catalog. The full catalog (B10) replaces it when data/investigations.json exists.')
-      : null,
+      : '',
     el('p', { class: 'text-2 type-small' },
       'Ranking adds visible points per factor: need, habitat named in the catalog notes, oxygen and pressure overlap with the habitat atmosphere, and gravity. Open a row to see why. Partial-gravity results are not in PSI yet; 0 g and 1 g results can only bound them as an estimate.'),
     controls, status, summary,
