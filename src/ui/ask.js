@@ -31,42 +31,43 @@ export async function loadOptionalJson(url, fetchImpl = fetch) {
 }
 
 export function summarize(hit) {
-  const r = hit.row;
-  if (hit.kind === 'evidence') {
+  const r = hit?.row ?? {};
+  if (hit?.kind === 'evidence') {
     const cond = [
-      `${r.material} (${r.form})`,
+      `${shown(r.material)} (${shown(r.form)})`,
       `O2 ${shown(r.o2_pct, '%')}`,
       `${shown(r.pressure_kpa, ' kPa')}`,
-      GRAVITY[r.gravity_g] ?? `${r.gravity_g} g`,
-      `flow ${r.flow_direction}${r.flow_speed_cm_s != null ? ` ${r.flow_speed_cm_s} cm/s` : ''}`,
+      GRAVITY[r.gravity_g] ?? (r.gravity_g == null ? 'gravity not stated' : `${r.gravity_g} g`),
+      `flow ${shown(r.flow_direction)}${r.flow_speed_cm_s != null ? ` ${r.flow_speed_cm_s} cm/s` : ''}`,
       r.endpoint ? `${r.endpoint} ${shown(r.value, r.value_unit ? ` ${r.value_unit}` : '')}` : 'endpoint not stated',
-    ].join(' · ');
+    ].join(' | ');
     return r.observation_paraphrase ? `${cond}. ${r.observation_paraphrase}` : cond;
   }
-  if (hit.kind === 'investigation') {
-    return [val(r.name), val(r.fuel), val(r.objective) ?? val(r.objectives)].filter(Boolean).join(' · ');
+  if (hit?.kind === 'investigation') {
+    return [val(r.name), val(r.fuel), val(r.objective) ?? val(r.objectives)].filter(Boolean).join(' | ');
   }
-  return r.text;
+  return r.text ?? '';
 }
 
 function sourceLink(src) {
   if (!src?.url) return '<span class="text-3">source link not found in the sources reviewed</span>';
   return `<a href="${esc(src.url)}" target="_blank" rel="noopener noreferrer">${esc(src.title)}<span ${SR}> (opens in new tab)</span></a>` +
-    (src.locator ? ` <span class="text-3">— ${esc(src.locator)}</span>` : '');
+    (src.locator ? ` <span class="text-3">- ${esc(src.locator)}</span>` : '');
 }
 
 function draftTag(row) {
-  return row.review_status && row.review_status !== 'verified'
+  return row?.review_status && row.review_status !== 'verified'
     ? ` <span class="flag">${esc(row.review_status)}</span>` : '';
 }
 
 export function hitsTableHtml(hits) {
+  hits = (Array.isArray(hits) ? hits : []).filter((h) => h && typeof h === 'object');
   if (!hits.length) return `<p class="text-2">No rows matched. Answer: ${NOT_FOUND}.</p>`;
   const rows = hits.map((h) => `<tr>
       <td class="type-data">${esc(h.id)}${draftTag(h.row)}</td>
       <td>${esc(h.kind)}</td>
       <td class="type-small">${esc(summarize(h))}</td>
-      <td class="type-small text-2">${esc([...new Set(h.matched.map((m) => m.term))].join(', '))}</td>
+      <td class="type-small text-2">${esc([...new Set((h.matched ?? []).map((m) => m?.term).filter(Boolean))].join(', '))}</td>
       <td class="type-small">${sourceLink(h.source)}</td>
     </tr>`).join('');
   return `<table><caption ${SR}>Rows retrieved for your question</caption>
@@ -76,26 +77,44 @@ export function hitsTableHtml(hits) {
 
 // Insights relevant to the retrieved rows: retrieved directly, or citing a retrieved row.
 export function relatedInsights(hits, insights) {
-  const ids = new Set(hits.map((h) => String(h.id)));
-  return (insights?.insights || []).filter((ins) => ids.has(ins.insight_id) || ins.cited_ids.some((id) => ids.has(id)));
+  const ids = new Set((Array.isArray(hits) ? hits : []).filter(Boolean).map((h) => String(h.id)));
+  const list = Array.isArray(insights?.insights) ? insights.insights : [];
+  return list.filter((ins) => ins && (ids.has(ins.insight_id) || (ins.cited_ids ?? []).some((id) => ids.has(id))));
 }
 
 export function insightHtml(ins, sources = {}) {
+  ins = ins ?? {};
+  sources = sources ?? {};
+  const cited = Array.isArray(ins.cited_ids) ? ins.cited_ids : [];
   const check = ins.checked_by_team
     ? `AI-generated, checked by team (${esc(ins.checked_by)})`
     : 'AI-generated, not yet checked by team';
-  const links = ins.cited_ids.filter((id) => sources[id]?.url)
+  const links = cited.filter((id) => sources[id]?.url)
     .map((id) => sourceLink({ title: sources[id].title, url: sources[id].url })).join('; ');
   return `<article class="panel ask-insight">
-    <h4 class="type-label">${esc(ins.subject.name)} <span class="flag">${check}</span></h4>
+    <h4 class="type-label">${esc(ins.subject?.name ?? 'Insight')} <span class="flag">${check}</span></h4>
     <p class="type-body">${esc(ins.text)}</p>
-    <p class="type-small text-2">Cited rows: ${esc(ins.cited_ids.join(', '))}</p>
+    <p class="type-small text-2">Cited rows: ${esc(cited.join(', ') || 'none')}</p>
     ${links ? `<p class="type-small">Sources: ${links}</p>` : ''}
   </article>`;
 }
 
+// Words of the question that no evidence, catalog or insight row mentions.
+export function coverageHtml(unmatched) {
+  const words = (Array.isArray(unmatched) ? unmatched : []).filter(Boolean);
+  if (!words.length) return '';
+  return `<p class="caveat type-body" data-role="coverage">No row mentions: ${esc(words.join(', '))}. ` +
+    `About ${words.length > 1 ? 'those' : 'that'}, the answer is: ${NOT_FOUND}. ` +
+    'The rows below match other words in your question and may not answer it.</p>';
+}
+
 // Escapes the model's answer and turns [ID] citations into links to that row's source.
 export function answerHtml(answer, hits) {
+  answer = String(answer ?? '');
+  if (/\bsafe\b|never\s+tested|never\s+burns|will\s+burn\s+on\s+the\s+moon|nonflammable/i.test(answer)) {
+    return '<p class="caveat type-small">Live answer withheld: it used wording that goes beyond the evidence. Read the retrieved NASA rows below.</p>';
+  }
+  hits = (Array.isArray(hits) ? hits : []).filter((h) => h && typeof h === 'object');
   const byId = new Map(hits.map((h) => [String(h.id), h]));
   const { unknown } = citationsIn(answer, hits);
   const body = esc(answer).replace(/\[([^\]]+)\]/g, (whole, inner) => {
@@ -156,29 +175,48 @@ const FORM = `
   <div data-role="insights"></div>`;
 
 // renderAsk(root, { evidence, investigations, insights }) -> { ask(question) }
-export function renderAsk(root, data = {}) {
+export function renderAsk(root, data = {}, { requestAnswer = askClaude } = {}) {
+  data = data ?? {};
   root.innerHTML = FORM;
   const sources = data.evidence?.sources || {};
   const $ = (role) => root.querySelector(`[data-role="${role}"]`);
   let apiKey = '';
+  let revision = 0;
   const keyInput = $('key');
   keyInput.addEventListener('input', () => { apiKey = keyInput.value.trim(); });
   root.querySelector('[data-action="forget"]').addEventListener('click', () => {
+    revision++;
     apiKey = '';
     keyInput.value = '';
     $('status').textContent = 'Key forgotten.';
   });
 
   async function ask(question) {
-    const { hits } = retrieve(question, data, { limit: 8 });
-    $('answer').innerHTML = '';
+    const current = ++revision;
+    question = String(question ?? '').trim();
+    if (!question) {
+      $('status').textContent = 'Enter a question about the NASA tests.';
+      return { hits: [], answer: null };
+    }
+    let hits = [], unmatched = [];
+    try {
+      ({ hits, unmatched = [] } = retrieve(question, data, { limit: 8 }));
+    } catch {
+      $('answer').innerHTML = '';
+      $('hits').innerHTML = '';
+      $('insights').innerHTML = '';
+      $('status').textContent = 'Error: evidence search could not run. Try again or reload the evidence. This is a search failure, not a finding about coverage.';
+      return { hits: [], answer: null, error: 'retrieval failed' };
+    }
+    hits = Array.isArray(hits) ? hits : [];
+    $('answer').innerHTML = unmatched.length && hits.length ? coverageHtml(unmatched) : '';
     $('hits').innerHTML = `<h3 class="type-heading">Retrieved rows (${hits.length})</h3>${hitsTableHtml(hits)}`;
     const related = relatedInsights(hits, data.insights);
     $('insights').innerHTML = related.length
       ? `<h3 class="type-heading">Pre-generated insights</h3>${related.map((i) => insightHtml(i, sources)).join('')}`
       : '';
     if (!apiKey) {
-      $('status').textContent = `${hits.length} rows retrieved. Add an API key for a live answer, or read the rows and insights below.`;
+      $('status').textContent = `${hits.length} rows retrieved by matching words in your question; they are not an answer. Add an API key for a live answer, or read the rows and insights below.`;
       return { hits, answer: null };
     }
     const ground = groundingHits(hits);
@@ -187,13 +225,15 @@ export function renderAsk(root, data = {}) {
       $('status').textContent = 'No catalog or evidence rows retrieved, so nothing was sent to Claude.';
       return { hits, answer: NOT_FOUND };
     }
-    $('status').textContent = 'Asking Claude using only the retrieved rows…';
+    $('status').textContent = 'Asking Claude using only the retrieved rows...';
     try {
-      const answer = await askClaude({ apiKey, question, hits: ground });
-      $('answer').innerHTML = `<section class="panel"><h3 class="type-heading">Answer <span class="flag">AI-generated from the rows below</span></h3>${answerHtml(answer, ground)}</section>`;
+      const answer = await requestAnswer({ apiKey, question, hits: ground });
+      if (current !== revision) return { hits, answer: null, stale: true };
+      $('answer').innerHTML = `${unmatched.length ? coverageHtml(unmatched) : ''}<section class="panel"><h3 class="type-heading">Answer <span class="flag">AI-generated from the rows below</span></h3>${answerHtml(answer, ground)}</section>`;
       $('status').textContent = '';
       return { hits, answer };
     } catch (err) {
+      if (current !== revision) return { hits, answer: null, stale: true };
       $('status').textContent = `Error: the live answer failed (${err.message}). The retrieved rows are still shown below.`;
       return { hits, answer: null, error: err };
     }
@@ -207,8 +247,21 @@ export function renderAsk(root, data = {}) {
   return { ask };
 }
 
+// Plain-language notice for a failed data/evidence.json load, with a retry link (#169).
+export function evidenceErrorHtml(retryHref = '') {
+  return `<div class="panel" role="alert"><p class="type-body">The NASA evidence file (data/evidence.json) could not load, so REDLINE cannot search the test results right now. Check your connection, then <a href="${esc(retryHref)}" data-action="retry">retry</a>.</p></div>`;
+}
+
 // Convenience loader for main.js: evidence is passed in; catalog and insights are optional.
+// With no evidence (the evidence.json load failed) it shows the retry notice instead of a dead form.
 export async function mountAsk(root, evidence, fetchImpl = fetch) {
+  if (!evidence || typeof evidence !== 'object') {
+    root.innerHTML = evidenceErrorHtml(globalThis.location?.href ?? '');
+    root.querySelector('[data-action="retry"]')?.addEventListener('click', (e) => {
+      if (globalThis.location?.reload) { e.preventDefault(); globalThis.location.reload(); }
+    });
+    return null;
+  }
   const [investigations, insights] = await Promise.all([
     loadOptionalJson(INVESTIGATIONS_URL, fetchImpl),
     loadOptionalJson(INSIGHTS_URL, fetchImpl),

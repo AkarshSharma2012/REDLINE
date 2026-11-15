@@ -1,11 +1,11 @@
 # Issue #90 — Space Apps submission checklist
 
-Created `docs/submission-checklist.md`, the only owned deliverable, plus this required root handoff. Read README, AGENTS, DESIGN, all four binding specs, submission draft, AI disclosure and pitch plan. Current branch: `task/90-s1-space-apps-submission-checklist`.
+Done: `docs/submission-checklist.md` with the seven-item **Submission package** section (slides, 2-minute pitch video, demo video, public app link, repo link, AI-use disclosure, credits) plus project, NASA data, AI use, links, team/consent and deadline sections. Each line is one checkbox and a `status: done / todo / unknown`; checked means a repo artifact exists. Anything unverifiable is `unknown`.
 
-Checklist covers the exact seven-item submission package, project fields, NASA data, AI use, links, walkthrough, team/consent, deadlines and submission verification. Checked boxes mean repository evidence only; external completion is unknown. Explicit unfinished pitch/video work is todo. Global guidance is separated from the issue's team-reported local instructions. Official page retrieval failures and incomplete Seattle/guide verification are disclosed; no portal or personal consent records were accessed.
+15 Nov update: merged `origin/main` (`5094334`). Public app link is now done (README Pages URL, anonymous HTTP 200). Credits are done (`docs/credits.md`). **Repo link is todo:** `https://github.com/AkarshSharma2012/REDLINE` returned HTTP 404 signed-out, so judges may not see it. A human admin must make it public. Slides are still unknown, and both videos are still todo.
 
-Verification: `node --test` exited 0: 191 tests, 104 pass, 0 fail, 87 TODO. Assertion diagnostics belong to TODO tests, not failures. A standalone Node check validated every checkbox/status pairing, the exact ordered seven package items, and all local Markdown file targets. `git diff --check` passed. Attempted `python -m http.server 8090 --bind 127.0.0.1`; Python was not installed/on PATH (neither py nor python3 found), so serving/opening the app could not be completed. This docs-only change does not claim browser verification or functional app acceptance. No dependencies added.
+Merge note: main's root HANDOFF.md (issue #267) conflicted; kept this task's version. #267 notes are in `docs/handoffs/issue-267.md` on main.
 
-Existing discrepancies between submission draft and pitch snapshots are a checklist action; edits to those files are outside this issue. Remaining submission tasks and external unknowns are intentionally recorded for the team, not blockers to this checklist deliverable. Next: conductor review/merge; team completes package and confirms Seattle/portal requirements.
+Testing: a Node script checked that every checkbox matches its status. Ran the full `node --test` suite once. No server or browser was started.
 
 STATUS: DONE

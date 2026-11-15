@@ -66,13 +66,21 @@ function el(tag, attrs = {}, ...children) {
 export function formatValue(key, value) {
   if (value == null) return NOT_FOUND;
   if (key === 'gravity') return [].concat(value).map((g) => GRAVITY_TEXT[g] ?? g).join(', ');
-  if (Array.isArray(value)) return value.join(', ');
-  if (typeof value === 'object' && 'min' in value) return value.min === value.max ? `${value.min}` : `${value.min}–${value.max}`;
+  if (typeof value === 'number' && !Number.isFinite(value)) return NOT_FOUND;
+  if (Array.isArray(value)) return value.length ? value.map((v) => formatValue(null, v)).join(', ') : NOT_FOUND;
+  if (typeof value === 'object') {
+    if ('min' in value) return value.min === value.max ? formatValue(null, value.min) : `${formatValue(null, value.min)}–${formatValue(null, value.max)}`;
+    if ('value' in value) return formatValue(key, value.value);
+    return NOT_FOUND;
+  }
   return String(value);
 }
 
 // DESIGN.md 5.5: Title — locator, underlined, new tab with a hint.
 function sourceLink(src, { short = false } = {}) {
+  if (Array.isArray(src)) return src.length
+    ? el('span', {}, src.flatMap((s, i) => [i ? '; ' : '', sourceLink(s, { short })]))
+    : sourceLink(null, { short });
   if (!src) return el('span', { class: 'inv-unknown' }, 'No source given in the catalog');
   const label = short ? 'Source' : src.title;
   const name = `${src.title}${src.locator ? `, ${src.locator}` : ''} (opens in new tab)`;
@@ -87,7 +95,7 @@ function valueCell(f, key, tag = 'td') {
   return el(tag, { class: NUMERIC.has(key) ? 'num' : null },
     el('span', { class: known ? null : 'inv-unknown' }, formatValue(key, f.value)),
     f.note && known ? el('span', { class: 'inv-cell-src' }, f.note) : null,
-    el('span', { class: 'inv-cell-src' }, sourceLink(f.source, { short: true })));
+    el('span', { class: 'inv-cell-src' }, sourceLink(f.sources ?? f.source, { short: true })));
 }
 
 function select(id, labelText, options, value, onchange) {
@@ -98,9 +106,17 @@ function select(id, labelText, options, value, onchange) {
 }
 
 function normalizeCatalog(catalog) {
-  let sources = catalog?.sources ?? {};
-  if (Array.isArray(sources)) sources = Object.fromEntries(sources.map((s) => [s.id ?? s.key, s]));
-  return { ...catalog, sources, investigations: catalog?.investigations ?? [] };
+  catalog = catalog && typeof catalog === 'object' ? catalog : {};
+  let sources = catalog.sources && typeof catalog.sources === 'object' ? catalog.sources : {};
+  if (Array.isArray(sources)) sources = Object.fromEntries(sources.filter((s) => s && typeof s === 'object').map((s) => [s.id ?? s.key, s]));
+  // Judge click-through (#169): skip non-records; a record without id/name still gets a stable id and plain text.
+  const investigations = (Array.isArray(catalog.investigations) ? catalog.investigations : [])
+    .filter((inv) => inv && typeof inv === 'object')
+    .map((inv, i) => {
+      const name = typeof inv.name === 'string' ? inv.name : inv.name?.value;
+      return { ...inv, id: inv.id ?? `entry-${i + 1}`, name: typeof name === 'string' && name ? name : 'Name not found in the sources reviewed' };
+    });
+  return { ...catalog, sources, investigations };
 }
 
 // renderInvestigations(root, catalog, opts) — draws the whole dashboard into root and keeps its own state.
@@ -117,7 +133,7 @@ export function renderInvestigations(root, rawCatalog, { fixture = false } = {})
   root.replaceChildren(
     fixture || catalog.fixture
       ? el('p', { class: 'inv-banner type-small' }, 'Development fixture: a few investigations copied from REDLINE research notes, not the full PSI catalog. The full catalog (B10) replaces it when data/investigations.json exists.')
-      : null,
+      : '',
     el('p', { class: 'text-2 type-small' },
       'Ranking adds visible points per factor: need, habitat named in the catalog notes, oxygen and pressure overlap with the habitat atmosphere, and gravity. Open a row to see why. Partial-gravity results are not in PSI yet; 0 g and 1 g results can only bound them as an estimate.'),
     controls, status, summary,
@@ -176,7 +192,7 @@ export function renderInvestigations(root, rawCatalog, { fixture = false } = {})
             class: 'inv-name-btn', type: 'button', 'aria-expanded': String(open), 'aria-controls': `inv-why-${s.id}`,
             onclick: () => { open ? state.open.delete(s.id) : state.open.add(s.id); drawSummary(); },
           }, s.name),
-          el('span', { class: 'inv-cell-src' }, psi.value ?? 'PSI id not found in the sources reviewed', ' · ', sourceLink(psi.source, { short: true }))),
+          el('span', { class: 'inv-cell-src' }, psi.value ?? 'PSI id not found in the sources reviewed', ' · ', sourceLink(psi.sources ?? psi.source, { short: true }))),
         el('td', { class: 'num' }, el('span', { class: 'inv-pts' }, `${s.score}/${s.max}`), el('span', { class: 'inv-cell-src' }, open ? 'Reasons shown below' : 'Open the name for reasons')),
         SUMMARY_COLUMNS.map(([key]) => valueCell(field(inv, key, sources), key)));
       return open ? [row, whyRow(s, habitat, colspan)] : [row];

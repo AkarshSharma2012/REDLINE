@@ -1,6 +1,6 @@
 # REDLINE submission checklist — Seattle 2026
 
-Checked 14 November 2026 against this checkout. `done` means the named repository artifact exists, not that it has been uploaded or accepted. `todo` means explicit remaining production work; `unknown` means completion cannot be verified, including anything held outside this repo. Only `done` items are checked. This is a preparation checklist, not proof of submission.
+Checked 14 November 2026; updated 15 November 2026 against `main` at `5094334`, merged into this branch. `done` means the named repository artifact exists, not that it has been uploaded or accepted. `todo` means explicit remaining production work; `unknown` means completion cannot be verified, including anything held outside this repo. Only `done` items are checked. This is a preparation checklist, not proof of submission.
 
 ## Requirements and verification boundaries
 
@@ -10,13 +10,13 @@ The issue records the event lead's instruction: judges use slides, a video and a
 
 ## Submission package
 
-- [ ] slides — status: unknown — No finished deck or public deck link found; external deck completion cannot be verified. Local lead requests slides; confirm global seven-slide limit if also using this as the global demo.
-- [ ] 2-minute pitch video — status: todo — [Pitch plan](pitch.md) exists, but human stopwatch rehearsal is unchecked and no recording/link is recorded; produce the local pitch cut.
-- [ ] demo video — status: todo — [Thirty-second storyboard](pitch.md#thirty-second-video-storyboard) explicitly leaves recording/editing unchecked; produce and host the demo, confirming the guide's exact duration limit.
-- [ ] public app link — status: unknown — No deployed URL or anonymous-access verification found; architecture's GitHub Pages plan is not deployment evidence.
-- [x] repo link — status: done — Origin identifies [AkarshSharma2012/REDLINE](https://github.com/AkarshSharma2012/REDLINE); public access is a separate check below.
-- [x] AI-use disclosure — status: done — [AI disclosure](ai-use.md) and [submission draft](submission-draft.md#ai-use-and-checking) describe development agents, stored interpretations, optional generation and checking limits; final consistency review remains below.
-- [ ] credits — status: unknown — NASA references and AI tools are documented, but a complete contributor, asset and licensing credit list is not verified.
+- [ ] slides — status: unknown — No deck file or public deck link is in the repo; [pitch.md](pitch.md) and [pitch-variants.md](pitch-variants.md) are scripts, not slides. External deck completion cannot be verified. Confirm the global seven-slide limit if the deck doubles as the global demo.
+- [ ] 2-minute pitch video — status: todo — [pitch.md](pitch.md) holds a [60-second demo script](pitch.md#current-60-second-demo-2026-11-15) and a historical two-minute click-path; delivery time is unmeasured and no recording or link is recorded.
+- [ ] demo video — status: todo — The [current screenshot set](pitch.md#current-screenshot-manifest-6455a3c) is captured and a recording package exists outside the repo, but pitch.md states no rendered or edited video is claimed; record, edit and host it, confirming the guide's duration limit.
+- [x] public app link — status: done — [akarshsharma2012.github.io/REDLINE](https://akarshsharma2012.github.io/REDLINE/) is listed in [README](../README.md#live-app-and-deployment) and returned HTTP 200 to an anonymous request on 15 November 2026; pitch.md records a coordinator browser check of build `6455a3c`. Re-check after the final merge.
+- [ ] repo link — status: todo — [github.com/AkarshSharma2012/REDLINE](https://github.com/AkarshSharma2012/REDLINE) returned HTTP 404 to an anonymous request on 15 November 2026, so it appears private to judges. A repo admin must make it public (or supply another public link), then re-check signed out.
+- [x] AI-use disclosure — status: done — [AI disclosure](ai-use.md), [AI log](ai-log.md) and [submission draft](submission-draft.md#ai-use-and-checking) describe development agents, stored interpretations, optional generation and checking limits; final consistency review remains below.
+- [x] credits — status: done — [Credits and data attributions](credits.md) registers NASA sources, investigators, research links and tools. Team contributor names and item-level reuse rights are not listed there; see the team and rights checks below.
 
 ## Project page and NASA data
 
@@ -32,8 +32,8 @@ The issue records the event lead's instruction: judges use slides, a video and a
 
 ## Links and judge walkthrough
 
-- [ ] Verify public app link in a signed-out browser — status: unknown — Confirm the exact submitted URL loads without access requests and supports the lead's click-through.
-- [ ] Verify repo link in a signed-out browser — status: unknown — Configured origin does not prove anonymous access or availability of the final submitted revision.
+- [ ] Verify public app link in a signed-out browser — status: unknown — Anonymous HTTP 200 confirmed for the Pages URL; a full signed-out click-through of the final build is not recorded here.
+- [ ] Verify repo link in a signed-out browser — status: todo — Anonymous request returned HTTP 404 on 15 November 2026; fix visibility, then re-check.
 - [ ] Verify public slides and both video links — status: unknown — Check playback, permissions, sound, legibility and duration without the team's accounts.
 - [ ] Rehearse the app click-through and two-minute pitch — status: todo — Use [pitch.md](pitch.md); confirm actual controls, source drill-down, review/empty states and a timed delivery, with local fallback available.
 - [ ] Populate separate project-demo and final-project links — status: unknown — Required by the organizing-team guidance above; no submitted project page is recorded.

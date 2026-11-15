@@ -67,6 +67,19 @@ function conditions(p) {
   return `${p.material}; ${p.form}; thickness ${number(p.thickness_mm, 'mm')}; ${pressure}; ${flow}; ${p.flow_direction || 'direction not stated'}; ${p.gravity || 'gravity not stated'} (${p.gravity_context}); ${p.facility}; observation ${number(p.test_duration_s, 's')}`;
 }
 
+// Cabin request in words and units, never raw JSON (persona B2 finding).
+const GRAVITY_TEXT = { 0: 'microgravity reference (0 g)', 1: 'Earth reference (1 g)', 0.16: 'lunar scenario (0.16 g, estimate)' };
+export function requestText(r = {}) {
+  const has = (v) => typeof v === 'number' && Number.isFinite(v);
+  return [
+    has(r.o2_pct) ? `${r.o2_pct}% O2` : 'O2 not stated',
+    has(r.pressure_kpa) ? `${r.pressure_kpa} kPa absolute` : 'pressure not stated',
+    has(r.flow_speed_cm_s) ? `forced airflow ${r.flow_speed_cm_s} cm/s` : 'forced airflow not specified',
+    r.flow_direction ? `${r.flow_direction} flow` : 'flow direction not specified',
+    has(r.gravity_g) ? (GRAVITY_TEXT[r.gravity_g] ?? `${r.gravity_g} g`) : 'gravity not stated',
+  ].join('; ');
+}
+
 function dataTable(points, research) {
   if (!points.length) return '<p>No numeric records in this series.</p>';
   return `<div class="gv-scroll" tabindex="0" role="region" aria-label="${research ? 'Research detail' : 'Reviewed'} chart data"><table>
@@ -131,10 +144,14 @@ const style = `<style>
 .gravity-view button,.gravity-view select{font:inherit;color:#E8EAED;background:#1E2228;border:1px solid #737B88;border-radius:4px;padding:4px 8px;min-height:32px;max-width:100%}
 .gravity-view :focus-visible{outline:2px solid #7CB8FF;outline-offset:2px}.gravity-view button[aria-pressed=true]{border-bottom:3px solid #7CB8FF}
 .gravity-view nav{display:flex;gap:8px;flex-wrap:wrap}.gravity-view label{display:block;margin:12px 0}.gravity-view select{display:block;margin-top:4px}
-.gravity-view .gv-note,.gravity-view article{padding:12px;border:1px solid #737B88;margin:16px 0;background:#16191E}
+.gravity-view .gv-note,.gravity-view article{padding:12px 16px;border:1px solid #2C313A;border-left:2px solid #A9B0BB;border-radius:6px;margin:16px 0;background:#16191E}
+.gravity-view>h2{margin:0 0 8px}.gravity-view>p{max-width:96ch;color:#A9B0BB}.gravity-view>details{border:1px dashed #737B88;border-radius:6px;padding:0 16px 12px;margin:16px 0}.gravity-view>details[open]>summary{border-bottom:1px solid #2C313A;margin-bottom:12px}
+.gravity-view [data-evidence-detail]:not(:empty){border:1px solid #737B88;border-left:2px solid #7CB8FF;border-radius:6px;background:#16191E;padding:12px 16px;margin:16px 0;scroll-margin-top:64px}.gravity-view [data-evidence-detail]>h3{margin:12px 0}
+.gravity-view thead th{background:#1E2228;color:#A9B0BB;font-size:12px;font-weight:500}.gravity-view tbody tr:hover>*{background:#1E2228}.gravity-view caption{color:#A9B0BB;text-align:left;padding:8px 12px}.gravity-view tbody th[scope=row]{min-width:180px}.gravity-view td button,.gravity-view th button{white-space:nowrap;margin-top:4px}
 .gravity-view figure{margin:16px 0}.gravity-view .gv-scroll{overflow-x:auto;max-width:100%}.gravity-view table{border-collapse:collapse;min-width:640px;width:100%;font-size:13px}
-.gravity-view th,.gravity-view td{text-align:left;vertical-align:top;border:1px solid #2C313A;padding:8px 12px}.gravity-view td:nth-child(2){font-variant-numeric:tabular-nums}
+.gravity-view th,.gravity-view td{text-align:left;vertical-align:top;border:0;border-bottom:1px solid #2C313A;padding:8px 12px}.gravity-view td:nth-child(2){font-variant-numeric:tabular-nums}
 .gravity-view summary{cursor:pointer;padding:8px 0;min-height:32px}.gravity-view .gv-status{color:#A9B0BB}.gravity-view dl{margin:0}.gravity-view dd{margin:0 0 8px}
+.gravity-view [data-source-context]>summary{min-height:40px}
 </style>`;
 
 function contextCards() {
@@ -188,7 +205,7 @@ export function renderGravityView(root, options = {}) {
       <h2>Earth-based prediction vs measured simulated-lunar result</h2>
       <p>For these tested setups. Not measurements on the lunar surface. Evidence review, not cabin certification.</p>
       ${options.onBack ? '<button type="button" data-back>Back to cabin</button>' : ''}
-      ${options.request ? `<p>Requested conditions (user input): ${escape(JSON.stringify(options.request))}. Source records remain at their published conditions.</p>` : ''}
+      ${options.request ? `<p>Requested conditions (user input): ${escape(requestText(options.request))}. Source records remain at their published conditions.</p>` : ''}
       <nav aria-label="Material family">${[...new Set(GROUPS.map((g) => g[1]))].map((f) => `<button type="button" data-family="${f}" aria-pressed="${f === family}">${f}</button>`).join('')}</nav>
       <label>Specimen / endpoint / condition group<select data-group>${GROUPS.filter((g) => g[1] === family).map((g) => `<option value="${g[0]}" ${g[0] === selected ? 'selected' : ''}>${g[2]}</option>`).join('')}</select></label>
       ${historical ? `<label>Historical endpoint (criteria differ by gravity)<select data-endpoint><option ${historicalEndpoint === 'ULOI' ? 'selected' : ''}>ULOI</option><option ${historicalEndpoint === 'MOC' ? 'selected' : ''}>MOC</option></select></label>` : ''}
@@ -201,7 +218,7 @@ export function renderGravityView(root, options = {}) {
       ${!selectedPoints.length ? '<p>No records in this extraction for the selected condition group. Source links remain available.</p>' : ''}
       <p class="gv-status">Research revision: ${escape(data.research_revision || 'Not stated')}; ${escape(data.research_path || 'Not stated')}</p>` : ''}
       <div class="gv-note"><h3>0 g / 1 g assumed envelope unavailable</h3><p>No reviewed compatible endpoint pair is supplied here. Do not infer a lunar threshold or clamp simulated-gravity results into an assumed range. Lunar behavior may fall outside a range between 0 g and 1 g results.</p>${sourceLink(...FABRIC_SOURCE, 'pp. 2–4; Table I and Eq. (1), p. 6')}</div>
-      ${contextCards()}<section data-evidence-detail aria-label="Selected evidence detail"></section></section>`;
+      <details data-source-context><summary>Source context and methods</summary>${contextCards()}</details><section data-evidence-detail aria-label="Selected evidence detail"></section></section>`;
   }
 
   async function reload() {
