@@ -33,3 +33,6 @@ STATUS: DONE
 # Issue #293
 - Recorded user-relayed Lakshya CORRECTION NEEDED review separately; retained HOLD/draft and B16. Nominal/inferred provenance carried in row notes and relevant displays/worksheet. A1 remains stopped. No server/browser.
 - Validation pending.
+
+- Native regeneration: node scripts/build-evidence.mjs (45 draft/0 verified), node scripts/export-datapackage.mjs, node scripts/verification-worksheet.mjs: exit 0. node --test: 1249 tests, 1204 pass, 1 stale pitch provenance failure, 44 TODO. Corrected pitch build reference; targeted pitch/review tests rerun. node scripts/size-budget.mjs PASS. node scripts/lint-csv.mjs reports 1 existing diagnostic; no unrelated evidence corrected. git diff --check clean. No build script exists; vendor integrity covered by full suite.
+STATUS: DONE
