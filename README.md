@@ -1,12 +1,12 @@
 ﻿# REDLINE
 
-NASA plans to run a Moon base at around 30% oxygen or more, a level hospitals already treat as a fire risk. But cabin materials are still approved with a fire test done in Earth gravity. REDLINE checks whether that holds up.
+REDLINE is a web-based dashboard for exploring combustion evidence for spacecraft and habitat fire-safety research. Its primary NASA dataset is the [Physical Sciences Informatics (PSI) Data Repository](https://psi.nasa.gov/).
 
-Enter the materials in a Moon base or lunar rover (Nomex, cotton, Teflon, acrylic and more) with the cabin's oxygen, pressure and airflow. REDLINE compares each material against NASA's space fire experiments and labels it **burned in testing**, **close to the burn limit**, or **never tested**, with a link to the experiment behind every label.
+Enter cabin materials and conditions, including oxygen, pressure and airflow. REDLINE uses only verified evidence rows for results and checks whether test conditions are comparable. Results use qualified wording such as **burned in testing at these conditions**, **close to a measured limit**, or **not found in the sources reviewed**. Evidence-backed results link to their NASA sources; a missing result describes a gap in the reviewed evidence, not a conclusion about all testing. If no verified evidence is loaded, no evidence-backed result is available.
 
-- Oxygen slider: the tradeoff between spacewalk pre-breathe time and how many materials become a fire risk.
-- Fixes: swap a material or cap the oxygen level.
-- Every untested combination becomes a suggested experiment for NASA's upcoming Moon fire tests.
+- Oxygen exploration: see how many materials have a burned-in-testing result as the selected oxygen changes, subject to comparability checks. These counts describe reviewed evidence, not a physical fire-risk score.
+- What changes the label: explore material and oxygen selections alongside their supporting test conditions. A label change does not establish an oxygen operating limit, certify a material, or demonstrate suitability for a cabin.
+- Evidence gaps: identify candidate research questions where comparable results are not found in the sources reviewed; these are not commitments to future NASA experiments.
 
 NASA Space Apps Challenge 2026, Seattle. Challenge: Flame in Freefall. Team: Interlake Embers.
 

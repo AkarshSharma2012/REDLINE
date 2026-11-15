@@ -70,7 +70,10 @@ function support(query, row) {
 
 // Absence of a winning spread observation is not evidence of no burning.
 // Only an oxygen limit or a no-spread observation can cover the query (V2 U1).
-function coversNoBurn(query, { row }) {
+function coversNoBurn(query, { row, rules }) {
+  // V2 U2: flagged pressure can retain burning observations, but cannot
+  // establish no burning. Reuse P's missing-value and gap thresholds.
+  if (!rules.some(({ rule, grade }) => rule === 'P' && grade === 'OK')) return false;
   const o = num(query.o2_pct);
   if (o === null) return false;
   if (row.endpoint === 'LOC-FS') {

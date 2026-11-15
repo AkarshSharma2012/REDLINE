@@ -63,7 +63,7 @@ const evidence = { schema_version: '1.0.0', built_at: '2026-11-14T00:00:00Z',
   built_from: 'inline S4 §7.1 test fixture', sources, materials, evidence: rows, cabin_presets: [] };
 
 // Acceptance starts from S4's published goldens, with reviewed corrections below.
-// Issue #234 applies reviewed U1 oxygen coverage; U2/U4 remain separate.
+// Issue #234 applies reviewed U1 oxygen coverage; U2 pressure coverage is applied in #235; U4 remains separate.
 // Observation points above query oxygen do not establish a no-burning result.
 // Review U5 supplies the otherwise undefined labelCabin query envelope.
 const ids = {
@@ -84,7 +84,7 @@ const cases = [
   ['T1', pmma, burned([ids.b19, ids.ug], 'M P T V')],
   ['T2', { ...pmma, o2_pct: 16.5 }, ne('NE-incompatible', [ids.b19, ids.ug], 'M P T V')],
   ['T3', { ...pmma, o2_pct: 17.5, pressure_kpa: null, flow_speed_cm_s: null, gravity_g: 1 },
-    ne('NE-no-burn', [ids.earth], 'M P T U V')],
+    ne('NE-incompatible', [ids.earth], 'M P T U V')],
   ['T4', { ...pmma, o2_pct: 34, gravity_g: 0.16 },
     out('BURNED', null, [ids.b19, ids.ug, ids.earth], 'G M P T U V', true)],
   ['T5', etfe, burned([ids.etfe1], 'M')],
@@ -228,7 +228,7 @@ for (const outcome of ['no-spread', 'quenched', 'blowoff', 'no-ignition', 'consu
     expectKind(etfe, [variant({ endpoint: 'burn/no-burn', outcome })], 'NOT_ESTABLISHED', 'NE-incompatible'));
 for (const [o2_pct, pressure_kpa, expected, reason] of [
   [34, 50, 'BURNED', null], [31, 50, 'NEAR', null],
-  [30, 50, 'NOT_ESTABLISHED', 'NE-no-burn'], [34, null, 'NOT_ESTABLISHED', 'NE-incompatible'],
+  [30, 50, 'NOT_ESTABLISHED', 'NE-incompatible'], [34, null, 'NOT_ESTABLISHED', 'NE-incompatible'],
 ]) test('S4 §4.3: kPa O2 limit at ' + o2_pct + '% and ' + pressure_kpa + ' kPa', () =>
   expectKind({ ...etfe, o2_pct, pressure_kpa }, [variant({ value: 16, value_unit: 'kPa O2' })], expected, reason));
 test('S4 §5.1: BURNED takes precedence over NEAR and cites only winning rows', () => {

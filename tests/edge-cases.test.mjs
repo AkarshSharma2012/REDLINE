@@ -138,13 +138,30 @@ test('labelMaterial: oxygen coverage requires known oxygen and cites only coveri
   }
 });
 for (const pressure_kpa of [null, 110.001]) {
-  test.todo(`labelMaterial: pressure ${pressure_kpa} cannot cover no-spread but retains burning evidence (V2 U2)`, () => {
+  test(`labelMaterial: pressure ${pressure_kpa} cannot cover no-spread but retains burning evidence (V2 U2)`, () => {
     answer(labelMaterial(query(), [row({ pressure_kpa, outcome: 'no-spread' })]), 'NOT_ESTABLISHED', 'NE-incompatible', ['SYNTHETIC-SPREAD']);
     const burned = labelMaterial(query(), [row({ pressure_kpa })]);
     answer(burned, 'BURNED', null, ['SYNTHETIC-SPREAD']);
     assert.ok(burned.flags.includes('P'));
   });
 }
+test('labelMaterial: no-burning pressure coverage uses P for query gaps, limits and the 10 kPa boundary (V2 U2)', () => {
+  const noSpread = row({ outcome: 'no-spread' });
+  const oxygenLimit = limit({ value: 23 });
+  for (const r of [noSpread, oxygenLimit]) {
+    for (const pressure_kpa of [null, undefined, 110.001, 89.999]) {
+      const result = labelMaterial(query({ pressure_kpa }), [r]);
+      answer(result, 'NOT_ESTABLISHED', 'NE-incompatible', [r.evidence_id]);
+      assert.ok(result.flags.includes('P'));
+    }
+    for (const pressure_kpa of [90, 100, 110]) {
+      answer(labelMaterial(query({ pressure_kpa }), [r]), 'NOT_ESTABLISHED', 'NE-no-burn', [r.evidence_id]);
+    }
+  }
+  const covering = row({ evidence_id: 'SYNTHETIC-COVERING', outcome: 'no-spread' });
+  answer(labelMaterial(query(), [covering, row({ outcome: 'no-spread', pressure_kpa: null })]),
+    'NOT_ESTABLISHED', 'NE-no-burn', [covering.evidence_id]);
+});
 for (const [o2_pct, label, reason] of [[20, 'BURNED', null], [19, 'NEAR', null], [18.99, 'NOT_ESTABLISHED', 'NE-no-burn']]) {
   test.todo(`labelMaterial: kPa O2 limit uses partial pressure: ${o2_pct}% at 50 kPa`, () => {
     const r = limit({ value: 10, value_unit: 'kPa O2', o2_pct: null, pressure_kpa: 50 });
