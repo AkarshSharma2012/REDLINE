@@ -98,8 +98,11 @@ test('form changes render labelled rows and NASA source links without submit; re
   const material = s.form().all().find(n => n.name?.endsWith('-material'));
   s.edit(material, 'pmma', 'change');
   assert.equal(s.calls.length, 1);
-  assert.ok(Array.isArray(s.calls[0].rows));
-  assert.deepEqual(s.calls[0].rows.map(r => r.evidence_id), ['fixture-only']);
+  // labelCabin (#55) takes the dataset with verified rows only, plus the material registry
+  // (persona B2 fix: a bare row array made every label "not found").
+  assert.ok(Array.isArray(s.calls[0].rows.evidence));
+  assert.deepEqual(s.calls[0].rows.evidence.map(r => r.evidence_id), ['fixture-only']);
+  assert.ok(Array.isArray(s.calls[0].rows.materials));
   assert.equal(dataRows(s.nodes['results-table']), 1);
   assert.match(s.nodes['results-table'].textContent, /Burned in testing at these conditions/);
   assert.ok(s.nodes['results-table'].all().some(n => n.href?.startsWith('https://ntrs.nasa.gov/')));
