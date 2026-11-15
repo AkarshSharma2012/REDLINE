@@ -69,10 +69,10 @@ function support(query, row) {
 }
 
 // Absence of a winning spread observation is not evidence of no burning.
-// Only an oxygen limit or a no-spread observation can cover the query (V2 U1/U2).
-function coversNoBurn(query, { row, rules }) {
+// Only an oxygen limit or a no-spread observation can cover the query (V2 U1).
+function coversNoBurn(query, { row }) {
   const o = num(query.o2_pct);
-  if (o === null || !rules.some((r) => r.rule === 'P' && r.grade === 'OK')) return false;
+  if (o === null) return false;
   if (row.endpoint === 'LOC-FS') {
     const limit = num(row.value);
     if (limit === null) return false;
@@ -137,7 +137,7 @@ export function labelSameGravity(query, rows) {
   if (near.length) return result('NEAR', null, near, queryClass);
   const covering = eligible.filter((g) => coversNoBurn(q, g));
   if (covering.length) return result('NOT_ESTABLISHED', 'NE-no-burn', covering, queryClass);
-  return result('NOT_ESTABLISHED', 'NE-incompatible', graded, queryClass);
+  return result('NOT_ESTABLISHED', 'NE-incompatible', eligible, queryClass);
 }
 
 // labelMaterial(query, rows) -> { label, reason, cited, flags, flag_details, cross_gravity, estimate, wording }

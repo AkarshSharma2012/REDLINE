@@ -62,9 +62,9 @@ const rows = [
 const evidence = { schema_version: '1.0.0', built_at: '2026-11-14T00:00:00Z',
   built_from: 'inline S4 §7.1 test fixture', sources, materials, evidence: rows, cabin_presets: [] };
 
-// Acceptance follows S4's published goldens exactly, as requested in #55.
-// Review U1/U2/U4 propose different coverage/pressure/material semantics;
-// those proposals are NOT silently mixed into S4 T2/T3/T4 or the M flags.
+// Acceptance starts from S4's published goldens, with reviewed corrections below.
+// Issue #234 applies reviewed U1 oxygen coverage; U2/U4 remain separate.
+// Observation points above query oxygen do not establish a no-burning result.
 // Review U5 supplies the otherwise undefined labelCabin query envelope.
 const ids = {
   b19: 'LINK2018-UG-B19', ug: 'LINK2018-UG-17', earth: 'LINK2018-1G-18',
@@ -82,7 +82,7 @@ const burned = (cited, flags) => out('BURNED', null, cited, flags);
 const ne = (reason, cited, flags, cross = false) => out('NOT_ESTABLISHED', reason, cited, flags, cross);
 const cases = [
   ['T1', pmma, burned([ids.b19, ids.ug], 'M P T V')],
-  ['T2', { ...pmma, o2_pct: 16.5 }, ne('NE-no-burn', [ids.b19, ids.ug], 'M P T V')],
+  ['T2', { ...pmma, o2_pct: 16.5 }, ne('NE-incompatible', [ids.b19, ids.ug], 'M P T V')],
   ['T3', { ...pmma, o2_pct: 17.5, pressure_kpa: null, flow_speed_cm_s: null, gravity_g: 1 },
     ne('NE-no-burn', [ids.earth], 'M P T U V')],
   ['T4', { ...pmma, o2_pct: 34, gravity_g: 0.16 },
@@ -123,7 +123,7 @@ function check(result, expected, q) {
     assert.ok(result.wording.startsWith('Estimate between 0 g and 1 g results:'));
     if (q.material_id === 'pmma') {
       check(result.estimate.g0, burned([ids.b19, ids.ug], 'M P T V'), { ...q, gravity_g: 0 });
-      check(result.estimate.g1, ne('NE-no-burn', [ids.earth], 'M P T U V'), { ...q, gravity_g: 1 });
+      check(result.estimate.g1, ne('NE-incompatible', [ids.earth], 'M P T U V'), { ...q, gravity_g: 1 });
     } else {
       for (const g of [0, 1]) check(result.estimate['g' + g], ne('NE-no-data', [], ''), { ...q, gravity_g: g });
     }
@@ -213,10 +213,10 @@ function expectKind(q, rs, label, reason = null) {
 }
 for (const [name, patch, o2, label, reason] of [
   ['LOC equality burns', {}, 31.5, 'BURNED', null],
-  ['single burn point below oxygen is not NEAR', { endpoint: 'burn/no-burn', outcome: 'spread' }, 31, 'NOT_ESTABLISHED', 'NE-no-burn'],
+  ['single burn point below oxygen is not NEAR', { endpoint: 'burn/no-burn', outcome: 'spread' }, 31, 'NOT_ESTABLISHED', 'NE-incompatible'],
   ['spread rate null outcome burns', { endpoint: 'spread-rate', value_unit: 'mm/s', value: 1 }, 34, 'BURNED', null],
   ['spread rate spread outcome burns', { endpoint: 'spread-rate', outcome: 'spread', value_unit: 'mm/s', value: 1 }, 34, 'BURNED', null],
-  ['spread rate no-spread does not burn', { endpoint: 'spread-rate', outcome: 'no-spread', value_unit: 'mm/s', value: 1 }, 34, 'NOT_ESTABLISHED', 'NE-no-burn'],
+  ['spread rate no-spread does not burn', { endpoint: 'spread-rate', outcome: 'no-spread', value_unit: 'mm/s', value: 1 }, 34, 'NOT_ESTABLISHED', 'NE-incompatible'],
   ['uncertainty widens NEAR', { uncertainty: '±2' }, 29.5, 'NEAR', null],
   ['ASCII uncertainty widens NEAR', { uncertainty: '+/-2' }, 29.5, 'NEAR', null],
   ['interval uncertainty widens NEAR', { uncertainty: 'between 29.5 and 33.5' }, 29.5, 'NEAR', null],
@@ -225,10 +225,10 @@ for (const [name, patch, o2, label, reason] of [
 ]) test('S4 §4.3 / §5.2: ' + name, () => expectKind({ ...etfe, o2_pct: o2 }, [variant(patch)], label, reason));
 for (const outcome of ['no-spread', 'quenched', 'blowoff', 'no-ignition', 'consumed', null])
   test('S4 §4.3 / §7.5 X2–X3: burn/no-burn ' + outcome + ' cannot prove burning or NEAR', () =>
-    expectKind(etfe, [variant({ endpoint: 'burn/no-burn', outcome })], 'NOT_ESTABLISHED', 'NE-no-burn'));
+    expectKind(etfe, [variant({ endpoint: 'burn/no-burn', outcome })], 'NOT_ESTABLISHED', 'NE-incompatible'));
 for (const [o2_pct, pressure_kpa, expected, reason] of [
   [34, 50, 'BURNED', null], [31, 50, 'NEAR', null],
-  [30, 50, 'NOT_ESTABLISHED', 'NE-no-burn'], [34, null, 'NOT_ESTABLISHED', 'NE-no-burn'],
+  [30, 50, 'NOT_ESTABLISHED', 'NE-no-burn'], [34, null, 'NOT_ESTABLISHED', 'NE-incompatible'],
 ]) test('S4 §4.3: kPa O2 limit at ' + o2_pct + '% and ' + pressure_kpa + ' kPa', () =>
   expectKind({ ...etfe, o2_pct, pressure_kpa }, [variant({ value: 16, value_unit: 'kPa O2' })], expected, reason));
 test('S4 §5.1: BURNED takes precedence over NEAR and cites only winning rows', () => {
