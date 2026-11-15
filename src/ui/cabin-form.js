@@ -27,7 +27,7 @@ export function renderCabinForm(root, options = {}) {
   styleUI(root);
   let nextId = 0, removed;
   const form = element(d, 'form'); form.noValidate = true;
-  form.append(element(d, 'h2', 'Cabin Check'), element(d, 'p', 'Illustrative scenario — evidence review, not cabin certification.'));
+  form.append(element(d, 'h2', 'Cabin Check'), element(d, 'p', 'Illustrative scenario — evidence review, not cabin certification. PSI means NASA’s Physical Sciences Informatics data repository.'));
   const errors = element(d, 'div'); errors.setAttribute('role', 'alert');
   const status = element(d, 'p'); status.setAttribute('role', 'status');
   const controls = {};
@@ -52,7 +52,7 @@ export function renderCabinForm(root, options = {}) {
     button.addEventListener('click', () => applyPreset(preset)); presetGroup.append(button); presetButtons.push([button, preset]);
   }
   presetGroup.append(presetSource);
-  controls.o2 = field(form, 'o2', 'Oxygen (% by volume)', 'number');
+  controls.o2 = field(form, 'o2', 'Oxygen (% by volume: oxygen’s share of the cabin gas)', 'number');
   controls.o2.input.min = '0'; controls.o2.input.max = '100'; controls.o2.input.step = 'any';
   controls.pressure = field(form, 'pressure', 'Absolute pressure', 'number'); controls.pressure.input.step = 'any';
   controls.unit = field(form, 'unit', 'Pressure unit', null, [['kpa', 'kPa'], ['psia', 'psia']]);
@@ -108,7 +108,7 @@ export function renderCabinForm(root, options = {}) {
   }
   function number(control, title, { optional = false, min = 0, strict = false, max = Infinity } = {}, messages = []) {
     const raw = control.input.value.trim(), value = raw === '' ? null : Number(raw);
-    const invalid = (value === null && !optional) || (value !== null && (!Number.isFinite(value) || (strict ? value <= min : value < min) || value > max));
+    const invalid = !!control.input.validity?.badInput || (value === null && !optional) || (value !== null && (!Number.isFinite(value) || (strict ? value <= min : value < min) || value > max));
     control.error.textContent = invalid ? `Error: ${title}` : '';
     control.input.setAttribute('aria-invalid', String(invalid));
     if (invalid) messages.push({ input: control.input, message: title });

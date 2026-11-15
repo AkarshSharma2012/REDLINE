@@ -113,7 +113,11 @@ export function renderBomImport(root, { materials = [], onImport } = {}) {
     try { const text = await files[0].text(); if (current === revision) show(text); }
     catch { if (current === revision) report.textContent = 'Error: CSV could not be read. Try pasting its contents.'; }
   }
-  button.addEventListener('click', () => { revision++; show(paste.value); });
+  button.addEventListener('click', event => {
+    // A pointer double-click is one import; a later click or keyboard activation can import again.
+    if (event.detail > 1) return;
+    revision++; show(paste.value);
+  });
   file.addEventListener('change', () => load(file.files));
   for (const type of ['dragover', 'drop']) drop.addEventListener(type, event => {
     event.preventDefault(); if (type === 'drop') load(event.dataTransfer.files);

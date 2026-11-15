@@ -246,6 +246,7 @@ async function start() {
       state: 'error', onRetry: () => location.reload(),
     });
     wireAccuracy(null);
+    mountAsk(document.getElementById('ask-root'), null);
     return;
   }
   status.textContent = '';

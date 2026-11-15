@@ -110,7 +110,7 @@ export function mountO2Slider(root, options) {
   }
   const panel = el('section', null, root, { class: 'o2-slider', 'aria-label': 'Oxygen tradeoff preview' });
   el('h2', 'Oxygen tradeoff (illustrative)', panel);
-  el('p', 'Illustration, not a mission calculation. Counts describe evidence labels, not predicted ignition. No pre-breathe duration is computed.', panel);
+  el('p', 'Illustration, not a mission calculation. Counts describe evidence labels, not predicted ignition. Pre-breathe means breathing oxygen before a spacewalk to reduce nitrogen in the body. No pre-breathe duration is computed.', panel);
   const presets = el('div', null, panel, { role: 'group', 'aria-label': 'Published atmosphere presets' });
   const buttons = [];
   for (const preset of data.cabin_presets ?? []) {

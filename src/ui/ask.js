@@ -102,6 +102,9 @@ export function insightHtml(ins, sources = {}) {
 // Escapes the model's answer and turns [ID] citations into links to that row's source.
 export function answerHtml(answer, hits) {
   answer = String(answer ?? '');
+  if (/\bsafe\b|never\s+tested|never\s+burns|will\s+burn\s+on\s+the\s+moon|nonflammable/i.test(answer)) {
+    return '<p class="caveat type-small">Live answer withheld: it used wording that goes beyond the evidence. Read the retrieved NASA rows below.</p>';
+  }
   hits = (Array.isArray(hits) ? hits : []).filter((h) => h && typeof h === 'object');
   const byId = new Map(hits.map((h) => [String(h.id), h]));
   const { unknown } = citationsIn(answer, hits);
@@ -163,26 +166,38 @@ const FORM = `
   <div data-role="insights"></div>`;
 
 // renderAsk(root, { evidence, investigations, insights }) -> { ask(question) }
-export function renderAsk(root, data = {}) {
+export function renderAsk(root, data = {}, { requestAnswer = askClaude } = {}) {
   data = data ?? {};
   root.innerHTML = FORM;
   const sources = data.evidence?.sources || {};
   const $ = (role) => root.querySelector(`[data-role="${role}"]`);
   let apiKey = '';
+  let revision = 0;
   const keyInput = $('key');
   keyInput.addEventListener('input', () => { apiKey = keyInput.value.trim(); });
   root.querySelector('[data-action="forget"]').addEventListener('click', () => {
+    revision++;
     apiKey = '';
     keyInput.value = '';
     $('status').textContent = 'Key forgotten.';
   });
 
   async function ask(question) {
+    const current = ++revision;
+    question = String(question ?? '').trim();
+    if (!question) {
+      $('status').textContent = 'Enter a question about the NASA tests.';
+      return { hits: [], answer: null };
+    }
     let hits = [];
     try {
       ({ hits } = retrieve(question, data, { limit: 8 }));
     } catch {
-      hits = []; // malformed data: show the empty state rather than a broken screen
+      $('answer').innerHTML = '';
+      $('hits').innerHTML = '';
+      $('insights').innerHTML = '';
+      $('status').textContent = 'Error: evidence search could not run. Try again or reload the evidence. This is a search failure, not a finding about coverage.';
+      return { hits: [], answer: null, error: 'retrieval failed' };
     }
     hits = Array.isArray(hits) ? hits : [];
     $('answer').innerHTML = '';
@@ -203,11 +218,13 @@ export function renderAsk(root, data = {}) {
     }
     $('status').textContent = 'Asking Claude using only the retrieved rows…';
     try {
-      const answer = await askClaude({ apiKey, question, hits: ground });
+      const answer = await requestAnswer({ apiKey, question, hits: ground });
+      if (current !== revision) return { hits, answer: null, stale: true };
       $('answer').innerHTML = `<section class="panel"><h3 class="type-heading">Answer <span class="flag">AI-generated from the rows below</span></h3>${answerHtml(answer, ground)}</section>`;
       $('status').textContent = '';
       return { hits, answer };
     } catch (err) {
+      if (current !== revision) return { hits, answer: null, stale: true };
       $('status').textContent = `Error: the live answer failed (${err.message}). The retrieved rows are still shown below.`;
       return { hits, answer: null, error: err };
     }

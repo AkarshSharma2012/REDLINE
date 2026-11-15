@@ -24,6 +24,7 @@ const gravityClass = g => !Number.isFinite(g) ? null : g <= 0.01 ? 'micro' : g >
 // S1 entry point. Supply result.query (immutable selected-item snapshot), or options.query.
 // options.compareRow is an integration/test adapter; eligibility and wording stay in the engine.
 export function renderEvidencePanel(root, result, evidence, options = {}) {
+  root.onkeydown = null;
   const doc = root.ownerDocument;
   const make = (tag, text, cls) => {
     const n = doc.createElement(tag);
@@ -40,6 +41,15 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
   const query = options.query ?? result.query;
   if (!query?.material_id) { p(root, 'Choose a cabin item with a request snapshot. Comparison unavailable without cabin conditions.'); return; }
   const snapshot = { ...query };
+  const opener = options.opener ?? doc.activeElement;
+  function close() {
+    root.onkeydown = null;
+    root.replaceChildren(make('p', 'Select a material to see the tests behind its label.'));
+    opener?.focus?.();
+  }
+  root.onkeydown = event => {
+    if (event.key === 'Escape') { event.preventDefault(); close(); }
+  };
   const compare = options.compareRow ?? compareRow;
   const sourceFor = row => evidence?.sources?.[row.source_key];
   let filter = 'all', drafts = false, selected = options.selectedId ?? null;
@@ -59,6 +69,8 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
   }
   function draw() {
     root.replaceChildren(); root.append(make('h3', `Evidence: ${snapshot.material_id}`));
+    const closeButton = button(root, 'Close evidence', close);
+    closeButton.setAttribute('aria-label', 'Close evidence and return to material');
     p(root, `Request: ${result.item_id ?? snapshot.material_id} · revision ${result.revision ?? 'not stated'}. Cabin values are user inputs.`);
     p(root, FIELDS.map(([key, name, unit]) => `${name}: ${format(key === 'o2_partial_kpa' ? partial(snapshot) : snapshot[key], unit)}`).join('; '));
     if (result.cross_gravity) p(root, 'Cross-gravity comparison', 'tag-cross-gravity');
@@ -146,4 +158,5 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
     psi.target = '_blank'; psi.rel = 'noopener noreferrer'; detail.append(psi);
   }
   draw();
+  root.querySelector?.('button')?.focus?.();
 }

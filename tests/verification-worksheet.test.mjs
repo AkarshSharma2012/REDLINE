@@ -98,7 +98,7 @@ test('metadata fallback and empty draft inventory', async () => {
   });
 });
 
-test('checked-in sheet matches current draft inventory without changing evidence', async () => {
+test('college student: checked-in sheet matches draft inventory across checkout line endings without changing evidence', async () => {
   const input = new URL('../data/evidence.csv', import.meta.url);
   const before = await readFile(input, 'utf8');
   const dir = await mkdtemp(join(tmpdir(), 'redline-worksheet-live-'));
@@ -106,7 +106,7 @@ test('checked-in sheet matches current draft inventory without changing evidence
     const output = join(dir, 'sheet.md');
     await generateWorksheet({ output });
     const text = await readFile(output, 'utf8');
-    assert.equal(text, await readFile(new URL('../docs/verification-demo-sheet.md', import.meta.url), 'utf8'));
+    assert.equal(text.replace(/\r\n/g, '\n'), (await readFile(new URL('../docs/verification-demo-sheet.md', import.meta.url), 'utf8')).replace(/\r\n/g, '\n'));
     const expected = parseCsv(before).filter((r) => r.review_status === 'draft' && ['pmma', 'nomex', 'sibal', 'cotton', 'p213'].includes(r.material_id));
     assert.deepEqual(ids(text).sort(), expected.map((r) => r.evidence_id).sort());
     assert.equal(await readFile(input, 'utf8'), before);

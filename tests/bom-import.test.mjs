@@ -131,3 +131,30 @@ test('rover sample imports all four illustrative forms with unknown dimensions',
   assert.deepEqual(result.lines.map(line => [line.material_id, line.form]), [['pmma', 'sheet'], ['cotton', 'fabric'], ['p213', 'tape'], ['nomex', 'fabric']]);
   assert.ok(result.lines.every(line => line.thickness_mm === null && line.width_mm === null));
 });
+
+test('college student: invalid browser number input is not treated as an omitted dimension', async () => {
+  const root = dom(); let evaluated = false;
+  renderCabinForm(root, { materials: evidence.materials, items: [{ material_id: 'pmma' }],
+    evaluate: () => { evaluated = true; return []; } });
+  const nodes = all(root);
+  for (const [name, value] of [['o2', '34'], ['pressure', '56.5'], ['unit', 'kpa'], ['gravity', '1']]) nodes.find(n => n.name === name).value = value;
+  const thickness = nodes.find(n => n.name?.endsWith('-thickness'));
+  thickness.value = ''; thickness.validity = { badInput: true };
+  await nodes.find(n => n.tagName === 'FORM').fire('submit');
+  assert.equal(evaluated, false);
+  assert.equal(thickness['aria-invalid'], 'true');
+});
+
+test('college student: double-clicking pasted CSV imports once and retains the paste', async () => {
+  const root = dom(); let count = 0;
+  renderBomImport(root, { materials: evidence.materials, onImport: () => count++ });
+  const nodes = all(root), paste = nodes.find(n => n.tagName === 'TEXTAREA');
+  const button = nodes.find(n => n.textContent === 'Import pasted CSV');
+  paste.value = header + 'nomex,fabric,,,,';
+  await button.fire('click', { detail: 1 });
+  await button.fire('click', { detail: 2 });
+  assert.equal(count, 1);
+  assert.equal(paste.value, header + 'nomex,fabric,,,,');
+  await button.fire('click', { detail: 0 });
+  assert.equal(count, 2, 'later keyboard import remains available');
+});
