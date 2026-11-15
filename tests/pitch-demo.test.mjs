@@ -60,3 +60,26 @@ test('current lunar question retrieves source-linked unverified evidence without
     assert.match(url.hostname, /(^|\.)nasa\.gov$/);
   }
 });
+
+// Issue #249: current 60-second script stays timed, sourced and within wording rules.
+test('current 60-second script is timed, about 120 words and cites a held NASA record', () => {
+  const section = pitch.split('## Current 60-second demo (2026-11-15)')[1]?.split('\n## ')[0];
+  assert.ok(section, 'current 60-second section present');
+  const rows = section.split('\n').filter(line => /^\| \d:\d\d–\d:\d\d \|/.test(line));
+  assert.equal(rows[0].slice(2, 6), '0:00');
+  assert.match(rows.at(-1), /^\| 0:\d\d–1:00 \|/);
+  const narration = rows.map(line => line.split('|')[3]).join(' ');
+  const words = narration.trim().split(/\s+/).length;
+  assert.ok(words >= 100 && words <= 140, `narration is ${words} words`);
+  assert.doesNotMatch(narration, /never tested|\bsafe\b|never burns|accura|guarantee/i);
+  for (const click of ['Load lunar rover demo', 'Inspect draft research detail · excluded from cabin results', 'Open evidence record'])
+    assert.ok(section.includes(click), click);
+  const record = evidence.evidence.find(row => row.evidence_id === 'U25-01-L');
+  assert.equal(record.research_status, 'HOLD_scientific_review');
+  assert.notEqual(record.review_status, 'verified');
+  assert.match(new URL(record.source_url).hostname, /(^|\.)nasa\.gov$/);
+  assert.ok(record.source_locator);
+  assert.ok(section.includes('`U25-01-L`') && section.includes('`HOLD_scientific_review`'));
+  assert.match(pitch, /## Historical two-minute demo click-path \(2026-11-14\)/);
+  assert.match(pitch, /## Historical screenshot manifest \(2026-11-14\)/);
+});
