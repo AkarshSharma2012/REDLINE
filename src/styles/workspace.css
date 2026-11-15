@@ -8,6 +8,7 @@
   grid-template-rows: auto minmax(0, 1fr) auto;
   align-items: stretch;
   min-height: 0;
+  background: #000; /* #302: explicit high-contrast black body, no washed-out pane surfaces */
 }
 
 /* Explicit placement: a collapsed (hidden) pane must not shift its neighbours. */
@@ -21,7 +22,7 @@
 
 /* Panes: flush rectangles that scroll independently; the separators draw the dividers. */
 .workspace .ws-pane { min-width: 0; min-height: 0; padding: 0 var(--space-12) var(--space-16); overflow-y: auto; overscroll-behavior: contain; border: 0; }
-.workspace > #ws-pane-controls { background: var(--surface-1); }
+.workspace > #ws-pane-controls { background: #000; }
 .workspace .ws-pane:focus { outline: none; }
 .workspace .ws-pane:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
@@ -32,12 +33,12 @@
   z-index: 1;
   margin: 0 calc(-1 * var(--space-12)) var(--space-8);
   padding: var(--space-8) var(--space-12) var(--space-4);
-  background: var(--bg);
+  background: #000;
   border-bottom: 1px solid var(--divider);
   font-size: 13px;
   line-height: 20px;
 }
-.workspace > #ws-pane-controls > .region-title { background-color: var(--surface-1); }
+.workspace > #ws-pane-controls > .region-title { background-color: #000; }
 .workspace .ws-pane > .ws-subtitle { position: static; margin-top: var(--space-16); }
 .workspace .region-note { margin: var(--space-4) 0 var(--space-8); font-size: 13px; line-height: 18px; }
 
@@ -50,7 +51,7 @@
   min-height: var(--bar-h);
   padding: 0 var(--space-12);
   border-bottom: 1px solid var(--divider);
-  background: var(--surface-1);
+  background: #000;
   min-width: 0;
 }
 .ws-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
@@ -144,9 +145,10 @@
   border-bottom: 1px solid var(--divider);
   border-radius: 0;
 }
+/* #302: record rows are one column; A2 source-records.css owns identity/conditions/status
+   placement. No shell rule may place a child in column 2 (it would add an implicit column). */
+.ws-card { grid-template-columns: minmax(0, 1fr); }
 .ws-card > *, .ws-material > * { grid-column: 1 / -1; }
-.ws-card > .ws-card-line:not(.type-data) { grid-column: 1; }
-.ws-card > .ws-card-status { grid-column: 2; grid-row: 2; text-align: right; }
 .ws-card:not(:disabled):hover, .ws-material:not(:disabled):hover { background: var(--surface-2); }
 .ws-card[aria-pressed="true"], .ws-material[aria-pressed="true"] { background: var(--surface-selected); box-shadow: inset 2px 0 0 var(--accent); }
 .ws-card-title { color: var(--text-1); font-weight: 600; }
@@ -170,7 +172,7 @@
   margin-bottom: var(--space-8);
   padding: var(--space-16);
   text-align: center;
-  background: var(--surface-1);
+  background: #000;
   border: 1px dashed var(--border-control);
 }
 .ws-stage-title { margin: 0; color: var(--text-1); font-weight: 600; }
@@ -189,7 +191,7 @@
 .ws-disclosure > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* Record detail: flat section with a hairline frame, conditions in a tabular grid */
-.ws-detail { margin-bottom: var(--space-16); padding: var(--space-12); background: var(--surface-1); border: 1px solid var(--divider); border-left: 2px solid var(--accent); }
+.ws-detail { margin-bottom: var(--space-16); padding: var(--space-12); background: #000; border: 1px solid var(--divider); border-left: 2px solid var(--accent); }
 .ws-detail-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-8); margin-bottom: var(--space-8); }
 .ws-detail-head h3 { margin: 0; }
 .ws-conditions { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 120px), 1fr)); gap: var(--space-4) var(--space-12); margin: 0 0 var(--space-8); }
@@ -206,17 +208,7 @@
 .ws-infobar p:last-child { margin-left: auto; }
 .ws-infobar .type-data { margin-left: var(--space-4); color: var(--text-1); font-size: 12px; line-height: 16px; }
 
-/* Wide model pane: the viewer's own tools become a right-edge strip beside the stage */
-@media (min-width: 1081px) {
-  .ws-viewer .rover-viewer { grid-template-columns: minmax(0, 1fr) 9.5rem; }
-  .ws-viewer .rover-viewer > * { grid-column: 1 / -1; }
-  .ws-viewer .rover-viewer > .rover-viewer__stage { grid-column: 1; grid-row: 2; max-height: 56vh; }
-  .ws-viewer .rover-viewer > .rover-viewer__tools { grid-column: 2; grid-row: 2; flex-direction: column; flex-wrap: nowrap; gap: var(--space-8); align-self: start; }
-  .ws-viewer .rover-viewer:has(> .rover-viewer__tools[hidden]) > .rover-viewer__stage { grid-column: 1 / -1; }
-}
-@media (min-width: 1081px) and (pointer: fine) {
-  .ws-viewer .rover-viewer__tool { min-height: var(--control-h); min-width: var(--control-h); padding: var(--space-4) var(--space-8); font-size: 13px; }
-}
+/* #302: viewer stage/tool-strip layout is owned by B1 (#299 rover-viewer.css); the shell only hosts it. */
 
 /* Compact density: tighter rhythm, same type sizes and control heights */
 .workspace[data-density="compact"] .ws-pane { padding-bottom: var(--space-8); }
@@ -245,7 +237,6 @@
 @media (max-width: 480px) {
   .ws-filters { grid-template-columns: minmax(0, 1fr); }
   .ws-toolbar button { padding: 0 var(--space-4); }
-  .ws-card > .ws-card-line:not(.type-data), .ws-card > .ws-card-status { grid-column: 1 / -1; grid-row: auto; text-align: left; }
 }
 
 /* Motion is GSAP-only (opacity/transform, 150-240 ms) and skipped for reduced motion. */
