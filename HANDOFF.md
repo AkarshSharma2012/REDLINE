@@ -1,9 +1,8 @@
-﻿# Issue #150 — Engine examples
+# Issue #150 — Engine examples
 
-- Existing runner prints 12 distinct source-linked fixture queries through imported labelMaterial/compareRow; generated Markdown explicitly identifies stub output.
-- Fetched origin: #55 implementation exists on origin/main (9df0e66), but this task branch still has stub label/compare/lunar modules. Engine files are outside this issue's ownership.
-- Regenerated docs/engine-examples.md to restore exact CLI parity after checkout line-ending conversion.
-- Verification: full node --test: 868 tests, 779 pass, 2 fail, 87 TODO. Regeneration fixes this task's parity failure; targeted tests then pass 3/3. Other failure: missing-fields report parity. No server/browser started.
-- Next: conductor sync this branch with main's engine dependency; regenerate with node scripts/engine-examples.mjs --write and verify substantive labels/citations before marking done.
+- Merged origin/main (includes #55 engine). `scripts/engine-examples.mjs` now runs the real `labelMaterial`/`compareRow` on the S1 holdout fixture; stub/BLOCKED text removed.
+- 12 examples: 5 unmodified fixture seeds + quench-endpoint seed + 6 queries explicitly titled `SYNTHETIC query:` (hypothetical inputs, not production evidence). Fixed mislabeled example 2 (LINK2018-UG-17 is a spread row). Lunar example shows separate 0 g / 1 g results as an estimate.
+- `docs/engine-examples.md` regenerated with `node scripts/engine-examples.mjs --write`.
+- Tests: `tests/engine-examples.test.mjs` (5 tests: CLI/doc parity + prints output, wording guard, real rule diagnostics, cited ⊆ candidates, synthetic-title ⇔ modified-query, lunar estimate). Full `node --test`: 1157 tests, 1074 pass, 0 fail, 83 todo. No server/browser started.
 
-STATUS: BLOCKED: task branch needs #55 engine dependency synced from origin/main; current engine imports still resolve to stubs.
+STATUS: DONE

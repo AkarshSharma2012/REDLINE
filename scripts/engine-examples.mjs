@@ -13,18 +13,18 @@ const docUrl = new URL('../docs/engine-examples.md', import.meta.url);
 export function buildExamples(data) {
   const byId = new Map(data.evidence.map(row => [row.evidence_id, row]));
   const cases = [
-    ['Spread observation', 'LINK2018-UG-B19', {}],
-    ['No-spread observation', 'LINK2018-UG-17', {}],
-    ['Normal-gravity observation', 'LINK2018-1G-18', {}],
+    ['Microgravity spread observation at 17.5% O2', 'LINK2018-UG-B19', {}],
+    ['Microgravity spread observation at 17% O2', 'LINK2018-UG-17', {}],
+    ['Normal-gravity no-spread observation at 18% O2', 'LINK2018-1G-18', {}],
     ['Normal-gravity measured limit', 'OSORIO2014-ETFE-1G', {}],
     ['Microgravity measured limit', 'OSORIO2014-ETFE-UG', {}],
-    ['One oxygen percentage point below a measured limit', 'OSORIO2014-ETFE-UG', { o2_pct: 25 }],
-    ['Below the near-limit band', 'OSORIO2014-ETFE-UG', { o2_pct: 23 }],
+    ['SYNTHETIC query: one oxygen percentage point below a measured limit', 'OSORIO2014-ETFE-UG', { o2_pct: 25 }],
+    ['SYNTHETIC query: below the near-limit band', 'OSORIO2014-ETFE-UG', { o2_pct: 23 }],
     ['Different endpoint: quench speed', 'ZHAO2015-SIBAL-T4', {}],
-    ['Form mismatch', 'LINK2018-UG-B19', { form: 'fabric' }],
-    ['Flow-direction mismatch', 'LINK2018-UG-B19', { flow_direction: 'concurrent' }],
-    ['Illustrative pressure of 56.5 kPa', 'LINK2018-UG-17', { pressure_kpa: 56.5 }],
-    ['Lunar estimate query', 'LINK2018-UG-B19', { gravity_g: 0.16 }],
+    ['SYNTHETIC query: form mismatch', 'LINK2018-UG-B19', { form: 'fabric' }],
+    ['SYNTHETIC query: flow-direction mismatch', 'LINK2018-UG-B19', { flow_direction: 'concurrent' }],
+    ['SYNTHETIC query: pressure of 56.5 kPa', 'LINK2018-UG-17', { pressure_kpa: 56.5 }],
+    ['SYNTHETIC query: lunar gravity (0.16 g) estimate', 'LINK2018-UG-B19', { gravity_g: 0.16 }],
   ];
   return cases.map(([title, id, overrides], index) => {
     const seed = byId.get(id);
@@ -46,14 +46,11 @@ function source(data, row) {
 
 export function renderExamples(data) {
   const examples = buildExamples(data);
-  const incomplete = examples.some(example => example.rows.length &&
-    example.rows.every(item => item.comparison.rules.length === 0));
   const lines = ['# Engine worked examples', '',
     'Generated with `node scripts/engine-examples.mjs --write`; stdout is the same Markdown.', '',
     'Dataset: [S1 holdout fixture](../tests/fixtures/holdout-evidence.json), not the production evidence inventory. Primary repository context: [NASA PSI](https://psi.nasa.gov/). Fixture review status is test metadata, not independent verification.', '',
-    'Queries copy the linked seed record except where the heading specifies an illustrative change. Modified queries are hypothetical inputs, not NASA measurements. Each result is returned by `labelMaterial`; row diagnostics come from `compareRow`. Candidate rows are not necessarily used to support the label.', '',
+    'Queries copy the linked seed record except where the heading says SYNTHETIC; those change one field and are hypothetical inputs, not NASA measurements or production evidence. Each result is returned by `labelMaterial`; row diagnostics come from `compareRow`. Candidate rows are not necessarily used to support the label.', '',
     'Lunar queries are estimates using separate 0 g and 1 g results; they do not establish a measured lunar limit.', ''];
-  if (incomplete) lines.push('**BLOCKED by #55:** the checked-in comparison engine has no rule diagnostics. Current labels are provisional stub output, not scientific findings. These 12 calls demonstrate integration only; regenerate after the real engine lands.', '');
   for (const example of examples) {
     const { number, title, seed, query, result, rows } = example;
     lines.push(`## Example ${number}: ${title}`, '', `Query seed: ${source(data, seed)}.`, '',
@@ -71,10 +68,14 @@ export function renderExamples(data) {
     lines.push('', 'Candidate-row diagnostics (including rows not cited):', '');
     for (const { row, comparison } of rows) {
       lines.push(`- ${source(data, row)}. Endpoint: ${inline(row.endpoint)}; outcome: ${inline(row.outcome)}; limit: ${inline(row.value)} ${inline(row.value_unit)}. Grade: ${comparison.grade}.`,
-        ...(comparison.rules.length ? comparison.rules.map(rule => `  - ${rule.rule}: ${rule.grade} — ${inline(rule.why)}`)
-          : ['  - No rule explanations returned; dependency #55 is incomplete.']));
+        ...comparison.rules.map(rule => `  - ${rule.rule}: ${rule.grade} — ${inline(rule.why)}`));
     }
-    if (result.estimate) lines.push('', 'Separate gravity results:', '', '```json', JSON.stringify(result.estimate, null, 2), '```');
+    if (result.estimate) {
+      lines.push('', 'Separate gravity results bounding the estimate (no direct lunar data):', '');
+      for (const [key, part] of Object.entries(result.estimate)) {
+        lines.push(`- ${inline(key)}: **${part.label}**${part.reason ? ` (${part.reason})` : ''}; cited: ${part.cited.join(', ') || 'none'}; wording: ${inline(part.wording ?? '')}.`);
+      }
+    }
     lines.push('');
   }
   return `${lines.join('\n').trimEnd()}\n`;

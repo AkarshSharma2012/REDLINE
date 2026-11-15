@@ -16,6 +16,27 @@ test('CLI prints exactly 12 reproducible examples and matches the checked-in doc
   assert.match(output, /https:\/\/psi\.nasa\.gov\//);
   assert.match(output, /https:\/\/ntrs\.nasa\.gov\//);
   assert.match(output, /Evidence rows used \/ cited by the engine:/);
+  assert.doesNotMatch(output, /\bsafe\b|never burns|never tested|stub/i);
+  console.log(output);
+});
+
+test('real engine returns rule diagnostics and only cites candidate rows', () => {
+  for (const example of buildExamples(data)) {
+    assert.ok(example.rows.length > 0, `example ${example.number} has candidate rows`);
+    assert.ok(example.rows.every(item => item.comparison.rules.length > 0));
+    const ids = new Set(example.rows.map(item => item.row.evidence_id));
+    assert.ok(example.result.cited.every(id => ids.has(id)));
+    assert.equal(typeof example.result.wording, 'string');
+    const synthetic = /^SYNTHETIC query:/.test(example.title);
+    const changed = Object.keys(example.query).some(key => example.query[key] !== (example.seed[key] ?? null));
+    assert.equal(synthetic, changed, `example ${example.number} synthetic labeling`);
+  }
+});
+
+test('lunar example is an estimate bounded by separate 0 g and 1 g results', () => {
+  const lunar = buildExamples(data).find(example => example.query.gravity_g === 0.16);
+  assert.ok(lunar.result.estimate);
+  assert.match(lunar.result.wording, /^Estimate between 0 g and 1 g results:/);
 });
 
 test('examples use actual engine results without changing fixture records', () => {
