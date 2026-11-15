@@ -5,6 +5,45 @@ export const BOM_MAX_ROWS = 200;
 export const BOM_MAX_BYTES = 100 * 1024;
 const forms = new Set(['sheet', 'rod', 'fabric', 'tape', 'wire', 'slab', 'foam', 'other']);
 
+// Name matching ignores case, repeated spaces and a trailing full stop.
+const key = name => String(name).trim().replace(/\s+/g, ' ').replace(/\.$/, '').toLowerCase();
+// Levenshtein distance, for "did you mean" hints only: a typo is never silently remapped.
+function distance(a, b) {
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const row = [i];
+    for (let j = 1; j <= b.length; j++) row[j] = Math.min(prev[j] + 1, row[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    prev = row;
+  }
+  return prev[b.length];
+}
+/** Closest catalog name within 2 edits (names of 4+ letters), or null. */
+export function suggestMaterial(name, materials = []) {
+  const target = key(name);
+  if (target.length < 4) return null;
+  let best = null;
+  for (const material of materials) {
+    for (const candidate of [material.material_id, material.display_name, ...(material.aliases || [])]) {
+      const d = distance(target, key(candidate));
+      if (d <= 2 && (!best || d < best.d)) best = { d, material };
+    }
+  }
+  return best?.material ?? null;
+}
+// Dimensions are mm. A bare number or an explicit "mm" suffix is accepted; other units
+// are rejected with the conversion spelled out, never converted silently.
+const LENGTH_UNITS = { um: 0.001, 'µm': 0.001, cm: 10, m: 1000, in: 25.4 };
+function millimetres(raw, column) {
+  const match = raw.match(/^([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?)\s*([a-zµ]+)?$/i);
+  const unit = match?.[2]?.toLowerCase();
+  if (match && (!unit || unit === 'mm')) return Number(match[1]);
+  if (match && LENGTH_UNITS[unit]) {
+    const mm = Number((Number(match[1]) * LENGTH_UNITS[unit]).toPrecision(6));
+    throw new Error(`${column} is in mm: write ${mm} for ${raw}.`);
+  }
+  throw new Error(`${column} must be a positive number in mm, or blank (got "${raw}").`);
+}
+
 /** Locate physical record starts only; all CSV field parsing uses parseCsv. */
 function records(text) {
   const result = [];
@@ -49,7 +88,11 @@ export function parseBom(text, materials = []) {
   const names = new Map();
   for (const material of materials) {
     for (const name of [material.material_id, material.display_name, ...(material.aliases || [])]) {
-      names.set(name.trim().toLowerCase(), material.material_id);
+      names.set(key(name), material.material_id);
+      // A parenthetical in the catalog display name is a name the catalog itself gives,
+      // e.g. "PTFE (Teflon)" -> "Teflon", "PMMA (acrylic)" -> "acrylic".
+      const inner = String(name).match(/\(([^)]+)\)/);
+      if (inner && !names.has(key(inner[1]))) names.set(key(inner[1]), material.material_id);
     }
   }
   for (const record of input) {
@@ -59,14 +102,14 @@ export function parseBom(text, materials = []) {
       if (!material) throw new Error('Material is required.');
       const form = row.form.trim().toLowerCase();
       if (form && !forms.has(form)) throw new Error('Form must be sheet, rod, fabric, tape, wire, slab, foam or other.');
-      const positive = (key) => {
-        const raw = (row[key] || '').trim();
+      const positive = (column) => {
+        const raw = (row[column] || '').trim();
         if (!raw) return null;
-        const value = Number(raw);
-        if (!Number.isFinite(value) || value <= 0) throw new Error(`${key} must be positive or blank.`);
+        const value = column === 'quantity' ? Number(raw) : millimetres(raw, column);
+        if (!Number.isFinite(value) || value <= 0) throw new Error(`${column} must be positive or blank (got "${raw}").`);
         return value;
       };
-      const material_id = names.get(material.toLowerCase());
+      const material_id = names.get(key(material));
       lines.push({ material_id: material_id || `unrecognised:${material}`, material_recognised: !!material_id,
         name: material, form: form || null, thickness_mm: positive('thickness_mm'),
         width_mm: positive('width_mm'), quantity: positive('quantity'), note: row.note || '', line: record.line });
@@ -99,7 +142,8 @@ export function renderBomImport(root, { materials = [], onImport } = {}) {
     report.replaceChildren(element(d, 'p', `${result.lines.length} material rows imported. ${result.errors.length} row errors.`));
     for (const error of result.errors) report.append(element(d, 'p', `Error: line ${error.line}: ${error.message}`));
     for (const line of result.lines.filter(line => !line.material_recognised)) {
-      report.append(element(d, 'p', `Line ${line.line}: ${line.name} — material not recognised; not found in the sources reviewed.`));
+      const guess = suggestMaterial(line.name, materials);
+      report.append(element(d, 'p', `Line ${line.line}: ${line.name} — material not recognised; not found in the sources reviewed.${guess ? ` Did you mean ${guess.display_name}? It was not substituted; choose it in the material list if that is what you meant.` : ''}`));
     }
     if (result.lines.length) onImport?.(result.lines);
     return result;

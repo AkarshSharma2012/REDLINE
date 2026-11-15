@@ -99,6 +99,15 @@ export function insightHtml(ins, sources = {}) {
   </article>`;
 }
 
+// Words of the question that no evidence, catalog or insight row mentions.
+export function coverageHtml(unmatched) {
+  const words = (Array.isArray(unmatched) ? unmatched : []).filter(Boolean);
+  if (!words.length) return '';
+  return `<p class="caveat type-body" data-role="coverage">No row mentions: ${esc(words.join(', '))}. ` +
+    `About ${words.length > 1 ? 'those' : 'that'}, the answer is: ${NOT_FOUND}. ` +
+    'The rows below match other words in your question and may not answer it.</p>';
+}
+
 // Escapes the model's answer and turns [ID] citations into links to that row's source.
 export function answerHtml(answer, hits) {
   answer = String(answer ?? '');
@@ -178,21 +187,21 @@ export function renderAsk(root, data = {}) {
   });
 
   async function ask(question) {
-    let hits = [];
+    let hits = [], unmatched = [];
     try {
-      ({ hits } = retrieve(question, data, { limit: 8 }));
+      ({ hits, unmatched = [] } = retrieve(question, data, { limit: 8 }));
     } catch {
       hits = []; // malformed data: show the empty state rather than a broken screen
     }
     hits = Array.isArray(hits) ? hits : [];
-    $('answer').innerHTML = '';
+    $('answer').innerHTML = unmatched.length && hits.length ? coverageHtml(unmatched) : '';
     $('hits').innerHTML = `<h3 class="type-heading">Retrieved rows (${hits.length})</h3>${hitsTableHtml(hits)}`;
     const related = relatedInsights(hits, data.insights);
     $('insights').innerHTML = related.length
       ? `<h3 class="type-heading">Pre-generated insights</h3>${related.map((i) => insightHtml(i, sources)).join('')}`
       : '';
     if (!apiKey) {
-      $('status').textContent = `${hits.length} rows retrieved. Add an API key for a live answer, or read the rows and insights below.`;
+      $('status').textContent = `${hits.length} rows retrieved by matching words in your question; they are not an answer. Add an API key for a live answer, or read the rows and insights below.`;
       return { hits, answer: null };
     }
     const ground = groundingHits(hits);
@@ -204,7 +213,7 @@ export function renderAsk(root, data = {}) {
     $('status').textContent = 'Asking Claude using only the retrieved rows…';
     try {
       const answer = await askClaude({ apiKey, question, hits: ground });
-      $('answer').innerHTML = `<section class="panel"><h3 class="type-heading">Answer <span class="flag">AI-generated from the rows below</span></h3>${answerHtml(answer, ground)}</section>`;
+      $('answer').innerHTML = `${unmatched.length ? coverageHtml(unmatched) : ''}<section class="panel"><h3 class="type-heading">Answer <span class="flag">AI-generated from the rows below</span></h3>${answerHtml(answer, ground)}</section>`;
       $('status').textContent = '';
       return { hits, answer };
     } catch (err) {

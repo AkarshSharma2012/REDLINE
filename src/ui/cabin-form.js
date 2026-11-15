@@ -16,6 +16,19 @@ export function labelCabin(query, fixture) {
   });
 }
 
+export const PSIA_TO_KPA = 6.894757293;
+// Converted pressures are kept to 0.001 kPa / 0.0001 psia so no tab shows float noise
+// such as 56.53700980259999 kPa (persona B2 finding).
+const round = (value, places) => Math.round(value * 10 ** places) / 10 ** places;
+export function toKpa(value, unit) { return round(value * (unit === 'psia' ? PSIA_TO_KPA : 1), 3); }
+// Non-blocking unit check: a cabin pressure typed in the wrong unit is a common slip.
+export function pressureUnitHint(value, unit) {
+  if (!Number.isFinite(value) || value <= 0) return '';
+  if (unit === 'kpa' && value < 25) return ` Check the unit: ${value} psia would be ${toKpa(value, 'psia')} kPa.`;
+  if (unit === 'psia' && value > 40) return ` Check the unit: ${value} kPa would be ${round(value / PSIA_TO_KPA, 2)} psia.`;
+  return '';
+}
+
 let instance = 0;
 /** Compatible with B1 scaffold; inject real labelCabin once the engine is available.
  * onEvaluate(results, query), onChange(query); controller.destroy() removes the form.
@@ -138,8 +151,11 @@ export function renderCabinForm(root, options = {}) {
         thickness_mm: number(entry.thickness, 'Enter positive thickness or leave blank.', { optional: true, strict: true }, messages),
         width_mm: number(entry.width, 'Enter positive width or leave blank.', { optional: true, strict: true }, messages) };
     });
-    const kpa = pressure == null ? null : pressure * (controls.unit.input.value === 'psia' ? 6.894757293 : 1);
-    pressureNote.textContent = kpa == null ? 'Pressure not specified' : `${kpa.toFixed(2)} kPa (${(kpa / 6.894757293).toFixed(2)} psia)`;
+    const unit = controls.unit.input.value;
+    const kpa = pressure == null || !Number.isFinite(pressure) ? null
+      : converted && controls.pressure.input.value.trim() === converted.text ? converted.kpa : toKpa(pressure, unit);
+    pressureNote.textContent = kpa == null ? 'Pressure not specified'
+      : `${kpa.toFixed(2)} kPa (${(kpa / PSIA_TO_KPA).toFixed(2)} psia).${pressureUnitHint(pressure, unit)}`;
     return { messages, query: { name: controls.name.input.value, context: controls.context.input.value,
       conditions: { o2_pct: o2, pressure_kpa: kpa, flow_speed_cm_s: flow, flow_direction: controls.direction.input.value || null,
         gravity_g: Number(controls.gravity.input.value), external_heat_flux_kw_m2: null }, materials: lines } };
@@ -148,7 +164,7 @@ export function renderCabinForm(root, options = {}) {
     revision++;
     status.textContent = 'Inputs changed. Evaluate cabin to update results.';
     const { query, messages } = read();
-    const active = presetButtons.find(([, preset]) => Math.abs(query.conditions.pressure_kpa - preset.pressure_kpa) < 1e-8 && query.conditions.o2_pct === preset.o2_pct);
+    const active = query.conditions.pressure_kpa == null ? null : presetButtons.find(([, preset]) => Math.abs(query.conditions.pressure_kpa - preset.pressure_kpa) < 1e-8 && query.conditions.o2_pct === preset.o2_pct);
     for (const [button] of presetButtons) button.setAttribute('aria-pressed', String(button === active?.[0]));
     if (active) {
       presetSource.replaceChildren(sourceLink(d, sources[active[1].source_key], active[1].source_locator));
@@ -158,7 +174,7 @@ export function renderCabinForm(root, options = {}) {
     onChange?.(query, { valid: !messages.length, stale: true });
   }
   function applyPreset(preset) {
-    previousUnit = 'kpa';
+    previousUnit = 'kpa'; converted = null;
     controls.unit.input.value = 'kpa'; controls.pressure.input.value = preset.pressure_kpa; controls.o2.input.value = preset.o2_pct;
     presetSource.replaceChildren(sourceLink(d, sources[preset.source_key], preset.source_locator));
     changed(); status.textContent = `Preset applied: ${preset.o2_pct}% oxygen and ${preset.pressure_kpa} kPa. Materials retained.`;
@@ -171,13 +187,16 @@ export function renderCabinForm(root, options = {}) {
     empty.hidden = true;
   });
   form.addEventListener('input', changed);
-  let previousUnit = controls.unit.input.value;
+  let previousUnit = controls.unit.input.value, converted = null;
   form.addEventListener('change', event => {
     if (event.target === controls.unit.input) {
-      const value = Number(controls.pressure.input.value);
-      if (controls.pressure.input.value !== '' && Number.isFinite(value)) {
-        const kpa = value * (previousUnit === 'psia' ? 6.894757293 : 1);
-        controls.pressure.input.value = kpa / (controls.unit.input.value === 'psia' ? 6.894757293 : 1);
+      const raw = controls.pressure.input.value.trim(), value = Number(raw);
+      if (raw !== '' && Number.isFinite(value)) {
+        // Switching units back and forth must not drift: keep the exact kPa behind the shown value.
+        const kpa = converted && raw === converted.text ? converted.kpa : toKpa(value, previousUnit);
+        const unit = controls.unit.input.value;
+        const text = String(unit === 'psia' ? round(kpa / PSIA_TO_KPA, 4) : kpa);
+        controls.pressure.input.value = text; converted = { text, kpa };
       }
       previousUnit = controls.unit.input.value;
     }
