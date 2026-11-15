@@ -42,7 +42,13 @@ function citations(row, sources) {
   const result = [{ url, locator }];
   for (const prefix of ['condition', 'observation']) {
     const extra = { url: row[`${prefix}_source_url`], locator: row[`${prefix}_source_locator`] };
-    if ((extra.url || extra.locator) && !result.some((c) => c.url === extra.url && c.locator === extra.locator)) {
+    if (!extra.url && !extra.locator) continue;
+    const existing = result.find((c) => c.url === extra.url);
+    if (existing) {
+      if (extra.locator && !existing.locator?.includes(extra.locator)) {
+        existing.locator = [existing.locator, extra.locator].filter(present).join('; ');
+      }
+    } else {
       result.push(extra);
     }
   }
