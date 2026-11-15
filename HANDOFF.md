@@ -1,0 +1,10 @@
+﻿# Issue #243 handoff
+STATUS: BLOCKED: Deployed ui-go.ps1 and GO-UI owning host/path are unavailable in this checkout; coordinator must supply them before correction/restart.
+
+- Inspected 2026-11-15 03:16-03:18 PST on LAPTOP-AM, branch task/243-q-correct-scheduled-fable-attribution-an. No prior HANDOFF.md. No orchestration/UI/science source changed.
+- Identity verified: git log commit 9a3b981 has akarshsharma2012 <lakshyakhandelwal28@gmail.com>; local config has Lakshya Khandelwal with that same email. Use akarshsharma2012 and the established email for new commits; no AI Co-Authored-By.
+- ui-go.ps1 is not tracked, not under redline-conductor, and not found by local user-tree searches (including hidden/ignored files outside excluded caches/AppData), C:\tmp or C:\ProgramData. Issue #243 has no source path in its body/comments.
+- Schedule state: no identifiable ui-go/GO-UI/Fable PowerShell command line or scheduled-task action. Existing interactive PowerShell PIDs 7236 (created Nov 14 10:07:45) and 27664 (12:48:10) have no script arguments; their in-memory contents are unknown. Existing conductor processes left untouched. Cannot establish whether another host owns the waiter or whether an interactive shell loaded it.
+- No process started to persist; no Fable usage, server/browser launch, stop/restart, clone removal, preview/work change, or schedule change. Required Nov 15 05:02 PST launch boundary remains unmodified and unverified.
+- Validation: full node --test once, exit 0 (existing TODO assertions present). PowerShell parse/targeted orchestration behavior cannot be tested without the source.
+- Next: obtain exact deployed source and owning process/host. A/B must fix author/committer identity, truthful approval wording and preservation before clone replacement; test without Claude. Coordinate replacing only the confirmed waiter, respecting the prohibition on persistent processes from this task and preserving 05:02 PST. Do not launch early or claim approval based on a directory.
