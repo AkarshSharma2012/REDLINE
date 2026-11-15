@@ -4,6 +4,10 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 // Decimal MB; measured on disk (not compressed). An exact-budget total passes.
 export const SIZE_LIMIT_BYTES = 2_000_000;
+// #305: production React/Aria/Lucide island plus bundled license notices only.
+// Existing scientific/data/3D assets retain their original 2 MB ceiling.
+export const REACT_LIMIT_BYTES = 400_000;
+const reactAsset = file => file === 'src/vendor/react-controls.js' || file.startsWith('src/vendor/react-controls/');
 const DEFAULT_ROOT = fileURLToPath(new URL('../', import.meta.url));
 const external = /^(?:https?:)?\/\//i;
 
@@ -68,8 +72,10 @@ export async function checkSizeBudget(root = DEFAULT_ROOT) {
     for (const url of findExternalResources(await readFile(name, 'utf8'))) violations.push({ file: relative, url });
   }
   const totalBytes = files.reduce((sum, file) => sum + file.bytes, 0);
+  const reactBytes = files.filter(file => reactAsset(file.file)).reduce((sum, file) => sum + file.bytes, 0);
   return { files, totalBytes, limitBytes: SIZE_LIMIT_BYTES, violations,
-    ok: totalBytes <= SIZE_LIMIT_BYTES && violations.length === 0 };
+    reactBytes, reactLimitBytes: REACT_LIMIT_BYTES, baseBytes: totalBytes - reactBytes,
+    ok: totalBytes - reactBytes <= SIZE_LIMIT_BYTES && reactBytes <= REACT_LIMIT_BYTES && violations.length === 0 };
 }
 
 export function formatReport(report) {
@@ -78,6 +84,7 @@ export function formatReport(report) {
     ...report.files.map(({ file, bytes }) => `${file.padEnd(48)} ${String(bytes).padStart(7)}`),
     `${'TOTAL'.padEnd(48)} ${String(report.totalBytes).padStart(7)}`,
     `Budget: at most ${report.limitBytes} bytes (${report.limitBytes / 1_000_000} MB).`,
+    `Base assets: ${report.baseBytes} bytes; React island including licenses: ${report.reactBytes}/${report.reactLimitBytes} bytes.`,
     ...report.violations.map(({ file, url }) => `External resource: ${file}: ${url}`),
     report.ok ? 'PASS: size and static resource checks.' : 'FAIL: size or external resource check.',
   ].join('\n');

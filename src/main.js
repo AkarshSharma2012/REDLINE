@@ -14,6 +14,7 @@ import { loadAccuracyReport, renderAccuracyView } from './ui/accuracy-view.js';
 import { mountAsk } from './ui/ask.js';
 import { validateEvidence } from './schema/validate.js';
 import { mountWorkspace } from './ui/workspace.js';
+import { mountReactControls } from './vendor/react-controls.js';
 
 const EVIDENCE_URL = 'data/evidence.json';
 
@@ -322,4 +323,7 @@ async function start() {
   showTab(tabFromHash(location.hash));
 }
 
-if (typeof document !== 'undefined') start();
+if (typeof document !== 'undefined') {
+  mountReactControls();
+  start();
+}

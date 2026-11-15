@@ -47,3 +47,9 @@ STATUS: DONE
 - Full node --test on 2a41a2da300a0a2501e3c27f81a30926971c82b7 (Node v26.13.1): 1250 tests, 1206 pass, 0 fail, 44 existing TODO, 0 skipped/cancelled; exit 0. git diff --check clean. Native worksheet/export regenerated with no content changes beyond evidence build metadata. No server/browser or persistent process started.
 - Complete; push current branch HEAD to existing PR294 source branch only. Coordinator retains review/release ownership.
 STATUS: DONE
+
+# Issue #305: React controls
+- Added synchronous production React Aria/Lucide islands for existing toolbar IDs, before main startup; no shell/styles/workspace/viewer/science changes. B2 wrapper coordination posted on #302.
+- Pinned dependencies/lockfile, reproducible build-ui and committed local ESM/licenses. Bundle 268241 raw / 84327 gzip bytes. Separate 400000-byte React-only allowance preserves original 2 MB for other assets.
+- Verification next: full node --test once, build reproducibility, diff check. Native browser/release remains coordinator-owned; no server/browser.
+
