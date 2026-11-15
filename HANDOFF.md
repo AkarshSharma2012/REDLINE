@@ -53,4 +53,8 @@ STATUS: DONE
 - Done: black stage (clear 0x000000); frame = stage + tool strip (right-edge 2-col strip when the viewer container is >=520px, wrapped row under the stage below that; never overlays the stage or list). 9 native buttons keep the old aria-labels: drawn SVG chevrons/plus/minus with CSS tooltip on hover + focus-visible, text buttons Reset/Shell/Wire. Information bar under the stage holds the single caption, selection, "Requested scenario (user input, not measured)", honest "Verification: none shown here" line, status and key help. Compact material rows with text "Selected"/"Not in current request"; empty-request state text. 3D selection = accent fill + text-1 edge outline (one merged LineSegments per material, disposed). Reset framing uses full bounding-sphere fit (was 0.92 crop). Targets 36px, 44px on coarse pointers; min text 12px.
 - Unchanged: mountRoverViewer API, on-demand render scheduler, DPR cap 1.5, no shadows/textures/postprocessing/autospin, fallbacks, keys (Escape/Tab not captured).
 - Tests: tests/rover-viewer.test.mjs adds 9-control redraw, caption-once/bar, CSS contract checks.
+- Validation: full node --test (Node v24.17.0): 1253 tests, 1209 pass, 0 fail, 44 existing TODO, 0 skipped/cancelled; exit 0. size-budget PASS; git diff --check clean; impeccable detector: no findings.
 - Browser limitation: no browser or server run (conductor rule); real WebGL pixels, 1440x900 / 390x844 / 320 layout need coordinator check.
+- Next: coordinator review of the PR; no merge/deploy.
+
+STATUS: DONE
