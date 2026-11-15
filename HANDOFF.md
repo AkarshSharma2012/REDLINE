@@ -75,3 +75,11 @@ STATUS: DONE
 - Next: coordinator review of the PR; no merge/deploy.
 
 STATUS: DONE
+
+# Issue #306: B2 final black/white theme + source-first density (on PR301 branch)
+- Base: PR301 head 2819e87 + main 0aeaec1 (already included) + B1 #303 ecd6ae4 merged (HANDOFF conflict: both kept). No science/data edits.
+- Tokens (src/styles.css, DESIGN.md 2.0 amendment): bg/surface-1 #000, text-1 #FFF, text-2 #D0D0D0, text-3 #ADADAD, border #8C8C8C, accent #FFF; ev-ne neutral #C8C8C8; red/amber kept for defined labels only. results-table.js inline palette neutralized. Gravity preview tab inline styles unchanged (still blue focus ring; test-pinned).
+- Records pane: NASA source records heading + status + records first; legend/results-table in native open `details#ws-results-disclosure` below records; fixes disclosure last. All IDs kept. Shell duplicate viewer caption removed (B1 viewer renders it once). Empty stage already #000.
+- Not done: setup-pane copy untouched; no measured browser numbers (no browser allowed) - coordinator native acceptance must confirm >=5 records at 1440 and first record <~500px at 390.
+- Tests: full node --test 1280 tests, 1236 pass, 0 fail, 44 existing TODO; size-budget PASS; diff --check clean.
+STATUS: DONE

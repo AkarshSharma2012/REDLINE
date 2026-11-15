@@ -26,7 +26,7 @@ test('cabin panel is a three-pane workspace that keeps every existing ID and con
     assert.match(main[1], new RegExp(`id="${id}"`), id);
   }
   assert.match(main[1], /<div id="rover-viewer-root"[^>]*\bhidden/, 'model area hidden until requested');
-  assert.equal(html.split(VIEWER_LABEL).length - 1, 1, 'illustrative model label present once');
+  assert.equal(html.split(VIEWER_LABEL).length - 1, 0, 'shell carries no duplicate caption; the B1 viewer renders it once (#306)');
   assert.equal(VIEWER_LABEL, 'Illustrative cabin model - not a fire simulation');
 });
 
