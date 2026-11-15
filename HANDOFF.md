@@ -57,3 +57,4 @@ STATUS: DONE
 - Full node --test on 09848c3df1622de5e4aaffcc7a0d60e64c265982: 1258 tests, 1214 pass, 0 fail, 44 existing TODO, 0 skipped/cancelled, exit 0. Includes static entrypoint/module reachability and source-specific interaction tests. git diff --check clean. U25 assertions and unchanged evidence file verified; B16 remains unresolved.
 - Existing DESIGN text tokens tested at >=4.5:1 on black and existing hover surface; no browser rendering/geometry assertion. Source module 252 lines (under 500). Required CSS index link belongs to B2; coordinator acceptance remains pending, no merge/deploy.
 STATUS: DONE
+- Revalidated existing PR #300 head e5700fdde0805f61502a5ce0756f09eadc53cdcb: full node --test 1258 tests, 1214 pass, 0 fail, 44 existing TODO, 0 skipped/cancelled. git diff --check clean. Existing #297 coordination confirmed; no runtime changes or persistent processes.
