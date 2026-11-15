@@ -25,3 +25,14 @@ STATUS: DONE
 - Full `node --test`: 1176 tests, 1132 pass, 0 fail, 44 todo, exit 0. No server or browser started.
 
 STATUS: DONE
+
+## Issue #277 (shell lane)
+
+- Implementation SHA `23baa3f569cedfceb422e4f5972598c2992980cc` (tests-first commit `35bbe26a3708223d00c0779feef6efc197fb7ba7`), base `5094334`. Draft PR only.
+- Files: index.html (cabin panel → toolbar + 3 panes + 2 separators; all old IDs kept), src/main.js (explicit bridge: `mountWorkspace`, `workspace.update/selectMaterial/setEvidence/setActive`, exported `resultForMaterial`), new src/ui/workspace.js (prefs, layout, separators, viewer bridge), src/ui/workspace-evidence.js (source browser, record detail, HTML cabin items), src/ui/workspace-motion.js, src/styles/workspace.css, src/vendor/gsap/{gsap.min.js,PROVENANCE.md} (3.15.1, sha256 recorded), .gitattributes (vendor byte-exact), DESIGN.md (narrow model + motion exception).
+- Viewer interface consumed exactly as specified: `import('./rover-viewer.js')` only when view = "Model + evidence"; mounts into `#rover-viewer-root`; `update({materialIds, selectedMaterialId, conditions})` with frozen requested conditions; `onSelectMaterial` IDs validated against cabin items/registry and change UI selection only. Missing module/WebGL → status "Model unavailable…", HTML items stay. Viewer CSS (src/styles/rover-viewer.css) is not linked from index.html; coordinator adds the link at integration.
+- Decisions: source filters sit at the top of the middle pane (beside the list they filter); left pane stays the cabin configuration. Selecting a cabin item opens the existing evidence panel through `renderEvidencePanel` directly, so it works with 0 verified rows (results table shows no rows then). Preferences key `redline.workspace.v1` stores only widths/collapse/density/view.
+- Tests: tests/workspace-shell.test.mjs + tests/workspace-evidence.test.mjs (28 tests: structure, prefs incl. malformed/denied storage, bounded resize/keyboard/drag, viewer failure isolation and sync, real 45/0 counts, filters, detail Escape focus, motion reduced-motion/failed import, relative import integrity). Full `node --test`: 1207 tests, 1163 pass, 0 fail, 44 todo (pre-existing), exit 0.
+- Gaps: no browser run (coordinator owns 320/390/1440, 200% zoom, real GSAP evaluation, console, visual hierarchy). Re-evaluating the cabin resets the evidence panel to its placeholder while the cabin item stays marked. Not tested in a real DOM: pointer capture, scrollIntoView, idle GSAP preload.
+
+STATUS: DONE
