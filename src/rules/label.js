@@ -68,6 +68,26 @@ function support(query, row) {
   return null;
 }
 
+// Absence of a winning spread observation is not evidence of no burning.
+// Only an oxygen limit or a no-spread observation can cover the query (V2 U1/U2).
+function coversNoBurn(query, { row, rules }) {
+  const o = num(query.o2_pct);
+  if (o === null || !rules.some((r) => r.rule === 'P' && r.grade === 'OK')) return false;
+  if (row.endpoint === 'LOC-FS') {
+    const limit = num(row.value);
+    if (limit === null) return false;
+    if (row.value_unit === '% O2') return o < limit - EPS;
+    if (row.value_unit === 'kPa O2') {
+      const partial = o2PartialKpa(o, num(query.pressure_kpa));
+      return partial !== null && partial < limit - EPS;
+    }
+    return false;
+  }
+  const rowO2 = num(row.o2_pct);
+  return ['burn/no-burn', 'spread-rate'].includes(row.endpoint)
+    && row.outcome === 'no-spread' && rowO2 !== null && rowO2 + EPS >= o;
+}
+
 function result(label, reason, graded, queryClass) {
   const flags = new Set();
   const flag_details = [];
@@ -115,7 +135,9 @@ export function labelSameGravity(query, rows) {
   if (burn.length) return result('BURNED', null, burn, queryClass);
   const near = eligible.filter((g) => support(q, g.row) === 'NEAR');
   if (near.length) return result('NEAR', null, near, queryClass);
-  return result('NOT_ESTABLISHED', 'NE-no-burn', eligible, queryClass);
+  const covering = eligible.filter((g) => coversNoBurn(q, g));
+  if (covering.length) return result('NOT_ESTABLISHED', 'NE-no-burn', covering, queryClass);
+  return result('NOT_ESTABLISHED', 'NE-incompatible', graded, queryClass);
 }
 
 // labelMaterial(query, rows) -> { label, reason, cited, flags, flag_details, cross_gravity, estimate, wording }
