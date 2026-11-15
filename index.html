@@ -5,61 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>REDLINE</title>
   <link rel="stylesheet" href="src/styles.css">
-  <style>
-    /* Tab layout only; colors and type come from styles.css tokens. */
-    .tabs { display: flex; gap: var(--space-4, 4px); padding: 0 var(--space-24, 24px); border-bottom: 1px solid var(--divider); overflow-x: auto; scrollbar-width: none; }
-    .tabs [role="tab"][aria-selected="true"] { color: var(--text-1); }
-    .framing { margin: 4px 0 0; }
-    [hidden] { display: none !important; }
-  </style>
   <script type="module" src="src/main.js"></script>
 </head>
 <body>
   <header class="app-header">
-    <h1 class="type-title">REDLINE</h1>
-    <p class="text-2">PSI combustion investigations and cabin materials, compared against NASA space fire experiments. Evidence review, not cabin certification.</p>
-    <p class="text-2 framing"><strong>Prevention · Detection · Suppression:</strong> each investigation and label is read for what it tells a crew about preventing, detecting or putting out a cabin fire.</p>
-    <p class="text-3 framing">Partial gravity (Moon 0.16 g, Mars 0.38 g): no partial-gravity data in PSI yet. REDLINE shows those cases only as an estimate beside 0 g and 1 g results, never as a lunar measurement.</p>
-    <p id="dataset" class="text-3 framing"></p>
+    <div class="mission-id">
+      <h1 class="type-title">REDLINE</h1>
+      <p class="mission-sub">Cabin fire evidence workbench</p>
+    </div>
+    <dl class="status-rail" aria-label="Evidence status">
+      <div><dt>Evidence</dt><dd id="rail-rows" class="rail-value">loading</dd></div>
+      <div><dt>Verified</dt><dd id="rail-verified" class="rail-value">loading</dd></div>
+    </dl>
+    <p class="rail-status"><span class="hold-tag">Research preview · not certification</span></p>
+    <details class="mission-notes">
+      <summary>Scope and limits</summary>
+      <p>PSI combustion investigations and cabin materials, compared against NASA space fire experiments. Evidence review, not cabin certification.</p>
+      <p><strong>Prevention · Detection · Suppression:</strong> each investigation and label is read for what it tells a crew about preventing, detecting or putting out a cabin fire.</p>
+      <p>Labels use verified evidence rows only. Unverified rows stay inspectable in the evidence panel but never produce a label; with 0 verified rows, results report that no verified evidence is loaded.</p>
+      <p>Partial gravity (Moon 0.16 g, Mars 0.38 g): no partial-gravity data in PSI yet. REDLINE shows those cases only as an estimate beside 0 g and 1 g results, never as a lunar measurement.</p>
+      <p id="dataset"></p>
+    </details>
   </header>
 
   <nav id="tabs" class="tabs" role="tablist" aria-label="REDLINE screens">
     <button type="button" role="tab" id="tab-cabin" aria-controls="panel-cabin" aria-selected="true">Cabin Check</button>
-    <button type="button" role="tab" id="tab-investigations" aria-controls="panel-investigations" aria-selected="false" tabindex="-1">Investigations <span class="preview-label">Research preview</span></button>
-    <button type="button" role="tab" id="tab-gravity" aria-controls="panel-gravity" aria-selected="false" tabindex="-1">Gravity view <span class="preview-label">Research preview</span></button>
-    <button type="button" role="tab" id="tab-oxygen" aria-controls="panel-oxygen" aria-selected="false" tabindex="-1">O2 tradeoff <span class="preview-label">Research preview</span></button>
-    <button type="button" role="tab" id="tab-accuracy" aria-controls="panel-accuracy" aria-selected="false" tabindex="-1">Accuracy <span class="preview-label">Research preview</span></button>
-    <button type="button" role="tab" id="tab-ask" aria-controls="panel-ask" aria-selected="false" tabindex="-1">Ask REDLINE <span class="preview-label">Research preview</span></button>
+    <button type="button" role="tab" id="tab-investigations" aria-controls="panel-investigations" aria-selected="false" tabindex="-1">Investigations <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
+    <button type="button" role="tab" id="tab-gravity" aria-controls="panel-gravity" aria-selected="false" tabindex="-1">Gravity view <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
+    <button type="button" role="tab" id="tab-oxygen" aria-controls="panel-oxygen" aria-selected="false" tabindex="-1">O2 tradeoff <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
+    <button type="button" role="tab" id="tab-accuracy" aria-controls="panel-accuracy" aria-selected="false" tabindex="-1">Accuracy <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
+    <button type="button" role="tab" id="tab-ask" aria-controls="panel-ask" aria-selected="false" tabindex="-1">Ask REDLINE <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
   </nav>
 
   <section id="panel-investigations" role="tabpanel" aria-labelledby="tab-investigations" class="region region-investigations" hidden>
     <h2 class="type-heading">PSI combustion investigations</h2>
     <p class="text-2">Summarize, rank and compare NASA Physical Sciences Informatics (PSI) combustion investigations for fire prevention, detection and suppression. Every value links to its source.</p>
     <aside class="research-preview" aria-label="Investigations research status">
-      <h3>Research preview</h3>
-      <p>Catalog browsing is available; rankings await scientific review, so tied zero scores do not establish equal relevance and “No source given” means supporting citation evidence is missing.</p>
+      <details>
+        <summary><span class="hold-tag">Research preview</span> Rankings held for scientific review</summary>
+        <p>Catalog browsing is available; rankings await scientific review, so tied zero scores do not establish equal relevance and “No source given” means supporting citation evidence is missing.</p>
+      </details>
     </aside>
     <div id="investigations-root"></div>
   </section>
 
   <section id="panel-ask" role="tabpanel" aria-labelledby="tab-ask" class="region" hidden>
     <aside class="research-preview" aria-label="Ask REDLINE research status">
-      <h2>Research preview</h2>
-      <p>The question interface is available; answer and citation quality await scientific review, so “No source given” means no supporting citation has been established and tied zero scores do not establish equal relevance.</p>
+      <details>
+        <summary><span class="hold-tag">Research preview</span> Answers held for scientific review</summary>
+        <p>The question interface is available; answer and citation quality await scientific review, so “No source given” means no supporting citation has been established and tied zero scores do not establish equal relevance.</p>
+      </details>
     </aside>
     <div id="ask-root"></div>
   </section>
 
   <main id="panel-cabin" role="tabpanel" aria-labelledby="tab-cabin" class="layout">
     <section class="region region-cabin" aria-labelledby="cabin-heading">
-      <h2 id="cabin-heading" class="type-heading">Cabin</h2>
-      <p><button type="button" id="rover-demo" disabled>Load lunar rover demo</button></p>
-      <p class="text-3">Illustrative pressurized rover cabin; item uses are hypothetical, not a real rover manifest.</p>
+      <h2 id="cabin-heading" class="region-title">Cabin setup</h2>
+      <button type="button" id="rover-demo" class="btn-primary" aria-describedby="rover-note" disabled>Load lunar rover demo</button>
+      <p id="rover-note" class="region-note">Illustrative pressurized rover cabin; item uses are hypothetical, not a real rover manifest.</p>
       <div id="cabin-form"></div>
     </section>
 
     <section class="region region-results" aria-labelledby="results-heading">
-      <h2 id="results-heading" class="type-heading">Results</h2>
+      <h2 id="results-heading" class="region-title">Results</h2>
       <ul class="legend" aria-label="Label key">
         <li><span class="chip chip-burned">Burned in testing at these conditions</span></li>
         <li><span class="chip chip-near">Close to a measured limit</span></li>
@@ -71,31 +80,37 @@
     </section>
 
     <section class="region region-evidence" aria-labelledby="evidence-heading">
-      <h2 id="evidence-heading" class="type-heading">Evidence</h2>
+      <h2 id="evidence-heading" class="region-title">Evidence</h2>
       <div id="evidence-panel"><p class="text-3">Select a material to see the tests behind its label.</p></div>
     </section>
   </main>
 
   <section id="panel-gravity" role="tabpanel" aria-labelledby="tab-gravity" class="region" hidden>
     <aside class="research-preview" aria-label="Gravity research status">
-      <h2>Research preview</h2>
-      <p>Source context is available; numeric gravity comparisons are held for scientific review, and estimates are not lunar measurements.</p>
+      <details>
+        <summary><span class="hold-tag">Research preview</span> Numeric comparisons held for scientific review</summary>
+        <p>Source context is available; numeric gravity comparisons are held for scientific review, and estimates are not lunar measurements.</p>
+      </details>
     </aside>
     <div id="gravity-view"></div>
   </section>
 
   <section id="panel-oxygen" role="tabpanel" aria-labelledby="tab-oxygen" class="region" hidden>
     <aside class="research-preview" aria-label="Oxygen tradeoff research status">
-      <h2>Research preview</h2>
-      <p>Oxygen scenario exploration is available; interpretation awaits scientific review and label counts do not establish cabin certification.</p>
+      <details>
+        <summary><span class="hold-tag">Research preview</span> Interpretation held for scientific review</summary>
+        <p>Oxygen scenario exploration is available; interpretation awaits scientific review and label counts do not establish cabin certification.</p>
+      </details>
     </aside>
     <div id="o2-slider"></div>
   </section>
 
   <section id="panel-accuracy" role="tabpanel" aria-labelledby="tab-accuracy" class="region" hidden>
     <aside class="research-preview" aria-label="Accuracy research status">
-      <h2>Research preview</h2>
-      <p>Report inspection is available; held-out evaluation requires scientific review, so tied zero scores do not establish measured accuracy and “No source given” indicates missing supporting citation evidence.</p>
+      <details>
+        <summary><span class="hold-tag">Research preview</span> Held-out evaluation pending scientific review</summary>
+        <p>Report inspection is available; held-out evaluation requires scientific review, so tied zero scores do not establish measured accuracy and “No source given” indicates missing supporting citation evidence.</p>
+      </details>
     </aside>
     <div id="accuracy-view"></div>
   </section>

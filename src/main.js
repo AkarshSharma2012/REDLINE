@@ -233,11 +233,23 @@ async function wireAccuracy(evidence) {
   }
 }
 
-function showDataset(evidence) {
-  const rows = evidence.evidence ?? [];
-  const verified = rows.filter((r) => r.review_status === 'verified').length;
-  document.getElementById('dataset').textContent =
-    `Dataset ${evidence.built_from ?? 'revision not stated'} · built ${evidence.built_at ?? 'date not stated'} · ${rows.length} evidence rows, ${verified} verified (labels use verified rows only).`;
+// Header status rail: counts come only from the loaded evidence file, never from markup.
+export function datasetStatus(evidence) {
+  const rows = evidence?.evidence ?? [];
+  return { rows: rows.length, verified: rows.filter((r) => r.review_status === 'verified').length };
+}
+
+export function showDataset(evidence, doc = document) {
+  const { rows, verified } = datasetStatus(evidence);
+  doc.getElementById('dataset').textContent =
+    `Dataset ${evidence.built_from ?? 'revision not stated'} · built ${evidence.built_at ?? 'date not stated'} · ${rows} evidence rows, ${verified} verified (labels use verified rows only).`;
+  showRail(doc, String(rows), String(verified), verified === 0 ? 'none' : 'some');
+}
+
+function showRail(doc, rows, verified, state) {
+  const rowsCell = doc.getElementById('rail-rows'), verifiedCell = doc.getElementById('rail-verified');
+  if (rowsCell) rowsCell.textContent = rows;
+  if (verifiedCell) { verifiedCell.textContent = verified; verifiedCell.parentElement?.setAttribute('data-state', state); }
 }
 
 async function start() {
@@ -252,6 +264,7 @@ async function start() {
     const retry = Object.assign(document.createElement('button'), { type: 'button', textContent: 'Retry' });
     retry.addEventListener('click', () => location.reload());
     status.append(retry);
+    showRail(document, 'unavailable', 'unavailable', 'unavailable');
     renderResultsTable(document.getElementById('results-table'), [], {
       state: 'error', onRetry: () => location.reload(),
     });
