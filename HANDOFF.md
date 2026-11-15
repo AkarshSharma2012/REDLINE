@@ -7,3 +7,5 @@
 - Next: review and merge PR.
 
 STATUS: DONE
+
+- Integration: merged origin/main f065251 (PR #264 engine examples). Preserved issue #150 receipt in docs/handoffs/issue-150.md. Edge-case assertions unchanged; full-suite verification pending.
