@@ -1,0 +1,2 @@
+# Vendored third-party files stay byte-exact (checksums in PROVENANCE.md).
+src/vendor/** -text -diff
