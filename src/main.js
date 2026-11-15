@@ -47,6 +47,11 @@ export function verifiedOnly(evidence) {
   return { ...evidence, evidence: (evidence?.evidence ?? []).filter((r) => r.review_status === 'verified') };
 }
 
+// The cabin form state -> engine labels, using verified rows and the material registry only.
+export function evaluateCabin(state, evidence, evaluate = labelCabin) {
+  return evaluate(buildCabinQuery(state), verifiedOnly(evidence));
+}
+
 // Each result carries an immutable query snapshot (material line + cabin conditions) so the
 // evidence panel and experiment cards compare against what the user actually asked.
 export function withQueries(results, cabinQuery) {
@@ -113,10 +118,10 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
     slider?.update(query);
   }
 
-  // labelCabin's second argument is the evidence ROW ARRAY, not the dataset.
-  // Keep metadata for row names and the evidence panel, outside the pure query.
+  // labelCabin (#55) takes the DATASET ({ evidence, materials }), not the row array: passing
+  // the array made every label "Not found in the sources reviewed" (persona B2 finding).
   function evaluateForm(state) {
-    return evaluate(buildCabinQuery(state), verified.evidence);
+    return evaluateCabin(state, evidence, evaluate);
   }
 
   function changed(state, { valid }) {
@@ -192,7 +197,7 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
     root.replaceChildren();
     slider = renderO2Slider(root, {
       cabinQuery, evidence,
-      labelCabin: (query, dataset) => evaluate(buildCabinQuery(query), verifiedOnly(dataset).evidence),
+      labelCabin: (query, dataset) => evaluateCabin(query, dataset, evaluate),
       onApply: (next) => { applyConditions(next); location.hash = 'cabin'; },
       onCancel: () => { location.hash = 'cabin'; },
     });

@@ -1,4 +1,4 @@
-﻿import { compareRow } from '../rules/compare.js';
+import { compareRow } from '../rules/compare.js';
 
 const FIELDS = [
   ['material', 'Material', '', 'M'], ['material_grade', 'Grade', '', 'M'], ['form', 'Form', '', 'F'],
@@ -68,7 +68,7 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
     else p(parent, `${prefix}Not found in the sources reviewed; no sourced statement available.`);
   }
   function draw() {
-    root.replaceChildren(); root.append(make('h3', `Evidence: ${snapshot.material_id}`));
+    root.replaceChildren(); root.append(make('h3', `Evidence: ${String(snapshot.material_id).startsWith('unrecognised:') ? `${snapshot.material_id.slice(13)} (material not recognised)` : snapshot.material_id}`));
     const closeButton = button(root, 'Close evidence', close);
     closeButton.setAttribute('aria-label', 'Close evidence and return to material');
     p(root, `Request: ${result.item_id ?? snapshot.material_id} · revision ${result.revision ?? 'not stated'}. Cabin values are user inputs.`);

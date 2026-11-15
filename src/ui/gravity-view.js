@@ -67,6 +67,19 @@ function conditions(p) {
   return `${p.material}; ${p.form}; thickness ${number(p.thickness_mm, 'mm')}; ${pressure}; ${flow}; ${p.flow_direction || 'direction not stated'}; ${p.gravity || 'gravity not stated'} (${p.gravity_context}); ${p.facility}; observation ${number(p.test_duration_s, 's')}`;
 }
 
+// Cabin request in words and units, never raw JSON (persona B2 finding).
+const GRAVITY_TEXT = { 0: 'microgravity reference (0 g)', 1: 'Earth reference (1 g)', 0.16: 'lunar scenario (0.16 g, estimate)' };
+export function requestText(r = {}) {
+  const has = (v) => typeof v === 'number' && Number.isFinite(v);
+  return [
+    has(r.o2_pct) ? `${r.o2_pct}% O2` : 'O2 not stated',
+    has(r.pressure_kpa) ? `${r.pressure_kpa} kPa absolute` : 'pressure not stated',
+    has(r.flow_speed_cm_s) ? `forced airflow ${r.flow_speed_cm_s} cm/s` : 'forced airflow not specified',
+    r.flow_direction ? `${r.flow_direction} flow` : 'flow direction not specified',
+    has(r.gravity_g) ? (GRAVITY_TEXT[r.gravity_g] ?? `${r.gravity_g} g`) : 'gravity not stated',
+  ].join('; ');
+}
+
 function dataTable(points, research) {
   if (!points.length) return '<p>No numeric records in this series.</p>';
   return `<div class="gv-scroll" tabindex="0" role="region" aria-label="${research ? 'Research detail' : 'Reviewed'} chart data"><table>
@@ -188,7 +201,7 @@ export function renderGravityView(root, options = {}) {
       <h2>Earth-based prediction vs measured simulated-lunar result</h2>
       <p>For these tested setups. Not measurements on the lunar surface. Evidence review, not cabin certification.</p>
       ${options.onBack ? '<button type="button" data-back>Back to cabin</button>' : ''}
-      ${options.request ? `<p>Requested conditions (user input): ${escape(JSON.stringify(options.request))}. Source records remain at their published conditions.</p>` : ''}
+      ${options.request ? `<p>Requested conditions (user input): ${escape(requestText(options.request))}. Source records remain at their published conditions.</p>` : ''}
       <nav aria-label="Material family">${[...new Set(GROUPS.map((g) => g[1]))].map((f) => `<button type="button" data-family="${f}" aria-pressed="${f === family}">${f}</button>`).join('')}</nav>
       <label>Specimen / endpoint / condition group<select data-group>${GROUPS.filter((g) => g[1] === family).map((g) => `<option value="${g[0]}" ${g[0] === selected ? 'selected' : ''}>${g[2]}</option>`).join('')}</select></label>
       ${historical ? `<label>Historical endpoint (criteria differ by gravity)<select data-endpoint><option ${historicalEndpoint === 'ULOI' ? 'selected' : ''}>ULOI</option><option ${historicalEndpoint === 'MOC' ? 'selected' : ''}>MOC</option></select></label>` : ''}
