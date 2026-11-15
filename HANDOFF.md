@@ -37,3 +37,9 @@ STATUS: DONE
 - Native regeneration: node scripts/build-evidence.mjs (45 draft/0 verified), node scripts/export-datapackage.mjs, node scripts/verification-worksheet.mjs: exit 0. node --test: 1249 tests, 1204 pass, 1 stale pitch provenance failure, 44 TODO. Corrected pitch build reference; targeted pitch/review tests rerun. node scripts/size-budget.mjs PASS. node scripts/lint-csv.mjs reports 1 existing diagnostic; no unrelated evidence corrected. git diff --check clean. No build script exists; vendor integrity covered by full suite.
 STATUS: DONE
 - Follow-up: initial pitch update encountered an encoding error; corrected with byte-preserving replacement. node --test tests/pitch-demo.test.mjs tests/review-293.test.mjs: exit 0 (all pass). PR #294 opened; no merge/deploy.
+
+# Issue #295: PR294 provenance and U25 display follow-up
+- Fetched PR294 head 6d0e62d onto assigned issue branch. Restored frozen screenshot inventory hashes; current inventory checked separately.
+- U25-only display adapters qualify inferred sheet and plot-derived five-second endpoint in Workspace, Ask, evidence panel and Gravity research. Stored enums and other rows unchanged; HOLD/draft and honest relayed review retained; PSI25-B16 unresolved.
+- Regression anchors all non-U25 evidence rows to immutable c4e68732269e8986849109612a5d806fea401d15; surface assertions added.
+- Next: native artifact regeneration, full node --test once, push to existing PR294. No server/browser, merge/deploy or verification promotion.

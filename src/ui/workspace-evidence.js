@@ -1,4 +1,4 @@
-import { reviewedGravity } from './evidence-provenance.js';
+import { reviewedGravity, reviewedForm, reviewedEndpoint } from './evidence-provenance.js';
 // #277 workspace source browser: filters, counts, record cards, record detail and the
 // HTML cabin-material controls. Reads the loaded evidence file only; never changes review
 // state, never promotes drafts and never derives a label. All data goes in via textContent.
@@ -64,8 +64,9 @@ export function describeRecord(row, sources = {}) {
       ['Oxygen', formatCondition(r.o2_pct, '% O2')],
       ['Pressure', formatCondition(r.pressure_kpa, 'kPa')],
       ['Gravity', (reviewedGravity(r) ?? formatCondition(r.gravity_g, 'g'))],
-      ['Form', formatCondition(r.form)],
+      ['Form', reviewedForm(r) ?? formatCondition(r.form)],
       ['Facility', formatCondition(r.facility)],
+      ...(reviewedEndpoint(r) ? [['Endpoint', reviewedEndpoint(r)]] : []),
     ],
     citation: { title: str(s.title) || str(r.source_key) || 'Source not stated', authors: str(s.authors), year: str(s.year), url: u ? u.href : null, nasa: isNASA(u) },
   };
@@ -187,8 +188,8 @@ export function renderSourceDetail(root, row, evidence, { opener = null, onClose
   more.append(make('summary', 'Method notes and record fields'));
   if (row.notes) more.append(make('p', String(row.notes)));
   more.append(conditionList(make, [
-    ['Endpoint', formatCondition(row.endpoint)], ['Outcome', formatCondition(row.outcome)],
-    ['Value', formatCondition(row.value, row.value_unit ?? '')], ['Flow', `${formatCondition(row.flow_speed_cm_s, 'cm/s')} · ${formatCondition(row.flow_direction)}`],
+    ['Endpoint', reviewedEndpoint(row) ?? formatCondition(row.endpoint)], ['Outcome', formatCondition(row.outcome)],
+    ['Value', reviewedEndpoint(row) ?? formatCondition(row.value, row.value_unit ?? '')], ['Flow', `${formatCondition(row.flow_speed_cm_s, 'cm/s')} · ${formatCondition(row.flow_direction)}`],
     ['Thickness', formatCondition(row.thickness_mm, 'mm')], ['Uncertainty', formatCondition(row.uncertainty)],
     ['Run', formatCondition(row.run_id)], ['Verifier', formatCondition(row.verified_by)],
   ], 'ws-conditions ws-conditions-wide'));

@@ -1,4 +1,4 @@
-import { reviewedGravity } from './evidence-provenance.js';
+import { reviewedGravity, reviewedForm, reviewedEndpoint } from './evidence-provenance.js';
 // Research display adapter, deliberately separate from S1 evidence/label inputs.
 const SOURCES = {
   urban: ['Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results',
@@ -7,13 +7,13 @@ const SOURCES = {
     'https://ntrs.nasa.gov/api/citations/20160012691/downloads/20160012691.pdf'],
 };
 const GROUPS = [
-  ['pmma', 'PMMA', 'PMMA sheet · flaming', 'Fig. 7, p. 8'],
-  ['p213', 'P213', 'P213 fiberglass tape with acrylic adhesive · flaming', 'Fig. 8, p. 8'],
-  ['cotton-flaming', 'Cotton', 'Cotton Beefy-T · flaming', 'Fig. 9, p. 8'],
-  ['cotton-smolder', 'Cotton', 'Cotton Beefy-T · smolder extinction', 'Fig. 10, p. 8'],
-  ['polycarbonate', 'Polycarbonate', 'Polycarbonate · flaming', 'Fig. 11, p. 9'],
-  ['nomex-velcro', 'Nomex', 'Nomex Velcro · flaming', 'Fig. 12, p. 9'],
-  ['nomex-fabric', 'Nomex', 'Nomex HT90-40 fabric · historical endpoints', 'Table I, p. 6'],
+  ['pmma', 'PMMA', 'PMMA sheet Â· flaming', 'Fig. 7, p. 8'],
+  ['p213', 'P213', 'P213 fiberglass tape with acrylic adhesive Â· flaming', 'Fig. 8, p. 8'],
+  ['cotton-flaming', 'Cotton', 'Cotton Beefy-T Â· flaming', 'Fig. 9, p. 8'],
+  ['cotton-smolder', 'Cotton', 'Cotton Beefy-T Â· smolder extinction', 'Fig. 10, p. 8'],
+  ['polycarbonate', 'Polycarbonate', 'Polycarbonate Â· flaming', 'Fig. 11, p. 9'],
+  ['nomex-velcro', 'Nomex', 'Nomex Velcro Â· flaming', 'Fig. 12, p. 9'],
+  ['nomex-fabric', 'Nomex', 'Nomex HT90-40 fabric Â· historical endpoints', 'Table I, p. 6'],
 ];
 const FABRIC_SOURCE = ['Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test',
   'https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf'];
@@ -34,7 +34,7 @@ function sourceLink(title, url, locator) {
   const href = nasaUrl(url);
   if (!href || !title || !locator) return 'Source metadata unavailable';
   const page = String(locator).match(/(?:slide|p\.?|page)\s*(\d+)/i)?.[1];
-  return `<a href="${escape(href)}${page && !href.includes('#') ? `#page=${page}` : ''}" target="_blank" rel="noopener noreferrer">${escape(title)} — ${escape(locator)} <span class="gv-hint">(opens in new tab)</span></a>`;
+  return `<a href="${escape(href)}${page && !href.includes('#') ? `#page=${page}` : ''}" target="_blank" rel="noopener noreferrer">${escape(title)} â€” ${escape(locator)} <span class="gv-hint">(opens in new tab)</span></a>`;
 }
 
 const citation = (p) => sourceLink(p.source_title, p.source_url, p.source_locator);
@@ -55,9 +55,9 @@ function missingFields(p) {
 }
 
 function basis(p) {
-  if (p.kind === 'extrapolation') return 'Earth-based prediction · REDLINE digitized/extrapolated fit (not a measurement)';
-  if (p.kind === 'digitized-reference') return 'Measured simulated-lunar reference · REDLINE digitized ordinate';
-  return 'Tabulated measurement · source endpoint criteria apply';
+  if (p.kind === 'extrapolation') return 'Earth-based prediction Â· REDLINE digitized/extrapolated fit (not a measurement)';
+  if (p.kind === 'digitized-reference') return 'Measured simulated-lunar reference Â· REDLINE digitized ordinate';
+  return 'Tabulated measurement Â· source endpoint criteria apply';
 }
 
 function conditions(p) {
@@ -65,7 +65,7 @@ function conditions(p) {
   const flow = p.kind === 'extrapolation'
     ? `${number(p.comparison_velocity_cm_s, 'cm/s')} comparison coordinate; not an observed flow`
     : `${number(p.flow_speed_cm_s, 'cm/s')} forced flow; buoyant speed not inferred`;
-  return `${p.material}; ${p.form}; thickness ${number(p.thickness_mm, 'mm')}; ${pressure}; ${flow}; ${p.flow_direction || 'direction not stated'}; ${p.gravity || 'gravity not stated'} (${p.gravity_context}); ${p.facility}; observation ${number(p.test_duration_s, 's')}`;
+  return `${p.material}; ${reviewedForm(p) ?? p.form}; thickness ${number(p.thickness_mm, 'mm')}; ${pressure}; ${flow}; ${p.flow_direction || 'direction not stated'}; ${p.gravity || 'gravity not stated'} (${p.gravity_context}); ${p.facility}; observation ${number(p.test_duration_s, 's')}`;
 }
 
 // Cabin request in words and units, never raw JSON (persona B2 finding).
@@ -84,13 +84,13 @@ export function requestText(r = {}) {
 function dataTable(points, research) {
   if (!points.length) return '<p>No numeric records in this series.</p>';
   return `<div class="gv-scroll" tabindex="0" role="region" aria-label="${research ? 'Research detail' : 'Reviewed'} chart data"><table>
-    <caption>Oxygen limits for these tested setups · simulated-lunar references are not lunar-surface measurements</caption>
+    <caption>Oxygen limits for these tested setups Â· simulated-lunar references are not lunar-surface measurements</caption>
     <thead><tr><th scope="col">Series / record</th><th scope="col">Oxygen (vol%)</th><th scope="col">Endpoint and conditions</th><th scope="col">Uncertainty / status / source</th></tr></thead>
     <tbody>${points.map((p) => {
       const missing = missingFields(p);
       return `<tr><th scope="row">${escape(basis(p))}<br>${escape(p.evidence_id)}<br><button type="button" data-record="${escape(p.evidence_id)}">Open evidence record</button></th>
-      <td>${missing.length ? `Value withheld: missing ${escape(missing.join(', '))}` : `${escape(p.value)} % O2<br>${citation(p)}`}</td>
-      <td>${escape(p.endpoint)}<br>${escape(conditions(p))}<br>Criterion: ${escape(p.pass_criterion || 'Not stated in this source')}<br>Run: ${escape(p.run_id || 'Not stated in this source')}<br>${p.condition_source_locator ? sourceLink(p.condition_source_title, p.condition_source_url, p.condition_source_locator) : citation(p)}</td>
+      <td>${missing.length ? `Value withheld: missing ${escape(missing.join(', '))}` : `${escape(reviewedEndpoint(p) ?? `${p.value} % O2`)}<br>${citation(p)}`}</td>
+      <td>${escape(reviewedEndpoint(p) ?? p.endpoint)}<br>${escape(conditions(p))}<br>Criterion: ${escape(p.pass_criterion || 'Not stated in this source')}<br>Run: ${escape(p.run_id || 'Not stated in this source')}<br>${p.condition_source_locator ? sourceLink(p.condition_source_title, p.condition_source_url, p.condition_source_locator) : citation(p)}</td>
       <td>${escape(p.uncertainty)}<br>Review: ${escape(p.review_status)}<br>${escape(p.notes)}<br>${citation(p)}</td></tr>`;
     }).join('')}</tbody></table></div>`;
 }
@@ -121,20 +121,20 @@ function chart(points, historical, research) {
   const dots = marks.map((p, i) => {
     const px = historical ? 100 + i * 450 / Math.max(1, marks.length - 1) : x(p.kind === 'extrapolation' ? p.comparison_velocity_cm_s : p.flow_speed_cm_s);
     const py = y(p.value);
-    const label = `${p.evidence_id}: ${basis(p)}, ${p.value} % O2; ${p.endpoint}; ${p.source_locator}; ${p.review_status}`;
+    const label = `${p.evidence_id}: ${basis(p)}, ${reviewedEndpoint(p) ?? `${p.value} % O2; ${p.endpoint}`}; ${p.source_locator}; ${p.review_status}`;
     const marker = p.kind === 'extrapolation'
       ? `<path d="M${px},${py - 6} l6,6 -6,6 -6,-6 Z" fill="#16191E" stroke="#E8EAED" stroke-width="2"/>`
       : `<circle cx="${px}" cy="${py}" r="5" fill="#E8EAED"/>`;
     const page = p.source_locator.match(/(?:slide|p\.?|page)\s*(\d+)/i)?.[1];
     const href = nasaUrl(p.source_url);
-    return `<a href="${escape(href)}${page && !href.includes('#') ? `#page=${page}` : ''}" target="_blank" rel="noopener noreferrer" fill="#7CB8FF" aria-label="${escape(label)} (opens in new tab)" data-point="${escape(p.evidence_id)}"><title>${escape(label)}</title>${marker}<text x="${px < 100 ? px + 10 : px}" y="${py - 12}" text-anchor="${px < 100 ? 'start' : 'middle'}">${p.value.toFixed(1)}</text>${historical ? `<text x="${px}" y="292" text-anchor="middle">${escape(p.gravity)} · ${escape(p.endpoint)}</text>` : ''}</a>`;
+    return `<a href="${escape(href)}${page && !href.includes('#') ? `#page=${page}` : ''}" target="_blank" rel="noopener noreferrer" fill="#7CB8FF" aria-label="${escape(label)} (opens in new tab)" data-point="${escape(p.evidence_id)}"><title>${escape(label)}</title>${marker}<text x="${px < 100 ? px + 10 : px}" y="${py - 12}" text-anchor="${px < 100 ? 'start' : 'middle'}">${p.value.toFixed(1)}</text>${historical ? `<text x="${px}" y="292" text-anchor="middle">${escape(p.gravity)} Â· ${escape(p.endpoint)}</text>` : ''}</a>`;
   }).join('');
   return `<figure><figcaption>${escape(name)}. ${historical ? 'Discrete gravity/endpoint categories; criteria differ.' : 'Oxygen (vol%) versus forced airflow comparison coordinate (cm/s).'}</figcaption>
     <div class="gv-scroll" tabindex="0" role="region" aria-label="Oxygen chart viewport"><svg viewBox="0 0 640 336" fill="#A9B0BB" role="img" aria-label="${escape(name)}; full values and provenance in adjacent data table" style="width:100%;min-width:640px;display:block;background:#16191E;color:#A9B0BB;font:13px system-ui">
     ${axes}<path d="M64 48 V270 H584" fill="none" stroke="#737B88"/><text x="64" y="24">Oxygen (vol%)</text>${ticks}${dots}
     <text x="320" y="326" text-anchor="middle">${historical ? 'Gravity / endpoint (categorical; no interpolation)' : 'Forced airflow comparison coordinate (cm/s)'}</text></svg></div>
     <p>Hollow diamond: REDLINE extrapolation. Solid circle: tabulated measurement. No continuous gravity curve or connecting line.</p>
-    ${!historical && references.length ? `<div class="gv-note"><strong>Separate simulated-lunar references · flow not stated; not plotted at zero</strong>${references.map((p) => `<p>${escape(p.material)} · ${escape(p.endpoint)}: approximately ${p.value.toFixed(1)} % O2; ${escape(p.uncertainty)}. ${citation(p)}</p>`).join('')}</div>` : ''}
+    ${!historical && references.length ? `<div class="gv-note"><strong>Separate simulated-lunar references Â· flow not stated; not plotted at zero</strong>${references.map((p) => `<p>${escape(p.material)} Â· ${escape(p.endpoint)}: ${escape(reviewedEndpoint(p) ?? `approximately ${p.value.toFixed(1)} % O2`)}; ${escape(p.uncertainty)}. ${citation(p)}</p>`).join('')}</div>` : ''}
     ${!historical && (!plotted.length || !references.length) ? '<p>Counterpart unavailable; no difference or connecting line is computed.</p>' : ''}</figure>`;
 }
 
@@ -156,14 +156,14 @@ const style = `<style>
 </style>`;
 
 function contextCards() {
-  return `<article><h3>Airflow regime · qualitative context</h3><p>Low flow: extinction / quenching. Intermediate flow: sustaining conditions. High flow: extinction / blowoff. No universal numeric cutoffs are assigned.</p>
+  return `<article><h3>Airflow regime Â· qualitative context</h3><p>Low flow: extinction / quenching. Intermediate flow: sustaining conditions. High flow: extinction / blowoff. No universal numeric cutoffs are assigned.</p>
     <p>Forced flow direction and buoyancy depend on the setup. REDLINE inference: a high-flow correlation alone does not establish the low-flow boundary.</p>${sourceLink(...SOURCES.urban, 'Fig. 1, p. 2')}
     <p>Stopped spreading does not mean stopped burning. Spread cessation (LOC-FS) and final regression-flame extinction (LOC-FR) remain separate endpoints.</p>
-    ${sourceLink('Material Ignition and Suppression Test (MIST) in Space Exploration Atmospheres, FY2025', 'https://taskbook.nasaprs.com/tbp/tbpdf.cfm?id=16225', 'pp. 2–3')}</article>
+    ${sourceLink('Material Ignition and Suppression Test (MIST) in Space Exploration Atmospheres, FY2025', 'https://taskbook.nasaprs.com/tbp/tbpdf.cfm?id=16225', 'pp. 2â€“3')}</article>
     <article><h3>Corrected Earth tests can reproduce a particular flight boundary</h3>
-    <p>Marcum’s concurrent, axisymmetric PMMA rod / stagnation-flow blowoff comparison accounts for buoyancy and blockage. The corrections align ground results with the flight blowoff branch for these tested setups.</p>
+    <p>Marcumâ€™s concurrent, axisymmetric PMMA rod / stagnation-flow blowoff comparison accounts for buoyancy and blockage. The corrections align ground results with the flight blowoff branch for these tested setups.</p>
     <p>Flight data informed calibration. REDLINE inference: this is useful condition-specific agreement, not independent universal Earth-to-space prediction. It does not establish a low-flow quenching boundary, another geometry, or lunar behavior. No numerical agreement tolerance is supplied here.</p>
-    ${sourceLink(...SOURCES.marcum, 'pp. 6–9, Figs. 4–6, Table 1')}
+    ${sourceLink(...SOURCES.marcum, 'pp. 6â€“9, Figs. 4â€“6, Table 1')}
     <p><button type="button" data-context="marcum">Open Marcum evidence context</button></p></article>`;
 }
 
@@ -215,17 +215,17 @@ export function renderGravityView(root, options = {}) {
       ${data ? `<div class="gv-note"><strong>Scientific review state</strong><p>R3 reports plot/text and fit/table discrepancies in the 2025 extraction. Numeric series retain their original review status. No directional summary, computed difference, or compensation factor is used as a measured limit.</p>${sourceLink(...SOURCES.urban, 'p. 9 discussion; Table 2, p. 11')}</div>
       <h3>${escape(group[2])}</h3>
       ${reviewed.length ? `${chart(reviewed, historical, false)}${dataTable(reviewed, false)}` : '<p>Reviewed numeric series unavailable. No reviewed limits are inferred for this request.</p>'}
-      ${draft.length ? `<details data-research><summary>Inspect draft research detail · excluded from cabin results</summary><p>Research only. These are unreviewed extractions, not approved numeric series. Reading/extrapolation allowances are editorial estimates, not instrument uncertainty or confidence intervals. Dashed fitted extensions are withheld pending science review.</p>${chart(draft, historical, true)}${dataTable(draft, true)}</details>` : ''}
+      ${draft.length ? `<details data-research><summary>Inspect draft research detail Â· excluded from cabin results</summary><p>Research only. These are unreviewed extractions, not approved numeric series. Reading/extrapolation allowances are editorial estimates, not instrument uncertainty or confidence intervals. Dashed fitted extensions are withheld pending science review.</p>${chart(draft, historical, true)}${dataTable(draft, true)}</details>` : ''}
       ${!selectedPoints.length ? '<p>No records in this extraction for the selected condition group. Source links remain available.</p>' : ''}
       <p class="gv-status">Research revision: ${escape(data.research_revision || 'Not stated')}; ${escape(data.research_path || 'Not stated')}</p>` : ''}
-      <div class="gv-note"><h3>0 g / 1 g assumed envelope unavailable</h3><p>No reviewed compatible endpoint pair is supplied here. Do not infer a lunar threshold or clamp simulated-gravity results into an assumed range. Lunar behavior may fall outside a range between 0 g and 1 g results.</p>${sourceLink(...FABRIC_SOURCE, 'pp. 2–4; Table I and Eq. (1), p. 6')}</div>
+      <div class="gv-note"><h3>0 g / 1 g assumed envelope unavailable</h3><p>No reviewed compatible endpoint pair is supplied here. Do not infer a lunar threshold or clamp simulated-gravity results into an assumed range. Lunar behavior may fall outside a range between 0 g and 1 g results.</p>${sourceLink(...FABRIC_SOURCE, 'pp. 2â€“4; Table I and Eq. (1), p. 6')}</div>
       <details data-source-context><summary>Source context and methods</summary>${contextCards()}</details><section data-evidence-detail aria-label="Selected evidence detail"></section></section>`;
   }
 
   async function reload() {
     const ticket = ++generation;
     data = null;
-    draw('Loading gravity evidence…');
+    draw('Loading gravity evidenceâ€¦');
     try {
       const loaded = await loadGravityPoints(options.url, options.fetchImpl);
       if (!destroyed && ticket === generation) { data = loaded; draw('Gravity research loaded. Review gates apply.'); }
@@ -247,7 +247,7 @@ export function renderGravityView(root, options = {}) {
     }
     const record = data?.points.find((p) => p.evidence_id === target.dataset.record);
     if (record || target.dataset.context) {
-      const selectedRecord = record ?? { evidence_id: 'M16-context', source_title: SOURCES.marcum[0], source_url: SOURCES.marcum[1], source_locator: 'pp. 6–9, Figs. 4–6, Table 1' };
+      const selectedRecord = record ?? { evidence_id: 'M16-context', source_title: SOURCES.marcum[0], source_url: SOURCES.marcum[1], source_locator: 'pp. 6â€“9, Figs. 4â€“6, Table 1' };
       if (options.onOpenEvidence) options.onOpenEvidence(selectedRecord, { request: options.request, researchOnly: record?.review_status !== 'verified' });
       else {
         const panel = root.querySelector('[data-evidence-detail]');
