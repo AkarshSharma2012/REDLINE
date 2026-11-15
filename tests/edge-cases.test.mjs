@@ -1,4 +1,4 @@
-// These tests describe the binding rules (compareRow, normalize, labels). They are marked todo until the F1 Evidence Engine (#55) implements them; remove ".todo" when F1 lands.
+// These tests enforce the binding rules (compareRow, normalize, labels) against the F1 Evidence Engine (#55); issue #265 promoted them from todo to regressions.
 // Issue #81: executable S1/S4 contracts, including V2 U1/U2 corrections.
 // Deliberately ordinary tests (no skips/TODOs): scaffold implementations must fail.
 import { test } from 'node:test';
@@ -45,31 +45,31 @@ function rule(result, letter, grade) {
   assert.ok(found.why.length > 0);
 }
 
-test.todo('compareRow: one fully specified comparable row has all 13 rules in binding order', () => {
+test('compareRow: one fully specified comparable row has all 13 rules in binding order', () => {
   const result = compareRow(query(), row());
   assert.deepEqual(result.rules.map((r) => r.rule), ['E', 'M', 'F', 'T', 'W', 'D', 'V', 'P', 'G', 'X', 'H', 'A', 'U']);
   assert.equal(result.grade, 'OK');
 });
 
 for (const side of ['query', 'row']) {
-  test.todo(`compareRow: missing ${side} pressure raises P without invalidating burning evidence`, () => {
+  test(`compareRow: missing ${side} pressure raises P without invalidating burning evidence`, () => {
     const result = compareRow(query(side === 'query' ? { pressure_kpa: null } : {}), row(side === 'row' ? { pressure_kpa: null } : {}));
     rule(result, 'P', 'FLAG');
     assert.equal(result.grade, 'FLAG');
   });
 }
-test.todo('compareRow: pressure gap of exactly 10 kPa is allowed; larger gap flags', () => {
+test('compareRow: pressure gap of exactly 10 kPa is allowed; larger gap flags', () => {
   rule(compareRow(query(), row({ pressure_kpa: 110 })), 'P', 'OK');
   rule(compareRow(query(), row({ pressure_kpa: 110.001 })), 'P', 'FLAG');
 });
-test.todo('compareRow: dimensions in mm and flow in cm/s use strict ratio > 2', () => {
+test('compareRow: dimensions in mm and flow in cm/s use strict ratio > 2', () => {
   for (const [field, value] of [['thickness_mm', 0.32], ['width_mm', 22], ['flow_speed_cm_s', 2.2]]) {
     const letter = { thickness_mm: 'T', width_mm: 'W', flow_speed_cm_s: 'V' }[field];
     rule(compareRow(query(), row({ [field]: value * 2 })), letter, 'OK');
     rule(compareRow(query(), row({ [field]: value * 2.01 })), letter, 'FLAG');
   }
 });
-test.todo('compareRow: quench speed at the upper endpoint invalidates; at the lower endpoint it does not', () => {
+test('compareRow: quench speed at the upper endpoint invalidates; at the lower endpoint it does not', () => {
   const context = { quench_speeds_cm_s: [2.2] };
   rule(compareRow(query({ flow_speed_cm_s: 2.2 }), row({ flow_speed_cm_s: 3 }), context), 'V', 'OK');
   const crossing = compareRow(query({ flow_speed_cm_s: 2.1 }), row(), context);
@@ -78,17 +78,17 @@ test.todo('compareRow: quench speed at the upper endpoint invalidates; at the lo
 });
 
 for (const [name, fn] of [['labelMaterial', labelMaterial], ['baselineLabel', baselineLabel]]) {
-  test.todo(`${name}: empty evidence is NE-no-data with no citations`, () => {
+  test(`${name}: empty evidence is NE-no-data with no citations`, () => {
     answer(fn(query(), []), 'NOT_ESTABLISHED', 'NE-no-data', []);
   });
-  test.todo(`${name}: a single spread row at exactly query O2 is BURNED`, () => {
+  test(`${name}: a single spread row at exactly query O2 is BURNED`, () => {
     answer(fn(query(), [row()]), 'BURNED', null, ['SYNTHETIC-SPREAD']);
   });
-  test.todo(`${name}: duplicate spread rows do not change the answer or citation`, () => {
+  test(`${name}: duplicate spread rows do not change the answer or citation`, () => {
     const r = row();
     assert.deepEqual(fn(query(), [r, { ...r }]), fn(query(), [r]));
   });
-  test.todo(`${name}: BURNED beats NEAR regardless of row order`, () => {
+  test(`${name}: BURNED beats NEAR regardless of row order`, () => {
     const burn = row();
     const near = limit();
     answer(fn(query(), [near]), 'NEAR', null, [near.evidence_id]);
@@ -97,26 +97,26 @@ for (const [name, fn] of [['labelMaterial', labelMaterial], ['baselineLabel', ba
     }
   });
   for (const [o2, expected] of [[21, 'BURNED'], [20, 'NEAR'], [20.999, 'NEAR']]) {
-    test.todo(`${name}: measured limit 21 % O2, query ${o2} % O2 => ${expected}`, () => {
+    test(`${name}: measured limit 21 % O2, query ${o2} % O2 => ${expected}`, () => {
       answer(fn(query({ o2_pct: o2 }), [limit()]), expected, null, ['SYNTHETIC-LIMIT']);
     });
   }
-  test.todo(`${name}: missing spread-row O2 is unknown rather than zero`, () => {
+  test(`${name}: missing spread-row O2 is unknown rather than zero`, () => {
     assert.equal(fn(query(), [row({ o2_pct: null })]).label, 'NOT_ESTABLISHED');
   });
-  test.todo(`${name}: missing query O2 cannot produce BURNED or NEAR`, () => {
+  test(`${name}: missing query O2 cannot produce BURNED or NEAR`, () => {
     for (const o2_pct of [null, undefined]) {
       assert.equal(fn(query({ o2_pct }), [row(), limit()]).label, 'NOT_ESTABLISHED');
     }
   });
 }
 
-test.todo('labelMaterial: duplicate NEAR rows do not duplicate citations', () => {
+test('labelMaterial: duplicate NEAR rows do not duplicate citations', () => {
   const r = limit();
   assert.deepEqual(labelMaterial(query(), [r, { ...r }]), labelMaterial(query(), [r]));
   answer(labelMaterial(query(), [r, { ...r }]), 'NEAR', null, [r.evidence_id]);
 });
-test.todo('labelMaterial: draft and unrelated rows cannot supply a label', () => {
+test('labelMaterial: draft and unrelated rows cannot supply a label', () => {
   answer(labelMaterial(query(), [row({ review_status: 'draft' }), row({ material_id: 'pmma' })]), 'NOT_ESTABLISHED', 'NE-no-data', []);
 });
 test('labelMaterial: a spread point above query O2 is not a measured limit or covering test (V2 U1)', () => {
@@ -163,45 +163,45 @@ test('labelMaterial: no-burning pressure coverage uses P for query gaps, limits 
     'NOT_ESTABLISHED', 'NE-no-burn', [covering.evidence_id]);
 });
 for (const [o2_pct, label, reason] of [[20, 'BURNED', null], [19, 'NEAR', null], [18.99, 'NOT_ESTABLISHED', 'NE-no-burn']]) {
-  test.todo(`labelMaterial: kPa O2 limit uses partial pressure: ${o2_pct}% at 50 kPa`, () => {
+  test(`labelMaterial: kPa O2 limit uses partial pressure: ${o2_pct}% at 50 kPa`, () => {
     const r = limit({ value: 10, value_unit: 'kPa O2', o2_pct: null, pressure_kpa: 50 });
     answer(labelMaterial(query({ o2_pct, pressure_kpa: 50 }), [r]), label, reason, [r.evidence_id]);
   });
 }
-test.todo('labelMaterial: kPa O2 limit with missing query pressure cannot produce a numeric label', () => {
+test('labelMaterial: kPa O2 limit with missing query pressure cannot produce a numeric label', () => {
   assert.equal(labelMaterial(query({ pressure_kpa: null }), [limit({ value: 10, value_unit: 'kPa O2', o2_pct: null })]).label, 'NOT_ESTABLISHED');
 });
-test.todo('labelMaterial: a cm/s quench value cannot be interpreted as an oxygen limit', () => {
+test('labelMaterial: a cm/s quench value cannot be interpreted as an oxygen limit', () => {
   answer(labelMaterial(query(), [row({ endpoint: 'quench-limit', value: 2.2, value_unit: 'cm/s', outcome: 'quenched' })]), 'NOT_ESTABLISHED', 'NE-incompatible', ['SYNTHETIC-SPREAD']);
 });
 
-test.todo('labelCabin: empty material list returns no results', () => {
+test('labelCabin: empty material list returns no results', () => {
   assert.deepEqual(labelCabin(cabin([]), evidence([row()])), []);
 });
-test.todo('labelCabin: empty evidence preserves requested materials in input order', () => {
+test('labelCabin: empty evidence preserves requested materials in input order', () => {
   const materials = [{ material_id: 'sibal' }, { material_id: 'pmma' }];
   const result = labelCabin(cabin(materials), evidence([]));
   assert.deepEqual(result.map((r) => r.material_id), ['sibal', 'pmma']);
   for (const r of result) answer(r, 'NOT_ESTABLISHED', 'NE-no-data', []);
 });
-test.todo('labelCabin: routes one verified row and excludes unrelated and draft rows', () => {
+test('labelCabin: routes one verified row and excludes unrelated and draft rows', () => {
   const materials = [{ ...query() }, { material_id: 'pmma' }, { material_id: 'nomex' }];
   const result = labelCabin(cabin(materials), evidence([row(), row({ material_id: 'pmma', review_status: 'draft' })]));
   assert.deepEqual(result.map((r) => r.material_id), ['sibal', 'pmma', 'nomex']);
   answer(result[0], 'BURNED', null, ['SYNTHETIC-SPREAD']);
   for (const r of result.slice(1)) answer(r, 'NOT_ESTABLISHED', 'NE-no-data', []);
 });
-test.todo('labelCabin: duplicates and conflicting rows retain BURNED precedence', () => {
+test('labelCabin: duplicates and conflicting rows retain BURNED precedence', () => {
   const result = labelCabin(cabin(), evidence([limit(), row(), row()]));
   assert.equal(result.length, 1);
   answer(result[0], 'BURNED', null, ['SYNTHETIC-SPREAD']);
 });
-test.todo('labelCabin: shared O2 and pressure reach the kPa O2 limit calculation', () => {
+test('labelCabin: shared O2 and pressure reach the kPa O2 limit calculation', () => {
   const r = limit({ value: 10, value_unit: 'kPa O2', o2_pct: null, pressure_kpa: 50 });
   const result = labelCabin(cabin(undefined, query({ o2_pct: 20, pressure_kpa: 50 })), evidence([r]));
   answer(result[0], 'BURNED', null, [r.evidence_id]);
 });
-test.todo('labelMaterial: winning citations resolve through the NASA source register and retain wording', () => {
+test('labelMaterial: winning citations resolve through the NASA source register and retain wording', () => {
   const r = row();
   const result = labelMaterial(query(), [r]);
   answer(result, 'BURNED', null, [r.evidence_id]);
@@ -212,11 +212,11 @@ test.todo('labelMaterial: winning citations resolve through the NASA source regi
     assert.equal(new URL(fixture.sources[cited.source_key].url).hostname, 'ntrs.nasa.gov');
   }
 });
-test.todo('baselineLabel: units in names normalize, and missing pressure is deliberately ignored', () => {
+test('baselineLabel: units in names normalize, and missing pressure is deliberately ignored', () => {
   const r = row({ material: '100 micron SIBAL fabric 2 cm wide' });
   answer(baselineLabel(query({ pressure_kpa: null }), [r]), 'BURNED', null, [r.evidence_id]);
 });
-test.todo('baselineLabel: kPa O2 value is not treated as % O2 (uses reported row O2)', () => {
+test('baselineLabel: kPa O2 value is not treated as % O2 (uses reported row O2)', () => {
   const r = limit({ value: 10, value_unit: 'kPa O2', o2_pct: 25 });
   answer(baselineLabel(query(), [r]), 'NOT_ESTABLISHED', 'NE-no-burn', [r.evidence_id]);
   answer(baselineLabel(query(), [{ ...r, o2_pct: null }]), 'NOT_ESTABLISHED', 'NE-no-burn', [r.evidence_id]);
