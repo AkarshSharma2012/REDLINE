@@ -1,0 +1,48 @@
+REDLINE | THREE-MINUTE LIVE PITCH
+Interlake Embers | NASA Space Apps Seattle | Flame in Freefall
+Target: 3:00 including the pauses and live actions below. Rehearse once with a stopwatch.
+
+0:00-0:20 | SLIDE 1 | ONE MATERIAL, TWO DIFFERENT WORLDS
+NASA burned acrylic aboard the space station. Now imagine you are choosing an acrylic panel for a lunar rover. Can you use that experiment to understand your panel?
+We are Interlake Embers. We built REDLINE to help you find the evidence, understand its limits, and choose the next test.
+
+0:20-0:40 | SLIDE 2 | A MATCH IS NOT AN ANSWER
+After Apollo 1, NASA changed both cabin materials and the launch-pad atmosphere. The lesson is simple: the material matters, but so do the conditions.
+Finding the word “acrylic” in a NASA experiment is a starting point. It is not a cabin safety verdict.
+
+0:40-1:10 | SLIDE 3 | FOLLOW ONE NASA RECORD
+[Load the lunar rover demo. Select acrylic. Open PSI25-B1. Pause for three seconds so judges can locate the record.]
+Here is our rover. I select its acrylic item, and REDLINE brings up relevant NASA records. Let us open BASS-II test B1.
+The record connects the material to the experiment and its source report. Instead of asking you to trust our summary, we give you a route back to NASA.
+
+1:10-1:45 | SLIDE 4 | SHOW WHAT DOES NOT TRANSFER
+[Point to sample, gravity, review status, and cabin-results area. Pause for three seconds.]
+Look at the difference. NASA tested a thin film in microgravity. Our question is about a panel in lunar gravity.
+Same material. Different sample. Different gravity.
+REDLINE checks whether the conditions are comparable and whether the evidence has been verified before showing an evidence-backed cabin result.
+This record is still a draft, so that result stays unavailable. That is not missing information disguised as an answer. It is an honest limit you can see.
+
+1:45-2:05 | SLIDE 5 | THE SAME WORKFLOW WITHOUT 3D
+[Select acrylic from the cabin-item list. Pause for three seconds.]
+The rover is a way to navigate, not a fire simulation.
+This ordinary item list controls the same evidence view. If the 3D view fails on a judge's laptop, we can still select the material, inspect the conditions, and open the NASA source.
+
+2:05-2:35 | SLIDE 6 | OUR TECHNOLOGY BUFFET
+We also built with a technology buffet: different tools doing different jobs.
+Codex and Claude worked across two computers. A shared GitHub queue divided the work into focused tasks. Changes came back through builds, tests, and review before merging.
+Inside REDLINE, the same principle applies: NASA sources provide the evidence, filters find relevant records, and 3D helps navigation.
+AI can help organize the work. It cannot supply a human scientific signoff.
+
+2:35-3:00 | SLIDE 7 | THE NEXT QUESTION IS THE POINT
+[Return to the NASA record. Pause for three seconds.]
+Our next question is no longer just, “Does acrylic burn?”
+It is, “How does this panel burn under our airflow in lunar gravity?”
+REDLINE takes you from a cabin material to an experiment you can cite, shows what that experiment cannot establish, and helps you identify the test you still need to run.
+
+PRESENTER NOTES, NOT SPOKEN
+- Never call the 3D rover a fire simulation or a certified cabin model.
+- Current evidence review state: 45 records, 0 human-verified. Do not change this for the presentation.
+- The “buffet” describes our real division of work, not proof of scientific correctness.
+- NASA-STD-6001B may be referenced during questions. REDLINE does not claim certification or compliance.
+- If the source record cannot be opened during the talk, use the item list and saved source link. Say what failed rather than pretending the action worked.
+- Timings are targets, not a measured rehearsal. Shorten spoken transitions if the live actions take longer.
