@@ -18,6 +18,7 @@ test('production React Aria controls retain workspace initialization, selection,
     const ids = [...document.querySelectorAll('#workspace-toolbar button')].map(b => b.id);
     document.getElementById('ws-narrow-sources').disabled = true;
     roots = mountReactControls();
+    assert.equal(ids.length, 14, 'all 14 workspace toolbar buttons');
     assert.equal(roots.length, ids.length);
     assert.equal(mountReactControls().length, 0);
     for (const id of ids) {
@@ -29,19 +30,19 @@ test('production React Aria controls retain workspace initialization, selection,
       assert.equal(b.querySelector('button'), null);
       assert.equal(b.parentElement.style.display, 'contents');
     }
-    assert.equal(document.getElementById('ws-narrow-controls').getAttribute('aria-label'), 'Narrow controls pane');
+    assert.equal(document.getElementById('ws-narrow-controls').getAttribute('aria-label'), 'Narrow setup pane');
     let loads = 0;
     workspace = mountWorkspace({ document, window, storage: window.localStorage, motion: null,
       loadViewer: async () => { loads++; return { mountRoverViewer: async () => ({ update() {}, setVisible() {}, destroy() {} }) }; } });
     const click = id => document.getElementById(id).click();
     assert.equal(loads, 0);
     click('ws-narrow-sources');
-    assert.equal(workspace.getPrefs().sources, 380, 'initial disabled retained');
+    assert.equal(workspace.getPrefs().sources, 400, 'initial disabled retained');
     document.getElementById('ws-narrow-sources').disabled = false;
     click('ws-narrow-sources');
-    assert.equal(workspace.getPrefs().sources, 360, 'imperative enable works');
+    assert.equal(workspace.getPrefs().sources, 380, 'imperative enable works');
     click('ws-widen-controls');
-    assert.equal(workspace.getPrefs().controls, 300);
+    assert.equal(workspace.getPrefs().controls, 260);
     click('ws-toggle-controls');
     assert.equal(workspace.getPrefs().controlsOpen, false);
     click('ws-density-compact');
@@ -76,4 +77,11 @@ test('production React Aria controls retain workspace initialization, selection,
       else delete globalThis[name];
     }
   }
+});
+
+test('workspace child-combinator button selectors also match through display:contents React hosts', async () => {
+  const css = await readFile('src/styles/workspace.css', 'utf8');
+  for (const sel of ['.ws-seg > .react-control-host > button', '.ws-seg > .react-control-host + .react-control-host > button',
+    '.ws-seg > .react-control-host:first-child > button', '.ws-seg > .react-control-host:last-child > button',
+    '.ws-jump > .react-control-host > button']) assert.ok(css.includes(sel), sel);
 });
