@@ -159,6 +159,21 @@ Rules ([Inference] unless cited):
 - **Narrow screens:** at 320 CSS px width, regions stack vertically with no horizontal page
   scrolling. The results table may scroll horizontally inside its own container: data tables
   are an allowed exception ([WCAG22] SC 1.4.10, AA).
+- **Workspace (#277, user-approved 2026-11-15):** Cabin Check is a three-pane workspace:
+  controls (~280 px) | results and NASA source records (~380 px) | evidence and illustrative
+  model (remaining width), under a one-row layout toolbar. Pane widths are bounded
+  (controls 240-400 px, sources 300-560 px) and adjustable by drag, keyboard separator or
+  -/+ buttons; panes collapse and reset; density is comfortable or compact. Only these layout
+  preferences are stored locally, never evidence, review state or a cabin scenario. Below
+  1080 px the panes stack with "Go to pane" buttons.
+- **Illustrative cabin model exception (#277, user-approved 2026-11-15):** the ban on
+  illustrations in section 1 has one narrow exception: a functional geometric cutaway
+  rover/cabin model used only to select cabin items. It is always labelled
+  "Illustrative cabin model - not a fire simulation", loads only when the user chooses the model view, and
+  has an HTML item list beside it and as its fallback. No flames, no predictive airflow, no
+  Moon terrain, no realistic engineering dimensions, no NASA endorsement. It never shows a
+  combustion outcome; review status and source links stay in the HTML evidence panes. All
+  evidence rules in this file are unchanged.
 
 ---
 
@@ -287,6 +302,10 @@ Rules ([Inference] unless cited):
 - **Motion:** only opacity/colour transitions ≤ 150 ms for state changes. No layout motion,
   no number counters, no pulsing alarms. Respect `prefers-reduced-motion: reduce` (user asked
   to minimise non-essential motion, [MDNprm]) by turning transitions off ([WCAG22] SC 2.3.3).
+  Workspace exception (#277): locally vendored GSAP 3.15.1 may run 150-240 ms opacity/transform
+  tweens when a pane opens or a record is selected; they overwrite on rapid input, clear their
+  inline styles, are skipped under reduced motion (checked live) and the UI is complete
+  without GSAP. No scroll hijacking, intros, moving labels or automatic camera movement.
 - Hover is never the only way to see information: tooltip content is also reachable by focus
   and present in the evidence panel.
 

@@ -1,0 +1,201 @@
+/* #277 three-pane evidence workspace. Tokens from src/styles.css (DESIGN.md).
+   Controls | source/results browser | evidence and illustrative model.
+   Hairline separators, 4 px radii, no gradients, glow, glass or decoration. */
+
+.layout.workspace {
+  grid-template-columns: var(--ws-columns, 280px 8px 380px 8px minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
+  align-items: start;
+}
+
+/* Explicit placement: a collapsed (hidden) pane must not shift its neighbours. */
+.workspace > .ws-toolbar { grid-column: 1 / -1; grid-row: 1; }
+.workspace > #ws-pane-controls { grid-column: 1; grid-row: 2; }
+.workspace > #ws-sep-controls { grid-column: 2; grid-row: 2; }
+.workspace > #ws-pane-sources { grid-column: 3; grid-row: 2; }
+.workspace > #ws-sep-sources { grid-column: 4; grid-row: 2; }
+.workspace > #ws-pane-visual { grid-column: 5; grid-row: 2; }
+
+/* Separators draw the pane dividers; the region borders would double them. */
+.workspace .region-cabin, .workspace .region-evidence { border: 0; }
+
+/* Panes scroll independently below the sticky tab bar, like a desktop tool. */
+.workspace .ws-pane {
+  position: sticky;
+  top: 52px;
+  max-height: calc(100vh - 52px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.workspace .ws-pane:focus { outline: none; }
+.workspace .ws-pane:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* Toolbar: one wrapping row of small segmented groups */
+.ws-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8) var(--space-16);
+  padding: var(--space-4) var(--space-24);
+  border-bottom: 1px solid var(--divider);
+  background: var(--surface-1);
+  min-width: 0;
+}
+.ws-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
+.ws-group-label { color: var(--text-2); font-size: 12px; line-height: 16px; font-weight: 500; margin: 0 var(--space-2) 0 var(--space-4); }
+.ws-toolbar button { min-height: 36px; padding: var(--space-4) var(--space-8); font-size: 13px; line-height: 18px; }
+.ws-widths button { min-width: 36px; font-family: var(--font-mono); }
+.ws-jump { display: none; }
+
+/* Resize handles: 8 px hit area, hairline, accent on hover and focus */
+.ws-sep {
+  position: relative;
+  align-self: stretch;
+  min-height: 100%;
+  cursor: col-resize;
+  touch-action: none;
+}
+.ws-sep::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 1px;
+  background: var(--divider);
+}
+.ws-sep:hover::before, .ws-sep:focus-visible::before { left: 2px; width: 3px; background: var(--accent); }
+.ws-sep:focus-visible { outline: none; }
+
+.ws-subtitle { margin-top: var(--space-24); }
+
+/* Source filters and counts */
+.ws-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 9rem);
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+.ws-filters input, .ws-filters select { width: 100%; }
+.ws-filters label { margin-top: 0; }
+.ws-scope { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-8); margin: 0 0 var(--space-8); }
+.ws-counts { margin: 0 0 var(--space-8); color: var(--text-1); font-size: 13px; line-height: 18px; }
+.ws-note {
+  margin: 0 0 var(--space-8);
+  padding: var(--space-4) var(--space-8);
+  border: 1px dashed var(--border-control);
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* Record cards and cabin item buttons: full-width text buttons, selection = fill + accent bar */
+.ws-cards, .ws-materials { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
+.ws-materials { grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr)); margin-bottom: var(--space-12); }
+.ws-card, .ws-material {
+  display: grid;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-8) var(--space-12);
+  text-align: left;
+  background: var(--surface-1);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-control);
+}
+.ws-card:not(:disabled):hover, .ws-material:not(:disabled):hover { background: var(--surface-2); border-color: var(--border-control); }
+.ws-card[aria-pressed="true"], .ws-material[aria-pressed="true"] {
+  background: var(--surface-selected);
+  border-color: var(--border-control);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.ws-card-title { color: var(--text-1); font-weight: 600; }
+.ws-card-line { color: var(--text-2); font-size: 13px; line-height: 18px; }
+.ws-card-status { color: var(--text-3); font-size: 12px; line-height: 16px; }
+.ws-card .type-data { font-size: 12px; line-height: 16px; }
+
+/* Visual pane: model label always visible; model area bounded */
+.ws-visual { margin-bottom: var(--space-12); }
+.ws-model-label {
+  display: inline-block;
+  margin: 0 0 var(--space-8);
+  padding: 0 var(--space-4);
+  border: 1px dashed var(--border-control);
+  border-radius: var(--radius-control);
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+.ws-viewer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  min-height: 220px;
+  margin-bottom: var(--space-8);
+  background: var(--surface-1);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-control);
+  overflow: hidden;
+}
+#ws-viewer-status:empty { display: none; }
+
+/* Record detail */
+.ws-detail {
+  margin-bottom: var(--space-16);
+  padding: var(--space-12);
+  background: var(--surface-1);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-control);
+}
+.ws-detail-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-8); margin-bottom: var(--space-8); }
+.ws-detail-head h3 { margin: 0; }
+.ws-conditions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 120px), 1fr));
+  gap: var(--space-4) var(--space-12);
+  margin: 0 0 var(--space-8);
+}
+.ws-conditions-wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr)); margin-top: var(--space-8); }
+.ws-conditions dt { font-size: 12px; line-height: 16px; }
+.ws-conditions dd { margin: 0; overflow-wrap: anywhere; }
+.ws-locator, .ws-citation { overflow-wrap: anywhere; }
+.ws-detail details > summary { color: var(--text-2); min-height: 40px; display: flex; align-items: center; }
+.ws-detail details p { max-width: 80ch; color: var(--text-2); }
+
+/* Compact density: tighter rhythm, same type sizes and touch heights */
+.workspace[data-density="compact"] .region { padding: var(--space-8) var(--space-12); }
+.workspace[data-density="compact"] .region-title { margin-bottom: var(--space-8); padding-bottom: var(--space-4); }
+.workspace[data-density="compact"] .ws-card, .workspace[data-density="compact"] .ws-material { padding: var(--space-4) var(--space-8); gap: 0; }
+.workspace[data-density="compact"] .ws-cards, .workspace[data-density="compact"] .ws-materials { gap: var(--space-2); }
+.workspace[data-density="compact"] .ws-subtitle { margin-top: var(--space-12); }
+.workspace[data-density="compact"] .ws-toolbar { padding: var(--space-2) var(--space-12); }
+.workspace[data-density="compact"] .ws-detail { padding: var(--space-8); }
+
+/* Tablet and phone: panes stack in task order; jump buttons reach each one; no page overflow */
+@media (max-width: 1080px) {
+  .layout.workspace { grid-template-columns: minmax(0, 1fr) !important; grid-template-rows: none; }
+  .workspace > .ws-toolbar, .workspace > .ws-pane { grid-column: 1; grid-row: auto; }
+  .workspace .ws-pane { position: static; max-height: none; overflow: visible; border-bottom: 1px solid var(--divider); }
+  .workspace > .ws-sep, .ws-widths { display: none; }
+  .ws-jump { display: flex; }
+  .ws-toolbar { padding: var(--space-4) var(--space-12); }
+}
+@media (max-width: 1080px), (pointer: coarse) {
+  .ws-toolbar button { min-height: 44px; }
+}
+@media (max-width: 480px) {
+  .ws-filters { grid-template-columns: minmax(0, 1fr); }
+  .ws-toolbar { gap: var(--space-8); }
+}
+
+/* Motion is GSAP-only (opacity/transform, 150-240 ms) and skipped for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .workspace, .workspace * { scroll-behavior: auto; }
+}
+
+@media print {
+  .ws-toolbar, .ws-sep, .ws-viewer { display: none !important; }
+  .workspace .ws-pane { position: static; max-height: none; overflow: visible; }
+}

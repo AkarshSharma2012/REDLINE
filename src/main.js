@@ -13,6 +13,7 @@ import { renderGravityView } from './ui/gravity-view.js';
 import { loadAccuracyReport, renderAccuracyView } from './ui/accuracy-view.js';
 import { mountAsk } from './ui/ask.js';
 import { validateEvidence } from './schema/validate.js';
+import { mountWorkspace } from './ui/workspace.js';
 
 const EVIDENCE_URL = 'data/evidence.json';
 
@@ -66,6 +67,22 @@ export function withQueries(results, cabinQuery) {
   }));
 }
 
+// Workspace bridge (#277): the model and HTML cabin items select a result by material ID.
+export function resultForMaterial(results, materialId) {
+  return (Array.isArray(results) ? results : []).find((r) => r?.query?.material_id === materialId) ?? null;
+}
+
+// Three-pane workspace (layout, source browser, optional illustrative model). It is a
+// progressive enhancement: if it cannot mount, Cabin Check works exactly as before.
+let workspace = null;
+function startWorkspace() {
+  try {
+    workspace = mountWorkspace({ onSelectMaterial: (id) => current.selectMaterial(id) });
+  } catch (err) {
+    workspace = null;
+  }
+}
+
 function showTab(id, { focus = false } = {}) {
   for (const tab of TABS) {
     const button = document.getElementById(`tab-${tab}`);
@@ -76,6 +93,7 @@ function showTab(id, { focus = false } = {}) {
     if (panel) panel.hidden = !active;
   }
   if (focus) document.getElementById(`tab-${id}`)?.focus();
+  workspace?.setActive(id === 'cabin');
   onShow[id]?.();
 }
 
@@ -101,26 +119,42 @@ function wireTabs() {
   showTab(tabFromHash(location.hash));
 }
 
-export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, document: doc = globalThis.document } = {}) {
+export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, document: doc = globalThis.document, workspace: ws = null } = {}) {
   const $ = (id) => doc.getElementById(id);
   const verified = verifiedOnly(evidence);
   let cabinQuery = null;
+  let shown = [];
   let form = null;
   let slider = null;
 
   function showResults(results, query) {
     cabinQuery = query;
     const withQ = withQueries(results, query);
+    shown = withQ;
     const context = { cabinQuery: query, evidence };
     $('evidence-panel').replaceChildren(Object.assign(doc.createElement('p'),
       { className: 'text-3', textContent: 'Select a material to see the tests behind its label.' }));
     renderResultsTable($('results-table'), withQ, {
       evidence,
       items: query.materials,
-      onSelect: (result) => renderEvidencePanel($('evidence-panel'), result, evidence, { query: result.query }),
+      onSelect: (result) => {
+        renderEvidencePanel($('evidence-panel'), result, evidence, { query: result.query });
+        ws?.selectMaterial(result.query?.material_id, { notify: false });
+      },
     });
     renderFixes($('fixes'), withQ, context);
     slider?.update(query);
+    ws?.update({ cabinQuery: query, results: withQ });
+  }
+
+  // Model or HTML cabin item -> the same engine result and evidence panel as the results table.
+  // Works with 0 verified rows, when the table shows no rows: drafts stay inspection only.
+  function selectMaterial(materialId) {
+    const result = resultForMaterial(shown, materialId);
+    if (!result) return false;
+    $('results-table').querySelectorAll?.('button[aria-pressed]').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+    renderEvidencePanel($('evidence-panel'), result, evidence, { query: result.query });
+    return true;
   }
 
   // labelCabin (#55) takes the DATASET ({ evidence, materials }), not the row array: passing
@@ -132,6 +166,8 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
   function changed(state, { valid }) {
     if (!state.materials.length || !valid) {
       cabinQuery = null;
+      shown = [];
+      ws?.update({ cabinQuery: null, results: [] });
       slider?.destroy(); slider = null;
       $('evidence-panel').replaceChildren();
       $('fixes').replaceChildren();
@@ -209,10 +245,11 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
   };
 
   current.query = () => cabinQuery;
+  current.selectMaterial = selectMaterial;
 }
 
 // Shared with the gravity view, which needs no evidence.json and works even if it fails to load.
-const current = { query: () => null };
+const current = { query: () => null, selectMaterial: () => false };
 
 let gravity = null;
 onShow.gravity = () => {
@@ -253,6 +290,7 @@ function showRail(doc, rows, verified, state) {
 }
 
 async function start() {
+  startWorkspace();
   wireTabs();
   const status = document.getElementById('status');
   status.textContent = 'Loading evidence…';
@@ -265,6 +303,7 @@ async function start() {
     retry.addEventListener('click', () => location.reload());
     status.append(retry);
     showRail(document, 'unavailable', 'unavailable', 'unavailable');
+    workspace?.setEvidence(null);
     renderResultsTable(document.getElementById('results-table'), [], {
       state: 'error', onRetry: () => location.reload(),
     });
@@ -274,7 +313,8 @@ async function start() {
   }
   status.textContent = '';
   showDataset(evidence);
-  wireCabin(evidence);
+  workspace?.setEvidence(evidence);
+  wireCabin(evidence, { workspace });
   wireAccuracy(evidence);
   mountAsk(document.getElementById('ask-root'), evidence).catch((err) => {
     document.getElementById('ask-root').textContent = `Ask REDLINE could not start (${err.message}).`;

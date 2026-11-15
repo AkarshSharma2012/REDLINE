@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>REDLINE</title>
   <link rel="stylesheet" href="src/styles.css">
+  <link rel="stylesheet" href="src/styles/workspace.css">
   <script type="module" src="src/main.js"></script>
 </head>
 <body>
@@ -59,15 +60,45 @@
     <div id="ask-root"></div>
   </section>
 
-  <main id="panel-cabin" role="tabpanel" aria-labelledby="tab-cabin" class="layout">
-    <section class="region region-cabin" aria-labelledby="cabin-heading">
+  <main id="panel-cabin" role="tabpanel" aria-labelledby="tab-cabin" class="layout workspace" data-density="comfortable" data-view="evidence">
+    <div id="workspace-toolbar" class="ws-toolbar" hidden>
+      <div class="ws-group" role="group" aria-label="Show panes">
+        <button type="button" id="ws-toggle-controls" aria-controls="ws-pane-controls" aria-pressed="true">Controls</button>
+        <button type="button" id="ws-toggle-sources" aria-controls="ws-pane-sources" aria-pressed="true">Sources</button>
+      </div>
+      <div class="ws-group ws-widths" role="group" aria-label="Pane widths">
+        <span class="ws-group-label" aria-hidden="true">Controls</span>
+        <button type="button" id="ws-narrow-controls" aria-label="Narrow controls pane">&minus;</button>
+        <button type="button" id="ws-widen-controls" aria-label="Widen controls pane">+</button>
+        <span class="ws-group-label" aria-hidden="true">Sources</span>
+        <button type="button" id="ws-narrow-sources" aria-label="Narrow sources pane">&minus;</button>
+        <button type="button" id="ws-widen-sources" aria-label="Widen sources pane">+</button>
+      </div>
+      <div class="ws-group" role="group" aria-label="Density">
+        <button type="button" id="ws-density-comfortable" aria-pressed="true">Comfortable</button>
+        <button type="button" id="ws-density-compact" aria-pressed="false">Compact</button>
+      </div>
+      <div class="ws-group" role="group" aria-label="Right pane view">
+        <button type="button" id="ws-view-evidence" aria-pressed="true">Evidence</button>
+        <button type="button" id="ws-view-model" aria-pressed="false">Model + evidence</button>
+      </div>
+      <button type="button" id="ws-reset">Reset layout</button>
+      <div class="ws-group ws-jump" role="group" aria-label="Go to pane">
+        <button type="button" id="ws-jump-controls">Cabin setup</button>
+        <button type="button" id="ws-jump-sources">Results and sources</button>
+        <button type="button" id="ws-jump-visual">Evidence</button>
+      </div>
+    </div>
+
+    <section id="ws-pane-controls" class="region region-cabin ws-pane" aria-labelledby="cabin-heading" tabindex="-1">
       <h2 id="cabin-heading" class="region-title">Cabin setup</h2>
       <button type="button" id="rover-demo" class="btn-primary" aria-describedby="rover-note" disabled>Load lunar rover demo</button>
       <p id="rover-note" class="region-note">Illustrative pressurized rover cabin; item uses are hypothetical, not a real rover manifest.</p>
       <div id="cabin-form"></div>
     </section>
+    <div id="ws-sep-controls" class="ws-sep" role="separator" aria-orientation="vertical" aria-label="Resize controls pane" aria-controls="ws-pane-controls" aria-valuemin="240" aria-valuemax="400" aria-valuenow="280" tabindex="0"></div>
 
-    <section class="region region-results" aria-labelledby="results-heading">
+    <section id="ws-pane-sources" class="region region-results ws-pane" aria-labelledby="results-heading" tabindex="-1">
       <h2 id="results-heading" class="region-title">Results</h2>
       <ul class="legend" aria-label="Label key">
         <li><span class="chip chip-burned">Burned in testing at these conditions</span></li>
@@ -77,10 +108,21 @@
       <div id="status" role="status" aria-live="polite" class="text-2"></div>
       <div id="results-table" class="table-scroll"></div>
       <div id="fixes"></div>
+      <h2 id="sources-heading" class="region-title ws-subtitle">NASA source records</h2>
+      <p class="region-note">Rows from the evidence file, cited to NASA PSI investigations and NTRS reports.</p>
+      <div id="ws-sources"><p class="text-3">Loading source records…</p></div>
     </section>
+    <div id="ws-sep-sources" class="ws-sep" role="separator" aria-orientation="vertical" aria-label="Resize sources pane" aria-controls="ws-pane-sources" aria-valuemin="300" aria-valuemax="560" aria-valuenow="380" tabindex="0"></div>
 
-    <section class="region region-evidence" aria-labelledby="evidence-heading">
+    <section id="ws-pane-visual" class="region region-evidence ws-pane" aria-labelledby="evidence-heading" tabindex="-1">
       <h2 id="evidence-heading" class="region-title">Evidence</h2>
+      <div class="ws-visual">
+        <p class="ws-model-label">Illustrative cabin model - not a fire simulation</p>
+        <div id="rover-viewer-root" class="ws-viewer" hidden></div>
+        <p id="ws-viewer-status" class="text-3" role="status"></p>
+        <div id="ws-materials"></div>
+      </div>
+      <div id="ws-source-detail"></div>
       <div id="evidence-panel"><p class="text-3">Select a material to see the tests behind its label.</p></div>
     </section>
   </main>
