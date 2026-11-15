@@ -81,6 +81,18 @@ test('pending requests survive bounded event log rollover', t => {
   assert.equal(s.total, 1);
 });
 
+test('exclusive lock covers asynchronous probes and releases after rejection', async t => {
+  const dir = fixture(t);
+  let finish;
+  const pending = withLock(dir, () => new Promise(resolve => { finish = resolve; }));
+  assert.throws(() => doctor(dir), /EEXIST/);
+  finish('finished');
+  assert.equal(await pending, 'finished');
+  assert.equal(doctor(dir).total, 0);
+  await assert.rejects(withLock(dir, async () => { throw Error('async failure'); }), /async failure/);
+  assert.equal(fs.existsSync(path.join(dir, 'watchdog.lock')), false);
+});
+
 test('bounded probes terminate only their own child and wait for exit', async () => {
   const timed = await boundedProbe(process.execPath, ['-e', 'setTimeout(() => {}, 10000)'], 100);
   assert.equal(timed.timedOut, true);
@@ -101,6 +113,16 @@ test('real read-only Windows process evidence and PowerShell syntax', { skip: pr
     const parsed = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', '$e=$null; $t=$null; [System.Management.Automation.Language.Parser]::ParseFile($env:REDLINE_PARSE_FILE,[ref]$t,[ref]$e) | Out-Null; if ($e.Count) { $e | Out-String | Write-Error; exit 1 }'], { encoding: 'utf8', timeout: 5000, windowsHide: true, env: { ...process.env, REDLINE_PARSE_FILE: path.resolve(file) } });
     assert.equal(parsed.status, 0, parsed.stderr);
   }
+});
+
+test('CLI probe holds the state lock until its read-only child has exited', { skip: process.platform !== 'win32' }, async t => {
+  if (Date.now() >= STOP) { t.skip('Absolute probe deadline reached'); return; }
+  const dir = fixture(t);
+  const pending = main(['probe', dir, String(process.pid)]);
+  assert.throws(() => doctor(dir), /EEXIST/);
+  const result = await pending;
+  assert.equal(result.code, 0);
+  assert.equal(doctor(dir).events[0].type, 'process-probe');
 });
 
 test('CLI report, watch and doctor retain literal untrusted text as JSON data', async t => {

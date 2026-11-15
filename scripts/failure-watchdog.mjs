@@ -31,8 +31,17 @@ export function withLock(dir, fn) {
   fs.mkdirSync(dir, { recursive: true });
   const lock = path.join(dir, 'watchdog.lock');
   const fd = fs.openSync(lock, 'wx'); // Fail closed; never steal a stale lock.
-  try { fs.writeFileSync(fd, JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString() })); return fn(); }
-  finally { fs.closeSync(fd); fs.unlinkSync(lock); }
+  const release = () => { fs.closeSync(fd); fs.unlinkSync(lock); };
+  let pending = false;
+  try {
+    fs.writeFileSync(fd, JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString() }));
+    const result = fn();
+    if (result && typeof result.then === 'function') {
+      pending = true;
+      return Promise.resolve(result).finally(release);
+    }
+    return result;
+  } finally { if (!pending) release(); }
 }
 function initial() { return { version: 1, total: 0, incidents: {}, events: [] }; }
 function state(dir) {
@@ -120,9 +129,12 @@ export async function main(args) {
   if (command === 'doctor' && !input) return doctor(dir);
   if (command === 'probe') {
     if (Date.now() >= STOP) throw Error('Watchdog deadline reached');
-    const result = await probeTask(Number(input));
-    withLock(dir, () => { const s = state(dir); event(s, { type: 'process-probe', pid: Number(input), ...result }); save(dir, s); });
-    return result;
+    return withLock(dir, async () => {
+      const s = state(dir);
+      const result = await probeTask(Number(input));
+      event(s, { type: 'process-probe', pid: Number(input), ...result }); save(dir, s);
+      return result;
+    });
   }
   throw Error('Unknown command or arguments');
 }
