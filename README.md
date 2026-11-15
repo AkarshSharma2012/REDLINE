@@ -10,13 +10,17 @@ Enter cabin materials and conditions, including oxygen, pressure and airflow. RE
 
 NASA Space Apps Challenge 2026, Seattle. Challenge: Flame in Freefall. Team: Interlake Embers.
 
-## Status
+## Live app and deployment
 
-Stack and architecture are decided at kickoff. Work is tracked in GitHub Issues; see `AGENTS.md` for how agents pick up tasks.
+[Open REDLINE](https://akarshsharma2012.github.io/REDLINE/).
+
+The app uses plain HTML, CSS and JavaScript ES modules. GitHub Pages publishes the committed files from `main`, at the repository root, with no application build step or dependency installation. Keep `.nojekyll` in the root. There is no checked-in Pages workflow; GitHub manages the existing **pages build and deployment** workflow.
+
+Pages is already enabled and HTTPS is enforced; no settings change is currently required. If restoring the setup, a repository administrator can open **Settings → Pages → Build and deployment**, select **Deploy from a branch**, choose **main** and **/ (root)**, then **Save**. Keep **Enforce HTTPS** enabled. Merge reviewed changes into `main` to publish; check the Pages deployment result in **Actions**.
 
 ## Run locally
 
-No install step and no dependencies. Needs Python 3 (any recent version) and Node 22.12 or newer.
+No install step and no dependencies. Local browsing needs Python 3 (any recent version); tests need Node 22.12 or newer.
 
 ```sh
 python -m http.server 8000     # from the repo root, then open http://localhost:8000/
@@ -24,4 +28,14 @@ npm test                       # or: node --test
 ```
 
 Open the page through the server, not as a `file://` path: browsers block ES modules loaded from `file://`.
-Until `data/evidence.json` exists (built by `scripts/build-evidence.mjs`), the page shows an "Evidence file could not be loaded" message; that is expected.
+The committed `data/evidence.json` supplies the evidence data. After editing its source CSV or metadata, regenerate it with `node scripts/build-evidence.mjs` and commit the updated artifact. This is a data maintenance command, not a deployment build step. If loading fails, check that the JSON file is served successfully from the same site.
+
+Tests run without a server: `node --test` (or `npm test`). See the [testing guide](docs/testing.md) for coverage and limitations; passing Node tests does not establish real-browser layout or accessibility.
+
+## Data sources
+
+The primary dataset is [NASA PSI](https://psi.nasa.gov/), with supporting publications from the [NASA Technical Reports Server](https://ntrs.nasa.gov/). Follow each result's NASA citation and recorded test conditions. See the [data documentation](data/README.md), [source metadata](data/metadata.json), [credits and data attributions](docs/credits.md), and [methods and limitations](docs/methods.md) for provenance, verification status and interpretation limits.
+
+## Team
+
+**Interlake Embers** — NASA Space Apps Challenge 2026, Seattle; **Flame in Freefall**. NASA researchers and contributing investigators are credited in the [source register](docs/credits.md). REDLINE is an independent challenge project; no NASA endorsement is claimed.
