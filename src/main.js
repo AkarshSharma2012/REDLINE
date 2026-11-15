@@ -14,7 +14,6 @@ import { loadAccuracyReport, renderAccuracyView } from './ui/accuracy-view.js';
 import { mountAsk } from './ui/ask.js';
 import { validateEvidence } from './schema/validate.js';
 import { mountWorkspace } from './ui/workspace.js';
-import { mountReactControls } from './vendor/react-controls.js';
 
 const EVIDENCE_URL = 'data/evidence.json';
 
@@ -324,6 +323,12 @@ async function start() {
 }
 
 if (typeof document !== 'undefined') {
-  mountReactControls();
-  start();
+  // Minimal non-browser test fixtures have no DOM realm. In the browser wait for
+  // the local island, then mount synchronously before attaching native handlers.
+  if (document.defaultView?.HTMLElement && document.querySelectorAll) {
+    import('./vendor/react-controls.js').then(({ mountReactControls }) => {
+      mountReactControls();
+    }).catch(() => { /* Native controls remain usable if enhancement fails. */ })
+      .then(() => start());
+  } else start();
 }

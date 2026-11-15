@@ -7,7 +7,7 @@ test('production React Aria controls retain workspace initialization, selection,
   const dom = new JSDOM(await readFile('index.html', 'utf8'), { url: 'https://example.org/REDLINE/' });
   const { window } = dom;
   const originals = new Map();
-  for (const name of ['window', 'document', 'navigator', 'HTMLElement', 'HTMLButtonElement', 'Element', 'Node', 'SVGElement', 'MutationObserver', 'Event', 'MouseEvent', 'KeyboardEvent', 'getComputedStyle']) {
+  for (const name of ['window', 'document', 'navigator', 'CSS', 'HTMLElement', 'HTMLButtonElement', 'Element', 'Node', 'SVGElement', 'MutationObserver', 'Event', 'MouseEvent', 'KeyboardEvent', 'getComputedStyle']) {
     originals.set(name, Object.getOwnPropertyDescriptor(globalThis, name));
     Object.defineProperty(globalThis, name, { configurable: true, value: typeof window[name] === 'function' && name === 'getComputedStyle' ? window[name].bind(window) : window[name] });
   }
@@ -16,6 +16,7 @@ test('production React Aria controls retain workspace initialization, selection,
   let workspace, roots = [];
   try {
     const ids = [...document.querySelectorAll('#workspace-toolbar button')].map(b => b.id);
+    document.getElementById('ws-narrow-sources').disabled = true;
     roots = mountReactControls();
     assert.equal(roots.length, ids.length);
     assert.equal(mountReactControls().length, 0);
@@ -34,6 +35,11 @@ test('production React Aria controls retain workspace initialization, selection,
       loadViewer: async () => { loads++; return { mountRoverViewer: async () => ({ update() {}, setVisible() {}, destroy() {} }) }; } });
     const click = id => document.getElementById(id).click();
     assert.equal(loads, 0);
+    click('ws-narrow-sources');
+    assert.equal(workspace.getPrefs().sources, 380, 'initial disabled retained');
+    document.getElementById('ws-narrow-sources').disabled = false;
+    click('ws-narrow-sources');
+    assert.equal(workspace.getPrefs().sources, 360, 'imperative enable works');
     click('ws-widen-controls');
     assert.equal(workspace.getPrefs().controls, 300);
     click('ws-toggle-controls');

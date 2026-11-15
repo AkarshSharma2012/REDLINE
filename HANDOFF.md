@@ -53,3 +53,4 @@ STATUS: DONE
 - Pinned dependencies/lockfile, reproducible build-ui and committed local ESM/licenses. Bundle 268241 raw / 84327 gzip bytes. Separate 400000-byte React-only allowance preserves original 2 MB for other assets.
 - Verification next: full node --test once, build reproducibility, diff check. Native browser/release remains coordinator-owned; no server/browser.
 
+- First full suite found two DOM-fixture integration failures: static library evaluation under a minimal fake window, and missing CSS global in jsdom. Fixed with guarded local import before startup and full jsdom realm fixture; focused control regression passes. Final full rerun required after these fixes.
