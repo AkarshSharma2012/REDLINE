@@ -7,8 +7,8 @@
   <link rel="stylesheet" href="src/styles.css">
   <style>
     /* Tab layout only; colors and type come from styles.css tokens. */
-    .tabs { display: flex; flex-wrap: wrap; gap: var(--space-4, 4px); padding: 0 var(--space-24, 24px); border-bottom: 1px solid var(--divider); }
-    .tabs [role="tab"][aria-selected="true"] { border-color: var(--accent); color: var(--accent); }
+    .tabs { display: flex; gap: var(--space-4, 4px); padding: 0 var(--space-24, 24px); border-bottom: 1px solid var(--divider); overflow-x: auto; scrollbar-width: none; }
+    .tabs [role="tab"][aria-selected="true"] { color: var(--text-1); }
     .framing { margin: 4px 0 0; }
     [hidden] { display: none !important; }
   </style>
