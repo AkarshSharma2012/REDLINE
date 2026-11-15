@@ -54,3 +54,8 @@ STATUS: DONE
 - Verification next: full node --test once, build reproducibility, diff check. Native browser/release remains coordinator-owned; no server/browser.
 
 - First full suite found two DOM-fixture integration failures: static library evaluation under a minimal fake window, and missing CSS global in jsdom. Fixed with guarded local import before startup and full jsdom realm fixture; focused control regression passes. Final full rerun required after these fixes.
+- Final full node --test on 22defde57cf3a55672b839682442db83bd759b6a (Node v26.13.1): 1251 tests, 1207 pass, 0 fail, 44 existing TODO; exit 0. U25 correction retained; B16 remains unresolved.
+- npm run build-ui repeated identically (git diff --exit-code for bundle/licenses passes); git diff --check clean. Size budget passes: base 1748609 / 2000000 bytes, React bundle/notices 371344 / 400000 bytes; bundle 268241 raw / 84327 gzip bytes.
+- Runtime: react/react-dom 19.3.1 MIT, react-aria-components 1.22.1 Apache-2.0, lucide-react 1.73.0 ISC. Build esbuild 0.28.2 MIT; DOM test jsdom 31.0.1 MIT. Full transitive lock and license notices committed.
+- Native Chrome visuals, physical keyboard/touch/screen reader and concurrent B2/B1 integration remain unverified and coordinator-owned. No server, browser, persistent process, merge or deployment started.
+STATUS: DONE
