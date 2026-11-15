@@ -1,5 +1,38 @@
 # REDLINE: final-app demo and video plan
 
+## UI267 launch refresh gate (issue #268, 2026-11-15)
+
+**Pending UI267 merge and coordinator capture. No screenshots were refreshed for #268.** At inventory time, remote `main` and `task/267-ui-compact-nasa-inspired-mission-dashboa` both pointed to `37ea4aafd8c75334f0933eace41bd283fa5e30be`; issue #267 was open with no associated PR found. That is the pre-redesign baseline, not the launch freeze. Do not record the final launch video or export UI-bearing presentation materials until the coordinator supplies the exact merged #267 SHA and checks that the deployed app serves it.
+
+The requested redesign is a compact mission workbench with concise visible evidence notices and native disclosures for full caveats. This describes #267's requirements, not observed rendering. Keep the 60-second target and existing technical workflow below; recheck visible labels against the merged build before changing any click instructions. Human evidence review remains **0/45**; a visual refresh does not verify evidence.
+
+### Affected assets and references
+
+- All tracked UI images are the seven PNGs in the historical manifest below: `docs/screenshots/01-investigations.png`, `02-cabin-rover.png`, `03-gravity.png`, `04-evidence-detail.png`, `05-oxygen-preview.png`, `06-accuracy.png`, and `07-ask-redline.png` (each under `docs/screenshots/`). They remain historical, unchanged fallback assets.
+- `docs/pitch.md` owns their image links, the 60-second click script, historical two-minute walkthrough, thirty-second storyboard and capture provenance. Every UI-bearing beat needs the merged-build check.
+- `docs/pitch-variants.md` contains the two-minute spoken pitch with embedded thirty-second clip, Cabin Check shot list and empty-evidence recording fallback. Its planned clip must also use the frozen UI; retain its instruction to omit the unverified-result placeholder.
+- `README.md` links the deployed app at `https://akarshsharma2012.github.io/REDLINE/` and contains human local-demo instructions, but embeds no screenshots or video. Those server instructions are not authorization for conductor agents to start processes.
+- `tests/pitch-demo.test.mjs` checks the data path and script wording, not visual freshness. `docs/specs/screens.md` contains an older timed demo and an immutable historical pitch link at `0df4e860015e04d59e48f0861859d177a3a30b16`; it is a specification reference, not a launch capture. Leave historical references intact.
+- No tracked launch video, slide deck, capture script or preview package was found. External assets needing coordinator inventory: the existing Downloads recording fallback mentioned in #267 (exact path not supplied), any edited launch video, embedded presentation clip, slide screenshots and exported preview package. Their paths/URLs and current contents are not established by this repository. Preserve the Downloads fallback; do not overwrite it or claim these external materials are refreshed. NASA PDFs linked below are source documents, not REDLINE UI captures.
+
+### Coordinator capture handoff after the merge
+
+No server, browser or persistent process may be started by this conductor task. The coordinator can capture native Chrome separately. Record the merged #267 SHA, deployed revision, capture date, browser, viewport/zoom and evidence revision before delivering images. Use 1600 × 1000 CSS pixels at 100% zoom for comparable presentation captures; separately check 1440, 390 and 320 px layouts as requested in #267. A Node pass cannot establish those browser checks.
+
+Preserve the seven historical PNGs. Save new, actual captures to the following exact paths, then update the launch links and provenance only after the coordinator confirms their contents:
+
+| New destination | State to capture on frozen UI |
+| --- | --- |
+| `docs/screenshots/ui267-01-investigations.png` | `#investigations`; Pressurized rover ranking; retain actual source/coverage notices, without assuming the historical tied-score state persists. |
+| `docs/screenshots/ui267-02-cabin-rover.png` | `#cabin`; Load lunar rover demo; frame four items, 34% O2, 56.5 kPa, lunar estimate and zero-verified notice. |
+| `docs/screenshots/ui267-03-gravity.png` | `#gravity` after loading rover; PMMA sheet / flaming; visible research hold with draft disclosure collapsed. |
+| `docs/screenshots/ui267-04-evidence-detail.png` | Expand draft disclosure; Open evidence record `U25-01-L`; frame NASA link, locator and `HOLD_scientific_review`. Open any new provenance disclosure needed to show these fields. |
+| `docs/screenshots/ui267-05-oxygen-preview.png` | `#oxygen`; preview 30% from original 34%; retain fixed pressure, gravity, four items and missing coverage. Cancel afterwards. |
+| `docs/screenshots/ui267-06-accuracy.png` | `#accuracy`; actual not-run state and method caveat; no accuracy score. Exclude from the 60-second cut. |
+| `docs/screenshots/ui267-07-ask-redline.png` | `#ask`; submit the existing lunar-gravity question without a key; retain draft tags and NASA locators; do not assume the historical hit count. |
+
+Rehearse the existing 0:00–1:00 sequence against those same states, including disclosure clicks and evidence-detail close/return. Record actual elapsed time; sixty seconds remains a target until timed. Replace UI-bearing frames in the launch video, the `docs/pitch-variants.md` embedded clip and any external slides/preview exports with the frozen-build captures together. Keep the historical recorded-walkthrough fallback below explicitly dated. Until the merged SHA and captures arrive, this handoff is preparation only, not a completed launch refresh.
+
 Issue #249 update, 2026-11-15, corrected against `main` at `2655346` (includes merged PRs #238, #239, #244, #246, #248, #250, #251, #253 and #254). The current 60-second script below follows a browser path reported in #249 as checked three times; this documentation task re-ran only the Node suite, not a browser. The two-minute script, storyboard and screenshots further down are historical captures from 2026-11-14 at `31a6acdd778e766d6a896201f376473155c51bc6`; they do not establish current UI behavior. Delivery time remains an unmeasured target. The Opus UI pass (release PR #255) is separate and not yet approved; recheck the click labels below against any build that includes it.
 
 ## Current 60-second demo (2026-11-15)
