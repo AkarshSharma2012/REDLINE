@@ -60,7 +60,7 @@ Sources by beat: hook [T]; problem [A, T]; insight [G]; demo [D, U]; proof [D, P
 
 ## 30-second video shot list
 
-Use this clip during 0:45â€“1:15 of the pitch. Stay in Cabin Check; do not change the environment or atmosphere. These controls/states are implemented and covered by Node tests, but no browser recording was performed for this documentation task. Capture only the actual current states; if a control fails during recording, retain the preceding working shot and cut the failed action. No mock screens or fabricated result rows.
+Use this clip during 0:45â€“1:15 of the pitch. Stay in Cabin Check; do not change the environment or atmosphere. These controls/states are implemented and covered by Node tests. Reference frame: [ui267-02 Cabin Check](screenshots/ui267-02-cabin-rover.png), captured from `main` at `6455a3c` (header **Evidence 45 · Verified 0**; **Scope and limits** collapsed); see the current screenshot manifest in [pitch.md](pitch.md). The coordinator's local package `Downloads/REDLINE-recording-6455a3c` matches this build, with `Downloads/REDLINE-recording-52f6e73` kept as a fallback; no rendered or edited clip is claimed. Capture only the actual current states; if a control fails during recording, retain the preceding working shot and cut the failed action. No mock screens or fabricated result rows.
 
 | Clip time | On screen / action | Narration or caption |
 |---|---|---|
