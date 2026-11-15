@@ -58,3 +58,11 @@ STATUS: DONE
 - Existing DESIGN text tokens tested at >=4.5:1 on black and existing hover surface; no browser rendering/geometry assertion. Source module 252 lines (under 500). Required CSS index link belongs to B2; coordinator acceptance remains pending, no merge/deploy.
 STATUS: DONE
 - Revalidated existing PR #300 head e5700fdde0805f61502a5ce0756f09eadc53cdcb: full node --test 1258 tests, 1214 pass, 0 fail, 44 existing TODO, 0 skipped/cancelled. git diff --check clean. Existing #297 coordination confirmed; no runtime changes or persistent processes.
+
+# Issue #302: B2 integrate A2 records into PR301 black shell
+- PR301 head 4fbc43e + main 0aeaec1 (U25 correction) + A2 PR300 bba7fe0. #297 handoff moved verbatim to docs/handoffs/issue-297-shell-pr301.md; #298 entry above kept. No data/evidence/research/rules diff vs main; B16 untouched.
+- index.html links src/styles/source-records.css after workspace.css. Shell .ws-card now one column; removed .ws-card-status col 2/row 2 and .ws-card-line col 1 rules (desktop + 480px), so A2 identity/conditions/status stack with no implicit 2nd column.
+- Removed shell .rover-viewer tool-strip overrides (>=1081px); B1 #299 (PR303) owns viewer layout. Workspace body, setup rail, pane titles, toolbar, empty stage and detail are #000.
+- Tests: new tests/shell-integration-302.test.mjs (static). Full node --test once: 1277 tests, 1233 pass, 0 fail, 44 existing TODO; size-budget PASS; git diff --check clean. No browser/server.
+- Limits: fake-DOM/static only; UI not accepted. Coordinator browser findings (1440x900, 390, 320, viewer strip after PR303) still needed. No merge/deploy.
+STATUS: DONE
