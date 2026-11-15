@@ -71,8 +71,11 @@ test('current 60-second script is timed, about 120 words and cites a held NASA r
   const narration = rows.map(line => line.split('|')[3]).join(' ');
   const words = narration.trim().split(/\s+/).length;
   assert.ok(words >= 100 && words <= 140, `narration is ${words} words`);
-  assert.doesNotMatch(narration, /never tested|\bsafe\b|never burns|accura|guarantee/i);
-  for (const click of ['Load lunar rover demo', 'Inspect draft research detail · excluded from cabin results', 'Open evidence record'])
+  assert.doesNotMatch(narration, /never tested|\bsafe\b|never burns|accura|guarantee|each result reads|every value traces/i);
+  assert.match(narration, /Cabin labels remain unavailable/);
+  assert.doesNotMatch(section, /nobody pushes/i);
+  assert.match(pitch, /merger integrates tested PR heads/);
+  for (const click of ['Load lunar rover demo', '**Gravity view**', 'No verified evidence rows loaded', 'Inspect draft research detail · excluded from cabin results', 'Open evidence record'])
     assert.ok(section.includes(click), click);
   const record = evidence.evidence.find(row => row.evidence_id === 'U25-01-L');
   assert.equal(record.research_status, 'HOLD_scientific_review');
