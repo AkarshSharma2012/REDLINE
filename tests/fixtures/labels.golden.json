@@ -546,9 +546,30 @@
       "cited": [],
       "flags": [],
       "flag_details": [],
-      "cross_gravity": false,
-      "estimate": null,
-      "wording": "Not found in the sources reviewed"
+      "cross_gravity": true,
+      "estimate": {
+        "g0": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        },
+        "g1": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        }
+      },
+      "wording": "Estimate between 0 g and 1 g results: Not found in the sources reviewed"
     }
   },
   "OF12-NOMEX-L-ULOISTAR": {
@@ -570,9 +591,30 @@
       "cited": [],
       "flags": [],
       "flag_details": [],
-      "cross_gravity": false,
-      "estimate": null,
-      "wording": "Not found in the sources reviewed"
+      "cross_gravity": true,
+      "estimate": {
+        "g0": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        },
+        "g1": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        }
+      },
+      "wording": "Estimate between 0 g and 1 g results: Not found in the sources reviewed"
     }
   },
   "PSI25-B1": {
@@ -954,9 +996,30 @@
       "cited": [],
       "flags": [],
       "flag_details": [],
-      "cross_gravity": false,
-      "estimate": null,
-      "wording": "Not found in the sources reviewed"
+      "cross_gravity": true,
+      "estimate": {
+        "g0": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        },
+        "g1": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        }
+      },
+      "wording": "Estimate between 0 g and 1 g results: Not found in the sources reviewed"
     }
   },
   "U25-02-L": {
@@ -978,9 +1041,30 @@
       "cited": [],
       "flags": [],
       "flag_details": [],
-      "cross_gravity": false,
-      "estimate": null,
-      "wording": "Not found in the sources reviewed"
+      "cross_gravity": true,
+      "estimate": {
+        "g0": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        },
+        "g1": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        }
+      },
+      "wording": "Estimate between 0 g and 1 g results: Not found in the sources reviewed"
     }
   },
   "U25-03-L": {
@@ -1002,9 +1086,30 @@
       "cited": [],
       "flags": [],
       "flag_details": [],
-      "cross_gravity": false,
-      "estimate": null,
-      "wording": "Not found in the sources reviewed"
+      "cross_gravity": true,
+      "estimate": {
+        "g0": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        },
+        "g1": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        }
+      },
+      "wording": "Estimate between 0 g and 1 g results: Not found in the sources reviewed"
     }
   },
   "U25-04-L": {
@@ -1026,9 +1131,30 @@
       "cited": [],
       "flags": [],
       "flag_details": [],
-      "cross_gravity": false,
-      "estimate": null,
-      "wording": "Not found in the sources reviewed"
+      "cross_gravity": true,
+      "estimate": {
+        "g0": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        },
+        "g1": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        }
+      },
+      "wording": "Estimate between 0 g and 1 g results: Not found in the sources reviewed"
     }
   },
   "U25-05-L": {
@@ -1050,9 +1176,30 @@
       "cited": [],
       "flags": [],
       "flag_details": [],
-      "cross_gravity": false,
-      "estimate": null,
-      "wording": "Not found in the sources reviewed"
+      "cross_gravity": true,
+      "estimate": {
+        "g0": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        },
+        "g1": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        }
+      },
+      "wording": "Estimate between 0 g and 1 g results: Not found in the sources reviewed"
     }
   },
   "U25-06-L": {
@@ -1074,9 +1221,30 @@
       "cited": [],
       "flags": [],
       "flag_details": [],
-      "cross_gravity": false,
-      "estimate": null,
-      "wording": "Not found in the sources reviewed"
+      "cross_gravity": true,
+      "estimate": {
+        "g0": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        },
+        "g1": {
+          "label": "NOT_ESTABLISHED",
+          "reason": "NE-no-data",
+          "cited": [],
+          "flags": [],
+          "flag_details": [],
+          "cross_gravity": false,
+          "estimate": null,
+          "wording": "Not found in the sources reviewed"
+        }
+      },
+      "wording": "Estimate between 0 g and 1 g results: Not found in the sources reviewed"
     }
   }
 }

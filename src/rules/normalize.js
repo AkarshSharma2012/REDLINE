@@ -45,7 +45,7 @@ export function uncertaintyNotStated(text) {
   return typeof text !== 'string' || text.trim() === '' || /^not stated\b/i.test(text.trim());
 }
 
-// Null-safe ratio of two positive numbers: max/min. null if either is null or not positive.
+// Ratio of two positive numbers: max/min. null if either is null or not positive.
 export function ratio(a, b) {
   const x = num(a);
   const y = num(b);
