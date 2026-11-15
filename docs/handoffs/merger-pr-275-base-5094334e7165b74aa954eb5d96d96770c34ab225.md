@@ -25,3 +25,12 @@ STATUS: DONE
 - Full `node --test`: 1176 tests, 1132 pass, 0 fail, 44 todo, exit 0. No server or browser started.
 
 STATUS: DONE
+
+## Issue #170
+
+- `docs/submission-draft.md` now opens with the product: upload/paste a bill-of-materials CSV, set the cabin, get lines ordered Burned → Close → Not established, each evidence-backed label linked to its NASA source.
+- Delivery limits now match `main` (5094334): `label.js` uses verified rows only, and `data/evidence.json` has 45 rows, all `draft`, so **0 verified**. On `main` every line reads "Not found in the sources reviewed". The doc says this plainly and claims no verified evidence. There is also no `research/validation-results.csv`, so no accuracy figure.
+- Objectives table updated: compare/label are implemented, Ask/accuracy/gravity are mounted, there are 30 insights (not 4), and the BOM sort is listed under Rank. The AI-use paragraph now says 45 draft rows (it said 29) and no longer calls the engine a stub. The NASA resource table is unchanged.
+- Verified: grep finds no banned wording (safe, never tested, never burns, will burn); full `node --test` gives 1176 tests, 1132 pass, 0 fail, 44 todo, exit 0. Doc-only change. No server or browser was started.
+
+STATUS: DONE
