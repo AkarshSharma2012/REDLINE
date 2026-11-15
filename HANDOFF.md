@@ -44,3 +44,6 @@ STATUS: DONE
 - Regression anchors all non-U25 evidence rows to immutable c4e68732269e8986849109612a5d806fea401d15; surface assertions added.
 - Next: native artifact regeneration, full node --test once, push to existing PR294. No server/browser, merge/deploy or verification promotion.
 - Native build-evidence/export-datapackage/verification-worksheet completed (45 draft, 0 verified). First full suite found two stale surface expectations; updated them for qualified U25 text and its endpoint field. Final full rerun pending.
+- Full node --test on 2a41a2da300a0a2501e3c27f81a30926971c82b7 (Node v26.13.1): 1250 tests, 1206 pass, 0 fail, 44 existing TODO, 0 skipped/cancelled; exit 0. git diff --check clean. Native worksheet/export regenerated with no content changes beyond evidence build metadata. No server/browser or persistent process started.
+- Complete; push current branch HEAD to existing PR294 source branch only. Coordinator retains review/release ownership.
+STATUS: DONE
