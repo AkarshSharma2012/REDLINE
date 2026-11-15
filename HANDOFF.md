@@ -1,6 +1,9 @@
 # Issue #243 handoff
 STATUS: BLOCKED: Tested correction is ready; deployment and replacement of the loaded waiter require an authorized A/B operator outside this checkout. This task forbids starting a persistent replacement process.
 
+- Rechecked 2026-11-15 03:57-04:00 PST on LAPTOP-AM: neither `C:\Users\Neeraj Sharma\redline-conductor\ui-go.ps1` nor `C:\Users\nehap\redline-conductor\ui-go.ps1` exists. No local PowerShell process invoked with `-File ...ui-go.ps1` was found. MORGANPISQR PID 26124 below is historical, not verified current state. No deployment/restart or preview/work changes made in this continuation. An A/B operator on MORGANPISQR must still execute and verify the replacement before 05:02 PST; do not mark DONE from this checkout.
+- Fresh verification: full `node --test` exited 0 (existing TODO assertions remain); targeted `node --test tests/ui-go.test.mjs` passed 3/3, including PowerShell parsing and isolated behavioral checks. `git diff --check` passed. Local Git identity still matches the contributor identity below. No Claude usage, server, browser or persistent process started.
+
 - 2026-11-15 03:41 PST, host MORGANPISQR, branch task/243-q-correct-scheduled-fable-attribution-an. Earlier LAPTOP-AM source-unavailable finding is superseded: deployed source is C:\Users\Neeraj Sharma\redline-conductor\ui-go.ps1.
 - Corrected source is scripts/ui-go.ps1 in this branch ONLY; deployed script and running waiter remain unchanged. No UI/science changes, Claude calls, servers, browsers or persistent processes started. No main push.
 - Identity: akarshsharma2012 <219518258+AkarshSharma2012@users.noreply.github.com>. Email verified from local Git config and ui-work commits f9eada8, 336f1fa, 5c84da3; required name set in this checkout. Script sets both author/committer environment and repo config in fresh/revision rounds and forbids attribution trailers. Earlier handoff's different email is not used.
