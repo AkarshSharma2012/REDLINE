@@ -135,7 +135,7 @@ export function renderInvestigations(root, rawCatalog, { fixture = false } = {})
       ? el('p', { class: 'inv-banner type-small' }, 'Development fixture: a few investigations copied from REDLINE research notes, not the full PSI catalog. The full catalog (B10) replaces it when data/investigations.json exists.')
       : '',
     el('p', { class: 'text-2 type-small' },
-      'Ranking adds visible points per factor: need, habitat named in the catalog notes, oxygen and pressure overlap with the habitat atmosphere, and gravity. Open a row to see why. Partial-gravity results are not in PSI yet; 0 g and 1 g results can only bound them as an estimate.'),
+      'Ranking adds visible points per factor: need, habitat named in the catalog notes, oxygen and pressure overlap with the habitat atmosphere, and gravity. Open a row to see why. Source catalog coverage is distinct from measured simulated-partial-gravity research. No reviewed compatible 0 g/1 g endpoint pair is supplied here; gravity transfer is not established. No universal 0 g/1 g bracket is inferred; condition-specific comparisons require reviewed compatibility.'),
     controls, status, summary,
     el('h3', { class: 'type-heading inv-subhead', id: 'inv-compare-heading' }, 'Compare two investigations'),
     compare,
