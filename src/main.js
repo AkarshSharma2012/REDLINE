@@ -12,6 +12,7 @@ import { renderFixes } from './ui/fixes.js';
 import { renderGravityView } from './ui/gravity-view.js';
 import { loadAccuracyReport, renderAccuracyView } from './ui/accuracy-view.js';
 import { mountAsk } from './ui/ask.js';
+import { validateEvidence } from './schema/validate.js';
 
 const EVIDENCE_URL = 'data/evidence.json';
 
@@ -33,7 +34,11 @@ export const ROVER_DEMO = Object.freeze({
 export async function loadEvidence(url = EVIDENCE_URL) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
-  return res.json();
+  const evidence = await res.json();
+  // Reject invalid datasets before any UI or engine can mistake them for missing coverage.
+  const validation = validateEvidence(evidence);
+  if (!validation.ok) throw new Error(`${url}: validation failed: ${validation.errors[0]}`);
+  return evidence;
 }
 
 // tabFromHash('#gravity') -> 'gravity'; anything unknown -> Cabin Check.
