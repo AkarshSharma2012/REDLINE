@@ -1,12 +1,10 @@
 # Issue #241
 
-STATUS: BLOCKED: Need locations of existing f1-go.ps1 / pane-doctor.ps1 and coordinator dispatch interface to finish required reuse and enforce external repair timeouts.
+STATUS: BLOCKED: Existing coordinator needs watchdog acknowledgment/dispatch integration and bounded isolated repair execution; local requests alone cannot enforce external repair timeouts.
 
-- Zero-AI structured report/watch/doctor/probe commands implemented. Durable dedup; exclusive lock; two attempts per incident, four globally; 60s retry spacing; fixed read-only 2s process probe; absolute stop Nov 15 2026 06:20 PST. No dependencies added.
-- Correctness follow-up: lock now covers asynchronous probe execution and logging. Regression failed before fix and passed afterward. Committed as 06867aa.
-- Full `node --test`: exit 0, 1143 tests, 1056 passed, 87 TODO, zero failures. Includes malformed inputs, dedup, no-incident zero calls, budgets/deadline, lock, timeout/reaping, PowerShell syntax, real process metadata (test node PID 10444) and real CLI probe locking.
-- After tests, finite watch and doctor launch through `node --test` exited 0, modelCalls=0. Direct child PIDs 10940 and 8744 confirmed exited. No persistent monitor/server started; coordinator verifies/schedules launch.
-- Evidence: C:\Users\nehap\redline-conductor\state\issue-241-evidence\full-suite-followup.log, watch-followup.log, doctor-followup.log; reproducible finite-launch.test.mjs in same external evidence folder. Production state: C:\Users\nehap\redline-conductor\state\failure-watchdog-241\state.json.
-- Commands/schema: scripts/failure-watchdog.md. Requests persist locally: claimed failures route owner first, then orchestrator. Actionability/ownership/resolution require coordinator inspection. External repair timeout is only a request contract; no models, messages, repairs or integration workers launched. No independent evidence identifying task 655450vvjp as hung; fixtures are synthetic.
-- Next: supply upstream doctor paths and coordinator interface; integrate acknowledgment/actionable dispatch and isolated tested PR repair execution with enforced timeouts. Never touch active checkouts, credentials, worktree reset/deletion, main or evidence verification. Claude/Fable allowances unchanged; no auto submission.
-- Author: akarshsharma2012 <lakshyakhandelwal28@gmail.com>, no AI trailers.
+- Found upstream f1-go.ps1 / pane-doctor.ps1 in conductor root. Reused status/log files and last-28-lines display with bounded reads, timestamps and sanitized text; never execute their model loops or active-checkout mutations.
+- Fixed malformed retry timestamps bypassing retry spacing and capped CLI probes at the absolute Nov 15 06:20 PST deadline. Intake/watch/doctor/probe use zero model calls. No new workers, dependencies, servers, credentials changes or worktree mutations.
+- Targeted node --test tests/failure-watchdog.test.mjs: 13 passed, zero failures, including PowerShell parser and real read-only process evidence. First run's success-probe fixture exceeded 2s under load; fixture now uses the permitted 5s helper maximum; production probe remains 2s.
+- Next: full suite once, then finite watch/doctor evidence through node --test, then push task branch. No persistent launch allowed. Coordinator verifies/schedules future passes.
+- Commands/schema/limitations: scripts/failure-watchdog.md. Two requests per incident, four global, 60s spacing, owner before orchestrator, exclusive lock. No automatic repairs or external repair timeout enforcement. Never mark evidence verified or auto-submit.
+- Prior handoff logs under C:\Users\nehap are historical, not evidence from this host. Current evidence will be recorded below. Task 655450vvjp has no independently established PID here; do not infer a hang or kill conductor processes.

@@ -16,7 +16,7 @@ export function validate(x) {
   for (const key of ['summary', 'evidence', 'taskId']) {
     if (typeof x[key] !== 'string' || !x[key].trim() || x[key].length > (key === 'evidence' ? 8000 : 500) || /[\x00-\x08\x0b-\x1f\x7f]/.test(x[key])) throw Error(`Invalid ${key}`);
   }
-  if (typeof x.observedAt !== 'string' || !/^\d{4}-\d\d-\d\dT.*(?:Z|[+-]\d\d:\d\d)$/.test(x.observedAt) || !Number.isFinite(Date.parse(x.observedAt))) throw Error('Invalid observedAt');
+  if (typeof x.observedAt !== 'string' || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?(?:Z|[+-]\d\d:\d\d)$/.test(x.observedAt) || !Number.isFinite(Date.parse(x.observedAt))) throw Error('Invalid observedAt');
   return x;
 }
 export function fingerprint(x) {
@@ -50,6 +50,7 @@ function state(dir) {
   if (s.version !== 1 || !Number.isSafeInteger(s.total) || s.total < 0 || s.total > 4 || !s.incidents || !Array.isArray(s.events)) throw Error('Invalid state; manual inspection required');
   for (const [id, r] of Object.entries(s.incidents)) {
     if (id !== fingerprint(validate(r.incident)) || !Number.isSafeInteger(r.attempts) || r.attempts < 0 || r.attempts > 2 || !Number.isSafeInteger(r.count) || r.count < 1 || !Array.isArray(r.requests) || r.requests.length !== r.attempts) throw Error('Invalid incident state');
+    if (r.attempts && (!Number.isSafeInteger(r.lastAttempt) || r.lastAttempt < 0)) throw Error('Invalid retry timestamp');
   }
   if (Object.values(s.incidents).reduce((n, r) => n + r.attempts, 0) !== s.total) throw Error('Budget ledger mismatch');
   return s;
@@ -108,14 +109,36 @@ export function boundedProbe(executable, args, timeoutMs = 2000) {
     child.on('close', code => { clearTimeout(timer); resolve({ code, timedOut, error, output }); });
   });
 }
-export async function probeTask(pid) {
+export async function probeTask(pid, timeoutMs = 2000) {
   if (!Number.isSafeInteger(pid) || pid < 1) throw Error('Positive PID required');
   // Only a fixed read-only diagnostic is executed; neither logs nor reports become code.
   return boundedProbe('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command',
-    `Get-Process -Id ${pid} -ErrorAction Stop | Select-Object Id,ProcessName,StartTime,CPU,Responding | ConvertTo-Json -Compress`]);
+    `Get-Process -Id ${pid} -ErrorAction Stop | Select-Object Id,ProcessName,StartTime,CPU,Responding | ConvertTo-Json -Compress`], timeoutMs);
 }
-export function doctor(dir) {
+export function upstreamDoctor(dir) {
+  // Reuse f1-go's DLog/SetStatus files and pane-doctor's last-28-lines view.
+  // Never dot-source either script: they launch models/workers and mutate checkouts.
+  return ['f1-status.txt', 'f1-doctor.log'].map(name => {
+    const file = path.resolve(dir, name);
+    let fd;
+    try {
+      fd = fs.openSync(file, 'r');
+      const info = fs.fstatSync(fd);
+      if (!info.isFile()) throw Error('Expected regular log file');
+      const bytes = Buffer.alloc(Math.min(info.size, MAX_BYTES));
+      const offset = Math.max(0, info.size - bytes.length);
+      const read = fs.readSync(fd, bytes, 0, bytes.length, offset);
+      let text = bytes.subarray(0, read).toString('utf8');
+      if (offset) text = text.slice(text.indexOf('\n') + 1);
+      return { file, size: info.size, modifiedAt: info.mtime.toISOString(), truncated: offset > 0,
+        tail: text.replace(/[\x00-\x08\x0b-\x1f\x7f]/g, '').split(/\r?\n/).slice(-28).join('\n') };
+    } catch (error) { return { file, error: error.code || error.message }; }
+    finally { if (fd !== undefined) fs.closeSync(fd); }
+  });
+}
+export function doctor(dir, upstreamStateDir) {
   return withLock(dir, () => ({ ...state(dir), modelCalls: 0, deadline: new Date(STOP).toISOString(),
+    upstream: upstreamStateDir ? upstreamDoctor(upstreamStateDir) : [],
     limitations: ['Escalations are local requests; existing coordinator must acknowledge and dispatch.', 'No automatic repairs or model calls. Repair timeout is a coordinator contract, not an executed repair.', 'A stale lock requires operator inspection; never removed automatically.', 'No automatic inference that a running process is hung.'] }));
 }
 export async function main(args) {
@@ -126,12 +149,14 @@ export async function main(args) {
     return report(dir, JSON.parse(fs.readFileSync(input, 'utf8')));
   }
   if (command === 'watch' && !input) return tick(dir); // One bounded pass; scheduler belongs to coordinator.
-  if (command === 'doctor' && !input) return doctor(dir);
+  if (command === 'doctor') return doctor(dir, input);
   if (command === 'probe') {
     if (Date.now() >= STOP) throw Error('Watchdog deadline reached');
     return withLock(dir, async () => {
       const s = state(dir);
-      const result = await probeTask(Number(input));
+      const remaining = STOP - Date.now();
+      if (remaining <= 0) throw Error('Watchdog deadline reached');
+      const result = await probeTask(Number(input), Math.min(2000, remaining));
       event(s, { type: 'process-probe', pid: Number(input), ...result }); save(dir, s);
       return result;
     });

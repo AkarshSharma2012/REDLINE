@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { STOP, validate, report, tick, doctor, withLock, boundedProbe, probeTask, main } from '../scripts/failure-watchdog.mjs';
+import { STOP, validate, report, tick, doctor, withLock, boundedProbe, probeTask, main, upstreamDoctor } from '../scripts/failure-watchdog.mjs';
 
 const now = STOP - 3600000;
 function fixture(t) {
@@ -71,6 +71,33 @@ test('exclusive lock rejects concurrent CLI and is released on exceptions', t =>
   assert.equal(fs.existsSync(path.join(dir, 'watchdog.lock')), false);
 });
 
+test('corrupted retry timestamps cannot bypass retry spacing', t => {
+  const dir = fixture(t);
+  report(dir, incident(), now); tick(dir, now);
+  const file = path.join(dir, 'state.json');
+  const original = fs.readFileSync(file, 'utf8');
+  for (const value of [null, 'yesterday', -1, 1.5]) {
+    const s = JSON.parse(original);
+    Object.values(s.incidents)[0].lastAttempt = value;
+    fs.writeFileSync(file, JSON.stringify(s));
+    assert.throws(() => tick(dir, now + 1000), /retry timestamp/);
+  }
+});
+
+test('doctor reuses bounded upstream status and log tail without executing log text', t => {
+  const dir = fixture(t), upstream = fixture(t);
+  fs.writeFileSync(path.join(upstream, 'f1-status.txt'), 'E: tests red');
+  fs.writeFileSync(path.join(upstream, 'f1-doctor.log'), 'x'.repeat(20000) + '\n' + Array.from({ length: 40 }, (_, i) => `line ${i}`).join('\n') + '\n$(Remove-Item C:/)\x1b[2J');
+  const result = doctor(dir, upstream);
+  assert.equal(result.modelCalls, 0);
+  assert.equal(result.upstream[0].tail, 'E: tests red');
+  assert.equal(result.upstream[1].truncated, true);
+  assert.equal(result.upstream[1].tail.split('\n').length, 28);
+  assert.match(result.upstream[1].tail, /\$\(Remove-Item C:\/\)/);
+  assert.ok(!result.upstream[1].tail.includes('\x1b'));
+  assert.ok(upstreamDoctor(fixture(t)).every(row => row.error === 'ENOENT'));
+});
+
 test('pending requests survive bounded event log rollover', t => {
   const dir = fixture(t);
   report(dir, incident(), now); tick(dir, now);
@@ -96,7 +123,7 @@ test('exclusive lock covers asynchronous probes and releases after rejection', a
 test('bounded probes terminate only their own child and wait for exit', async () => {
   const timed = await boundedProbe(process.execPath, ['-e', 'setTimeout(() => {}, 10000)'], 100);
   assert.equal(timed.timedOut, true);
-  const good = await boundedProbe(process.execPath, ['-e', 'process.stdout.write("probe evidence")']);
+  const good = await boundedProbe(process.execPath, ['-e', 'process.stdout.write("probe evidence")'], 5000);
   assert.equal(good.code, 0); assert.equal(good.output, 'probe evidence');
   const missing = await boundedProbe('redline-nonexistent-executable-241', []);
   assert.ok(missing.error);
@@ -109,6 +136,7 @@ test('real read-only Windows process evidence and PowerShell syntax', { skip: pr
   assert.equal(probe.code, 0);
   assert.equal(JSON.parse(probe.output).Id, process.pid);
   t.diagnostic(`Real read-only process probe: ${probe.output}`);
+  if (process.env.REDLINE_UPSTREAM_STATE) t.diagnostic(`Real upstream logs (untrusted): ${JSON.stringify(upstreamDoctor(process.env.REDLINE_UPSTREAM_STATE))}`);
   for (const file of ['scripts/failure-watchdog.ps1', 'scripts/watchdog-doctor.ps1']) {
     const parsed = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', '$e=$null; $t=$null; [System.Management.Automation.Language.Parser]::ParseFile($env:REDLINE_PARSE_FILE,[ref]$t,[ref]$e) | Out-Null; if ($e.Count) { $e | Out-String | Write-Error; exit 1 }'], { encoding: 'utf8', timeout: 5000, windowsHide: true, env: { ...process.env, REDLINE_PARSE_FILE: path.resolve(file) } });
     assert.equal(parsed.status, 0, parsed.stderr);

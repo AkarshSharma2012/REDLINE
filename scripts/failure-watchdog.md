@@ -6,13 +6,13 @@ From this checkout, using a dedicated local state directory outside worker check
 
 ```powershell
 # Start one bounded monitoring pass (after tests; coordinator verifies launch).
-powershell -NoProfile -File scripts/failure-watchdog.ps1 watch C:\Users\nehap\redline-conductor\state\failure-watchdog-241
+powershell -NoProfile -File scripts/failure-watchdog.ps1 watch "$env:USERPROFILE\redline-conductor\state\failure-watchdog-241"
 # Agent report: JSON file is read as data, never shell.
-powershell -NoProfile -File scripts/failure-watchdog.ps1 report C:\Users\nehap\redline-conductor\state\failure-watchdog-241 C:\path\incident.json
+powershell -NoProfile -File scripts/failure-watchdog.ps1 report "$env:USERPROFILE\redline-conductor\state\failure-watchdog-241" C:\path\incident.json
 # Doctor / logs (state.json contains bounded recent event history).
-powershell -NoProfile -File scripts/watchdog-doctor.ps1 C:\Users\nehap\redline-conductor\state\failure-watchdog-241
+powershell -NoProfile -File scripts/watchdog-doctor.ps1 "$env:USERPROFILE\redline-conductor\state\failure-watchdog-241" "$env:USERPROFILE\redline-conductor\state"
 # Optional bounded read-only probe: replace 1234 with an independently identified PID.
-powershell -NoProfile -File scripts/failure-watchdog.ps1 probe C:\Users\nehap\redline-conductor\state\failure-watchdog-241 1234
+powershell -NoProfile -File scripts/failure-watchdog.ps1 probe "$env:USERPROFILE\redline-conductor\state\failure-watchdog-241" 1234
 ```
 
 Incident JSON, with a current observation timestamp and actual evidence:
@@ -29,4 +29,5 @@ Escalations are **local requests**, not delivered messages or dispatched workers
 
 Repairs are deliberately coordinator controlled: only an existing authorized worker, bounded timeout (request contract: 60 seconds), within the coordinator's remaining model budget, isolated checkout, tests and PR; never main, an active worker checkout, credentials, reset/deletion of worktrees or changes to evidence verification. No PR integration assignment is created. The request timeout is a contract; this program does not launch or enforce external repairs. No automatic submission.
 
-Named upstream `f1-go.ps1` and `pane-doctor.ps1` were not available in this checkout or found under the user directory. These entry/display wrappers are standalone; upstream doctor integration and persistent launch remain coordinator work. Verify with `node --test`; the suite includes synthetic input, dedup, budgets, cutoff, cross-process locking, child timeout, real Windows process metadata and PowerShell parser checks.
+Upstream scripts were found in the conductor root. Doctor reuses `f1-go.ps1` status/doctor log files and `pane-doctor.ps1` last-28-lines display through the optional upstream state-directory argument. Each file read is capped at 16 KiB, with path, size, modification time and truncation reported; control characters are stripped. Neither upstream script is executed: their worker/model loops and active-checkout mutations violate this issue policy. The inspected conductor has no watchdog request acknowledgment/dispatch interface; delivery and external repair enforcement remain coordinator work. Verify with `node --test`; the suite includes synthetic input, dedup, budgets, cutoff, cross-process locking, child timeout, real Windows process metadata and PowerShell parser checks.
+
