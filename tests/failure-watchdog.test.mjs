@@ -4,8 +4,12 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { STOP, validate, report, tick, doctor, withLock, boundedProbe, probeTask, main, upstreamDoctor } from '../scripts/failure-watchdog.mjs';
+import { validate, report as rawReport, tick as rawTick, doctor, withLock, boundedProbe, probeTask, main, upstreamDoctor } from '../scripts/failure-watchdog.mjs';
 
+const STOP = Date.parse('2026-11-15T08:00:00-08:00');
+const cutoff = new Date(STOP).toISOString();
+const report = (dir, incident, now) => rawReport(dir, incident, now, cutoff);
+const tick = (dir, now) => rawTick(dir, now, cutoff);
 const now = STOP - 3600000;
 function fixture(t) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'redline-watchdog-'));
@@ -34,9 +38,9 @@ test('malformed, oversized, stale and future reports fail closed', async t => {
   assert.throws(() => report(dir, incident({ observedAt: new Date(now - 86400001).toISOString() }), now));
   assert.throws(() => report(dir, incident({ observedAt: new Date(now + 60001).toISOString() }), now));
   const file = path.join(dir, 'large.json'); fs.writeFileSync(file, ' '.repeat(16385));
-  await assert.rejects(main(['report', dir, file]), /too large/);
+  await assert.rejects(main(['report', dir, file, cutoff]), /too large/);
   fs.writeFileSync(file, '{broken');
-  await assert.rejects(main(['report', dir, file]));
+  await assert.rejects(main(['report', dir, file, cutoff]));
   assert.equal(doctor(dir).total, 0);
 });
 
@@ -53,8 +57,8 @@ test('persistent global budget, deadline and poisoned state stop escalation', t 
   assert.equal(result.requests.length, 4);
   assert.ok(result.requests.every(x => x.recipient === 'orchestrator'));
   assert.equal(tick(dir, now + 60000).remainingBudget, 0);
-  assert.equal(tick(dir, STOP).stopped, true);
-  assert.throws(() => report(dir, incident(), STOP), /deadline/);
+  assert.throws(() => tick(dir, STOP), /cutoff/);
+  assert.throws(() => report(dir, incident(), STOP), /cutoff/);
   const file = path.join(dir, 'state.json');
   const s = JSON.parse(fs.readFileSync(file)); s.total = 0; fs.writeFileSync(file, JSON.stringify(s));
   assert.throws(() => tick(dir, now), /ledger/);
@@ -146,7 +150,7 @@ test('real read-only Windows process evidence and PowerShell syntax', { skip: pr
 test('CLI probe holds the state lock until its read-only child has exited', { skip: process.platform !== 'win32' }, async t => {
   if (Date.now() >= STOP) { t.skip('Absolute probe deadline reached'); return; }
   const dir = fixture(t);
-  const pending = main(['probe', dir, String(process.pid)]);
+  const pending = main(['probe', dir, String(process.pid), cutoff]);
   assert.throws(() => doctor(dir), /EEXIST/);
   const result = await pending;
   assert.equal(result.code, 0);
@@ -158,8 +162,8 @@ test('CLI report, watch and doctor retain literal untrusted text as JSON data', 
   // Actual clock is used only for the command-line intake, never to extend deadline.
   if (Date.now() >= STOP) return;
   fs.writeFileSync(file, JSON.stringify(incident({ observedAt: new Date().toISOString() })));
-  const result = await main(['report', dir, file]);
+  const result = await main(['report', dir, file, cutoff]);
   assert.equal(result.modelCalls, 0);
-  assert.equal((await main(['watch', dir])).requests[0].recipient, 'A1');
+  assert.equal(tick(dir, Date.now()).requests[0].recipient, 'A1');
   assert.equal(Object.values((await main(['doctor', dir])).incidents)[0].incident.evidence, incident().evidence);
 });
