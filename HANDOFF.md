@@ -43,3 +43,4 @@ STATUS: DONE
 - U25-only display adapters qualify inferred sheet and plot-derived five-second endpoint in Workspace, Ask, evidence panel and Gravity research. Stored enums and other rows unchanged; HOLD/draft and honest relayed review retained; PSI25-B16 unresolved.
 - Regression anchors all non-U25 evidence rows to immutable c4e68732269e8986849109612a5d806fea401d15; surface assertions added.
 - Next: native artifact regeneration, full node --test once, push to existing PR294. No server/browser, merge/deploy or verification promotion.
+- Native build-evidence/export-datapackage/verification-worksheet completed (45 draft, 0 verified). First full suite found two stale surface expectations; updated them for qualified U25 text and its endpoint field. Final full rerun pending.
