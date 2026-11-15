@@ -1,3 +1,4 @@
+import { reviewedGravity, reviewedForm, reviewedEndpoint } from './evidence-provenance.js';
 import { compareRow } from '../rules/compare.js';
 
 const FIELDS = [
@@ -122,7 +123,7 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
       b.setAttribute('aria-pressed', String(selected === c.row.evidence_id));
       p(li, `${sourceFor(c.row)?.title ?? 'Source not stated'} · ${c.comparison.rules.find(r => r.grade !== 'OK')?.why ?? 'No comparison notes'}`);
       source(li, c.row);
-      p(li, `${c.row.material} · ${c.row.form} · ${c.row.facility} · ${format(c.row.gravity_g, 'g')} · ${c.row.endpoint} · ${c.row.outcome ?? 'Outcome not stated'} · ${c.row.review_status}`);
+      p(li, `${c.row.material} · ${reviewedForm(c.row) ?? c.row.form} · ${c.row.facility} · ${(reviewedGravity(c.row) ?? format(c.row.gravity_g, 'g'))} · ${reviewedEndpoint(c.row) ?? c.row.endpoint} · ${c.row.outcome ?? 'Outcome not stated'} · ${c.row.review_status}`);
       if (result.conflicts?.includes(c.row.evidence_id)) p(li, 'Other comparable tests disagree');
       if (c.comparison.rules.some(r => r.rule === 'E' && r.grade === 'INVALID')) p(li, 'Related test (different endpoint, not used for the label)');
     });
@@ -133,7 +134,7 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
     detail.append(make('h4', row.evidence_id));
     p(detail, `Review status: ${row.review_status}; verifier: ${row.verified_by ?? 'Not stated'}; run: ${format(row.run_id)}; sample: ${format(row.sample_id)}.`);
     if (!source(detail, row)) return;
-    p(detail, `Recorded outcome: ${format(row.outcome)}; endpoint: ${format(row.endpoint)}; value: ${format(row.value, row.value_unit)}.`);
+    p(detail, `Recorded outcome: ${format(row.outcome)}; endpoint: ${reviewedEndpoint(row) ?? format(row.endpoint)}; value: ${reviewedEndpoint(row) ?? format(row.value, row.value_unit)}.`);
     p(detail, `Applicability to this request: ${comparison.grade}${inspectOnly ? '; inspection only, not used for the label' : ''}.`);
     if (comparison.rules.some(r => r.rule === 'G' && r.grade !== 'OK')) p(detail, 'Cross-gravity comparison', 'tag-cross-gravity');
     if (['aircraft', 'drop-tower'].includes(row.facility)) p(detail, 'Short-duration facility; not a long-duration cabin measurement.', 'caveat');
@@ -145,7 +146,7 @@ export function renderEvidencePanel(root, result, evidence, options = {}) {
     const q = { ...snapshot, o2_partial_kpa: partial(snapshot) }, r = { ...row, o2_partial_kpa: partial(row) };
     FIELDS.forEach(([key, name, unit, rule]) => {
       const tr = make('tr'), th = make('th', name); th.scope = 'row'; tr.append(th);
-      tr.append(make('td', format(q[key], unit)), make('td', format(r[key], unit)));
+      tr.append(make('td', format(q[key], unit)), make('td', (key === 'gravity_g' && reviewedGravity(r) || key === 'form' && reviewedForm(r) || key === 'endpoint' && reviewedEndpoint(r) || format(r[key], unit))));
       const v = comparison.rules.find(n => n.rule === rule);
       tr.append(make('td', `${!known(q[key]) || !known(r[key]) ? 'Unknown; ' : ''}${v ? `${v.grade}: ${v.why}` : 'Context only; no field verdict'}`)); body.append(tr);
     });

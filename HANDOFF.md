@@ -30,12 +30,20 @@ STATUS: DONE
 
 STATUS: DONE
 
-# Issue #297: B2 reference-faithful dark workspace shell
+# Issue #293
+- Recorded user-relayed Lakshya CORRECTION NEEDED review separately; retained HOLD/draft and B16. Nominal/inferred provenance carried in row notes and relevant displays/worksheet. A1 remains stopped. No server/browser.
+- Validation pending.
 
-- Base main c4e6873. Owned files only: index.html, src/styles.css, src/styles/workspace.css, src/ui/workspace.js, DESIGN.md (narrow §4 amendment), tests/workspace-shell, mission-dashboard (geometry/token assertions updated, same intent), fixtures/workspace-dom (new IDs), new tests/workspace-layout.test.mjs. No A2 science files, viewer/model/scene, data, main.js or vendor edits.
-- Composition (transcribed geometry, screenshot not seen): black 36px masthead + 36px tabs + 36px toolbar (<=111px incl. hairlines); setup rail 240px | records 400px | model+evidence remainder (55% at 1440) | 28px summary strip (real counts, selection, PSI link). 1px separators with 9px drag target. Rare layout controls in native "Layout" details (Escape/outside close, focus restore; masthead scope notes same on desktop). Dense hairline record rows. Empty 16:10 stage with user-triggered "Load rover model" (Three.js still lazy). Viewer tools become a right-edge strip on desktop via host CSS only. <1080px: one pane at a time via Setup/Records/Model switch; record/item selection reveals detail pane and focus returns on close. Shared --control-h (32 fine / 44 touch-narrow) and --bar-h tokens.
-- Skills interface-design/ui-ux-pro-max/uncodixfy/impeccable/web-design-guidelines are not installed here: applied their principles as fallback, none ran.
-- Tests: full node --test once on final code (Node v26.13.1): 1262 tests, 1218 pass, 0 fail, 44 existing TODO; size-budget PASS; git diff --check clean. No browser/server run: coordinator must capture 1440x900, 390x844, 320 reflow, all 6 tools, keyboard, 200% zoom, no-WebGL/context-loss fallback and perf.
-- Next: coordinator visual review of the PR; no merge/deploy.
+- Native regeneration: node scripts/build-evidence.mjs (45 draft/0 verified), node scripts/export-datapackage.mjs, node scripts/verification-worksheet.mjs: exit 0. node --test: 1249 tests, 1204 pass, 1 stale pitch provenance failure, 44 TODO. Corrected pitch build reference; targeted pitch/review tests rerun. node scripts/size-budget.mjs PASS. node scripts/lint-csv.mjs reports 1 existing diagnostic; no unrelated evidence corrected. git diff --check clean. No build script exists; vendor integrity covered by full suite.
+STATUS: DONE
+- Follow-up: initial pitch update encountered an encoding error; corrected with byte-preserving replacement. node --test tests/pitch-demo.test.mjs tests/review-293.test.mjs: exit 0 (all pass). PR #294 opened; no merge/deploy.
 
+# Issue #295: PR294 provenance and U25 display follow-up
+- Fetched PR294 head 6d0e62d onto assigned issue branch. Restored frozen screenshot inventory hashes; current inventory checked separately.
+- U25-only display adapters qualify inferred sheet and plot-derived five-second endpoint in Workspace, Ask, evidence panel and Gravity research. Stored enums and other rows unchanged; HOLD/draft and honest relayed review retained; PSI25-B16 unresolved.
+- Regression anchors all non-U25 evidence rows to immutable c4e68732269e8986849109612a5d806fea401d15; surface assertions added.
+- Next: native artifact regeneration, full node --test once, push to existing PR294. No server/browser, merge/deploy or verification promotion.
+- Native build-evidence/export-datapackage/verification-worksheet completed (45 draft, 0 verified). First full suite found two stale surface expectations; updated them for qualified U25 text and its endpoint field. Final full rerun pending.
+- Full node --test on 2a41a2da300a0a2501e3c27f81a30926971c82b7 (Node v26.13.1): 1250 tests, 1206 pass, 0 fail, 44 existing TODO, 0 skipped/cancelled; exit 0. git diff --check clean. Native worksheet/export regenerated with no content changes beyond evidence build metadata. No server/browser or persistent process started.
+- Complete; push current branch HEAD to existing PR294 source branch only. Coordinator retains review/release ownership.
 STATUS: DONE

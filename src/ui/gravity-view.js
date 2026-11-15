@@ -1,3 +1,4 @@
+import { reviewedGravity, reviewedForm, reviewedEndpoint } from './evidence-provenance.js';
 // Research display adapter, deliberately separate from S1 evidence/label inputs.
 const SOURCES = {
   urban: ['Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results',
@@ -64,7 +65,7 @@ function conditions(p) {
   const flow = p.kind === 'extrapolation'
     ? `${number(p.comparison_velocity_cm_s, 'cm/s')} comparison coordinate; not an observed flow`
     : `${number(p.flow_speed_cm_s, 'cm/s')} forced flow; buoyant speed not inferred`;
-  return `${p.material}; ${p.form}; thickness ${number(p.thickness_mm, 'mm')}; ${pressure}; ${flow}; ${p.flow_direction || 'direction not stated'}; ${p.gravity || 'gravity not stated'} (${p.gravity_context}); ${p.facility}; observation ${number(p.test_duration_s, 's')}`;
+  return `${p.material}; ${reviewedForm(p) ?? p.form}; thickness ${number(p.thickness_mm, 'mm')}; ${pressure}; ${flow}; ${p.flow_direction || 'direction not stated'}; ${p.gravity || 'gravity not stated'} (${p.gravity_context}); ${p.facility}; observation ${number(p.test_duration_s, 's')}`;
 }
 
 // Cabin request in words and units, never raw JSON (persona B2 finding).
@@ -76,7 +77,7 @@ export function requestText(r = {}) {
     has(r.pressure_kpa) ? `${r.pressure_kpa} kPa absolute` : 'pressure not stated',
     has(r.flow_speed_cm_s) ? `forced airflow ${r.flow_speed_cm_s} cm/s` : 'forced airflow not specified',
     r.flow_direction ? `${r.flow_direction} flow` : 'flow direction not specified',
-    has(r.gravity_g) ? (GRAVITY_TEXT[r.gravity_g] ?? `${r.gravity_g} g`) : 'gravity not stated',
+    has(r.gravity_g) ? (reviewedGravity(r) ?? GRAVITY_TEXT[r.gravity_g] ?? `${r.gravity_g} g`) : 'gravity not stated',
   ].join('; ');
 }
 
@@ -88,8 +89,8 @@ function dataTable(points, research) {
     <tbody>${points.map((p) => {
       const missing = missingFields(p);
       return `<tr><th scope="row">${escape(basis(p))}<br>${escape(p.evidence_id)}<br><button type="button" data-record="${escape(p.evidence_id)}">Open evidence record</button></th>
-      <td>${missing.length ? `Value withheld: missing ${escape(missing.join(', '))}` : `${escape(p.value)} % O2<br>${citation(p)}`}</td>
-      <td>${escape(p.endpoint)}<br>${escape(conditions(p))}<br>Criterion: ${escape(p.pass_criterion || 'Not stated in this source')}<br>Run: ${escape(p.run_id || 'Not stated in this source')}<br>${p.condition_source_locator ? sourceLink(p.condition_source_title, p.condition_source_url, p.condition_source_locator) : citation(p)}</td>
+      <td>${missing.length ? `Value withheld: missing ${escape(missing.join(', '))}` : `${escape(reviewedEndpoint(p) ?? `${p.value} % O2`)}<br>${citation(p)}`}</td>
+      <td>${escape(reviewedEndpoint(p) ?? p.endpoint)}<br>${escape(conditions(p))}<br>Criterion: ${escape(p.pass_criterion || 'Not stated in this source')}<br>Run: ${escape(p.run_id || 'Not stated in this source')}<br>${p.condition_source_locator ? sourceLink(p.condition_source_title, p.condition_source_url, p.condition_source_locator) : citation(p)}</td>
       <td>${escape(p.uncertainty)}<br>Review: ${escape(p.review_status)}<br>${escape(p.notes)}<br>${citation(p)}</td></tr>`;
     }).join('')}</tbody></table></div>`;
 }
@@ -120,7 +121,7 @@ function chart(points, historical, research) {
   const dots = marks.map((p, i) => {
     const px = historical ? 100 + i * 450 / Math.max(1, marks.length - 1) : x(p.kind === 'extrapolation' ? p.comparison_velocity_cm_s : p.flow_speed_cm_s);
     const py = y(p.value);
-    const label = `${p.evidence_id}: ${basis(p)}, ${p.value} % O2; ${p.endpoint}; ${p.source_locator}; ${p.review_status}`;
+    const label = `${p.evidence_id}: ${basis(p)}, ${reviewedEndpoint(p) ?? `${p.value} % O2; ${p.endpoint}`}; ${p.source_locator}; ${p.review_status}`;
     const marker = p.kind === 'extrapolation'
       ? `<path d="M${px},${py - 6} l6,6 -6,6 -6,-6 Z" fill="#16191E" stroke="#E8EAED" stroke-width="2"/>`
       : `<circle cx="${px}" cy="${py}" r="5" fill="#E8EAED"/>`;
@@ -133,7 +134,7 @@ function chart(points, historical, research) {
     ${axes}<path d="M64 48 V270 H584" fill="none" stroke="#737B88"/><text x="64" y="24">Oxygen (vol%)</text>${ticks}${dots}
     <text x="320" y="326" text-anchor="middle">${historical ? 'Gravity / endpoint (categorical; no interpolation)' : 'Forced airflow comparison coordinate (cm/s)'}</text></svg></div>
     <p>Hollow diamond: REDLINE extrapolation. Solid circle: tabulated measurement. No continuous gravity curve or connecting line.</p>
-    ${!historical && references.length ? `<div class="gv-note"><strong>Separate simulated-lunar references · flow not stated; not plotted at zero</strong>${references.map((p) => `<p>${escape(p.material)} · ${escape(p.endpoint)}: approximately ${p.value.toFixed(1)} % O2; ${escape(p.uncertainty)}. ${citation(p)}</p>`).join('')}</div>` : ''}
+    ${!historical && references.length ? `<div class="gv-note"><strong>Separate simulated-lunar references · flow not stated; not plotted at zero</strong>${references.map((p) => `<p>${escape(p.material)} · ${escape(p.endpoint)}: ${escape(reviewedEndpoint(p) ?? `approximately ${p.value.toFixed(1)} % O2`)}; ${escape(p.uncertainty)}. ${citation(p)}</p>`).join('')}</div>` : ''}
     ${!historical && (!plotted.length || !references.length) ? '<p>Counterpart unavailable; no difference or connecting line is computed.</p>' : ''}</figure>`;
 }
 

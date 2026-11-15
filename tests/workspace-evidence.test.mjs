@@ -57,7 +57,8 @@ test('record description keeps units, citation, locator and inspection-only stat
   assert.match(d.citation.url, /^https:\/\/([\w-]+\.)*nasa\.gov\//);
   assert.equal(d.citation.nasa, true);
   const labels = d.conditions.map(([k]) => k);
-  assert.deepEqual(labels, ['Oxygen', 'Pressure', 'Gravity', 'Form', 'Facility']);
+  assert.deepEqual(labels, ['Oxygen', 'Pressure', 'Gravity', 'Form', 'Facility',
+    ...(row.evidence_id === 'U25-01-L' ? ['Endpoint'] : [])]);
   assert.equal(formatCondition(null, 'kPa'), 'Not stated');
   assert.equal(formatCondition(56.5, 'kPa'), '56.5 kPa');
   const unsafe = describeRecord({ evidence_id: 'Z', source_key: 'BAD' }, { BAD: { title: 'T', url: 'javascript:alert(1)' } });

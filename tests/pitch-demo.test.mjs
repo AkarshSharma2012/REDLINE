@@ -15,7 +15,11 @@ test('current pitch inventory matches checked-in data', () => {
   const verified = evidence.evidence.filter(row => row.review_status === 'verified').length;
   assert.ok(pitch.includes(`**${evidence.evidence.length} rows and zero verified rows**`));
   assert.equal(verified, 0);
-  assert.ok(pitch.includes(evidence.built_from));
+  const current = pitch.split('## Current screenshot manifest')[0];
+  assert.ok(current.includes(evidence.built_from));
+  const captures = pitch.split('## Current screenshot manifest')[1];
+  assert.ok(captures.includes('data/evidence.csv@c78b68c2b7ae1c952eb9feb0d51c1a6e7f08b5aa'));
+  assert.ok(captures.includes('data/evidence.csv@dbb9db601a4a8d07ad77ec5097f8b6231a3f0e41'));
 });
 
 test('current rover and 30% oxygen preview retain four missing-evidence results', () => {

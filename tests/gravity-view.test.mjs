@@ -91,7 +91,7 @@ test('SVG never invents a zero-flow lunar point; each plotted point links its NA
   // The digitization URL is the presentation: slide 14, not paper page 8.
   assert.ok(points.every((m) => m[1].includes('ntrs.nasa.gov') && m[1].endsWith('#page=14')));
   assert.match(root.innerHTML, /Separate simulated-lunar references · flow not stated; not plotted at zero/);
-  assert.match(root.innerHTML, /approximately 13\.5 % O2/);
+  assert.match(root.innerHTML, /13\.5 mol% O2 \(plot-derived five-second extinction; 0\.8 mm PMMA at 56\.5 kPa absolute\)/);
   assert.match(root.innerHTML, /<table>/);
   assert.match(root.innerHTML, /<caption>Oxygen limits for these tested setups/);
   assert.match(root.innerHTML, /<svg[^>]+fill="#A9B0BB"/); // SVG text needs fill; CSS color alone leaves it black.
