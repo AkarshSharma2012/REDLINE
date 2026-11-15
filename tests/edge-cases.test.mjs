@@ -138,7 +138,7 @@ test('labelMaterial: oxygen coverage requires known oxygen and cites only coveri
   }
 });
 for (const pressure_kpa of [null, 110.001]) {
-  test.todo(`labelMaterial: pressure ${pressure_kpa} cannot cover no-spread but retains burning evidence (V2 U2)`, () => {
+  test(`labelMaterial: pressure ${pressure_kpa} cannot cover no-spread but retains burning evidence (V2 U2)`, () => {
     answer(labelMaterial(query(), [row({ pressure_kpa, outcome: 'no-spread' })]), 'NOT_ESTABLISHED', 'NE-incompatible', ['SYNTHETIC-SPREAD']);
     const burned = labelMaterial(query(), [row({ pressure_kpa })]);
     answer(burned, 'BURNED', null, ['SYNTHETIC-SPREAD']);
