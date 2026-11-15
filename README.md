@@ -20,7 +20,9 @@ Pages is already enabled and HTTPS is enforced; no settings change is currently 
 
 ## Run locally
 
-No install step and no dependencies. Local browsing needs Python 3 (any recent version); tests need Node 22.12 or newer.
+No dependency installation or application build is needed. Local browsing needs Python 3 (any recent version); tests need Node 22.12 or newer.
+
+The workspace release described below bundles pinned browser libraries locally: **GSAP 3.15.1** ([provenance](src/vendor/gsap/PROVENANCE.md), [GSAP standard license](https://gsap.com/standard-license)) and **Three.js r187 (0.187.0)** ([provenance](src/vendor/three/PROVENANCE.md), [MIT license](src/vendor/three/LICENSE)). These are browser dependencies, not packages you need to install. Source browsing and the illustrative model require no CDN, paid service or API key; opening original citations requires access to the linked sites. The library links belong to the pending workspace integration and become available with that release.
 
 ```sh
 python -m http.server 8000     # from the repo root, then open http://localhost:8000/
@@ -31,6 +33,21 @@ Open the page through the server, not as a `file://` path: browsers block ES mod
 The committed `data/evidence.json` supplies the evidence data. After editing its source CSV or metadata, regenerate it with `node scripts/build-evidence.mjs` and commit the updated artifact. This is a data maintenance command, not a deployment build step. If loading fails, check that the JSON file is served successfully from the same site.
 
 Tests run without a server: `node --test` (or `npm test`). See the [testing guide](docs/testing.md) for coverage and limitations; passing Node tests does not establish real-browser layout or accessibility.
+
+## NASA workspace quickstart (pending release integration)
+
+These instructions describe workspace PR #285 at `f44d08bf02fa6452bcb92ff525ab327e08bb02af`, with science wording reviewed against PR #286 at `531b949e1ec03bb41004d066966ed41bd4827251`. They do not establish that the workspace is deployed at the live link above.
+
+1. In Cabin setup, choose **Load lunar rover demo**. The cabin items and their uses are hypothetical, not a real rover manifest.
+2. Browse **NASA source records**. Search by material, investigation or source and filter by review status. Check the total, matching and verified counts. Open a record to inspect its original citation, locator and recorded test conditions; follow the citation to the original source.
+3. Choose **Model + evidence** to open the illustrative cabin model alongside evidence. Selecting a cabin material in the HTML item list or a model part synchronizes the selection/highlight and scopes the source records to that material. Clear the material filter to browse all records again.
+4. Adjust pane widths with the narrow/widen buttons or draggable separators; show/hide panes, choose **Comfortable** or **Compact** density, or **Reset layout**. Layout preferences are stored locally when browser storage is available. On narrow screens, panes stack and jump buttons reach each pane.
+
+Use native keyboard controls: Tab/Shift+Tab move focus, Enter/Space activate buttons, and native select controls choose filters. **Escape** closes an open source record and returns focus to its list button. With a pane separator focused, Left/Right adjust width, Home/End choose its minimum/maximum, and Enter resets that pane's width.
+
+For the 3D camera, use the orbit, zoom and **Reset view** buttons. With the view focused, arrow keys orbit, **+ / -** zoom and **Home** resets; drag to orbit and click a part to select it. Tab remains available to leave the view. The HTML cabin-item buttons provide material selection without canvas interaction.
+
+The workspace respects reduced-motion preferences. If animation or WebGL is unavailable, the HTML source browser, citation details and cabin-item controls remain usable; the viewer provides a schematic fallback. The model is **illustrative, not a fire simulation**. Inspecting a draft record does not verify it or make it eligible for results. **Zero verified rows cannot produce evidence-backed cabin results.** Model selection does not change review status, establish gravity transfer or validate a cabin design. No universal measured 0 g/1 g gravity bounds are inferred.
 
 ## Data sources
 
