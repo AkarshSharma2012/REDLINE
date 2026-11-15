@@ -91,3 +91,18 @@ test('text is rendered literally rather than parsed as HTML', () => {
   const r = root(); render(r, [row('A', { notes: '<img src=x onerror=alert(1)>' })]);
   assert.match(r.textContent, /<img/); assert.equal(r.all('img').length, 0);
 });
+
+test('college student: Escape and Close evidence restore the material opener', () => {
+  const r = root(); let focused = 0;
+  const opener = { focus: () => focused++ };
+  render(r, [row('A')], result, { opener });
+  let prevented = false;
+  r.onkeydown({ key: 'Escape', preventDefault: () => { prevented = true; } });
+  assert.equal(prevented, true);
+  assert.equal(focused, 1);
+  assert.match(r.textContent, /Select a material/);
+  assert.equal(r.onkeydown, null);
+  render(r, [row('A')], result, { opener });
+  click(r, 'Close evidence');
+  assert.equal(focused, 2);
+});

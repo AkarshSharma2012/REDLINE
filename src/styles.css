@@ -134,6 +134,28 @@ a[target="_blank"]::after {
 /* Active tab: bar + fill, not border colour alone (SC 1.4.1) */
 [role="tab"][aria-selected="true"] { background: var(--surface-selected); box-shadow: inset 0 -2px 0 var(--accent); }
 
+/* Preview status stays outside module roots so rerenders retain the explanation. */
+.preview-label {
+  display: block;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+.research-preview {
+  margin-bottom: var(--space-16);
+  padding: var(--space-12);
+  border: 1px dashed var(--border-control);
+  border-radius: var(--radius-panel);
+  background: var(--surface-1);
+  color: var(--text-2);
+}
+.research-preview h2, .research-preview h3 {
+  margin: 0 0 var(--space-4);
+  color: var(--text-1);
+}
+.research-preview p { margin: 0; }
+
 /* Panels: borders over shadows */
 .panel {
   background: var(--surface-1);
@@ -144,6 +166,10 @@ a[target="_blank"]::after {
 
 /* Results table (DESIGN.md 5.1) */
 .table-scroll { overflow-x: auto; }
+
+/* Keep absolute screen-reader citation text inside the Ask table's scrollport.
+   Without a containing block here, it can escape local overflow clipping. */
+#ask-root .table-scroll { position: relative; }
 
 table { border-collapse: collapse; width: 100%; background: var(--surface-1); }
 th, td {
@@ -319,3 +345,78 @@ a[target="_blank"] + a { margin-left: var(--space-8); }
 /* O2 tradeoff: preset button and its source link were touching; action buttons had no gap */
 .o2-slider [role="group"] > div { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-8); margin-bottom: var(--space-4); }
 .o2-slider > button { margin: var(--space-4) var(--space-4) 0 0; }
+
+/* ---- UI polish pass (task/ui-polish). Tokens only; spacing 2/4/8/12/16/24/32. ---- */
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+td, th, dd, .num, input, select { font-variant-numeric: tabular-nums; }
+
+/* Header: one title row, secondary lines at reading width */
+.app-header { padding: var(--space-16) var(--space-24) var(--space-12); }
+.app-header p { max-width: 96ch; font-size: 13px; line-height: 18px; }
+.app-header .type-title { letter-spacing: 0.02em; }
+#dataset { font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--text-3); overflow-wrap: anywhere; }
+
+/* Tab bar: flat tabs, selected = text-1 + surface fill + 2 px accent underline (not colour alone) */
+.tabs { position: sticky; top: 0; z-index: 2; background: var(--bg); }
+.tabs [role="tab"] {
+  flex: none;
+  border: 0;
+  border-radius: var(--radius-control) var(--radius-control) 0 0;
+  background: transparent;
+  color: var(--text-2);
+  padding: var(--space-8) var(--space-12);
+  margin-top: var(--space-4);
+  text-align: left;
+  white-space: nowrap;
+}
+.tabs [role="tab"]:not(:disabled):hover { background: var(--surface-1); color: var(--text-1); }
+.tabs [role="tab"]:focus-visible { outline-offset: -2px; }
+.tabs .preview-label { color: var(--text-3); font-weight: 400; }
+
+/* Regions: hairline-separated columns, headings with quiet rhythm */
+.region > .type-heading, .region > h2:first-child { margin: 0 0 var(--space-12); }
+.region-cabin > p:first-of-type button { width: 100%; min-height: 32px; }
+.region-evidence { position: sticky; top: 56px; max-height: calc(100vh - 56px); overflow-y: auto; }
+@media (max-width: 1080px) { .region-evidence { position: static; max-height: none; } }
+.research-preview { border-left: 2px solid var(--text-2); font-size: 13px; line-height: 18px; }
+.research-preview h2, .research-preview h3 { font-size: 13px; line-height: 18px; }
+
+/* Buttons: one height family; primary actions read as controls, not links */
+button { min-height: 28px; line-height: 18px; }
+button:active:not(:disabled) { background: var(--surface-1); }
+select { min-height: 32px; }
+input:not([type="range"]), select { background: var(--surface-1); }
+input:not([type="range"]):hover, select:hover { border-color: var(--text-2); }
+
+/* Tables: sticky header, row hover, aligned numerics, hairline rows */
+thead th { position: sticky; top: 0; z-index: 1; white-space: nowrap; border-bottom-color: var(--border-control); }
+tbody tr:hover > * { background: var(--surface-2); }
+tbody tr:last-child > * { border-bottom: 0; }
+.table-scroll, .gv-scroll { border: 1px solid var(--divider); border-radius: var(--radius-panel); }
+.table-scroll > table, .gv-scroll > table { border-radius: var(--radius-panel); }
+td .text-3, td .type-small { font-size: 12px; line-height: 16px; }
+
+/* Chips never truncate; legend gets a quiet caption feel */
+.legend { gap: var(--space-8) var(--space-12); }
+.legend .chip { white-space: nowrap; }
+
+/* Cards / notes used by Accuracy, Fixes and others */
+.panel + .panel { margin-top: var(--space-12); }
+.caveat { border-radius: 0 var(--radius-control) var(--radius-control) 0; }
+
+/* Phone: keep tabs on one scrollable row; full-width controls */
+@media (max-width: 480px) {
+  .tabs [role="tab"] { padding: var(--space-8); }
+  .region select, .region input:not([type="range"]):not([type="checkbox"]):not([type="radio"]) { width: 100%; }
+}
+
+/* Print: light paper, no chrome, links show their targets */
+@media print {
+  html, body { background: #fff; color: #000; }
+  .tabs, button, .region-cabin form { display: none !important; }
+  .layout { display: block; }
+  .region-evidence { position: static; max-height: none; overflow: visible; }
+  a { color: #000; }
+  a[target="_blank"]::after { content: " (" attr(href) ")"; background: none; width: auto; height: auto; -webkit-mask: none; mask: none; font-size: 10px; }
+  table, th, td { background: #fff !important; color: #000; }
+}

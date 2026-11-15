@@ -160,16 +160,22 @@ export function retrieve(question, data = {}, { limit = 8 } = {}) {
     docs.push({ kind: 'insight', id: row.insight_id, row, fields: fieldTokens(row) });
   }
   const hits = [];
-  if (!terms.length) return { terms, hits };
+  if (!terms.length) return { terms, hits, unmatched: [] };
+  // Question words (or their synonyms) that no row mentions at all: the data cannot answer
+  // about them, and the screen must say so rather than show near-misses (persona B2 finding).
+  const seen = new Set();
   for (const d of docs) {
     const { score, matched } = scoreDoc(terms, d.fields);
+    for (const m of matched) seen.add(m.term);
     // A hit needs at least one exact (weight 1) query word, not only synonyms.
     if (score > 0 && matched.some((m) => terms.find((t) => t.term === m.term).weight === 1)) {
       hits.push({ kind: d.kind, id: d.id, score, matched, row: d.row, source: sourceFor(d.kind, d.row, sources) });
     }
   }
   hits.sort((a, b) => b.score - a.score || String(a.id).localeCompare(String(b.id)));
-  return { terms, hits: hits.slice(0, limit) };
+  const unmatched = terms.filter((t) => t.weight === 1 && !seen.has(t.term)
+    && !(SYN_INDEX.get(t.term) || []).some((s) => seen.has(s))).map((t) => t.term);
+  return { terms, hits: hits.slice(0, limit), unmatched };
 }
 
 // Compact row for the prompt: drops nulls/empties so only fields the source gave are sent.
