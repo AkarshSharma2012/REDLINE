@@ -1,25 +1,35 @@
 # REDLINE: final-app demo and video plan
 
-Issue #63. Updated 2026-11-14 against app source commit `31a6acdd778e766d6a896201f376473155c51bc6`. This is a script for the running checkout, with its current limitations. Timing is a rehearsal target, not a measured delivery. Screenshots are real browser captures; no result or source was inserted for presentation.
+Issue #233 update, 2026-11-15, checked against source commit `7570c040a2b5ba550016c005a23c52413073def8`. Current verification is a Node-only rehearsal, not a browser walkthrough. The screenshots and timed script below are historical captures from 2026-11-14 at `31a6acdd778e766d6a896201f376473155c51bc6`; they do not establish current UI behavior. Timing remains an unmeasured target.
 
 ## What this build can demonstrate
 
 Start with an illustrative pressurized lunar rover, inspect published research, distinguish draft evidence from reviewed results, preview oxygen while holding other conditions fixed, and turn missing coverage into a candidate experiment question.
 
-The captured dataset has **29 rows and zero verified rows**. The current `src/rules/label.js` is a stub. Cabin Check shows **No verified evidence rows loaded**, not material-specific combustion results; its legend is a key, not an outcome. Gravity research is inspectable but held for scientific review. Accuracy shows **Held-out evaluation not run**. Ask REDLINE retrieves source-linked rows without a key; this is retrieval, not a live generated answer. Do not narrate functioning combustion classification, a changing label, measured accuracy or completed scientific validation.
+The checked-in `data/evidence.json` has **45 rows and zero verified rows**, built from `data/evidence.csv@c78b68c2b7ae1c952eb9feb0d51c1a6e7f08b5aa`. These are repository metadata, not NASA measurements. `src/rules/label.js` implements evidence matching, review-status filtering and labels; the Node suite exercises that logic. The current rover evaluation returns four **NOT_ESTABLISHED / NE-no-data** results. Its four materials have no verified evidence in this inventory; this does not establish measured material outcomes. Cabin Check's zero-verified notice and legend must not be presented as combustion findings. Ask retrieval works without a key; retrieval is not a live generated answer. No measured accuracy or completed scientific validation is established here.
 
-The Investigations screen is present, but the captured rover ranking has tied zero scores and fields saying **No source given in the catalog**. Treat those as an integration limitation, not NASA findings or evidence of equal relevance. Use the source-linked Gravity detail for the substantive source check. The root HANDOFF.md records changes needed from other owners.
+The historical Investigations capture has tied zero scores and missing-source fields. Those observations apply to that capture, not necessarily to the current catalog. Historical Gravity and Accuracy screens likewise require a fresh UI check before presenting their visible states as current.
 
 ## Before presenting
 
-1. From the repository root, run `python -m http.server 8000` and open `http://localhost:8000/#cabin`. ES modules require HTTP. If Python is unavailable, use an existing static server; do not install dependencies for this demo.
+During conductor work, **do not start a server, browser or background process**. Run `node --test` from the repository root. `tests/pitch-demo.test.mjs` rehearses the current data path without HTTP, a DOM or external requests. It checks inventory metadata, all four rover results, a 30% oxygen preview with other conditions preserved, and source-linked draft retrieval. It does not rehearse clicks, rendering, PDF switching or delivery time.
+
+Approved current narration: “REDLINE implements evidence matching and labels, but this inventory contains 45 rows with none verified. This illustrative rover returns four results saying not found in the sources reviewed. Changing oxygen to 30% retains that missing-coverage result. Ask retrieves draft research and source links; neither retrieval nor these software tests validates material behavior.”
+
+A current live UI demo requires a separate authorized human walkthrough and fresh captures. Until then, use the dated recorded walkthrough below and identify it as historical. Do not substitute synthetic test outcomes for measured evidence.
+
+## Historical browser preflight (2026-11-14; not rerun for #233)
+
+The following steps describe the captured build only. They are not instructions to launch a browser or server during conductor work.
+
+1. The captured app was already served over HTTP; its browser setup is recorded in the historical screenshot manifest below.
 2. Use a 1600 x 1000 viewport at 100% zoom, matching the captures. Click **Load lunar rover demo**. This loads and evaluates four hypothetical items: PMMA sheet window/display panel, cotton fabric clothing, P213 tape and Nomex fabric seat cover. It is not a flight manifest. The loader resets the form to its default exploration atmosphere and lunar scenario.
 3. Confirm the inputs show **34% O2, 56.5 kPa** and **Lunar scenario (0.16 g, estimate)**. Atmosphere context: [Abercromby et al., Table 1, journal p.77 / PDF p.2](https://www.nasa.gov/wp-content/uploads/2023/03/abercromby-8.2-34-atm-2015.pdf). The choice of this scenario and item uses is REDLINE's illustration. Leave unknown airflow blank; blank does not mean zero.
 4. Preflight **Gravity view**: PMMA / **PMMA sheet · flaming**; expand **Inspect draft research detail · excluded from cabin results**, then **Open evidence record** for `U25-01-L`. Locate the source link, source locator and `HOLD_scientific_review` tag. Close the detail and collapse the draft section, then return to Cabin Check.
 5. Preflight **Ask REDLINE** with `Which materials were tested at lunar gravity?`; submit **Ask**. Leave the optional API-key section closed and empty. Return to Cabin Check. No secret or live API call is needed.
 6. Check the dataset revision in the header. If it differs from the capture manifest, repeat the walkthrough and update captures before recording. Open the cited NASA PDF in advance if network access at judging is unreliable; keep its title and page visible.
 
-## Two-minute demo click-path
+## Historical two-minute demo click-path (2026-11-14)
 
 Read only the narration column. Approximately 210 spoken words leave room for clicks and pauses. All times include navigation. Keep the full caveats visible when zooming. Begin after the page has loaded; no typing an API key or waiting for a generated response.
 
@@ -42,7 +52,7 @@ Read only the narration column. Approximately 210 spoken words leave room for cl
 - If no verified rows remain available, keep the script as written. The legend's three states do not count as demonstrated results. Cabin evidence-row selection is unavailable in this state; Gravity detail supplies the inspectable source record.
 - If the app or network fails, say: **“These are captures of the local build; I will walk through its recorded states.”** Use shots in demo order: 02 → 01 → 03 → 04 → 05 → 06 → 07 → 02. Label the presentation **Recorded walkthrough**, not live interaction. Use a preloaded original PDF or its visible link/locator; do not claim a successful fresh source fetch.
 
-## Thirty-second video storyboard
+## Historical thirty-second video storyboard (2026-11-14)
 
 Six five-second segments; narration is approximately 53 words. This is an editing plan, not a rendered video. Use hard cuts and a stationary cursor while reading. Retain source links, draft tags and coverage notices; no fabricated charts, badges or result transitions.
 
@@ -55,9 +65,9 @@ Six five-second segments; narration is approximately 53 words. This is an editin
 | 0:20–0:25 | Shot 06: not-run banner, then Shot 07 retrieved rows. | No accuracy score is claimed. Ask retrieves source-linked records. | Retrieval shown · evaluation not run |
 | 0:25–0:30 | Shot 02: candidate experiment card; finish on REDLINE title and card. | The gap becomes a candidate experiment question for review. | Candidate question · REDLINE inference |
 
-## Screenshot manifest
+## Historical screenshot manifest (2026-11-14)
 
-Captured 2026-11-14 from the source commit above, in installed Microsoft Edge headless through DevTools Protocol. Viewport **1600 x 1000 CSS pixels**, device scale 1. PNGs are unedited viewport captures; scroll where indicated. The app was served over HTTP at `http://127.0.0.1:8063/` with a temporary Node server because `python` and `py` were unavailable on PATH. No dependencies were installed. These images include current integration defects rather than hiding them.
+Captured 2026-11-14 from historical commit `31a6acdd778e766d6a896201f376473155c51bc6`, in installed Microsoft Edge headless through DevTools Protocol. Viewport **1600 x 1000 CSS pixels**, device scale 1. PNGs are unedited viewport captures; scroll where indicated. The app was served over HTTP at `http://127.0.0.1:8063/` with a temporary Node server because `python` and `py` were unavailable on PATH. No dependencies were installed. These images document integration defects observed then, not the current checkout. No recapture was performed for #233.
 
 Dataset header: `data/evidence.csv@dbb9db601a4a8d07ad77ec5097f8b6231a3f0e41`; built `2026-11-14T18:22:32.413Z`; 29 rows, zero verified. Gravity research revision: `0d0cb9aeba1c93640cedaab916b7a7acc816a9c5`. Counts and revisions are build metadata, not NASA measurements.
 
@@ -81,9 +91,9 @@ Recapture after any UI or dataset change. Load the rover before Gravity and Oxyg
 - **Gravity context / Ask retrieval:** Olson and Ferkul, [Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test](https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf), criteria pp.2–4; Table I and Eq.(1), p.6. Preserve the distinction between historical endpoints, test conditions and lunar-surface behavior.
 - **Candidate experiment context:** [NASA Glenn, Flammability of Materials on the Moon (FM2)](https://www.nasa.gov/glenn/glenn-expertise-space-exploration/physical-sciences-program/combustion-science/flammability-of-materials-on-the-moon-fm2/), Background and Objectives. REDLINE's candidate cards are project inferences, not scheduled or accepted NASA experiments.
 
-Sources and locators above follow the repository's published data and review documents; this documentation task did not independently revalidate their scientific extraction. Runtime behavior was checked locally. No physical prediction, novelty, adoption, time savings or improved fire outcome is established by this walkthrough.
+Sources and locators above follow the repository's published data and review documents; this documentation task did not independently revalidate their scientific extraction. Current software behavior is checked through Node tests only; browser observations belong to the dated captures. No physical prediction, novelty, adoption, time savings or improved fire outcome is established by this walkthrough.
 
-## Demo acceptance check
+## Historical browser acceptance check (2026-11-14 only)
 
 - [x] Loaded the actual rover preset; scenario persisted across tabs.
 - [x] Exercised all six tabs; inspected the expanded draft evidence record and its NASA link/locator.
