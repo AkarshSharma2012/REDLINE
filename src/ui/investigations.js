@@ -66,8 +66,13 @@ function el(tag, attrs = {}, ...children) {
 export function formatValue(key, value) {
   if (value == null) return NOT_FOUND;
   if (key === 'gravity') return [].concat(value).map((g) => GRAVITY_TEXT[g] ?? g).join(', ');
-  if (Array.isArray(value)) return value.join(', ');
-  if (typeof value === 'object' && 'min' in value) return value.min === value.max ? `${value.min}` : `${value.min}–${value.max}`;
+  if (typeof value === 'number' && !Number.isFinite(value)) return NOT_FOUND;
+  if (Array.isArray(value)) return value.length ? value.map((v) => formatValue(null, v)).join(', ') : NOT_FOUND;
+  if (typeof value === 'object') {
+    if ('min' in value) return value.min === value.max ? formatValue(null, value.min) : `${formatValue(null, value.min)}–${formatValue(null, value.max)}`;
+    if ('value' in value) return formatValue(key, value.value);
+    return NOT_FOUND;
+  }
   return String(value);
 }
 
@@ -98,9 +103,17 @@ function select(id, labelText, options, value, onchange) {
 }
 
 function normalizeCatalog(catalog) {
-  let sources = catalog?.sources ?? {};
-  if (Array.isArray(sources)) sources = Object.fromEntries(sources.map((s) => [s.id ?? s.key, s]));
-  return { ...catalog, sources, investigations: catalog?.investigations ?? [] };
+  catalog = catalog && typeof catalog === 'object' ? catalog : {};
+  let sources = catalog.sources && typeof catalog.sources === 'object' ? catalog.sources : {};
+  if (Array.isArray(sources)) sources = Object.fromEntries(sources.filter((s) => s && typeof s === 'object').map((s) => [s.id ?? s.key, s]));
+  // Judge click-through (#169): skip non-records; a record without id/name still gets a stable id and plain text.
+  const investigations = (Array.isArray(catalog.investigations) ? catalog.investigations : [])
+    .filter((inv) => inv && typeof inv === 'object')
+    .map((inv, i) => {
+      const name = typeof inv.name === 'string' ? inv.name : inv.name?.value;
+      return { ...inv, id: inv.id ?? `entry-${i + 1}`, name: typeof name === 'string' && name ? name : 'Name not found in the sources reviewed' };
+    });
+  return { ...catalog, sources, investigations };
 }
 
 // renderInvestigations(root, catalog, opts) — draws the whole dashboard into root and keeps its own state.
