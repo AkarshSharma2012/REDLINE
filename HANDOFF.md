@@ -5,3 +5,4 @@
 - Verified: initial missing-module test failure, then all 6 detector tests pass; full node --test: 696 pass, 87 TODO, 0 fail (783 total). Existing TODO assertions print diagnostics. git diff --check passed. No server/browser started.
 - No changes needed outside owned files except this required root handoff. Next: conductor review/merge.
 STATUS: DONE
+- Reverified on task continuation: node --test (696 pass, 87 TODO, 0 fail); regenerated report with no content changes; git diff --check passed.
