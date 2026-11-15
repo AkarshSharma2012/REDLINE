@@ -58,7 +58,9 @@ test('workspace CSS is focused, restrained and stacks without page overflow on p
   assert.match(css, /@media \(max-width: 1080px\)[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(css, /\[data-density="compact"\]/);
   assert.match(css, /prefers-reduced-motion/);
-  assert.match(css, /min-height: 44px/);
+  assert.match(css, /min-height: var\(--control-h\)/, 'workspace controls follow the shared control-height token');
+  const tokens = await read('src/styles.css');
+  assert.match(tokens, /@media \(pointer: coarse\), \(max-width: 1080px\) \{\s*:root \{ --control-h: 44px;/, '44 px touch targets on touch and narrow screens');
 });
 
 test('DESIGN.md records the narrow illustrative-model exception without weakening evidence rules', async () => {
@@ -111,8 +113,8 @@ test('resize is bounded and layout columns follow collapsed panes', () => {
   p = resizePane(p, 'sources', -10000);
   assert.equal(p.sources, PANE_BOUNDS.sources.min);
   assert.deepEqual(resizePane(p, 'visual', 20), p, 'unknown pane unchanged');
-  assert.equal(layoutColumns(DEFAULT_PREFS), '280px 8px 380px 8px minmax(0, 1fr)');
-  assert.equal(layoutColumns({ ...DEFAULT_PREFS, controlsOpen: false }), '0 0 380px 8px minmax(0, 1fr)');
+  assert.equal(layoutColumns(DEFAULT_PREFS), '240px 1px 400px 1px minmax(0, 1fr)');
+  assert.equal(layoutColumns({ ...DEFAULT_PREFS, controlsOpen: false }), '0 0 400px 1px minmax(0, 1fr)');
   assert.equal(layoutColumns({ ...DEFAULT_PREFS, controlsOpen: false, sourcesOpen: false }), '0 0 0 0 minmax(0, 1fr)');
 });
 
@@ -132,8 +134,8 @@ test('settings visibly change the workspace and persist; reset restores defaults
   assert.equal($('workspace-toolbar').hidden, false);
   assert.equal(main.style.props['--ws-columns'], layoutColumns(DEFAULT_PREFS));
   $('ws-widen-controls').click();
-  assert.equal($('ws-sep-controls').getAttribute('aria-valuenow'), '300');
-  assert.match(main.style.props['--ws-columns'], /^300px/);
+  assert.equal($('ws-sep-controls').getAttribute('aria-valuenow'), '260');
+  assert.match(main.style.props['--ws-columns'], /^260px/);
   $('ws-toggle-sources').click();
   assert.equal($('ws-pane-sources').hidden, true);
   assert.equal($('ws-toggle-sources').getAttribute('aria-pressed'), 'false');
@@ -142,7 +144,7 @@ test('settings visibly change the workspace and persist; reset restores defaults
   assert.equal(main.getAttribute('data-density'), 'compact');
   assert.equal($('ws-density-compact').getAttribute('aria-pressed'), 'true');
   const saved = JSON.parse(storage.data[PREFS_KEY]);
-  assert.equal(saved.controls, 300); assert.equal(saved.sourcesOpen, false); assert.equal(saved.density, 'compact');
+  assert.equal(saved.controls, 260); assert.equal(saved.sourcesOpen, false); assert.equal(saved.density, 'compact');
   $('ws-reset').click();
   assert.deepEqual(ws.getPrefs(), DEFAULT_PREFS);
   assert.equal($('ws-pane-sources').hidden, false);
@@ -153,7 +155,7 @@ test('separators resize with keyboard: arrows, Home/End bounds and Enter reset',
   const { $ } = mount();
   const sep = $('ws-sep-sources');
   sep.dispatch('keydown', { key: 'ArrowRight' });
-  assert.equal(sep.getAttribute('aria-valuenow'), '400');
+  assert.equal(sep.getAttribute('aria-valuenow'), '420');
   sep.dispatch('keydown', { key: 'End' });
   assert.equal(sep.getAttribute('aria-valuenow'), String(PANE_BOUNDS.sources.max));
   sep.dispatch('keydown', { key: 'Home' });

@@ -1,11 +1,13 @@
-/* #277 three-pane evidence workspace. Tokens from src/styles.css (DESIGN.md).
-   Controls | source/results browser | evidence and illustrative model.
-   Hairline separators, 4 px radii, no gradients, glow, glass or decoration. */
+/* #277 three-pane evidence workspace, recomposed in #297 as a flush desktop tool:
+   slim toolbar | setup rail (~16%) | records column (~28%) | dominant model + evidence pane
+   | bottom summary strip. Tokens from src/styles.css (DESIGN.md). Hairline dividers,
+   rectangular panes, no gradients, glow, glass or decoration. */
 
 .layout.workspace {
-  grid-template-columns: var(--ws-columns, 280px 8px 380px 8px minmax(0, 1fr));
-  grid-template-rows: auto 1fr;
-  align-items: start;
+  grid-template-columns: var(--ws-columns, 240px 1px 400px 1px minmax(0, 1fr));
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-items: stretch;
+  min-height: 0;
 }
 
 /* Explicit placement: a collapsed (hidden) pane must not shift its neighbours. */
@@ -15,61 +17,95 @@
 .workspace > #ws-pane-sources { grid-column: 3; grid-row: 2; }
 .workspace > #ws-sep-sources { grid-column: 4; grid-row: 2; }
 .workspace > #ws-pane-visual { grid-column: 5; grid-row: 2; }
+.workspace > .ws-infobar { grid-column: 1 / -1; grid-row: 3; }
 
-/* Separators draw the pane dividers; the region borders would double them. */
-.workspace .region-cabin, .workspace .region-evidence { border: 0; }
-
-/* Panes scroll independently below the sticky tab bar, like a desktop tool. */
-.workspace .ws-pane {
-  position: sticky;
-  top: 52px;
-  max-height: calc(100vh - 52px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
+/* Panes: flush rectangles that scroll independently; the separators draw the dividers. */
+.workspace .ws-pane { min-width: 0; min-height: 0; padding: 0 var(--space-12) var(--space-16); overflow-y: auto; overscroll-behavior: contain; border: 0; }
+.workspace > #ws-pane-controls { background: var(--surface-1); }
 .workspace .ws-pane:focus { outline: none; }
 .workspace .ws-pane:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
-/* Toolbar: one wrapping row of small segmented groups */
+/* Pane header: one compact bar that stays in view while the pane scrolls */
+.workspace .ws-pane > .region-title {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 0 calc(-1 * var(--space-12)) var(--space-8);
+  padding: var(--space-8) var(--space-12) var(--space-4);
+  background: var(--bg);
+  border-bottom: 1px solid var(--divider);
+  font-size: 13px;
+  line-height: 20px;
+}
+.workspace > #ws-pane-controls > .region-title { background-color: var(--surface-1); }
+.workspace .ws-pane > .ws-subtitle { position: static; margin-top: var(--space-16); }
+.workspace .region-note { margin: var(--space-4) 0 var(--space-8); font-size: 13px; line-height: 18px; }
+
+/* Toolbar: one slim row. Pane switch (phones), right-pane view, layout settings disclosure. */
 .ws-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-8) var(--space-16);
-  padding: var(--space-4) var(--space-24);
+  gap: var(--space-4) var(--space-12);
+  min-height: var(--bar-h);
+  padding: 0 var(--space-12);
   border-bottom: 1px solid var(--divider);
   background: var(--surface-1);
   min-width: 0;
 }
 .ws-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
 .ws-group-label { color: var(--text-2); font-size: 12px; line-height: 16px; font-weight: 500; margin: 0 var(--space-2) 0 var(--space-4); }
-.ws-toolbar button { min-height: 36px; padding: var(--space-4) var(--space-8); font-size: 13px; line-height: 18px; }
-.ws-widths button { min-width: 36px; font-family: var(--font-mono); }
+.ws-toolbar button { padding: 0 var(--space-8); font-size: 13px; line-height: 18px; }
+/* Segmented groups: joined rectangles, selection = fill + accent underline (from button[aria-pressed]) */
+.ws-seg { gap: 0; }
+.ws-seg > button { border-radius: 0; }
+.ws-seg > button + button { border-left-width: 0; }
+.ws-seg > button:first-child { border-radius: var(--radius-control) 0 0 var(--radius-control); }
+.ws-seg > button:last-child { border-radius: 0 var(--radius-control) var(--radius-control) 0; }
+.ws-widths button { min-width: var(--control-h); font-family: var(--font-mono); }
 .ws-jump { display: none; }
 
-/* Resize handles: 8 px hit area, hairline, accent on hover and focus */
-.ws-sep {
-  position: relative;
-  align-self: stretch;
-  min-height: 100%;
-  cursor: col-resize;
-  touch-action: none;
+/* Layout settings: a native disclosure that opens a small panel under the toolbar */
+.ws-settings { position: relative; margin-left: auto; }
+.ws-settings > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--control-h);
+  padding: 0 var(--space-8);
+  list-style: none;
+  color: var(--text-1);
+  font-size: 13px;
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-control);
+  background: var(--surface-2);
 }
-.ws-sep::before {
-  content: "";
+.ws-settings > summary::-webkit-details-marker { display: none; }
+.ws-settings > summary::after { content: ""; width: 6px; height: 6px; margin: 0 var(--space-2) var(--space-2) var(--space-4); border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); }
+.ws-settings[open] > summary { background: var(--surface-selected); box-shadow: inset 0 -2px 0 var(--accent); }
+.ws-settings-body {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 3px;
-  width: 1px;
-  background: var(--divider);
+  z-index: 20;
+  top: calc(100% + var(--space-4));
+  right: 0;
+  display: grid;
+  gap: var(--space-12);
+  justify-items: start;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  padding: var(--space-12);
+  background: var(--surface-1);
+  border: 1px solid var(--border-control);
 }
-.ws-sep:hover::before, .ws-sep:focus-visible::before { left: 2px; width: 3px; background: var(--accent); }
+
+/* Separators: 1 px hairline; a wider invisible hit area overlaps the panes; accent on hover and focus */
+.ws-sep { position: relative; z-index: 2; align-self: stretch; background: var(--divider); cursor: col-resize; touch-action: none; }
+.ws-sep::after { content: ""; position: absolute; top: 0; bottom: 0; left: -4px; right: -4px; }
+.ws-sep::before { content: ""; position: absolute; top: 0; bottom: 0; left: -1px; width: 3px; background: transparent; }
+.ws-sep:hover::before, .ws-sep:focus-visible::before { background: var(--accent); }
 .ws-sep:focus-visible { outline: none; }
 
-.ws-subtitle { margin-top: var(--space-24); }
-
-/* Source filters and counts */
+/* Records column: compact filters, counts, then dense row-aligned records */
 .ws-filters {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 9rem);
@@ -83,123 +119,133 @@
 .ws-note {
   margin: 0 0 var(--space-8);
   padding: var(--space-4) var(--space-8);
-  border: 1px dashed var(--border-control);
-  border-radius: var(--radius-control);
+  border-left: 2px solid var(--text-2);
+  background: var(--surface-2);
   color: var(--text-1);
   font-size: 13px;
   line-height: 18px;
 }
+.workspace .legend { gap: var(--space-4) var(--space-8); margin-bottom: var(--space-8); }
 
-/* Record cards and cabin item buttons: full-width text buttons, selection = fill + accent bar */
-.ws-cards, .ws-materials { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
-.ws-materials { grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr)); margin-bottom: var(--space-12); }
+/* Record rows: full-width text buttons separated by hairlines, not padded cards.
+   Row 1 record ID and investigation; row 2 material and review state; row 3 conditions. */
+.ws-cards, .ws-materials { list-style: none; margin: 0; padding: 0; display: grid; }
+.ws-cards { border-top: 1px solid var(--divider); }
 .ws-card, .ws-material {
   display: grid;
-  gap: var(--space-2);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 var(--space-8);
   width: 100%;
-  min-height: 44px;
-  padding: var(--space-8) var(--space-12);
+  min-height: var(--control-h);
+  padding: var(--space-8);
   text-align: left;
-  background: var(--surface-1);
-  border: 1px solid var(--divider);
-  border-radius: var(--radius-control);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--divider);
+  border-radius: 0;
 }
-.ws-card:not(:disabled):hover, .ws-material:not(:disabled):hover { background: var(--surface-2); border-color: var(--border-control); }
-.ws-card[aria-pressed="true"], .ws-material[aria-pressed="true"] {
-  background: var(--surface-selected);
-  border-color: var(--border-control);
-  box-shadow: inset 2px 0 0 var(--accent);
-}
+.ws-card > *, .ws-material > * { grid-column: 1 / -1; }
+.ws-card > .ws-card-line:not(.type-data) { grid-column: 1; }
+.ws-card > .ws-card-status { grid-column: 2; grid-row: 2; text-align: right; }
+.ws-card:not(:disabled):hover, .ws-material:not(:disabled):hover { background: var(--surface-2); }
+.ws-card[aria-pressed="true"], .ws-material[aria-pressed="true"] { background: var(--surface-selected); box-shadow: inset 2px 0 0 var(--accent); }
 .ws-card-title { color: var(--text-1); font-weight: 600; }
 .ws-card-line { color: var(--text-2); font-size: 13px; line-height: 18px; }
-.ws-card-status { color: var(--text-3); font-size: 12px; line-height: 16px; }
-.ws-card .type-data { font-size: 12px; line-height: 16px; }
+.ws-card-status { color: var(--text-2); font-size: 12px; line-height: 16px; }
+.ws-card .type-data, .ws-material .type-data { font-size: 12px; line-height: 16px; }
 
-/* Visual pane: model label always visible; model area bounded */
+/* Model and evidence pane: the stage dominates; selection list and detail follow */
 .ws-visual { margin-bottom: var(--space-12); }
-.ws-model-label {
-  display: inline-block;
-  margin: 0 0 var(--space-8);
-  padding: 0 var(--space-4);
+.ws-model-label { margin: 0 0 var(--space-4); color: var(--text-2); font-size: 12px; line-height: 16px; font-weight: 500; }
+/* Empty stage: same reserved proportions as the viewer stage, with one intentional action */
+.ws-stage-empty {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-8);
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: 56vh;
+  min-height: 200px;
+  margin-bottom: var(--space-8);
+  padding: var(--space-16);
+  text-align: center;
+  background: var(--surface-1);
   border: 1px dashed var(--border-control);
-  border-radius: var(--radius-control);
-  color: var(--text-2);
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 500;
 }
+.ws-stage-title { margin: 0; color: var(--text-1); font-weight: 600; }
+.ws-stage-text { margin: 0; max-width: 44ch; color: var(--text-2); }
+.ws-stage-empty .btn-primary { width: auto; padding: 0 var(--space-16); }
 /* The host flows the whole mounted viewer (caption, stage, tools, material list).
    Only the viewer's own .rover-viewer__stage reserves the canvas aspect ratio and clips. */
-.ws-viewer {
-  position: relative;
-  width: 100%;
-  min-width: 0;
-  margin-bottom: var(--space-8);
-}
+.ws-viewer { position: relative; width: 100%; min-width: 0; margin-bottom: var(--space-8); }
+#ws-viewer-status:empty { display: none; }
+/* Cabin item hotspots beside the model: dense two-column list */
+.ws-materials { grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); border-top: 1px solid var(--divider); margin-bottom: var(--space-12); }
 
 /* Fixes and experiment planning: native disclosure below the source browser */
-.ws-disclosure { margin-top: var(--space-24); border-top: 1px solid var(--divider); }
-.ws-disclosure > summary {
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  color: var(--text-1);
-  font-weight: 600;
-  cursor: pointer;
-}
+.ws-disclosure { margin-top: var(--space-16); border-top: 1px solid var(--divider); }
+.ws-disclosure > summary { min-height: var(--control-h); display: flex; align-items: center; color: var(--text-1); font-weight: 600; cursor: pointer; }
 .ws-disclosure > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-#ws-viewer-status:empty { display: none; }
 
-/* Record detail */
-.ws-detail {
-  margin-bottom: var(--space-16);
-  padding: var(--space-12);
-  background: var(--surface-1);
-  border: 1px solid var(--divider);
-  border-radius: var(--radius-control);
-}
+/* Record detail: flat section with a hairline frame, conditions in a tabular grid */
+.ws-detail { margin-bottom: var(--space-16); padding: var(--space-12); background: var(--surface-1); border: 1px solid var(--divider); border-left: 2px solid var(--accent); }
 .ws-detail-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-8); margin-bottom: var(--space-8); }
 .ws-detail-head h3 { margin: 0; }
-.ws-conditions {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 120px), 1fr));
-  gap: var(--space-4) var(--space-12);
-  margin: 0 0 var(--space-8);
-}
+.ws-conditions { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 120px), 1fr)); gap: var(--space-4) var(--space-12); margin: 0 0 var(--space-8); }
 .ws-conditions-wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr)); margin-top: var(--space-8); }
 .ws-conditions dt { font-size: 12px; line-height: 16px; }
-.ws-conditions dd { margin: 0; overflow-wrap: anywhere; }
+.ws-conditions dd { margin: 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
 .ws-locator, .ws-citation { overflow-wrap: anywhere; }
-.ws-detail details > summary { color: var(--text-2); min-height: 40px; display: flex; align-items: center; }
+.ws-detail details > summary { color: var(--text-2); min-height: var(--control-h); display: flex; align-items: center; }
 .ws-detail details p { max-width: 80ch; color: var(--text-2); }
 
-/* Compact density: tighter rhythm, same type sizes and touch heights */
-.workspace[data-density="compact"] .region { padding: var(--space-8) var(--space-12); }
-.workspace[data-density="compact"] .region-title { margin-bottom: var(--space-8); padding-bottom: var(--space-4); }
-.workspace[data-density="compact"] .ws-card, .workspace[data-density="compact"] .ws-material { padding: var(--space-4) var(--space-8); gap: 0; }
-.workspace[data-density="compact"] .ws-cards, .workspace[data-density="compact"] .ws-materials { gap: var(--space-2); }
-.workspace[data-density="compact"] .ws-subtitle { margin-top: var(--space-12); }
-.workspace[data-density="compact"] .ws-toolbar { padding: var(--space-2) var(--space-12); }
+/* Bottom summary strip: real counts, the current selection and the primary dataset link */
+.ws-infobar { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-24); min-height: 28px; padding: var(--space-2) var(--space-12); border-top: 1px solid var(--divider); background: #000; color: var(--text-2); font-size: 12px; line-height: 16px; }
+.ws-infobar p { margin: 0; }
+.ws-infobar p:last-child { margin-left: auto; }
+.ws-infobar .type-data { margin-left: var(--space-4); color: var(--text-1); font-size: 12px; line-height: 16px; }
+
+/* Wide model pane: the viewer's own tools become a right-edge strip beside the stage */
+@media (min-width: 1081px) {
+  .ws-viewer .rover-viewer { grid-template-columns: minmax(0, 1fr) 9.5rem; }
+  .ws-viewer .rover-viewer > * { grid-column: 1 / -1; }
+  .ws-viewer .rover-viewer > .rover-viewer__stage { grid-column: 1; grid-row: 2; max-height: 56vh; }
+  .ws-viewer .rover-viewer > .rover-viewer__tools { grid-column: 2; grid-row: 2; flex-direction: column; flex-wrap: nowrap; gap: var(--space-8); align-self: start; }
+  .ws-viewer .rover-viewer:has(> .rover-viewer__tools[hidden]) > .rover-viewer__stage { grid-column: 1 / -1; }
+}
+@media (min-width: 1081px) and (pointer: fine) {
+  .ws-viewer .rover-viewer__tool { min-height: var(--control-h); min-width: var(--control-h); padding: var(--space-4) var(--space-8); font-size: 13px; }
+}
+
+/* Compact density: tighter rhythm, same type sizes and control heights */
+.workspace[data-density="compact"] .ws-pane { padding-bottom: var(--space-8); }
+.workspace[data-density="compact"] .ws-card, .workspace[data-density="compact"] .ws-material { padding: var(--space-4) var(--space-8); }
+.workspace[data-density="compact"] .ws-pane > .ws-subtitle { margin-top: var(--space-8); }
 .workspace[data-density="compact"] .ws-detail { padding: var(--space-8); }
 
-/* Tablet and phone: panes stack in task order; jump buttons reach each one; no page overflow */
+/* Tablet and phone: one pane at a time, chosen by the full-width pane switch; page scrolls */
 @media (max-width: 1080px) {
   .layout.workspace { grid-template-columns: minmax(0, 1fr) !important; grid-template-rows: none; }
   /* Same ID specificity as the desktop placements above, so these win and no implicit columns appear. */
   .workspace > #ws-pane-controls, .workspace > #ws-pane-sources, .workspace > #ws-pane-visual,
-  .workspace > #ws-sep-controls, .workspace > #ws-sep-sources, .workspace > .ws-toolbar { grid-column: 1; grid-row: auto; }
+  .workspace > #ws-sep-controls, .workspace > #ws-sep-sources, .workspace > .ws-toolbar, .workspace > .ws-infobar { grid-column: 1; grid-row: auto; }
   .workspace > .ws-pane { min-width: 0; width: auto; }
-  .workspace .ws-pane { position: static; max-height: none; overflow: visible; border-bottom: 1px solid var(--divider); }
+  .workspace .ws-pane { overflow: visible; }
+  .workspace[data-pane="controls"] > .ws-pane:not(#ws-pane-controls),
+  .workspace[data-pane="sources"] > .ws-pane:not(#ws-pane-sources),
+  .workspace[data-pane="visual"] > .ws-pane:not(#ws-pane-visual) { display: none; }
   .workspace > .ws-sep, .ws-widths { display: none; }
-  .ws-jump { display: flex; }
   .ws-toolbar { padding: var(--space-4) var(--space-12); }
-}
-@media (max-width: 1080px), (pointer: coarse) {
-  .ws-toolbar button { min-height: 44px; }
+  .ws-jump { display: flex; flex: 1 0 100%; }
+  .ws-jump > button { flex: 1 1 0; min-width: 0; }
+  .ws-infobar { gap: var(--space-2) var(--space-16); }
+  .ws-infobar p:last-child { margin-left: 0; }
 }
 @media (max-width: 480px) {
   .ws-filters { grid-template-columns: minmax(0, 1fr); }
-  .ws-toolbar { gap: var(--space-8); }
+  .ws-toolbar button { padding: 0 var(--space-4); }
+  .ws-card > .ws-card-line:not(.type-data), .ws-card > .ws-card-status { grid-column: 1 / -1; grid-row: auto; text-align: left; }
 }
 
 /* Motion is GSAP-only (opacity/transform, 150-240 ms) and skipped for reduced motion. */
@@ -208,6 +254,6 @@
 }
 
 @media print {
-  .ws-toolbar, .ws-sep, .ws-viewer { display: none !important; }
-  .workspace .ws-pane { position: static; max-height: none; overflow: visible; }
+  .ws-toolbar, .ws-sep, .ws-viewer, .ws-stage-empty { display: none !important; }
+  .workspace .ws-pane { display: block !important; overflow: visible; }
 }

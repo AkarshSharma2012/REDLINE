@@ -1,6 +1,7 @@
-// #277 three-pane evidence workspace: layout preferences, pane configuration, the
-// illustrative cabin model bridge and selection sync between cabin items, the source
-// browser and the model. It never evaluates evidence, never changes review state and
+// #277/#297 three-pane evidence workspace: layout preferences, pane configuration, the
+// illustrative cabin model bridge, selection sync between cabin items, the source
+// browser and the model, and the shell chrome (layout popover, phone pane switch,
+// bottom summary strip). It never evaluates evidence, never changes review state and
 // never persists anything except layout preferences.
 import { filterSources, renderSourceBrowser, renderSourceDetail, renderMaterialControls } from './workspace-evidence.js';
 import { createMotion } from './workspace-motion.js';
@@ -9,16 +10,19 @@ export const PREFS_KEY = 'redline.workspace.v1';
 const VERSION = 1;
 export const WIDTH_STEP = 20;
 export const PANE_BOUNDS = Object.freeze({
-  controls: Object.freeze({ min: 240, max: 400, default: 280 }),
-  sources: Object.freeze({ min: 300, max: 560, default: 380 }),
+  controls: Object.freeze({ min: 220, max: 400, default: 240 }),
+  sources: Object.freeze({ min: 300, max: 560, default: 400 }),
 });
 export const DEFAULT_PREFS = Object.freeze({
-  controls: 280, sources: 380, controlsOpen: true, sourcesOpen: true, density: 'comfortable', view: 'evidence',
+  controls: 240, sources: 400, controlsOpen: true, sourcesOpen: true, density: 'comfortable', view: 'evidence',
 });
 export const VIEWER_LABEL = 'Illustrative cabin model - not a fire simulation';
 const DENSITIES = ['comfortable', 'compact'];
 const VIEWS = ['evidence', 'model'];
 const PANES = ['controls', 'sources'];
+export const SEPARATOR_PX = 1;
+export const NARROW_QUERY = '(max-width: 1080px)';
+const JUMPS = ['controls', 'sources', 'visual'];
 
 const isObject = v => v !== null && typeof v === 'object' && !Array.isArray(v);
 const clamp = (pane, value) => Math.min(PANE_BOUNDS[pane].max, Math.max(PANE_BOUNDS[pane].min, Math.round(value)));
@@ -58,7 +62,7 @@ export function resizePane(prefs, pane, delta) {
 const setPane = (prefs, pane, value) => ({ ...prefs, [pane]: clamp(pane, value) });
 
 export function layoutColumns(p) {
-  const col = pane => (p[`${pane}Open`] ? `${p[pane]}px 8px` : '0 0');
+  const col = pane => (p[`${pane}Open`] ? `${p[pane]}px ${SEPARATOR_PX}px` : '0 0');
   return `${col('controls')} ${col('sources')} minmax(0, 1fr)`;
 }
 
@@ -81,7 +85,7 @@ export function mountWorkspace({
   if (!main || !toolbar || typeof main.style?.setProperty !== 'function') return inert();
   const anim = motion === undefined ? createMotion({ window: win }) : motion;
   const disposers = [];
-  const on = (el, type, fn) => { if (!el) return; el.addEventListener(type, fn); disposers.push(() => el.removeEventListener(type, fn)); };
+  const on = (el, type, fn) => { if (typeof el?.addEventListener !== 'function') return; el.addEventListener(type, fn); disposers.push(() => el.removeEventListener(type, fn)); };
 
   let prefs = readPrefs(storage);
   let evidence; // undefined = loading, null = unavailable
@@ -89,7 +93,7 @@ export function mountWorkspace({
   let selectedMaterialId = null, selectedSourceId = null;
   let filters = { text: '', review: 'all', materialId: null };
   let cards = new Map(), materialButtons = [];
-  let active = true, destroyed = false;
+  let active = true, destroyed = false, pane = 'sources';
   const viewer = { promise: null, handle: null };
 
   // ---- Layout configuration ----
@@ -107,8 +111,10 @@ export function mountWorkspace({
     }
     for (const d of DENSITIES) $(`ws-density-${d}`)?.setAttribute('aria-pressed', String(prefs.density === d));
     for (const v of VIEWS) $(`ws-view-${v}`)?.setAttribute('aria-pressed', String(prefs.view === v));
-    const modelRoot = $('rover-viewer-root');
+    const modelRoot = $('rover-viewer-root'), empty = $('ws-stage-empty'), load = $('ws-load-model');
     if (modelRoot) modelRoot.hidden = prefs.view !== 'model';
+    if (empty) empty.hidden = prefs.view === 'model';
+    if (load) load.textContent = viewer.promise ? 'Show rover model' : 'Load rover model';
     if (prefs.view === 'model') ensureViewer();
     showViewer();
   }
@@ -130,15 +136,38 @@ export function mountWorkspace({
   for (const d of DENSITIES) on($(`ws-density-${d}`), 'click', () => commit({ ...prefs, density: d }));
   for (const v of VIEWS) on($(`ws-view-${v}`), 'click', () => commit({ ...prefs, view: v }));
   on($('ws-reset'), 'click', () => commit({ ...DEFAULT_PREFS }));
-  // Narrow screens stack the panes; jump buttons reach each one (re-opening a collapsed pane).
-  for (const target of ['controls', 'sources', 'visual']) {
-    on($(`ws-jump-${target}`), 'click', () => {
-      if (PANES.includes(target) && !prefs[`${target}Open`]) commit({ ...prefs, [`${target}Open`]: true });
-      const pane = $(`ws-pane-${target}`);
-      pane?.scrollIntoView?.({ block: 'start' });
-      pane?.focus?.({ preventScroll: true });
-    });
+  on($('ws-load-model'), 'click', () => commit({ ...prefs, view: 'model' }));
+  for (const target of JUMPS) on($(`ws-jump-${target}`), 'click', () => showPane(target, { focus: true }));
+
+  // Phones and tablets show one pane at a time (CSS keys off data-pane below 1080 px);
+  // desktop ignores the attribute. Opening a pane re-opens it if it was collapsed.
+  const narrow = () => { try { return Boolean(win?.matchMedia?.(NARROW_QUERY)?.matches); } catch { return false; } };
+  function showPane(target, { focus = false, reopen = true } = {}) {
+    if (!JUMPS.includes(target)) return;
+    const changed = pane !== target;
+    pane = target;
+    main.setAttribute('data-pane', target);
+    for (const t of JUMPS) $(`ws-jump-${t}`)?.setAttribute('aria-pressed', String(t === target));
+    if (reopen && PANES.includes(target) && !prefs[`${target}Open`]) commit({ ...prefs, [`${target}Open`]: true });
+    else if (changed && narrow()) anim?.enter?.($(`ws-pane-${target}`));
+    if (focus) $(`ws-pane-${target}`)?.focus?.({ preventScroll: true });
   }
+  // A selection made in the records pane shows its detail; on a phone that means switching panes.
+  function revealVisual() {
+    const moved = pane !== 'visual';
+    showPane('visual');
+    if (moved && narrow()) $('ws-pane-visual')?.focus?.({ preventScroll: true });
+  }
+
+  // Rare layout settings live in a native disclosure: Escape or an outside click closes it.
+  const settings = $('ws-settings');
+  const closeSettings = ({ restore = false } = {}) => {
+    if (!settings?.open) return;
+    settings.open = false;
+    if (restore) settings.querySelector?.('summary')?.focus?.();
+  };
+  on(settings, 'keydown', event => { if (event.key === 'Escape' && settings.open) { event.preventDefault(); closeSettings({ restore: true }); } });
+  on(doc, 'pointerdown', event => { if (settings?.open && !settings.contains?.(event.target)) closeSettings(); });
 
   // Separator: drag, or keyboard (arrows step, Home/End bounds, Enter resets this pane).
   function wireSeparator(pane) {
@@ -208,8 +237,23 @@ export function mountWorkspace({
     return viewer.promise;
   }
 
+  // ---- Bottom summary strip: real counts from the evidence file and the current selection ----
+  function renderInfo() {
+    const records = $('ws-info-records'), picked = $('ws-info-selected');
+    if (records) {
+      const r = filterSources(evidence, filters);
+      records.textContent = evidence === undefined ? 'loading' : !r.ok ? 'unavailable'
+        : `${r.matched} of ${r.total} shown · ${r.verified} verified`;
+    }
+    if (picked) {
+      const parts = [selectedMaterialId && `material ${selectedMaterialId}`, selectedSourceId && `record ${selectedSourceId}`].filter(Boolean);
+      picked.textContent = parts.length ? parts.join(' · ') : 'none';
+    }
+  }
+
   // ---- Source browser, record detail and cabin item controls ----
   function renderBrowser() {
+    renderInfo();
     const host = $('ws-sources');
     if (!host) return;
     if (evidence === undefined) { host.replaceChildren(Object.assign(doc.createElement('p'), { className: 'text-3', textContent: 'Loading source records…' })); return; }
@@ -225,7 +269,7 @@ export function mountWorkspace({
     filters = { text: String(next?.text ?? ''), review: String(next?.review ?? 'all'), materialId: allowedMaterial(next?.materialId) ? next.materialId : null };
     renderBrowser();
   }
-  function markCards() { for (const [id, b] of cards) b.setAttribute('aria-pressed', String(id === selectedSourceId)); }
+  function markCards() { for (const [id, b] of cards) b.setAttribute('aria-pressed', String(id === selectedSourceId)); renderInfo(); }
   function selectSource(id) {
     const row = filterSources(evidence).rows.find(r => r.evidence_id === id);
     if (!row) return;
@@ -233,7 +277,9 @@ export function mountWorkspace({
     markCards();
     const host = $('ws-source-detail');
     if (!host) return;
-    renderSourceDetail(host, row, evidence, { opener: cards.get(id), onClose: () => { selectedSourceId = null; markCards(); } });
+    const from = pane;
+    revealVisual();
+    renderSourceDetail(host, row, evidence, { opener: cards.get(id), onClose: () => { selectedSourceId = null; markCards(); showPane(from); } });
     anim?.enter?.(host.children?.[0]);
   }
   function renderMaterials() {
@@ -260,6 +306,7 @@ export function mountWorkspace({
       if (mine) anim?.select?.(b);
     }
     pushViewer();
+    revealVisual();
     if (notify) try { onSelectMaterial(id); } catch { /* host failure leaves the selection visible */ }
     return true;
   }
@@ -287,6 +334,7 @@ export function mountWorkspace({
   }
 
   toolbar.hidden = false;
+  showPane(prefs.sourcesOpen ? 'sources' : 'visual', { reopen: false });
   applyPrefs();
   renderBrowser();
   renderMaterials();
