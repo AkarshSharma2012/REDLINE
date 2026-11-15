@@ -47,3 +47,10 @@ STATUS: DONE
 - Full node --test on 2a41a2da300a0a2501e3c27f81a30926971c82b7 (Node v26.13.1): 1250 tests, 1206 pass, 0 fail, 44 existing TODO, 0 skipped/cancelled; exit 0. git diff --check clean. Native worksheet/export regenerated with no content changes beyond evidence build metadata. No server/browser or persistent process started.
 - Complete; push current branch HEAD to existing PR294 source branch only. Coordinator retains review/release ownership.
 STATUS: DONE
+
+# Issue #298: A2 source records
+- Base: 0aeaec10a1a3c428878efa0e3ab1293437a6a43c; owned source module, new source-records.css and tests only (plus required handoff).
+- Compact semantic list with aligned Oxygen/Pressure/Gravity cells, unchanged source values/copy, clear all filters, selected state and open provenance disclosure; methods remain native disclosure. No data, science, shell, viewer or historical screenshot changes.
+- Targeted node --test tests/source-records.test.mjs tests/workspace-evidence.test.mjs: 18 pass, 0 fail. Full suite next. B2 notified on #297 to link CSS after workspace.css.
+- No server/browser/persistent process. Coordinator owns actual 1440x900, 390x844 and 320px visual/keyboard acceptance; five-visible-record target unverified in a browser. Other requested design skills not installed; used UI/UX Pro Max and supplied web guidelines.
+
