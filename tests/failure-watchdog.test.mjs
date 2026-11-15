@@ -71,6 +71,16 @@ test('exclusive lock rejects concurrent CLI and is released on exceptions', t =>
   assert.equal(fs.existsSync(path.join(dir, 'watchdog.lock')), false);
 });
 
+test('pending requests survive bounded event log rollover', t => {
+  const dir = fixture(t);
+  report(dir, incident(), now); tick(dir, now);
+  for (let i = 0; i < 105; i++) report(dir, incident(), now);
+  const s = doctor(dir);
+  assert.equal(s.events.length, 100);
+  assert.equal(Object.values(s.incidents)[0].requests[0].recipient, 'A1');
+  assert.equal(s.total, 1);
+});
+
 test('bounded probes terminate only their own child and wait for exit', async () => {
   const timed = await boundedProbe(process.execPath, ['-e', 'setTimeout(() => {}, 10000)'], 100);
   assert.equal(timed.timedOut, true);
