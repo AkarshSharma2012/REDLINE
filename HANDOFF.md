@@ -25,3 +25,11 @@ STATUS: DONE
 - Full `node --test`: 1176 tests, 1132 pass, 0 fail, 44 todo, exit 0. No server or browser started.
 
 STATUS: DONE
+
+## Issue #278
+
+- Viewer lane only; no index/main/global CSS/shell/data edits. API: `mountRoverViewer(root, { onSelectMaterial })` -> `{ update({ materialIds, selectedMaterialId, conditions }), setVisible(bool), destroy() }` in `src/ui/rover-viewer.js`; pure helpers `src/ui/rover-model.js`; scene `src/ui/rover-scene.js`; scoped `src/styles/rover-viewer.css` (link added by mount, module-relative).
+- Three.js r187 under `src/vendor/three/`. Decision: r187 ships no `.min` builds and the unminified core+module (2,133,699 B) alone exceed the 2,000,000 B site budget, so both upstream files were esbuild-minified (no bundling/edits; import specifier renamed) with hashes, command and MIT LICENSE recorded in `PROVENANCE.md` and checked by tests. Coordinator may prefer another resolution.
+- Scene (measured in Node): 23 meshes cutaway / 26 shell (upper bound on draw calls), 684 triangles, 2 lights, no shadows/textures. Site budget now 1,609,103 B.
+- Behaviour: lazy import only inside mount; render on demand (no idle RAF, no damping/auto-rotate), DPR cap 1.5, ResizeObserver width+height, 0x0 skipped, hidden pauses; failed import / WebGL creation / context loss -> HTML schematic + material list. Selection callback once per user selection; updates never call back; removed/unmodeled IDs show text, no highlight.
+- Tests: `tests/rover-{model,scene,viewer}.test.mjs` (26). Full `node --test`: 1205 tests, 1161 pass, 0 fail, 44 todo, exit 0. Stub renderer only: no real WebGL, raycast pick, layout, screen reader or frame-count check was run. Coordinator owns Chrome checks.

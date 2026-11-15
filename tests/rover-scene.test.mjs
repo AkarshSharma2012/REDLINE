@@ -43,6 +43,24 @@ test('viewer loads Three.js lazily, module-relative, with no CDN or bare specifi
   }
 });
 
+test('viewer module graph resolves to local files and its CSS stays scoped', async () => {
+  const { access } = await import('node:fs/promises');
+  for (const file of ['rover-viewer.js', 'rover-scene.js', 'rover-model.js']) {
+    const base = new URL(`../src/ui/${file}`, import.meta.url);
+    const text = await readFile(base, 'utf8');
+    const specs = [...text.matchAll(/(?:from\s*|import\(\s*)['"]([^'"]+)['"]/g)].map(match => match[1]);
+    for (const spec of specs) {
+      assert.match(spec, /^\.\.?\//, `${file}: ${spec} is relative (works under /REDLINE/)`);
+      await access(new URL(spec, base));
+    }
+  }
+  await access(new URL('../src/styles/rover-viewer.css', import.meta.url));
+  const css = await readFile(new URL('../src/styles/rover-viewer.css', import.meta.url), 'utf8');
+  const selectors = css.replace(/\/\*[\s\S]*?\*\//g, '').match(/[^{}]+(?=\{)/g).map(s => s.trim()).filter(s => !s.startsWith('@'));
+  for (const group of selectors) for (const selector of group.split(',')) assert.match(selector.trim(), /^\.rover-viewer/, selector);
+  assert.doesNotMatch(css, /#FF6A33|--ev-burned|@import|url\(/i, 'no evidence red, no external CSS');
+});
+
 test('cutaway scene maps every material to parts, stays under 100 draw calls', () => {
   const rover = buildRoverScene(THREE);
   for (const id of SUPPORTED_MATERIAL_IDS) {
