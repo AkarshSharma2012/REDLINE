@@ -151,6 +151,7 @@ const style = `<style>
 .gravity-view figure{margin:16px 0}.gravity-view .gv-scroll{overflow-x:auto;max-width:100%}.gravity-view table{border-collapse:collapse;min-width:640px;width:100%;font-size:13px}
 .gravity-view th,.gravity-view td{text-align:left;vertical-align:top;border:0;border-bottom:1px solid #2C313A;padding:8px 12px}.gravity-view td:nth-child(2){font-variant-numeric:tabular-nums}
 .gravity-view summary{cursor:pointer;padding:8px 0;min-height:32px}.gravity-view .gv-status{color:#A9B0BB}.gravity-view dl{margin:0}.gravity-view dd{margin:0 0 8px}
+.gravity-view [data-source-context]>summary{min-height:40px}
 </style>`;
 
 function contextCards() {
@@ -217,7 +218,7 @@ export function renderGravityView(root, options = {}) {
       ${!selectedPoints.length ? '<p>No records in this extraction for the selected condition group. Source links remain available.</p>' : ''}
       <p class="gv-status">Research revision: ${escape(data.research_revision || 'Not stated')}; ${escape(data.research_path || 'Not stated')}</p>` : ''}
       <div class="gv-note"><h3>0 g / 1 g assumed envelope unavailable</h3><p>No reviewed compatible endpoint pair is supplied here. Do not infer a lunar threshold or clamp simulated-gravity results into an assumed range. Lunar behavior may fall outside a range between 0 g and 1 g results.</p>${sourceLink(...FABRIC_SOURCE, 'pp. 2–4; Table I and Eq. (1), p. 6')}</div>
-      ${contextCards()}<section data-evidence-detail aria-label="Selected evidence detail"></section></section>`;
+      <details data-source-context><summary>Source context and methods</summary>${contextCards()}</details><section data-evidence-detail aria-label="Selected evidence detail"></section></section>`;
   }
 
   async function reload() {
