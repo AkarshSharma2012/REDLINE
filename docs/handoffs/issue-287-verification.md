@@ -9,7 +9,14 @@ Inputs: main bed640032c895dfa9c8abefb815d5658efd5b37a; PR285 f44d08bf02fa6452bcb
 Full node --test ran once, exit 0:
 
 ```text
-
+tests 1247
+suites 0
+pass 1203
+fail 0
+cancelled 0
+skipped 0
+todo 44
+duration_ms 14453.7118
 ```
 
 Existing repository size budget (2,000,000 bytes), named import resolution and viewer module graph checks passed in this suite. No tests changed beyond the exact accepted inputs. git diff --check passed.
@@ -62,5 +69,49 @@ These files match PR285 exactly. Integration adds only root handoff bookkeeping 
 The suite retains 44 TODO tests (including three expected TODO assertion failures for incomplete O2, pressure and result endpoint/outcome fields). Unique TODO test names below; parameterized cases account for repeated names. No test or scientific gate was weakened.
 
 
+- every row has finite O2 percent between 0 and 100 inclusive
+- every row has finite pressure above zero
+- every row has a known result endpoint and any outcome is known
+- o2PartialKpa(21, 100) preserves calculation precision
+- o2PartialKpa(34, 56.5) preserves calculation precision
+- o2PartialKpa(26.5, 70.3) preserves calculation precision
+- o2PartialKpa(0, 101.3) preserves calculation precision
+- o2PartialKpa(100, 101.3) preserves calculation precision
+- o2PartialKpa(34, 0) preserves calculation precision
+- o2PartialKpa(17.123456789, 56.54321) preserves calculation precision
+- o2PartialKpa accepts kPa converted from 8.2 psia without early rounding
+- o2PartialKpa accepts kPa converted from 10.2 psia without early rounding
+- o2PartialKpa accepts kPa converted from 14.7 psia without early rounding
+- o2PartialKpa treats null oxygen as unknown
+- o2PartialKpa treats null pressure as unknown
+- gravityClass treats null gravity as unknown
+- o2PartialKpa treats absent oxygen as unknown
+- o2PartialKpa treats absent pressure as unknown
+- gravityClass treats absent gravity as unknown
+- o2PartialKpa treats empty oxygen as unknown
+- o2PartialKpa treats empty pressure as unknown
+- gravityClass treats empty gravity as unknown
+- o2PartialKpa treats whitespace oxygen as unknown
+- o2PartialKpa treats whitespace pressure as unknown
+- gravityClass treats whitespace gravity as unknown
+- o2PartialKpa treats NaN oxygen as unknown
+- o2PartialKpa treats NaN pressure as unknown
+- gravityClass treats NaN gravity as unknown
+- o2PartialKpa treats infinity oxygen as unknown
+- o2PartialKpa treats infinity pressure as unknown
+- gravityClass treats infinity gravity as unknown
+- o2PartialKpa treats negative infinity oxygen as unknown
+- o2PartialKpa treats negative infinity pressure as unknown
+- gravityClass treats negative infinity gravity as unknown
+- o2PartialKpa returns null with both inputs absent
+- gravityClass(0) is 0g
+- gravityClass(0.01) is 0g
+- gravityClass(0.010001) is partial
+- gravityClass(0.16) is partial
+- gravityClass(0.5) is partial
+- gravityClass(0.899999) is partial
+- gravityClass(0.9) is 1g
+- gravityClass(1) is 1g
+- gravityClass(1.1) is 1g
 
 Coordinator still owns final real browser acceptance at 1440/390/320, zoom, keyboard, WebGL/fallback and release. No merge, deployment or superseded PR closure performed.
