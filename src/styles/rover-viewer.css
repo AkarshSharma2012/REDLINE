@@ -11,7 +11,7 @@
   --rv-text: var(--text-1, #E8EAED);
   --rv-text-2: var(--text-2, #A9B0BB);
   --rv-text-3: var(--text-3, #8A929E);
-  --rv-accent: var(--accent, #7CB8FF);
+  --rv-accent: #FFFFFF; /* neutral white; viewer does not inherit the blue page accent */
   --rv-mono: var(--font-mono, ui-monospace, Consolas, monospace);
   --rv-target: 36px;
   container: rover-viewer / inline-size;

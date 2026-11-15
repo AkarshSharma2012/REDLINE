@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
@@ -88,14 +89,14 @@ test('cutaway scene maps every material to parts, stays under 100 draw calls', (
   rover.dispose();
 });
 
-test('selection is neutral blue, never evidence red, and dims parts outside the request', () => {
+test('selection is neutral white, never blue or evidence red, and dims parts outside the request', () => {
   const rover = buildRoverScene(THREE);
   const color = id => rover.partMeshes(id)[0].material.color.clone();
   const before = color('nomex');
   rover.applyState({ highlightId: 'nomex', inRequest: new Set(SUPPORTED_MATERIAL_IDS) });
   const selected = color('nomex');
   assert.equal(selected.getHex(), SELECTED_COLOR);
-  assert.ok(selected.b > selected.r, 'selected is blue, not red/orange');
+  assert.ok(selected.r === selected.g && selected.g === selected.b, 'selected is neutral white/gray, not blue or red/orange');
   assert.notEqual(color('pmma').getHex(), SELECTED_COLOR);
   rover.applyState({ highlightId: null, inRequest: new Set(['pmma']) });
   assert.equal(color('nomex').getHex(), before.getHex());
@@ -126,4 +127,10 @@ test('dispose releases every owned geometry and material exactly once', () => {
   assert.equal(disposed, geometries.size + materials.size);
   rover.dispose();
   assert.equal(disposed, geometries.size + materials.size, 'second dispose is a no-op');
+});
+
+test('viewer CSS accent is neutral white, not the blue page accent', () => {
+  const css = readFileSync(new URL('../src/styles/rover-viewer.css', import.meta.url), 'utf8');
+  assert.match(css, /--rv-accent: #FFFFFF;/);
+  assert.doesNotMatch(css, /7CB8FF/i);
 });
