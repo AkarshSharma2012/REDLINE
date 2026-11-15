@@ -159,13 +159,25 @@ Rules ([Inference] unless cited):
 - **Narrow screens:** at 320 CSS px width, regions stack vertically with no horizontal page
   scrolling. The results table may scroll horizontally inside its own container: data tables
   are an allowed exception ([WCAG22] SC 1.4.10, AA).
-- **Workspace (#277, user-approved 2026-11-15):** Cabin Check is a three-pane workspace:
-  controls (~280 px) | results and NASA source records (~380 px) | evidence and illustrative
-  model (remaining width), under a one-row layout toolbar. Pane widths are bounded
-  (controls 240-400 px, sources 300-560 px) and adjustable by drag, keyboard separator or
-  -/+ buttons; panes collapse and reset; density is comfortable or compact. Only these layout
-  preferences are stored locally, never evidence, review state or a cabin scenario. Below
-  1080 px the panes stack with "Go to pane" buttons.
+- **Workspace (#277; recomposed #297, user-approved 2026-11-15):** Cabin Check is a flush
+  desktop tool modelled on the spatial hierarchy of a data-search workspace (structure only,
+  no affiliation art): slim black masthead, compact tabs and one slim toolbar (together at
+  most 120 px on a fine pointer), then setup rail (~240 px) | results and NASA source records
+  (~400 px) | model and evidence (remaining width, at least half of a 1440 px window), and a
+  bottom summary strip with real record counts, the current selection and the PSI dataset link.
+  Panes are rectangular, separated by 1 px hairlines (wider invisible drag target), and scroll
+  independently when the window is at least 1081 x 560 px; otherwise the page scrolls. Pane
+  widths are bounded (setup 220-400 px, records 300-560 px) and adjustable by drag, keyboard
+  separator or -/+ buttons; panes collapse and reset; density is comfortable or compact. These
+  rare settings sit in a native "Layout" disclosure (Escape closes it and returns focus). Only
+  layout preferences are stored locally, never evidence, review state or a cabin scenario.
+  Below 1080 px one pane shows at a time, chosen by a full-width Setup / Records / Model and
+  evidence switch; selecting a record or item there shows its detail pane.
+- **Control height (#297):** `--control-h` is 32 px on a fine pointer and 44 px on touch or
+  below 1080 px; bars use `--bar-h` (36 / 44 px). Never below the 24 px minimum in 5.7.
+- **Model stage (#297):** before the model is requested, its slot shows a reserved 16:10 empty
+  stage with one "Load rover model" action. The 3D module still loads only on that request;
+  no scenario is loaded automatically.
 - **Illustrative cabin model exception (#277, user-approved 2026-11-15):** the ban on
   illustrations in section 1 has one narrow exception: a functional geometric cutaway
   rover/cabin model used only to select cabin items. It is always labelled

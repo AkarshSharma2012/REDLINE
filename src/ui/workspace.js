@@ -159,15 +159,16 @@ export function mountWorkspace({
     if (moved && narrow()) $('ws-pane-visual')?.focus?.({ preventScroll: true });
   }
 
-  // Rare layout settings live in a native disclosure: Escape or an outside click closes it.
-  const settings = $('ws-settings');
-  const closeSettings = ({ restore = false } = {}) => {
-    if (!settings?.open) return;
-    settings.open = false;
-    if (restore) settings.querySelector?.('summary')?.focus?.();
-  };
-  on(settings, 'keydown', event => { if (event.key === 'Escape' && settings.open) { event.preventDefault(); closeSettings({ restore: true }); } });
-  on(doc, 'pointerdown', event => { if (settings?.open && !settings.contains?.(event.target)) closeSettings(); });
+  // Overlay disclosures (Layout settings, masthead scope notes): Escape closes and returns
+  // focus to the summary; a pointerdown outside closes. Native details otherwise.
+  const popovers = [$('ws-settings'), doc.querySelector?.('.mission-notes')].filter(Boolean);
+  const close = (d, restore) => { d.open = false; if (restore) d.querySelector?.('summary')?.focus?.(); };
+  for (const d of popovers) {
+    on(d, 'keydown', event => { if (event.key === 'Escape' && d.open) { event.preventDefault(); close(d, true); } });
+  }
+  // Below 1080 px the scope notes expand in flow, so closing them on a tap would shift content.
+  const overlay = d => d.id === 'ws-settings' || !narrow();
+  on(doc, 'pointerdown', event => { for (const d of popovers) if (d.open && overlay(d) && !d.contains?.(event.target)) close(d, false); });
 
   // Separator: drag, or keyboard (arrows step, Home/End bounds, Enter resets this pane).
   function wireSeparator(pane) {
