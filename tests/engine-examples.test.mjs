@@ -12,9 +12,7 @@ test('CLI prints exactly 12 reproducible examples and matches the checked-in doc
   const output = execFileSync(process.execPath, ['scripts/engine-examples.mjs'], { cwd: root, encoding: 'utf8' });
   assert.equal((output.match(/^## Example \d+:/gm) ?? []).length, 12);
   assert.equal(output, renderExamples(data));
-  assert.equal(output, (await readFile(new URL('docs/engine-examples.md', root), 'utf8')).replace(/
-/g, '
-'));
+  assert.equal(output, (await readFile(new URL('docs/engine-examples.md', root), 'utf8')).replace(/\r\n/g, '\n'));
   assert.match(output, /https:\/\/psi\.nasa\.gov\//);
   assert.match(output, /https:\/\/ntrs\.nasa\.gov\//);
   assert.match(output, /Evidence rows used \/ cited by the engine:/);
