@@ -1,0 +1,112 @@
+/* Illustrative rover viewer (issue #278). Scoped to .rover-viewer; tokens fall back to DESIGN.md values. */
+.rover-viewer {
+  --rv-surface: var(--surface-1, #16191E);
+  --rv-surface-2: var(--surface-2, #1E2228);
+  --rv-selected: var(--surface-selected, #262B33);
+  --rv-divider: var(--divider, #2C313A);
+  --rv-border: var(--border-control, #737B88);
+  --rv-text: var(--text-1, #E8EAED);
+  --rv-text-2: var(--text-2, #A9B0BB);
+  --rv-accent: var(--accent, #7CB8FF);
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  color: var(--rv-text);
+  font: 14px/1.45 var(--font-ui, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+}
+.rover-viewer[hidden] { display: none; }
+.rover-viewer p { margin: 0; overflow-wrap: anywhere; }
+.rover-viewer__caption { font-size: 12px; color: var(--rv-text-2); }
+
+/* Reserved stage size in every state (loading, 3D, schematic) to avoid layout shift. */
+.rover-viewer__stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  min-height: 200px;
+  max-height: 70vh;
+  overflow: hidden;
+  background: var(--rv-surface);
+  border: 1px solid var(--rv-divider);
+  border-radius: 4px;
+}
+.rover-viewer__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y; /* vertical swipes still scroll the page */
+}
+.rover-viewer__canvas:focus-visible { outline: 2px solid var(--rv-accent); outline-offset: -2px; }
+.rover-viewer__callouts { position: absolute; inset: 0; pointer-events: none; }
+.rover-viewer__badge {
+  position: absolute;
+  top: -11px;
+  left: -11px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--rv-surface-2);
+  border: 1px solid var(--rv-border);
+  font: 12px/1 var(--font-mono, ui-monospace, Consolas, monospace);
+  color: var(--rv-text);
+}
+.rover-viewer__badge[hidden] { display: none; }
+
+.rover-viewer__schematic { margin: 0; position: absolute; inset: 0; display: grid; grid-template-rows: 1fr auto; padding: 8px; }
+.rover-viewer__schematic svg { width: 100%; height: 100%; min-height: 0; }
+.rover-viewer__schematic-note { font-size: 12px; color: var(--rv-text-2); }
+.rover-viewer__hull { fill: var(--rv-surface-2); stroke: var(--rv-border); stroke-width: 1.5; }
+.rover-viewer__wheel { fill: #2A2F37; stroke: var(--rv-border); }
+.rover-viewer__zone { fill: #4B535F; stroke: var(--rv-border); }
+.rover-viewer__zone.is-selected { fill: var(--rv-accent); stroke: var(--rv-text); stroke-width: 2; }
+.rover-viewer__zone.is-absent { opacity: 0.35; stroke-dasharray: 3 2; }
+.rover-viewer__zone-num { fill: var(--rv-text); font: 12px var(--font-mono, ui-monospace, monospace); }
+
+.rover-viewer__tools { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: flex-start; }
+.rover-viewer__tools[hidden] { display: none; }
+.rover-viewer__group { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.rover-viewer__group-label { flex-basis: 100%; font-size: 12px; color: var(--rv-text-2); }
+.rover-viewer__help { flex-basis: 100%; font-size: 12px; color: var(--rv-text-2); }
+
+.rover-viewer__tool,
+.rover-viewer__pick {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 6px 12px;
+  border: 1px solid var(--rv-border);
+  border-radius: 4px;
+  background: var(--rv-surface-2);
+  color: var(--rv-text);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+.rover-viewer__tool:hover,
+.rover-viewer__pick:hover:not(:disabled) { background: var(--rv-selected); }
+.rover-viewer__tool:focus-visible,
+.rover-viewer__pick:focus-visible { outline: 2px solid var(--rv-accent); outline-offset: 2px; }
+.rover-viewer__tool[aria-pressed="true"],
+.rover-viewer__pick[aria-pressed="true"] { border-color: var(--rv-accent); background: var(--rv-selected); box-shadow: inset 3px 0 0 var(--rv-accent); }
+
+.rover-viewer__heading { margin: 4px 0 0; font-size: 12px; font-weight: 600; color: var(--rv-text-2); }
+.rover-viewer__materials { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 4px; }
+.rover-viewer__pick { width: 100%; display: grid; grid-template-columns: auto 1fr auto; gap: 2px 8px; align-items: center; text-align: left; }
+.rover-viewer__pick:disabled { cursor: not-allowed; opacity: 0.6; }
+.rover-viewer__num { font: 12px var(--font-mono, ui-monospace, monospace); color: var(--rv-text-2); }
+.rover-viewer__id { font: 12px var(--font-mono, ui-monospace, monospace); color: var(--rv-text-2); }
+.rover-viewer__note { grid-column: 2 / -1; font-size: 12px; color: var(--rv-text-2); }
+.rover-viewer__note:empty { display: none; }
+.rover-viewer__extras:empty { display: none; }
+.rover-viewer__extras,
+.rover-viewer__scenario,
+.rover-viewer__status { font-size: 12px; color: var(--rv-text-2); }
+.rover-viewer__scenario { font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rover-viewer__tool,
+  .rover-viewer__pick { transition: none; }
+}
