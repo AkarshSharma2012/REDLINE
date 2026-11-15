@@ -1,9 +1,10 @@
-# Issue #260
+# Issue #133
 
-- Replaced only four corrupted presentation punctuation literals in `src/ui/ask.js` with ASCII delimiters.
-- Added targeted summary, source locator, HTML escaping, input preservation, and pending status regression tests in `tests/ask-punctuation.test.mjs`.
-- Verified: full `node --test` once, exit 0; 1,070 passed, 0 failed, 83 TODO (including data-integrity TODO diagnostics). All three new regression tests passed.
-- Coordinator owns browser proof; no server or browser started. No scientific wording, research data, rules, URLs, citations, or values changed.
-- Next: coordinator review/merge of task branch PR.
+- Merged current origin/main, preserving saved seeded fuzz tests; dependency #55 is implemented.
+- tests/fuzz-compare.test.mjs runs three deterministic groups of 3,000 synthetic cases with seed/case failure diagnostics: result shape and grade aggregation, label membership, symmetry under explicit preconditions, and O2 threshold monotonicity for fixed compatible zero-uncertainty evidence only.
+- Added unique synthetic row IDs, randomized approach/criterion fields, symmetric direction checks, and O2 eligibility invariance. No production evidence or src/ edits.
+- Verification: full `node --test` exits 0: 1,158 tests, 1,075 pass, 0 fail, 83 existing TODOs. All three fuzz groups pass. No server/browser or persistent process started.
+- Next: review and merge PR.
 
 STATUS: DONE
+
