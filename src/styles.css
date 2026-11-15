@@ -12,10 +12,6 @@
   --text-2: #A9B0BB;
   --text-3: #8A929E;
   --accent: #7CB8FF;
-  /* Primary action (#267): crimson, distinct from the reserved ev-burned vermilion.
-     White on #C62828 = 5.6:1; fill vs bg = 3.4:1 (SC 1.4.11). Only .btn-primary / submit. */
-  --primary: #C62828;
-  --primary-hover: #A61F1F;
 
   /* 2.2 Evidence labels (reserved: use only for the three label results) */
   --ev-burned: #FF6A33;
@@ -107,19 +103,23 @@ a[target="_blank"]::after {
 
 [hidden] { display: none !important; }
 
-/* Mission header (#267): title + subtitle, evidence-status rail, collapsed scope notes */
-.app-header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-12) var(--space-24); padding: var(--space-12) var(--space-24); border-bottom: 1px solid var(--divider); }
-.mission-id { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-4) var(--space-12); min-width: 0; }
-.app-header .type-title { font-size: 28px; line-height: 32px; letter-spacing: 0.04em; }
+/* Mission header (#267): one wrapping row of title, two evidence counts, preview status, scope disclosure */
+.app-header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-16); padding: var(--space-8) var(--space-24); border-bottom: 1px solid var(--divider); }
+.mission-id { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-12); min-width: 0; }
+.app-header .type-title { margin: 0; font-size: 24px; line-height: 32px; letter-spacing: 0.04em; }
 .mission-sub { margin: 0; color: var(--text-2); }
-.status-rail { display: grid; grid-auto-flow: column; gap: 1px; margin: 0 0 0 auto; background: var(--divider); border: 1px solid var(--divider); border-radius: var(--radius-panel); overflow: hidden; }
-.status-rail > div { min-width: 0; padding: var(--space-4) var(--space-12); background: var(--surface-1); }
-.status-rail dt { color: var(--text-3); font-size: 12px; line-height: 16px; font-weight: 500; }
+.status-rail { display: flex; align-items: baseline; margin: 0; font-size: 14px; line-height: 20px; }
+.status-rail > div { display: flex; align-items: baseline; gap: var(--space-4); padding: var(--space-4) var(--space-8); }
+.status-rail > div + div { border-left: 1px solid var(--border-control); }
+.status-rail dt { color: var(--text-2); }
 .status-rail dd { margin: 0; color: var(--text-1); }
-.rail-value { font-family: var(--font-mono); font-size: 20px; line-height: 28px; font-variant-numeric: tabular-nums; }
+.rail-value { font-family: var(--font-mono); font-weight: 600; font-variant-numeric: tabular-nums; }
 /* Zero verified rows: dashed outline as well as the number, never colour alone */
-.status-rail > div[data-state="none"], .status-rail > div[data-state="unavailable"] { outline: 1px dashed var(--border-control); outline-offset: -4px; }
-.mission-notes { flex: 1 0 100%; }
+.status-rail > div[data-state="none"], .status-rail > div[data-state="unavailable"] { outline: 1px dashed var(--border-control); outline-offset: -1px; }
+.rail-status { margin: 0; }
+.rail-status .hold-tag { font-size: 14px; line-height: 20px; color: var(--text-2); }
+.mission-notes { flex: 0 1 auto; }
+.mission-notes[open] { flex-basis: 100%; }
 .mission-notes p { max-width: 96ch; margin: 0 0 var(--space-8); color: var(--text-2); }
 
 /* Disclosure (native details): visible chevron, 40 px target, no layout-moving motion */
@@ -158,13 +158,10 @@ a[target="_blank"]::after {
   .region-cabin, .region-evidence { border: 0; border-bottom: 1px solid var(--divider); }
 }
 
-@media (max-width: 1080px) {
-  .status-rail { grid-auto-flow: row; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); margin-left: 0; flex: 1 0 100%; }
-}
-
 @media (max-width: 480px) {
   .region, .app-header { padding: var(--space-12); }
   nav.tabs { padding: 0 var(--space-12); }
+  .app-header { padding: var(--space-8) var(--space-12); }
   .app-header .type-title { font-size: 20px; line-height: 28px; }
 }
 
@@ -422,10 +419,10 @@ td, th, dd, .num, input, select { font-variant-numeric: tabular-nums; }
 .layout .cabin-ui button, .layout .cabin-ui select,
 .layout .cabin-ui input:not([type="range"]):not([type="checkbox"]):not([type="radio"]) { min-height: 40px; }
 
-/* Primary action: restrained crimson fill */
-.btn-primary, .layout .cabin-ui button[type="submit"] { width: 100%; background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
-.btn-primary:not(:disabled):hover, .layout .cabin-ui button[type="submit"]:not(:disabled):hover { background: var(--primary-hover); }
-.btn-primary:disabled, .layout .cabin-ui button[type="submit"]:disabled { background: var(--surface-2); border-color: var(--border-control); color: var(--text-3); font-weight: 400; }
+/* Primary action (DESIGN.md: no filled coloured primary; red is reserved for BURNED):
+   neutral surface, set apart by a text-2 border and heavier weight */
+.btn-primary, .layout .cabin-ui button[type="submit"] { width: 100%; background: var(--surface-2); border-color: var(--text-2); color: var(--text-1); font-weight: 600; }
+.btn-primary:disabled, .layout .cabin-ui button[type="submit"]:disabled { border-color: var(--border-control); color: var(--text-3); font-weight: 400; }
 
 /* Buttons: one 40 px height family; primary actions read as controls, not links */
 button { line-height: 20px; }

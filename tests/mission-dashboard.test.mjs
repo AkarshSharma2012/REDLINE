@@ -13,21 +13,43 @@ const VIEWS = ['investigations', 'gravity', 'oxygen', 'accuracy', 'ask'];
 
 test('header is a short title, subtitle and status rail, not an essay', () => {
   assert.match(header, /<h1 class="type-title">REDLINE<\/h1>/);
-  assert.match(header, /<p class="mission-sub">[^<]{10,80}<\/p>/);
+  assert.match(header, /<p class="mission-sub">[^<]{10,40}<\/p>/);
   const visible = header.replace(/<details[\s\S]*?<\/details>/, '').replace(/<[^>]+>/g, ' ');
-  assert.ok(visible.split(/\s+/).filter(Boolean).length < 45, 'visible header text stays compact');
+  assert.ok(visible.split(/\s+/).filter(Boolean).length < 20, 'visible header text stays compact');
   assert.doesNotMatch(header, /<img|nasa-logo|meatball/i, 'no NASA logo or affiliation art');
 });
 
-test('status rail never hardcodes counts; values come from the loaded evidence', () => {
+test('status rail is exactly two data-driven counts plus one research-preview line', () => {
+  const rail = header.match(/<dl class="status-rail"[^>]*>([\s\S]*?)<\/dl>/)[1];
+  assert.deepEqual([...rail.matchAll(/<dt>([^<]+)<\/dt>/g)].map(m => m[1]), ['Evidence', 'Verified']);
   for (const id of ['rail-rows', 'rail-verified']) {
-    const cell = header.match(new RegExp(`<dd id="${id}"[^>]*>([^<]*)</dd>`));
+    const cell = rail.match(new RegExp(`<dd id="${id}"[^>]*>([^<]*)</dd>`));
     assert.ok(cell, id);
-    assert.doesNotMatch(cell[1], /\d/, `${id} has no static number`);
+    assert.equal(cell[1], 'loading', `${id} starts as loading, never a static number`);
   }
-  assert.match(header, /Research preview · not certification/);
-  assert.match(header, /Verified rows only/);
-  assert.match(header, /Estimate, 0 g–1 g bound/);
+  const visible = header.replace(/<details[\s\S]*?<\/details>/, '');
+  assert.equal(visible.match(/Research preview/g).length, 1, 'one visible research-preview line');
+  assert.match(visible, /<p class="rail-status"><span class="hold-tag">Research preview · not certification<\/span><\/p>/);
+  assert.doesNotMatch(visible, /Labels|Moon|Mars/, 'no Labels or Moon/Mars cell');
+});
+
+test('no lunar bound is asserted anywhere; the full gravity caveat stays disclosed', () => {
+  assert.doesNotMatch(html, /\bbound\b|Estimate, 0 g/i, 'no reviewed endpoint pair, so no 0 g–1 g bound wording');
+  const notes = header.match(/<details class="mission-notes">([\s\S]*?)<\/details>/)[1];
+  assert.match(notes, /no partial-gravity data in PSI yet/);
+  assert.match(notes, /never as a lunar measurement/);
+  assert.match(notes, /Labels use verified evidence rows only/);
+});
+
+test('red stays reserved for BURNED: no crimson primary token or filled red action', () => {
+  assert.doesNotMatch(css, /--primary\b|#C62828|#A61F1F/i);
+  const primary = css.match(/\.btn-primary, \.layout \.cabin-ui button\[type="submit"\] \{([^}]*)\}/)[1];
+  assert.match(primary, /background: var\(--surface-2\)/);
+  assert.match(primary, /font-weight: 600/);
+  assert.doesNotMatch(primary, /ev-burned|#|red/i);
+  const tokens = css.match(/:root \{([\s\S]*?)\n\}/)[1];
+  const reds = [...tokens.matchAll(/--([\w-]+):\s*#FF6A33/gi)].map(m => m[1]);
+  assert.deepEqual(reds, ['ev-burned'], 'vermilion only on the BURNED token');
 });
 
 test('rail shows the real dataset counts and flags zero verified rows', () => {
@@ -45,7 +67,7 @@ test('rail shows the real dataset counts and flags zero verified rows', () => {
 test('scope notes keep the full scientific wording in a closed native details', () => {
   const notes = header.match(/<details class="mission-notes">([\s\S]*?)<\/details>/);
   assert.ok(notes, 'mission-notes details');
-  assert.match(notes[1], /^\s*<summary>[^<]+<\/summary>/, 'summary is the first child so native toggle works');
+  assert.match(notes[1], /^\s*<summary>Scope and limits<\/summary>/, 'summary is the first child so native toggle works');
   for (const phrase of ['Evidence review, not cabin certification', 'Prevention · Detection · Suppression',
     'no partial-gravity data in PSI yet', 'estimate beside 0 g and 1 g results', 'never as a lunar measurement', 'id="dataset"']) {
     assert.ok(notes[1].includes(phrase), phrase);
@@ -71,6 +93,21 @@ test('native details are not overridden by script or hidden content rules', asyn
   assert.match(css, /summary::-webkit-details-marker \{ display: none; \}/);
 });
 
+test('header stays compact: no grid rail, readable 14 px rail text, scope collapsed', () => {
+  assert.doesNotMatch(css, /\.status-rail \{[^}]*grid/, 'no metric grid with empty slots');
+  assert.match(css, /\.status-rail \{[^}]*font-size: 14px;/);
+  assert.match(css, /\.rail-status \.hold-tag \{[^}]*font-size: 14px;/);
+  assert.doesNotMatch(css, /\.(status-rail|rail-status|hold-tag|mission-notes)[^{]*\{[^}]*(white-space: nowrap|text-overflow)/, 'warnings wrap, never clip');
+  assert.doesNotMatch(header, /<details[^>]*\bopen/);
+});
+
+test('tab research-preview labels are compact but keep the full status for assistive tech', () => {
+  for (const view of VIEWS) {
+    const tab = html.match(new RegExp(`id="tab-${view}"[^>]*>([\\s\\S]*?)</button>`))[1];
+    assert.match(tab, /<span class="preview-label" aria-hidden="true">Preview<\/span><span class="sr-only">, Research preview<\/span>$/);
+  }
+});
+
 test('tabs, panels and primary controls keep IDs and sizes', () => {
   const tabs = [...html.matchAll(/role="tab" id="tab-([^"]+)"/g)].map(m => m[1]);
   assert.deepEqual(tabs, ['cabin', ...VIEWS]);
@@ -86,6 +123,5 @@ test('styling stays restrained: no gradients except the estimate hatch, no glow,
   assert.equal(gradients.length, 1, 'only the DESIGN.md estimate hatch');
   assert.doesNotMatch(css, /text-shadow|backdrop-filter|filter:\s*blur|drop-shadow/);
   assert.doesNotMatch(html + css, /\p{Extended_Pictographic}/u);
-  assert.match(css, /--primary: #C62828;/);
   for (const file of [html, css]) assert.ok(file.split('\n').length < 500);
 });

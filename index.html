@@ -11,19 +11,18 @@
   <header class="app-header">
     <div class="mission-id">
       <h1 class="type-title">REDLINE</h1>
-      <p class="mission-sub">Cabin fire evidence workbench · NASA PSI combustion data</p>
+      <p class="mission-sub">Cabin fire evidence workbench</p>
     </div>
     <dl class="status-rail" aria-label="Evidence status">
-      <div><dt>Evidence rows</dt><dd id="rail-rows" class="rail-value">loading</dd></div>
+      <div><dt>Evidence</dt><dd id="rail-rows" class="rail-value">loading</dd></div>
       <div><dt>Verified</dt><dd id="rail-verified" class="rail-value">loading</dd></div>
-      <div><dt>Labels</dt><dd>Verified rows only</dd></div>
-      <div><dt>Moon / Mars</dt><dd>Estimate, 0 g–1 g bound</dd></div>
-      <div><dt>Status</dt><dd>Research preview · not certification</dd></div>
     </dl>
+    <p class="rail-status"><span class="hold-tag">Research preview · not certification</span></p>
     <details class="mission-notes">
       <summary>Scope and limits</summary>
       <p>PSI combustion investigations and cabin materials, compared against NASA space fire experiments. Evidence review, not cabin certification.</p>
       <p><strong>Prevention · Detection · Suppression:</strong> each investigation and label is read for what it tells a crew about preventing, detecting or putting out a cabin fire.</p>
+      <p>Labels use verified evidence rows only. Unverified rows stay inspectable in the evidence panel but never produce a label; with 0 verified rows, results report that no verified evidence is loaded.</p>
       <p>Partial gravity (Moon 0.16 g, Mars 0.38 g): no partial-gravity data in PSI yet. REDLINE shows those cases only as an estimate beside 0 g and 1 g results, never as a lunar measurement.</p>
       <p id="dataset"></p>
     </details>
@@ -31,11 +30,11 @@
 
   <nav id="tabs" class="tabs" role="tablist" aria-label="REDLINE screens">
     <button type="button" role="tab" id="tab-cabin" aria-controls="panel-cabin" aria-selected="true">Cabin Check</button>
-    <button type="button" role="tab" id="tab-investigations" aria-controls="panel-investigations" aria-selected="false" tabindex="-1">Investigations <span class="preview-label">Research preview</span></button>
-    <button type="button" role="tab" id="tab-gravity" aria-controls="panel-gravity" aria-selected="false" tabindex="-1">Gravity view <span class="preview-label">Research preview</span></button>
-    <button type="button" role="tab" id="tab-oxygen" aria-controls="panel-oxygen" aria-selected="false" tabindex="-1">O2 tradeoff <span class="preview-label">Research preview</span></button>
-    <button type="button" role="tab" id="tab-accuracy" aria-controls="panel-accuracy" aria-selected="false" tabindex="-1">Accuracy <span class="preview-label">Research preview</span></button>
-    <button type="button" role="tab" id="tab-ask" aria-controls="panel-ask" aria-selected="false" tabindex="-1">Ask REDLINE <span class="preview-label">Research preview</span></button>
+    <button type="button" role="tab" id="tab-investigations" aria-controls="panel-investigations" aria-selected="false" tabindex="-1">Investigations <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
+    <button type="button" role="tab" id="tab-gravity" aria-controls="panel-gravity" aria-selected="false" tabindex="-1">Gravity view <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
+    <button type="button" role="tab" id="tab-oxygen" aria-controls="panel-oxygen" aria-selected="false" tabindex="-1">O2 tradeoff <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
+    <button type="button" role="tab" id="tab-accuracy" aria-controls="panel-accuracy" aria-selected="false" tabindex="-1">Accuracy <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
+    <button type="button" role="tab" id="tab-ask" aria-controls="panel-ask" aria-selected="false" tabindex="-1">Ask REDLINE <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
   </nav>
 
   <section id="panel-investigations" role="tabpanel" aria-labelledby="tab-investigations" class="region region-investigations" hidden>
