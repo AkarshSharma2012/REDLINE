@@ -33,3 +33,6 @@ STATUS: DONE
 - Scene (measured in Node): 23 meshes cutaway / 26 shell (upper bound on draw calls), 684 triangles, 2 lights, no shadows/textures. Site budget now 1,609,103 B.
 - Behaviour: lazy import only inside mount; render on demand (no idle RAF, no damping/auto-rotate), DPR cap 1.5, ResizeObserver width+height, 0x0 skipped, hidden pauses; failed import / WebGL creation / context loss -> HTML schematic + material list. Selection callback once per user selection; updates never call back; removed/unmodeled IDs show text, no highlight.
 - Tests: `tests/rover-{model,scene,viewer}.test.mjs` (26). Full `node --test`: 1205 tests, 1161 pass, 0 fail, 44 todo, exit 0. Stub renderer only: no real WebGL, raycast pick, layout, screen reader or frame-count check was run. Coordinator owns Chrome checks.
+- Draft PR #282. Next: coordinator Chrome checks (WebGL/no-WebGL, idle frames, shell integration) and a decision on the minified vendor build.
+
+STATUS: DONE
