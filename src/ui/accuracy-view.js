@@ -116,7 +116,8 @@ function matrix(rows, who) {
 
 // summarizeResults(rows) -> everything the screen shows. rows = parsed R8 §8 CSV records.
 export function summarizeResults(rows) {
-  rows = rows ?? [];
+  // Judge click-through (#169): ignore non-record entries; anything unusable reads as "not run".
+  rows = (Array.isArray(rows) ? rows : []).filter((r) => r && typeof r === 'object' && !Array.isArray(r));
   if (!rows.length) return { status: 'not-run', rows };
   const first = rows[0];
   const meta = {
@@ -272,6 +273,8 @@ const answerText = (c) => ANSWER_TEXT[c] ?? c;
 
 // accuracyViewHtml(summary, { sources }) -> HTML string. Pure; tested in Node.
 export function accuracyViewHtml(summary, { sources = {} } = {}) {
+  summary = summary?.status in BANNERS ? summary : { status: 'not-run', rows: [] };
+  sources = sources ?? {};
   const [title, detail] = BANNERS[summary.status];
   const head = '<header class="panel"><h2 class="type-heading">Accuracy</h2>'
     + '<button type="button" data-action="back">Back to cabin</button>'
@@ -290,7 +293,7 @@ export function accuracyViewHtml(summary, { sources = {} } = {}) {
       + '<li>Run: node scripts/eval-holdout.mjs --seed &lt;n&gt;</li></ul></section>';
   }
   const m = summary.meta;
-  const run = `<p class="panel text-3 type-small">Evaluation ${esc(m.evaluation)}; seed ${esc(m.seed)}; code ${esc(m.commit)}; evidence ${esc(m.built_from)}; run ${esc(m.run_at)}; `
+  const run = `<p class="panel text-3 type-small">Evaluation ${esc(m.evaluation)}; seed ${esc(m.seed ?? "not stated")}; code ${esc(m.commit ?? "not stated")}; evidence ${esc(m.built_from ?? "not stated")}; run ${esc(m.run_at ?? "not stated")}; `
     + `${summary.groups} independent source group(s) in the test split; ${summary.devQueries} dev-split or excluded queries not in the metrics.</p>`;
 
   const R = summary.redline;
@@ -346,6 +349,7 @@ export async function loadAccuracyReport(url = RESULTS_URL) {
 
 // renderAccuracyView(root, rows, { sources, onBack }) -> summary. Read-only screen.
 export function renderAccuracyView(root, rows, { sources = {}, onBack } = {}) {
+  sources = sources ?? {};
   const summary = summarizeResults(rows);
   root.innerHTML = accuracyViewHtml(summary, { sources });
   root.querySelector('[data-action="back"]')?.addEventListener('click', () => onBack?.());

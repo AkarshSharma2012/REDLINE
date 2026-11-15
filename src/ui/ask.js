@@ -31,22 +31,22 @@ export async function loadOptionalJson(url, fetchImpl = fetch) {
 }
 
 export function summarize(hit) {
-  const r = hit.row;
-  if (hit.kind === 'evidence') {
+  const r = hit?.row ?? {};
+  if (hit?.kind === 'evidence') {
     const cond = [
-      `${r.material} (${r.form})`,
+      `${shown(r.material)} (${shown(r.form)})`,
       `O2 ${shown(r.o2_pct, '%')}`,
       `${shown(r.pressure_kpa, ' kPa')}`,
-      GRAVITY[r.gravity_g] ?? `${r.gravity_g} g`,
-      `flow ${r.flow_direction}${r.flow_speed_cm_s != null ? ` ${r.flow_speed_cm_s} cm/s` : ''}`,
+      GRAVITY[r.gravity_g] ?? (r.gravity_g == null ? 'gravity not stated' : `${r.gravity_g} g`),
+      `flow ${shown(r.flow_direction)}${r.flow_speed_cm_s != null ? ` ${r.flow_speed_cm_s} cm/s` : ''}`,
       r.endpoint ? `${r.endpoint} ${shown(r.value, r.value_unit ? ` ${r.value_unit}` : '')}` : 'endpoint not stated',
     ].join(' · ');
     return r.observation_paraphrase ? `${cond}. ${r.observation_paraphrase}` : cond;
   }
-  if (hit.kind === 'investigation') {
+  if (hit?.kind === 'investigation') {
     return [val(r.name), val(r.fuel), val(r.objective) ?? val(r.objectives)].filter(Boolean).join(' · ');
   }
-  return r.text;
+  return r.text ?? '';
 }
 
 function sourceLink(src) {
@@ -56,17 +56,18 @@ function sourceLink(src) {
 }
 
 function draftTag(row) {
-  return row.review_status && row.review_status !== 'verified'
+  return row?.review_status && row.review_status !== 'verified'
     ? ` <span class="flag">${esc(row.review_status)}</span>` : '';
 }
 
 export function hitsTableHtml(hits) {
+  hits = (Array.isArray(hits) ? hits : []).filter((h) => h && typeof h === 'object');
   if (!hits.length) return `<p class="text-2">No rows matched. Answer: ${NOT_FOUND}.</p>`;
   const rows = hits.map((h) => `<tr>
       <td class="type-data">${esc(h.id)}${draftTag(h.row)}</td>
       <td>${esc(h.kind)}</td>
       <td class="type-small">${esc(summarize(h))}</td>
-      <td class="type-small text-2">${esc([...new Set(h.matched.map((m) => m.term))].join(', '))}</td>
+      <td class="type-small text-2">${esc([...new Set((h.matched ?? []).map((m) => m?.term).filter(Boolean))].join(', '))}</td>
       <td class="type-small">${sourceLink(h.source)}</td>
     </tr>`).join('');
   return `<table><caption ${SR}>Rows retrieved for your question</caption>
@@ -76,26 +77,32 @@ export function hitsTableHtml(hits) {
 
 // Insights relevant to the retrieved rows: retrieved directly, or citing a retrieved row.
 export function relatedInsights(hits, insights) {
-  const ids = new Set(hits.map((h) => String(h.id)));
-  return (insights?.insights || []).filter((ins) => ids.has(ins.insight_id) || ins.cited_ids.some((id) => ids.has(id)));
+  const ids = new Set((Array.isArray(hits) ? hits : []).filter(Boolean).map((h) => String(h.id)));
+  const list = Array.isArray(insights?.insights) ? insights.insights : [];
+  return list.filter((ins) => ins && (ids.has(ins.insight_id) || (ins.cited_ids ?? []).some((id) => ids.has(id))));
 }
 
 export function insightHtml(ins, sources = {}) {
+  ins = ins ?? {};
+  sources = sources ?? {};
+  const cited = Array.isArray(ins.cited_ids) ? ins.cited_ids : [];
   const check = ins.checked_by_team
     ? `AI-generated, checked by team (${esc(ins.checked_by)})`
     : 'AI-generated, not yet checked by team';
-  const links = ins.cited_ids.filter((id) => sources[id]?.url)
+  const links = cited.filter((id) => sources[id]?.url)
     .map((id) => sourceLink({ title: sources[id].title, url: sources[id].url })).join('; ');
   return `<article class="panel ask-insight">
-    <h4 class="type-label">${esc(ins.subject.name)} <span class="flag">${check}</span></h4>
+    <h4 class="type-label">${esc(ins.subject?.name ?? 'Insight')} <span class="flag">${check}</span></h4>
     <p class="type-body">${esc(ins.text)}</p>
-    <p class="type-small text-2">Cited rows: ${esc(ins.cited_ids.join(', '))}</p>
+    <p class="type-small text-2">Cited rows: ${esc(cited.join(', ') || 'none')}</p>
     ${links ? `<p class="type-small">Sources: ${links}</p>` : ''}
   </article>`;
 }
 
 // Escapes the model's answer and turns [ID] citations into links to that row's source.
 export function answerHtml(answer, hits) {
+  answer = String(answer ?? '');
+  hits = (Array.isArray(hits) ? hits : []).filter((h) => h && typeof h === 'object');
   const byId = new Map(hits.map((h) => [String(h.id), h]));
   const { unknown } = citationsIn(answer, hits);
   const body = esc(answer).replace(/\[([^\]]+)\]/g, (whole, inner) => {
@@ -157,6 +164,7 @@ const FORM = `
 
 // renderAsk(root, { evidence, investigations, insights }) -> { ask(question) }
 export function renderAsk(root, data = {}) {
+  data = data ?? {};
   root.innerHTML = FORM;
   const sources = data.evidence?.sources || {};
   const $ = (role) => root.querySelector(`[data-role="${role}"]`);
@@ -170,7 +178,13 @@ export function renderAsk(root, data = {}) {
   });
 
   async function ask(question) {
-    const { hits } = retrieve(question, data, { limit: 8 });
+    let hits = [];
+    try {
+      ({ hits } = retrieve(question, data, { limit: 8 }));
+    } catch {
+      hits = []; // malformed data: show the empty state rather than a broken screen
+    }
+    hits = Array.isArray(hits) ? hits : [];
     $('answer').innerHTML = '';
     $('hits').innerHTML = `<h3 class="type-heading">Retrieved rows (${hits.length})</h3>${hitsTableHtml(hits)}`;
     const related = relatedInsights(hits, data.insights);
@@ -207,8 +221,21 @@ export function renderAsk(root, data = {}) {
   return { ask };
 }
 
+// Plain-language notice for a failed data/evidence.json load, with a retry link (#169).
+export function evidenceErrorHtml(retryHref = '') {
+  return `<div class="panel" role="alert"><p class="type-body">The NASA evidence file (data/evidence.json) could not load, so REDLINE cannot search the test results right now. Check your connection, then <a href="${esc(retryHref)}" data-action="retry">retry</a>.</p></div>`;
+}
+
 // Convenience loader for main.js: evidence is passed in; catalog and insights are optional.
+// With no evidence (the evidence.json load failed) it shows the retry notice instead of a dead form.
 export async function mountAsk(root, evidence, fetchImpl = fetch) {
+  if (!evidence || typeof evidence !== 'object') {
+    root.innerHTML = evidenceErrorHtml(globalThis.location?.href ?? '');
+    root.querySelector('[data-action="retry"]')?.addEventListener('click', (e) => {
+      if (globalThis.location?.reload) { e.preventDefault(); globalThis.location.reload(); }
+    });
+    return null;
+  }
   const [investigations, insights] = await Promise.all([
     loadOptionalJson(INVESTIGATIONS_URL, fetchImpl),
     loadOptionalJson(INSIGHTS_URL, fetchImpl),
