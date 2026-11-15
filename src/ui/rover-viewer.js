@@ -163,6 +163,7 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
     const note = el('figcaption', 'rover-viewer__schematic-note', 'Schematic side view, not to scale. Numbers match the material list.');
     figure.append(drawing, note);
     stage.replaceChildren(figure);
+    tools.replaceChildren(); // camera/layer controls are meaningless without the 3D view
     tools.hidden = true;
     status.textContent = `3D view unavailable (${reason}). The schematic and material list below remain usable.`;
     render();
@@ -350,9 +351,8 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
     three = null;
     scheduler?.destroy();
     while (glCleanups.length) glCleanups.pop()();
-    rover?.dispose();
-    renderer.dispose();
-    renderer.forceContextLoss?.();
+    // A lost or half-created context must not turn teardown into a shell error.
+    try { rover?.dispose(); renderer.dispose(); renderer.forceContextLoss?.(); } catch { /* already released */ }
     canvas.remove?.();
   }
 

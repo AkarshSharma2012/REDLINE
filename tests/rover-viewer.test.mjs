@@ -1,14 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import * as THREE from '../src/vendor/three/three.module.min.js';
 import { mountRoverViewer, VIEWER_CAPTION } from '../src/ui/rover-viewer.js';
+import { PREF_KEY } from '../src/ui/rover-model.js';
 
 // Minimal DOM: enough for the HTML controls and fallback path. Real WebGL,
 // pointer orbit and layout are checked by the coordinator in Chrome.
 class Element {
   constructor(tag, doc) {
     this.tagName = tag.toUpperCase(); this.ownerDocument = doc; this.children = [];
-    this.attrs = {}; this.events = {}; this.hidden = false; this.disabled = false; this.text = '';
+    this.attrs = {}; this.events = {}; this.hidden = false; this.disabled = false; this.text = ''; this.style = {};
   }
+  setPointerCapture(id) { this.captured = id; }
+  hasPointerCapture(id) { return this.captured === id; }
+  releasePointerCapture(id) { if (this.captured === id) { this.captured = null; this.dispatch('lostpointercapture'); } }
+  getBoundingClientRect() { return { left: 0, top: 0, width: 400, height: 250 }; }
   set textContent(text) { this.text = String(text); this.children = []; }
   get textContent() { return [this.text, ...this.children.map(child => child.textContent)].filter(Boolean).join(' '); }
   setAttribute(key, value) { this.attrs[key] = String(value); }
@@ -155,4 +161,123 @@ test('setVisible and destroy stop work, remove listeners and are idempotent', as
 test('missing root returns an inert handle instead of throwing through startup', async () => {
   const viewer = await mountRoverViewer(null);
   assert.doesNotThrow(() => { viewer.update({}); viewer.setVisible(false); viewer.destroy(); });
+});
+
+// Stub renderer around the real scene and scheduler: proves on-demand frames and teardown.
+// It cannot prove real GPU output, which the coordinator checks in Chrome.
+function webglSetup() {
+  const { doc, root } = setup();
+  const frames = new Map(); let nextFrame = 1;
+  const store = new Map();
+  const observers = [];
+  const renderers = [];
+  doc.defaultView = {
+    devicePixelRatio: 3,
+    requestAnimationFrame: fn => { frames.set(nextFrame, fn); return nextFrame++; },
+    cancelAnimationFrame: id => frames.delete(id),
+    localStorage: { getItem: key => store.get(key) ?? null, setItem: (key, value) => store.set(key, value) },
+    ResizeObserver: class { constructor(fn) { this.fn = fn; this.connected = true; observers.push(this); }
+      observe(target) { this.target = target; } disconnect() { this.connected = false; }
+      fire(width, height) { this.fn([{ contentRect: { width, height } }]); } },
+  };
+  class StubRenderer {
+    constructor({ canvas }) { Object.assign(this, { canvas, renders: 0, disposed: 0, lost: 0 }); renderers.push(this); }
+    setClearColor() {} setPixelRatio(ratio) { this.pixelRatio = ratio; } setSize(...size) { this.size = size; }
+    render(scene, camera) { assert.ok(scene.isScene && camera.isCamera); this.renders += 1; }
+    dispose() { this.disposed += 1; } forceContextLoss() { this.lost += 1; }
+  }
+  const flush = () => { const fns = [...frames.values()]; frames.clear(); fns.forEach(fn => fn(0)); };
+  const loadThree = async () => ({ ...THREE, WebGLRenderer: StubRenderer });
+  return { root, frames, flush, store, observers, renderers, loadThree };
+}
+const byLabel = (root, label) => all(root).find(el => el.tagName === 'BUTTON' && (el.getAttribute('aria-label') ?? el.text) === label);
+const listeners = nodes => nodes.reduce((sum, el) => sum + Object.values(el.events).reduce((n, set) => n + set.size, 0), 0);
+
+test('WebGL path renders only on real changes, pauses when hidden and tears down fully', async () => {
+  const env = webglSetup();
+  const calls = [];
+  const viewer = await mountRoverViewer(env.root, { onSelectMaterial: id => calls.push(id), loadThree: env.loadThree });
+  const [renderer] = env.renderers;
+  const [observer] = env.observers;
+  const canvas = all(env.root).find(el => el.tagName === 'CANVAS');
+  assert.match(env.root.textContent, /3D view ready/);
+  assert.equal(canvas.getAttribute('tabindex'), '0');
+  assert.match(canvas.getAttribute('aria-label'), /Illustrative rover cabin/);
+  assert.equal(renderer.pixelRatio, 1.5);
+  viewer.update({ materialIds: ALL, selectedMaterialId: 'pmma' });
+  observer.fire(0, 0);
+  env.flush();
+  assert.equal(renderer.renders, 0, 'nothing drawn at 0x0');
+  observer.fire(400, 250);
+  assert.deepEqual(renderer.size, [400, 250, false]);
+  env.flush();
+  assert.equal(renderer.renders, 1);
+  env.flush();
+  assert.equal(env.frames.size, 0, 'idle: no frames after settle');
+  assert.ok(all(env.root).some(el => el.getAttribute('class') === 'rover-viewer__badge' && el.style.transform));
+
+  byLabel(env.root, 'Orbit left').dispatch('click');
+  env.flush();
+  assert.equal(renderer.renders, 2);
+  assert.equal(canvas.dispatch('keydown', { key: 'ArrowUp' }).defaultPrevented, true);
+  assert.equal(canvas.dispatch('keydown', { key: 'Tab' }).defaultPrevented, false, 'Tab never captured');
+  env.flush();
+  assert.equal(renderer.renders, 3);
+
+  viewer.setVisible(false);
+  byLabel(env.root, 'Zoom in').dispatch('click');
+  assert.equal(env.frames.size, 0, 'hidden viewer requests no frames');
+  viewer.setVisible(true);
+  env.flush();
+  assert.equal(renderer.renders, 4);
+
+  const shellToggle = byLabel(env.root, 'Show outer shell');
+  shellToggle.dispatch('click');
+  assert.equal(shellToggle.getAttribute('aria-pressed'), 'true');
+  assert.deepEqual(JSON.parse(env.store.get(PREF_KEY)), { layer: 'shell', wireframe: false });
+  byLabel(env.root, 'Wireframe').dispatch('click');
+  assert.equal(byLabel(env.root, 'Wireframe').getAttribute('aria-pressed'), 'true');
+
+  canvas.dispatch('pointerdown', { button: 0, pointerId: 7, clientX: 100, clientY: 100 });
+  assert.equal(canvas.captured, 7);
+  canvas.dispatch('pointermove', { pointerId: 7, clientX: 160, clientY: 100 });
+  canvas.dispatch('pointerup', { pointerId: 7, clientX: 160, clientY: 100 });
+  assert.equal(canvas.captured, null, 'pointer capture released');
+  assert.deepEqual(calls, [], 'a drag never selects');
+  canvas.dispatch('pointerdown', { button: 0, pointerId: 8, clientX: 5, clientY: 5 });
+  canvas.dispatch('pointercancel', { pointerId: 8 });
+  assert.equal(canvas.captured, null);
+
+  const nodes = all(env.root);
+  byLabel(env.root, 'Zoom out').dispatch('click');
+  viewer.destroy();
+  assert.equal(env.frames.size, 0, 'queued frame cancelled');
+  assert.equal(observer.connected, false);
+  assert.equal(renderer.disposed, 1);
+  assert.equal(renderer.lost, 1, 'context released');
+  assert.equal(env.root.children.length, 0);
+  assert.equal(listeners(nodes), 0);
+});
+
+test('stored display preferences apply, and context loss falls back with working controls', async () => {
+  const env = webglSetup();
+  env.store.set(PREF_KEY, JSON.stringify({ layer: 'shell', wireframe: true }));
+  const calls = [];
+  const viewer = await mountRoverViewer(env.root, { onSelectMaterial: id => calls.push(id), loadThree: env.loadThree });
+  assert.equal(byLabel(env.root, 'Show outer shell').getAttribute('aria-pressed'), 'true');
+  assert.equal(byLabel(env.root, 'Wireframe').getAttribute('aria-pressed'), 'true');
+  viewer.update({ materialIds: ALL });
+  const canvas = all(env.root).find(el => el.tagName === 'CANVAS');
+  canvas.dispatch('webglcontextlost');
+  assert.match(env.root.textContent, /3D view unavailable \(the graphics context was lost\)/);
+  assert.equal(all(env.root).filter(el => el.tagName === 'CANVAS').length, 0);
+  assert.ok(all(env.root).some(el => el.getAttribute('data-rover-schematic') !== null));
+  assert.equal(env.renderers[0].disposed, 1);
+  assert.equal(byLabel(env.root, 'Zoom in'), undefined, 'camera controls removed with the 3D view');
+  buttonFor(env.root, 'pmma').dispatch('click');
+  assert.deepEqual(calls, ['pmma']);
+  env.flush();
+  assert.equal(env.renderers[0].renders, 0);
+  viewer.destroy();
+  assert.equal(env.renderers[0].disposed, 1, 'not disposed twice');
 });
