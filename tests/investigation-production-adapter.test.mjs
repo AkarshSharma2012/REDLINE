@@ -33,6 +33,13 @@ test('production aliases preserve values, scopes, provenance notes and genuine u
   assert.equal(field(missing, 'psi_id', sources).source, null);
   assert.equal(field(bass, 'habitat_relevance', sources).value, null);
   assert.equal(field(bass, 'airflow_cm_s', sources).value, null);
+  const sample = field(bass, 'fuel_sample', sources);
+  assert.equal(sample.value, `${bass.sample_shape}; ${bass.sample_size}`);
+  assert.equal(sample.sources.length, 2);
+  assert.match(sample.note, /Illustrative specimen/);
+  const multiple = structuredClone(bass);
+  multiple.provenance.psi_id.sources.push({ source_id: 'guide', locator: 'second reference' });
+  assert.equal(field(multiple, 'psi_id', sources).sources[1].locator, 'second reference');
 });
 
 test('production filters and rover rankings use supplied fields without inventing planetary relevance', () => {

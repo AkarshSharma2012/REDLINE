@@ -1,4 +1,4 @@
 # Issue #230
-- Reproduced production contract mismatch with three failing Node regressions: separate provenance, aliases, filters/ranking.
-- Next: resolve field-level sources/locators and explicit aliases; preserve unknowns and prevent planned/model-only records receiving tested-condition points.
-- Verification so far: node --test tests/investigation-production-adapter.test.mjs (3 expected failures). No servers or browsers.
+- Fixed production field aliases and separate provenance resolution; retains all references, locators, notes and nulls. Sample shape/size combined without invented values. UI renders all supplied references.
+- Rankings read production need/ranges/relevance and explicit flight microgravity; planned conditions/model-only records do not earn tested-condition points. No inferred planetary relevance.
+- Focused Node regressions and legacy ranking tests: 14 pass. Next: full node --test once, final review and push. No servers/browsers/background processes.
