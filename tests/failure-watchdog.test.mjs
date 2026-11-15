@@ -25,6 +25,7 @@ test('structured intake deduplicates changing logs and routes owner before orche
   assert.equal(tick(dir, now + 60000).requests[0].recipient, 'orchestrator');
   assert.equal(tick(dir, now + 120000).requests.length, 0);
   assert.equal(doctor(dir).total, 2);
+  t.diagnostic(JSON.stringify({ synthetic: true, events: doctor(dir).events }));
 });
 
 test('malformed, oversized, stale and future reports fail closed', async t => {
@@ -80,13 +81,14 @@ test('bounded probes terminate only their own child and wait for exit', async ()
   assert.throws(() => boundedProbe(process.execPath, [], 6000));
 });
 
-test('real read-only Windows process evidence and PowerShell syntax', { skip: process.platform !== 'win32' }, async () => {
+test('real read-only Windows process evidence and PowerShell syntax', { skip: process.platform !== 'win32' }, async t => {
   const probe = await probeTask(process.pid);
   assert.equal(probe.timedOut, false);
   assert.equal(probe.code, 0);
   assert.equal(JSON.parse(probe.output).Id, process.pid);
+  t.diagnostic(`Real read-only process probe: ${probe.output}`);
   for (const file of ['scripts/failure-watchdog.ps1', 'scripts/watchdog-doctor.ps1']) {
-    const parsed = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', '$e=$null; $t=$null; [System.Management.Automation.Language.Parser]::ParseFile($args[0],[ref]$t,[ref]$e) | Out-Null; if ($e.Count) { $e | Out-String | Write-Error; exit 1 }', file], { encoding: 'utf8', timeout: 5000, windowsHide: true });
+    const parsed = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', '$e=$null; $t=$null; [System.Management.Automation.Language.Parser]::ParseFile($env:REDLINE_PARSE_FILE,[ref]$t,[ref]$e) | Out-Null; if ($e.Count) { $e | Out-String | Write-Error; exit 1 }'], { encoding: 'utf8', timeout: 5000, windowsHide: true, env: { ...process.env, REDLINE_PARSE_FILE: path.resolve(file) } });
     assert.equal(parsed.status, 0, parsed.stderr);
   }
 });
