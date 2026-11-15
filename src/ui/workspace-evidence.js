@@ -108,10 +108,11 @@ export function renderSourceBrowser(root, { evidence, state = {}, onSelect = () 
   form.setAttribute('aria-label', 'Filter NASA source records');
   const textLabel = make('label', 'Material, investigation or source');
   const search = make('input'); search.setAttribute('type', 'search'); search.id = 'ws-filter-text';
+  search.name = 'source-search';
   search.value = filters.text; search.setAttribute('autocomplete', 'off');
   textLabel.setAttribute('for', search.id);
   const reviewLabel = make('label', 'Review status');
-  const select = make('select'); select.id = 'ws-filter-review'; reviewLabel.setAttribute('for', select.id);
+  const select = make('select'); select.name = 'source-review'; select.id = 'ws-filter-review'; reviewLabel.setAttribute('for', select.id);
   for (const value of options) { const o = make('option', value === 'all' ? 'All statuses' : value); o.value = value; select.append(o); }
   select.value = filters.review;
   const emit = patch => onFilter({ ...filters, ...patch });
@@ -119,7 +120,12 @@ export function renderSourceBrowser(root, { evidence, state = {}, onSelect = () 
   select.addEventListener('change', () => emit({ review: options.includes(select.value) ? select.value : 'all' }));
   const textField = make('div'), reviewField = make('div');
   textField.append(textLabel, search); reviewField.append(reviewLabel, select);
-  form.append(textField, reviewField);
+  const clearFilters = make('button', 'Clear filters', 'ws-clear-filters'); clearFilters.type = 'button';
+  clearFilters.addEventListener('click', () => {
+    emit({ text: '', review: 'all', materialId: null });
+    doc.getElementById('ws-filter-text')?.focus?.();
+  });
+  form.append(textField, reviewField, clearFilters);
   root.append(form);
   if (filters.materialId) {
     const scope = make('p', undefined, 'ws-scope');
@@ -132,7 +138,7 @@ export function renderSourceBrowser(root, { evidence, state = {}, onSelect = () 
   counts.setAttribute('role', 'status');
   root.append(counts);
   if (result.verified === 0) root.append(make('p', '0 verified rows: labels are not produced; records below are inspection only.', 'ws-note'));
-  if (!result.matched) { root.append(make('p', 'No records match these filters.', 'text-2')); return { ...result, cards }; }
+  if (!result.matched) { root.append(make('p', 'No records match these filters. Clear filters to show all source records.', 'text-2 ws-empty')); return { ...result, cards }; }
   const list = make('ul', undefined, 'ws-cards');
   list.setAttribute('aria-label', 'Source records');
   const { sources } = index(evidence);
@@ -142,9 +148,16 @@ export function renderSourceBrowser(root, { evidence, state = {}, onSelect = () 
     const b = make('button', undefined, 'ws-card'); b.type = 'button';
     b.setAttribute('data-evidence-id', d.id);
     b.setAttribute('aria-pressed', String(state.selectedId === d.id));
-    b.append(make('span', `${d.id} · ${d.investigation}`, 'ws-card-title'),
-      make('span', d.material, 'ws-card-line'),
-      make('span', d.conditions.slice(0, 3).map(([k, v]) => `${k} ${v}`).join(' · '), 'ws-card-line type-data'),
+    const identity = make('span', undefined, 'ws-record-identity');
+    identity.append(make('span', `${d.id} · ${d.investigation}`, 'ws-card-title'),
+      make('span', d.material, 'ws-card-line'));
+    const conditions = make('span', undefined, 'ws-record-conditions type-data');
+    for (const [label, value] of d.conditions.slice(0, 3)) {
+      const cell = make('span', undefined, 'ws-record-condition');
+      cell.append(make('span', label, 'ws-record-label'), make('span', value));
+      conditions.append(cell);
+    }
+    b.append(identity, conditions,
       make('span', `Review: ${d.status}${d.inspectOnly ? ' · inspection only' : ''}`, 'ws-card-status'));
     b.addEventListener('click', () => onSelect(d.id));
     cards.set(d.id, b);
@@ -163,7 +176,7 @@ export function renderSourceDetail(root, row, evidence, { opener = null, onClose
   const d = describeRecord(row, index(evidence).sources);
   const close = () => { root.onkeydown = null; root.replaceChildren(); onClose(); opener?.focus?.(); };
   root.onkeydown = event => { if (event.key === 'Escape') { event.preventDefault(); close(); } };
-  const section = make('section', undefined, 'ws-detail');
+  const section = make('section', undefined, 'ws-detail ws-record-detail');
   section.setAttribute('aria-label', `Source record ${d.id}`);
   const head = make('div', undefined, 'ws-detail-head');
   head.append(make('h3', `Source record ${d.id}`));
@@ -180,11 +193,15 @@ export function renderSourceDetail(root, row, evidence, { opener = null, onClose
   section.append(make('p', 'Measured source conditions above; the cabin request is a separate user input.', 'text-3'));
   const cite = make('p', undefined, 'ws-citation');
   if (d.citation.url) cite.append(link(make, d.citation.title, d.citation.url)); else cite.append(make('span', `${d.citation.title} (source URL unavailable)`));
-  section.append(cite);
-  section.append(make('p', `${d.citation.authors || 'Authors not stated'} · ${d.citation.year || 'Year not stated'}`, 'text-2'));
-  if (d.citation.url && !d.citation.nasa) section.append(make('p', 'Non-NASA publication: not used for any label.', 'caveat'));
-  section.append(make('p', `Locator: ${d.locator || 'not stated'}`, 'type-small ws-locator'));
-  const more = make('details');
+  const provenance = make('details', undefined, 'ws-record-provenance');
+  provenance.open = true;
+  provenance.append(make('summary', 'Source and provenance'));
+  provenance.append(cite);
+  provenance.append(make('p', `${d.citation.authors || 'Authors not stated'} · ${d.citation.year || 'Year not stated'}`, 'text-2'));
+  if (d.citation.url && !d.citation.nasa) provenance.append(make('p', 'Non-NASA publication: not used for any label.', 'caveat'));
+  provenance.append(make('p', `Locator: ${d.locator || 'not stated'}`, 'type-small ws-locator'));
+  section.append(provenance);
+  const more = make('details', undefined, 'ws-record-method');
   more.append(make('summary', 'Method notes and record fields'));
   if (row.notes) more.append(make('p', String(row.notes)));
   more.append(conditionList(make, [
