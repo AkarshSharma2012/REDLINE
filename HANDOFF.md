@@ -13,7 +13,7 @@
 ## How tested
 - HWB06 p. 3-4, OF12 p. 6, TM08 PDF p. 7, SIBAL p. 9 re-read from NTRS PDF text (pypdf) and every value compared. MIST/M16/U25 values rely on existing verification reports (verify-pmma.md, verify-us25.md).
 - CSV parsed with a quote-aware parser: 88 rows, 23 columns each, unique IDs.
-- `node --test` full suite run once (no code changed).
+- `node --test`: 870 tests, 782 pass, 1 fail ("checked-in report matches current evidence"), pre-existing and unrelated: this branch changes nothing in src/, data/ or tests/ vs origin/main.
 
 ## Next / for humans
 - If data/ should ingest these, a separate task must map them to the S1 schema (not done here; data/ not owned).
