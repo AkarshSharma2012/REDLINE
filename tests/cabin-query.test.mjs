@@ -62,6 +62,8 @@ class Element {
   querySelector(selector) { return this.querySelectorAll(selector)[0] ?? null; }
   requestSubmit() { this.dispatchEvent({ type: 'submit' }); }
 }
+// W3 groups rows under concern-tier heading rows; count only material rows.
+const dataRows = root => root.querySelectorAll('tr').filter(r => r.parent?.tagName === 'TBODY' && r.className !== 'concern-heading').length;
 function setup() {
   const nodes = {};
   const doc = { createElement: tag => new Element(tag, doc), createTextNode: text => {
@@ -98,7 +100,7 @@ test('form changes render labelled rows and NASA source links without submit; re
   assert.equal(s.calls.length, 1);
   assert.ok(Array.isArray(s.calls[0].rows));
   assert.deepEqual(s.calls[0].rows.map(r => r.evidence_id), ['fixture-only']);
-  assert.equal(s.nodes['results-table'].querySelector('tbody').children.length, 1);
+  assert.equal(dataRows(s.nodes['results-table']), 1);
   assert.match(s.nodes['results-table'].textContent, /Burned in testing at these conditions/);
   assert.ok(s.nodes['results-table'].all().some(n => n.href?.startsWith('https://ntrs.nasa.gov/')));
   s.edit(s.field('o2'), '26.5');
@@ -118,6 +120,6 @@ test('rover demo evaluates all lines immediately and retains item names', async 
   s.nodes['rover-demo'].dispatchEvent({ type: 'click' });
   await Promise.resolve();
   assert.deepEqual(s.calls.at(-1).query.materials.map(m => m.material_id), ROVER_DEMO.items.map(m => m.material_id));
-  assert.equal(s.nodes['results-table'].querySelector('tbody').children.length, ROVER_DEMO.items.length);
+  assert.equal(dataRows(s.nodes['results-table']), ROVER_DEMO.items.length);
   assert.match(s.nodes['results-table'].textContent, /Window \/ display panel/);
 });
