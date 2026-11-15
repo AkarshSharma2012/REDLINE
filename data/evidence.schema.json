@@ -1,0 +1,563 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "REDLINE evidence row",
+  "$comment": "Mirrors row-local rules in src/schema/validate.js. Dataset-wide ID uniqueness and source/material reference resolution require validateEvidence.",
+  "type": "object",
+  "required": [
+    "evidence_id",
+    "material",
+    "material_id",
+    "form",
+    "thickness_mm",
+    "width_mm",
+    "flow_speed_cm_s",
+    "flow_direction",
+    "o2_pct",
+    "pressure_kpa",
+    "gravity_g",
+    "facility",
+    "endpoint",
+    "value",
+    "value_unit",
+    "outcome",
+    "uncertainty",
+    "run_id",
+    "source_key",
+    "source_locator",
+    "external_heat_flux_kw_m2",
+    "holdout_group",
+    "review_status"
+  ],
+  "properties": {
+    "evidence_id": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "material": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "material_id": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "form": {
+      "type": "string",
+      "pattern": "\\S",
+      "enum": [
+        "sheet",
+        "rod",
+        "fabric",
+        "tape",
+        "wire",
+        "slab",
+        "foam",
+        "other"
+      ]
+    },
+    "thickness_mm": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "exclusiveMinimum": 0
+    },
+    "width_mm": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "exclusiveMinimum": 0
+    },
+    "flow_speed_cm_s": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "flow_direction": {
+      "type": "string",
+      "pattern": "\\S",
+      "enum": [
+        "opposed",
+        "concurrent",
+        "quiescent",
+        "upward-buoyant"
+      ]
+    },
+    "o2_pct": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "pressure_kpa": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "exclusiveMinimum": 0
+    },
+    "gravity_g": {
+      "type": "number",
+      "minimum": 0
+    },
+    "facility": {
+      "type": "string",
+      "pattern": "\\S",
+      "enum": [
+        "ISS",
+        "free-flyer",
+        "drop-tower",
+        "aircraft",
+        "ground"
+      ]
+    },
+    "endpoint": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "LOC-FS",
+        "LOC-FR",
+        "quench-limit",
+        "blowoff-limit",
+        "MOC-T1",
+        "LOI-D2863",
+        "ignition",
+        "spread-rate",
+        "burn/no-burn",
+        "MOC",
+        "ULOI",
+        "extinction-5s",
+        null
+      ]
+    },
+    "value": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "value_unit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "% O2",
+        "kPa O2",
+        "cm/s",
+        "mm/s",
+        "pass/fail",
+        null
+      ]
+    },
+    "outcome": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "spread",
+        "no-spread",
+        "quenched",
+        "blowoff",
+        "no-ignition",
+        "consumed",
+        null
+      ]
+    },
+    "uncertainty": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "source_key": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "source_locator": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "external_heat_flux_kw_m2": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "limit_approach": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "lower-flow",
+        "raise-flow",
+        "lower-o2",
+        "fixed",
+        null
+      ]
+    },
+    "pass_criterion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "test_duration_s": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "exclusiveMinimum": 0
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "holdout_group": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "review_status": {
+      "type": "string",
+      "pattern": "\\S",
+      "enum": [
+        "draft",
+        "reviewed",
+        "verified"
+      ]
+    },
+    "verified_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "investigation": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pi": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "as_run_number": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "sample_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "date_source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "material_source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gravity_regime": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "flow_configuration": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "flow_restrictor_source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "fan_display_source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "air_display_source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "o2_initial_calibrated_vol_pct": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "o2_final_calibrated_vol_pct": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "observation_paraphrase": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "condition_source_title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "condition_source_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "condition_source_locator": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "observation_source_title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "observation_source_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "observation_source_locator": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "caveat": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_keys_research": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "endpoint_source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gravity_source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gravity_context": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pressure_psia": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "extraction_method": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "evidence_kind": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "value_qualifier": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "research_status": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "review_status"
+        ],
+        "properties": {
+          "review_status": {
+            "const": "verified"
+          }
+        }
+      },
+      "then": {
+        "allOf": [
+          {
+            "required": [
+              "endpoint"
+            ],
+            "properties": {
+              "endpoint": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "required": [
+              "o2_pct"
+            ],
+            "properties": {
+              "o2_pct": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "anyOf": [
+              {
+                "required": [
+                  "value"
+                ],
+                "properties": {
+                  "value": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                }
+              },
+              {
+                "required": [
+                  "outcome"
+                ],
+                "properties": {
+                  "outcome": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "not": {
+              "type": "null"
+            }
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value_unit"
+        ],
+        "properties": {
+          "value_unit": {
+            "not": {
+              "type": "null"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "endpoint"
+        ],
+        "properties": {
+          "endpoint": {
+            "const": "burn/no-burn"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "outcome"
+        ],
+        "properties": {
+          "outcome": {
+            "not": {
+              "type": "null"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
