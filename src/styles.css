@@ -134,6 +134,28 @@ a[target="_blank"]::after {
 /* Active tab: bar + fill, not border colour alone (SC 1.4.1) */
 [role="tab"][aria-selected="true"] { background: var(--surface-selected); box-shadow: inset 0 -2px 0 var(--accent); }
 
+/* Preview status stays outside module roots so rerenders retain the explanation. */
+.preview-label {
+  display: block;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+.research-preview {
+  margin-bottom: var(--space-16);
+  padding: var(--space-12);
+  border: 1px dashed var(--border-control);
+  border-radius: var(--radius-panel);
+  background: var(--surface-1);
+  color: var(--text-2);
+}
+.research-preview h2, .research-preview h3 {
+  margin: 0 0 var(--space-4);
+  color: var(--text-1);
+}
+.research-preview p { margin: 0; }
+
 /* Panels: borders over shadows */
 .panel {
   background: var(--surface-1);

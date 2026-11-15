@@ -1,7 +1,7 @@
 // Entry point: loads data/evidence.json and wires the UI to the rules (S1 §2-3).
 // Tabs follow screens.md §1 plus the PSI dashboard (B11) and Ask REDLINE (B12).
 // The Investigations tab mounts itself (src/ui/investigations.js has its own <script> tag),
-// so the first screen still works if evidence.json fails to load.
+// independently of the Cabin Check default if evidence.json fails to load.
 import { labelCabin } from './rules/label.js';
 import { renderCabinForm } from './ui/cabin-form.js';
 import { buildCabinQuery } from './ui/cabin-query.js';
@@ -15,7 +15,7 @@ import { mountAsk } from './ui/ask.js';
 
 const EVIDENCE_URL = 'data/evidence.json';
 
-export const TABS = ['investigations', 'ask', 'cabin', 'gravity', 'oxygen', 'accuracy'];
+export const TABS = ['cabin', 'investigations', 'gravity', 'oxygen', 'accuracy', 'ask'];
 
 // Illustrative lunar pressurized rover cabin (screens.md §7, docs/pitch.md 0:00-0:20).
 // Item uses are hypothetical, not a real rover manifest. Atmosphere: the form's default
@@ -36,7 +36,7 @@ export async function loadEvidence(url = EVIDENCE_URL) {
   return res.json();
 }
 
-// tabFromHash('#gravity') -> 'gravity'; anything unknown -> the PSI dashboard.
+// tabFromHash('#gravity') -> 'gravity'; anything unknown -> Cabin Check.
 export function tabFromHash(hash = '') {
   const id = String(hash).replace(/^#/, '');
   return TABS.includes(id) ? id : TABS[0];
