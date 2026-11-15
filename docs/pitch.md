@@ -2,7 +2,7 @@
 
 ## UI267 launch refresh gate (issue #268, 2026-11-15)
 
-**Pending UI267 merge and coordinator capture. No screenshots were refreshed for #268.** At inventory time, remote `main` and `task/267-ui-compact-nasa-inspired-mission-dashboa` both pointed to `37ea4aafd8c75334f0933eace41bd283fa5e30be`; issue #267 was open with no associated PR found. That is the pre-redesign baseline, not the launch freeze. Do not record the final launch video or export UI-bearing presentation materials until the coordinator supplies the exact merged #267 SHA and checks that the deployed app serves it.
+**Pending UI267 merge and coordinator capture. No screenshots were refreshed for #268.** At the latest check, remote `main` remained `37ea4aafd8c75334f0933eace41bd283fa5e30be`. UI267 has [open PR #270](https://github.com/AkarshSharma2012/REDLINE/pull/270), with head `592e282997eb7b32310cfb8424ca055984e04fd0` and no merge SHA. The PR head is a review candidate, not the launch freeze. Do not record the final launch video or export UI-bearing presentation materials until the coordinator supplies the exact merged #267 SHA and checks that the deployed app serves it.
 
 The requested redesign is a compact mission workbench with concise visible evidence notices and native disclosures for full caveats. This describes #267's requirements, not observed rendering. Keep the 60-second target and existing technical workflow below; recheck visible labels against the merged build before changing any click instructions. Human evidence review remains **0/45**; a visual refresh does not verify evidence.
 
@@ -14,6 +14,7 @@ The requested redesign is a compact mission workbench with concise visible evide
 - `README.md` links the deployed app at `https://akarshsharma2012.github.io/REDLINE/` and contains human local-demo instructions, but embeds no screenshots or video. Those server instructions are not authorization for conductor agents to start processes.
 - `tests/pitch-demo.test.mjs` checks the data path and script wording, not visual freshness. `docs/specs/screens.md` contains an older timed demo and an immutable historical pitch link at `0df4e860015e04d59e48f0861859d177a3a30b16`; it is a specification reference, not a launch capture. Leave historical references intact.
 - No tracked launch video, slide deck, capture script or preview package was found. External assets needing coordinator inventory: the existing Downloads recording fallback mentioned in #267 (exact path not supplied), any edited launch video, embedded presentation clip, slide screenshots and exported preview package. Their paths/URLs and current contents are not established by this repository. Preserve the Downloads fallback; do not overwrite it or claim these external materials are refreshed. NASA PDFs linked below are source documents, not REDLINE UI captures.
+- Issue #267 also names an external before-state capture, `state/acceptance-ask-390.png`. It is not tracked here; its absolute location and contents have not been verified by this task. Preserve it for coordinator comparison; do not use it as a final launch capture.
 
 ### Coordinator capture handoff after the merge
 
