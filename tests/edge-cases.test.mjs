@@ -119,10 +119,10 @@ test.todo('labelMaterial: duplicate NEAR rows do not duplicate citations', () =>
 test.todo('labelMaterial: draft and unrelated rows cannot supply a label', () => {
   answer(labelMaterial(query(), [row({ review_status: 'draft' }), row({ material_id: 'pmma' })]), 'NOT_ESTABLISHED', 'NE-no-data', []);
 });
-test.todo('labelMaterial: a spread point above query O2 is not a measured limit or covering test (V2 U1)', () => {
+test('labelMaterial: a spread point above query O2 is not a measured limit or covering test (V2 U1)', () => {
   answer(labelMaterial(query({ o2_pct: 19.5 }), [row()]), 'NOT_ESTABLISHED', 'NE-incompatible', ['SYNTHETIC-SPREAD']);
 });
-test.todo('labelMaterial: no-spread at query O2 covers; lower O2 does not (V2 U1)', () => {
+test('labelMaterial: no-spread at query O2 covers; lower O2 does not (V2 U1)', () => {
   answer(labelMaterial(query(), [row({ outcome: 'no-spread' })]), 'NOT_ESTABLISHED', 'NE-no-burn', ['SYNTHETIC-SPREAD']);
   answer(labelMaterial(query(), [row({ outcome: 'no-spread', o2_pct: 19 })]), 'NOT_ESTABLISHED', 'NE-incompatible', ['SYNTHETIC-SPREAD']);
 });
