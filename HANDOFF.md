@@ -58,3 +58,12 @@ STATUS: DONE
 - Next: coordinator review of the PR; no merge/deploy.
 
 STATUS: DONE
+
+# Issue #308: B1 neutral-white viewer selection (continues PR #303)
+- Fast-forwarded from PR #303 head ecd6ae431aa21f5da9abb516cb2a31ba1dd52759; scalar patch f6d7004ee6969d1c7d89d6461d305b5aae362826 pushed to PR #303 branch task/299-ui-b1-polish-high-contrast-3d-viewport-a.
+- rover-scene.js: SELECTED_COLOR 0x7cb8ff -> 0xffffff, SELECTED_EMISSIVE 0x1a3350 -> 0x3a3a3a. rover-viewer.css: --rv-accent fixed #FFFFFF (no blue page-accent inheritance). Black stage, selection outline, render-on-demand, hand-drawn icons unchanged. No B2/A2 shell/controls files, science, or global --accent edits.
+- Tests: rover-scene selection test now asserts neutral (r=g=b); new CSS test asserts no 7CB8FF in viewer CSS.
+- Full node --test once: 1254 tests, 1210 pass, 0 fail, 44 existing TODO, 0 cancelled/skipped; exit 0. git diff --check clean. No server/browser, merge or deploy.
+- If B2 already incorporated old #303, coordinator integrates this scalar patch.
+
+STATUS: DONE
