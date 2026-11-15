@@ -128,17 +128,26 @@
   line-height: 16px;
   font-weight: 500;
 }
+/* The host flows the whole mounted viewer (caption, stage, tools, material list).
+   Only the viewer's own .rover-viewer__stage reserves the canvas aspect ratio and clips. */
 .ws-viewer {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 10;
-  min-height: 220px;
+  min-width: 0;
   margin-bottom: var(--space-8);
-  background: var(--surface-1);
-  border: 1px solid var(--divider);
-  border-radius: var(--radius-control);
-  overflow: hidden;
 }
+
+/* Fixes and experiment planning: native disclosure below the source browser */
+.ws-disclosure { margin-top: var(--space-24); border-top: 1px solid var(--divider); }
+.ws-disclosure > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--text-1);
+  font-weight: 600;
+  cursor: pointer;
+}
+.ws-disclosure > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 #ws-viewer-status:empty { display: none; }
 
 /* Record detail */
@@ -176,7 +185,10 @@
 /* Tablet and phone: panes stack in task order; jump buttons reach each one; no page overflow */
 @media (max-width: 1080px) {
   .layout.workspace { grid-template-columns: minmax(0, 1fr) !important; grid-template-rows: none; }
-  .workspace > .ws-toolbar, .workspace > .ws-pane { grid-column: 1; grid-row: auto; }
+  /* Same ID specificity as the desktop placements above, so these win and no implicit columns appear. */
+  .workspace > #ws-pane-controls, .workspace > #ws-pane-sources, .workspace > #ws-pane-visual,
+  .workspace > #ws-sep-controls, .workspace > #ws-sep-sources, .workspace > .ws-toolbar { grid-column: 1; grid-row: auto; }
+  .workspace > .ws-pane { min-width: 0; width: auto; }
   .workspace .ws-pane { position: static; max-height: none; overflow: visible; border-bottom: 1px solid var(--divider); }
   .workspace > .ws-sep, .ws-widths { display: none; }
   .ws-jump { display: flex; }
