@@ -2,9 +2,9 @@
 // only: no terrain, flames, airflow, textures or shadows, and no engineering dimensions.
 // THREE is passed in so this module never loads the library by itself.
 
-// Accent blue from DESIGN.md; evidence red/orange stays reserved for real labels.
-export const SELECTED_COLOR = 0x7cb8ff;
-const SELECTED_EMISSIVE = 0x1a3350;
+// Neutral white selection on the black stage (no blue); evidence red/orange stays reserved for real labels.
+export const SELECTED_COLOR = 0xffffff;
+const SELECTED_EMISSIVE = 0x3a3a3a;
 // Selection outline: text-1 hairline edges, so selection reads by shape as well as colour.
 const OUTLINE = 0xe8eaed;
 const DIM_OPACITY = 0.25;
