@@ -1,23 +1,38 @@
-/* Illustrative rover viewer (issue #278). Scoped to .rover-viewer; tokens fall back to DESIGN.md values. */
+/* Illustrative rover viewer (issues #278, #299). Scoped to .rover-viewer; tokens fall back to DESIGN.md values.
+   Layout: black stage with a right-edge tool strip (row below the stage in narrow containers),
+   one information bar carrying the always-visible caption, then the compact material list. */
 .rover-viewer {
-  --rv-surface: var(--surface-1, #16191E);
+  --rv-stage: #000000;
+  --rv-bg: var(--bg, #0E1013);
   --rv-surface-2: var(--surface-2, #1E2228);
   --rv-selected: var(--surface-selected, #262B33);
   --rv-divider: var(--divider, #2C313A);
   --rv-border: var(--border-control, #737B88);
   --rv-text: var(--text-1, #E8EAED);
   --rv-text-2: var(--text-2, #A9B0BB);
+  --rv-text-3: var(--text-3, #8A929E);
   --rv-accent: var(--accent, #7CB8FF);
+  --rv-mono: var(--font-mono, ui-monospace, Consolas, monospace);
+  --rv-target: 36px;
+  container: rover-viewer / inline-size;
   display: grid;
-  gap: 8px;
   min-width: 0;
   color: var(--rv-text);
   font: 14px/1.45 var(--font-ui, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
 }
 .rover-viewer[hidden] { display: none; }
 .rover-viewer p { margin: 0; overflow-wrap: anywhere; }
-.rover-viewer__caption { font-size: 12px; color: var(--rv-text-2); }
+.rover-viewer [hidden] { display: none !important; }
 
+/* Frame: stage plus tool strip, one black block with a single hairline edge. */
+.rover-viewer__frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  background: var(--rv-stage);
+  border: 1px solid var(--rv-divider);
+  border-radius: 4px 4px 0 0;
+}
 /* Reserved stage size in every state (loading, 3D, schematic) to avoid layout shift. */
 .rover-viewer__stage {
   position: relative;
@@ -26,9 +41,7 @@
   min-height: 200px;
   max-height: 70vh;
   overflow: hidden;
-  background: var(--rv-surface);
-  border: 1px solid var(--rv-divider);
-  border-radius: 4px;
+  background: var(--rv-stage);
 }
 .rover-viewer__canvas {
   position: absolute;
@@ -51,10 +64,9 @@
   border-radius: 50%;
   background: var(--rv-surface-2);
   border: 1px solid var(--rv-border);
-  font: 12px/1 var(--font-mono, ui-monospace, Consolas, monospace);
+  font: 12px/1 var(--rv-mono);
   color: var(--rv-text);
 }
-.rover-viewer__badge[hidden] { display: none; }
 
 .rover-viewer__schematic { margin: 0; position: absolute; inset: 0; display: grid; grid-template-rows: 1fr auto; padding: 8px; }
 .rover-viewer__schematic svg { width: 100%; height: 100%; min-height: 0; }
@@ -64,19 +76,21 @@
 .rover-viewer__zone { fill: #4B535F; stroke: var(--rv-border); }
 .rover-viewer__zone.is-selected { fill: var(--rv-accent); stroke: var(--rv-text); stroke-width: 2; }
 .rover-viewer__zone.is-absent { opacity: 0.35; stroke-dasharray: 3 2; }
-.rover-viewer__zone-num { fill: var(--rv-text); font: 12px var(--font-mono, ui-monospace, monospace); }
+.rover-viewer__zone-num { fill: var(--rv-text); font: 12px var(--rv-mono); }
 
-.rover-viewer__tools { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: flex-start; }
-.rover-viewer__tools[hidden] { display: none; }
-.rover-viewer__group { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
-.rover-viewer__group-label { flex-basis: 100%; font-size: 12px; color: var(--rv-text-2); }
-.rover-viewer__help { flex-basis: 100%; font-size: 12px; color: var(--rv-text-2); }
-
+/* Tools: a wrapped row under the stage by default; a vertical strip in wider containers. */
+.rover-viewer__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 8px;
+  border-top: 1px solid var(--rv-divider);
+}
+.rover-viewer__group { display: flex; flex-wrap: wrap; gap: 4px; }
 .rover-viewer__tool,
 .rover-viewer__pick {
-  min-height: 44px;
-  min-width: 44px;
-  padding: 6px 12px;
+  min-height: var(--rv-target);
+  min-width: var(--rv-target);
   border: 1px solid var(--rv-border);
   border-radius: 4px;
   background: var(--rv-surface-2);
@@ -85,27 +99,105 @@
   cursor: pointer;
   transition: background-color 150ms ease, border-color 150ms ease;
 }
+.rover-viewer__tool {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 10px;
+  font-size: 13px;
+  line-height: 1;
+}
+.rover-viewer__tool--icon { padding: 0; }
+.rover-viewer__tool svg { display: block; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .rover-viewer__tool:hover,
 .rover-viewer__pick:hover:not(:disabled) { background: var(--rv-selected); }
 .rover-viewer__tool:focus-visible,
 .rover-viewer__pick:focus-visible { outline: 2px solid var(--rv-accent); outline-offset: 2px; }
 .rover-viewer__tool[aria-pressed="true"],
-.rover-viewer__pick[aria-pressed="true"] { border-color: var(--rv-accent); background: var(--rv-selected); box-shadow: inset 3px 0 0 var(--rv-accent); }
+.rover-viewer__pick[aria-pressed="true"] {
+  border-color: var(--rv-accent);
+  background: var(--rv-selected);
+  box-shadow: inset 0 0 0 1px var(--rv-accent);
+}
+/* Tooltip for icon buttons (also on keyboard focus); only drawn over the stage in strip mode. */
+.rover-viewer__tool--icon::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 8px);
+  z-index: 2;
+  display: none;
+  padding: 4px 8px;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  border: 1px solid var(--rv-border);
+  border-radius: 4px;
+  background: var(--rv-surface-2);
+  color: var(--rv-text);
+  font-size: 12px;
+  pointer-events: none;
+}
 
-.rover-viewer__heading { margin: 4px 0 0; font-size: 12px; font-weight: 600; color: var(--rv-text-2); }
+@container rover-viewer (min-width: 520px) {
+  .rover-viewer__frame { grid-template-columns: minmax(0, 1fr) auto; }
+  .rover-viewer__tools {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 8px;
+    border-top: 0;
+    border-left: 1px solid var(--rv-divider);
+  }
+  .rover-viewer__group { display: grid; grid-template-columns: repeat(2, var(--rv-target)); gap: 4px; }
+  .rover-viewer__group + .rover-viewer__group { padding-top: 8px; border-top: 1px solid var(--rv-divider); }
+  .rover-viewer__tool:not(.rover-viewer__tool--icon) { grid-column: 1 / -1; }
+  .rover-viewer__tool--icon:hover::after,
+  .rover-viewer__tool--icon:focus-visible::after { display: block; }
+}
+
+/* Information bar: caption first, then selection, user-input scenario, verification, status. */
+.rover-viewer__bar {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  background: var(--rv-bg);
+  border: 1px solid var(--rv-divider);
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+  font-size: 12px;
+  color: var(--rv-text-2);
+}
+.rover-viewer__caption { font-weight: 600; color: var(--rv-text); }
+.rover-viewer__selection { font-size: 14px; color: var(--rv-text); }
+.rover-viewer__scenario { font-variant-numeric: tabular-nums; }
+.rover-viewer__help { color: var(--rv-text-3); }
+
+/* Material list: compact rows, text state ("Selected", "Not in current request"). */
+.rover-viewer__heading { margin: 12px 0 4px; font-size: 12px; font-weight: 600; color: var(--rv-text-2); }
+.rover-viewer__empty,
+.rover-viewer__extras { margin-top: 4px; font-size: 12px; color: var(--rv-text-2); }
+.rover-viewer__empty:empty,
+.rover-viewer__extras:empty { display: none; }
 .rover-viewer__materials { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 4px; }
-.rover-viewer__pick { width: 100%; display: grid; grid-template-columns: auto 1fr auto; gap: 2px 8px; align-items: center; text-align: left; }
+.rover-viewer__pick {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0 8px;
+  align-items: center;
+  padding: 4px 10px;
+  text-align: left;
+}
 .rover-viewer__pick:disabled { cursor: not-allowed; opacity: 0.6; }
-.rover-viewer__num { font: 12px var(--font-mono, ui-monospace, monospace); color: var(--rv-text-2); }
-.rover-viewer__id { font: 12px var(--font-mono, ui-monospace, monospace); color: var(--rv-text-2); }
+.rover-viewer__num,
+.rover-viewer__id { font: 12px var(--rv-mono); color: var(--rv-text-2); }
 .rover-viewer__note { grid-column: 2 / -1; font-size: 12px; color: var(--rv-text-2); }
 .rover-viewer__note:empty { display: none; }
-.rover-viewer__extras:empty { display: none; }
-.rover-viewer__extras,
-.rover-viewer__scenario,
-.rover-viewer__status { font-size: 12px; color: var(--rv-text-2); }
-.rover-viewer__scenario { font-variant-numeric: tabular-nums; }
+.rover-viewer__pick[aria-pressed="true"] .rover-viewer__note { font-weight: 600; color: var(--rv-text); }
 
+/* Touch: practical 44px targets. */
+@media (pointer: coarse) {
+  .rover-viewer { --rv-target: 44px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .rover-viewer__tool,
   .rover-viewer__pick { transition: none; }

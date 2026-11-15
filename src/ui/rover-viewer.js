@@ -9,8 +9,14 @@ import {
 import { buildRoverScene } from './rover-scene.js';
 
 export const VIEWER_CAPTION = 'Illustrative cabin model - not a fire simulation';
-const CLEAR_COLOR = 0x16191e;
+const CLEAR_COLOR = 0x000000; // black stage; the lit model and white selection edges carry contrast
 const ORBIT_DEG_PER_PX = 0.4;
+const VERIFICATION_TEXT = 'Verification: none shown here. This model holds no measured data; review status stays with each source record.';
+// Drawn 24px stroke icons for the self-evident camera actions; other tools use text.
+const ICONS = Object.freeze({
+  left: 'M15 6l-6 6 6 6', right: 'M9 6l6 6-6 6', up: 'M6 15l6-6 6 6', down: 'M6 9l6 6 6-6',
+  in: 'M5 12h14M12 5v14', out: 'M5 12h14',
+});
 let mountCount = 0;
 
 const INERT = Object.freeze({ update() {}, setVisible() {}, destroy() {} });
@@ -69,25 +75,35 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
   let destroyed = false;
   let three = null; // { renderer, rover, camera, scheduler, ... } while WebGL is live
 
-  // Skeleton: caption, stage (canvas or schematic), controls, material list, status.
+  // Skeleton: frame (stage + right-edge tool strip), information bar holding the one
+  // always-visible caption, then the HTML material list that is also the fallback.
   const shell = el('div', 'rover-viewer');
   shell.setAttribute('data-layer', prefs.layer);
-  const caption = el('p', 'rover-viewer__caption', VIEWER_CAPTION);
-  caption.id = `${uid}-caption`;
+  const frame = el('div', 'rover-viewer__frame');
   const stage = el('div', 'rover-viewer__stage');
   const tools = el('div', 'rover-viewer__tools');
   tools.hidden = true;
-  const listHeading = el('h3', 'rover-viewer__heading', 'Cabin materials');
-  listHeading.id = `${uid}-materials`;
-  const list = el('ul', 'rover-viewer__materials');
-  list.setAttribute('aria-labelledby', listHeading.id);
-  const extras = el('p', 'rover-viewer__extras');
+  frame.append(stage, tools);
+  const bar = el('div', 'rover-viewer__bar');
+  const caption = el('p', 'rover-viewer__caption', VIEWER_CAPTION);
+  caption.id = `${uid}-caption`;
   const selection = el('p', 'rover-viewer__selection');
   selection.setAttribute('aria-live', 'polite');
   const scenario = el('p', 'rover-viewer__scenario');
+  const verification = el('p', 'rover-viewer__verification', VERIFICATION_TEXT);
   const status = el('p', 'rover-viewer__status', 'Loading 3D view…');
   status.setAttribute('role', 'status');
-  shell.append(caption, stage, tools, listHeading, list, extras, selection, scenario, status);
+  const help = el('p', 'rover-viewer__help', 'With the view focused: arrow keys orbit, + and - zoom, Home resets. Drag to orbit; click a part to select it.');
+  help.id = `${uid}-help`;
+  help.hidden = true;
+  bar.append(caption, selection, scenario, verification, status, help);
+  const listHeading = el('h3', 'rover-viewer__heading', 'Cabin materials');
+  listHeading.id = `${uid}-materials`;
+  const empty = el('p', 'rover-viewer__empty');
+  const list = el('ul', 'rover-viewer__materials');
+  list.setAttribute('aria-labelledby', listHeading.id);
+  const extras = el('p', 'rover-viewer__extras');
+  shell.append(frame, bar, listHeading, empty, list, extras);
   root.append(shell);
 
   const buttons = new Map();
@@ -123,15 +139,18 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
     for (const part of state.parts) {
       const { button, note } = buttons.get(part.materialId);
       button.disabled = !part.inRequest;
-      button.setAttribute('aria-pressed', String(part.materialId === state.highlightId));
-      note.textContent = part.inRequest ? '' : 'not in current request';
+      const pressed = part.materialId === state.highlightId;
+      button.setAttribute('aria-pressed', String(pressed));
+      note.textContent = pressed ? 'Selected' : part.inRequest ? '' : 'Not in current request';
     }
+    empty.textContent = state.materialIds.length ? ''
+      : 'No cabin items requested yet. Parts stay dimmed until matching items are added.';
     extras.textContent = state.extraIds.length
       ? `Requested materials without a modeled part: ${state.extraIds.join(', ')}.` : '';
     selection.textContent = selectionText(state);
     scenario.textContent = state.conditions.length
       ? `Requested scenario (user input, not measured): ${state.conditions.map(row => row.text).join(' · ')}`
-      : 'Requested scenario: not provided.';
+      : 'Requested scenario (user input): not provided.';
     for (const node of schematicZones) {
       const id = node.getAttribute('data-material-id');
       node.setAttribute('class', `rover-viewer__zone${id === state.highlightId ? ' is-selected' : ''}${state.parts.find(p => p.materialId === id)?.inRequest ? '' : ' is-absent'}`);
@@ -165,6 +184,7 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
     stage.replaceChildren(figure);
     tools.replaceChildren(); // camera/layer controls are meaningless without the 3D view
     tools.hidden = true;
+    help.hidden = true;
     status.textContent = `3D view unavailable (${reason}). The schematic and material list below remain usable.`;
     render();
   }
@@ -185,8 +205,6 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
     canvas.setAttribute('role', 'application');
     canvas.setAttribute('aria-roledescription', '3D cabin view');
     canvas.setAttribute('aria-label', 'Illustrative rover cabin, 3D cutaway view');
-    const help = el('p', 'rover-viewer__help', 'With the view focused: arrow keys orbit, + and - zoom, Home resets. Drag to orbit; click a part to select it.');
-    help.id = `${uid}-help`;
     canvas.setAttribute('aria-describedby', `${caption.id} ${help.id}`);
     const renderer = new T.WebGLRenderer({ canvas, antialias: true, powerPreference: 'low-power' });
     three = { renderer, canvas };
@@ -214,7 +232,7 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
       const hfov = 2 * Math.atan(Math.tan(vfov / 2) * camera.aspect);
       const fit = rover.radius / Math.sin(Math.min(vfov, hfov) / 2);
       const p = viewToPosition(view);
-      const scale = fit * 0.92 / VIEW_DEFAULT.distance;
+      const scale = fit / VIEW_DEFAULT.distance; // whole bounding sphere in frame at Reset: no clipped parts
       camera.position.set(rover.center.x + p.x * scale, rover.center.y + p.y * scale, rover.center.z + p.z * scale);
       camera.lookAt(rover.center);
       camera.updateMatrixWorld();
@@ -232,10 +250,19 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
     Object.assign(three, { camera, scheduler });
 
     const setView = next => { view = next; scheduler.invalidate(); };
-    const button = (label, text, onClick, pressed) => {
-      const node = el('button', 'rover-viewer__tool', text);
+    // Native buttons. Icon buttons carry an aria-label plus a CSS tooltip on hover and
+    // keyboard focus; text buttons keep their visible word inside the accessible name.
+    const button = (label, content, onClick, pressed) => {
+      const icon = ICONS[content];
+      const node = el('button', `rover-viewer__tool${icon ? ' rover-viewer__tool--icon' : ''}`, icon ? undefined : content);
       node.type = 'button';
-      if (label !== text) node.setAttribute('aria-label', label);
+      node.setAttribute('aria-label', label);
+      if (icon) {
+        node.setAttribute('data-tip', label);
+        const drawing = svg('svg', { viewBox: '0 0 24 24', width: 20, height: 20, 'aria-hidden': 'true', focusable: 'false' });
+        drawing.append(svg('path', { d: icon }));
+        node.append(drawing);
+      }
       if (pressed !== undefined) node.setAttribute('aria-pressed', String(pressed));
       listen(node, 'click', () => onClick(node), glCleanups);
       return node;
@@ -244,23 +271,23 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
       const wrap = el('div', 'rover-viewer__group');
       wrap.setAttribute('role', 'group');
       wrap.setAttribute('aria-label', label);
-      wrap.append(el('span', 'rover-viewer__group-label', label), ...nodes);
+      wrap.append(...nodes);
       return wrap;
     };
     const savePrefs = () => { writePrefs(storage, prefs); shell.setAttribute('data-layer', prefs.layer); };
     tools.replaceChildren(
-      group('Orbit', ...[['left', 'Left'], ['right', 'Right'], ['up', 'Up'], ['down', 'Down']]
-        .map(([action, text]) => button(`Orbit ${action}`, text, () => setView(stepView(view, action))))),
-      group('Zoom', button('Zoom in', 'Zoom in', () => setView(stepView(view, 'in'))),
-        button('Zoom out', 'Zoom out', () => setView(stepView(view, 'out'))),
-        button('Reset view', 'Reset view', () => setView(stepView(view, 'reset')))),
+      group('Orbit', ...['left', 'right', 'up', 'down']
+        .map(action => button(`Orbit ${action}`, action, () => setView(stepView(view, action))))),
+      group('Zoom', button('Zoom in', 'in', () => setView(stepView(view, 'in'))),
+        button('Zoom out', 'out', () => setView(stepView(view, 'out'))),
+        button('Reset view', 'Reset', () => setView(stepView(view, 'reset')))),
       group('Layers',
-        button('Show outer shell', 'Outer shell', node => {
+        button('Show outer shell', 'Shell', node => {
           prefs = { ...prefs, layer: prefs.layer === 'shell' ? 'cutaway' : 'shell' };
           node.setAttribute('aria-pressed', String(prefs.layer === 'shell'));
           rover.setLayer(prefs.layer); savePrefs(); scheduler.invalidate();
         }, prefs.layer === 'shell'),
-        button('Wireframe', 'Wireframe', node => {
+        button('Wireframe', 'Wire', node => {
           prefs = { ...prefs, wireframe: !prefs.wireframe };
           node.setAttribute('aria-pressed', String(prefs.wireframe));
           rover.setWireframe(prefs.wireframe); savePrefs(); scheduler.invalidate();
@@ -341,8 +368,8 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
 
     stage.replaceChildren(canvas, callouts);
     tools.hidden = false;
-    tools.append(help);
-    status.textContent = '3D view ready. Use the buttons, keys or drag to orbit; select a part or a list item.';
+    help.hidden = false;
+    status.textContent = '3D view ready. Orbit with the tool strip, keys or drag; select a part or a list item.';
   }
 
   function teardownWebGL() {

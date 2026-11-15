@@ -1,0 +1,98 @@
+/* Source records only; loaded after workspace.css by the shell owner. */
+#ws-sources, .ws-record-detail {
+  background: #000;
+  color: var(--text-1);
+  font-size: 14px;
+  line-height: 20px;
+  min-width: 0;
+  color-scheme: dark;
+}
+#ws-sources .ws-filters {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 8rem);
+  gap: 4px 8px;
+  margin: 0 0 6px;
+}
+#ws-sources .ws-filters > div { min-width: 0; }
+#ws-sources .ws-filters label {
+  display: block;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0 0 2px;
+}
+#ws-sources .ws-filters input, #ws-sources .ws-filters select,
+#ws-sources .ws-clear-filters, #ws-sources .ws-scope button {
+  min-width: 0;
+  min-height: 36px;
+  margin: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--border-control);
+  border-radius: 0;
+  background: #000;
+  color: var(--text-1);
+  font: inherit;
+}
+#ws-sources .ws-clear-filters { grid-column: 1 / -1; justify-self: start; }
+#ws-sources .ws-counts { margin: 0 0 4px; font-size: 12px; line-height: 16px; }
+#ws-sources .ws-note { margin: 0 0 6px; padding: 4px 6px; font-size: 12px; line-height: 16px; }
+#ws-sources .ws-scope { margin: 0 0 4px; font-size: 12px; overflow-wrap: anywhere; }
+#ws-sources .ws-cards { display: block; margin: 0; padding: 0; }
+#ws-sources .ws-cards > li { margin: 0; padding: 0; }
+#ws-sources .ws-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  margin: 0;
+  padding: 6px 8px;
+  min-height: 96px;
+  border: 0;
+  border-bottom: 1px solid var(--border-control);
+  border-left: 3px solid transparent;
+  border-radius: 0;
+  background: #000;
+  color: var(--text-1);
+  box-shadow: none;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+#ws-sources .ws-record-identity { display: grid; min-width: 0; }
+#ws-sources .ws-card-title, #ws-sources .ws-card-line {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 20px;
+}
+#ws-sources .ws-card-line { color: var(--text-2); }
+#ws-sources .ws-record-conditions { display: grid; grid-template-columns: 1fr 1fr 1.35fr; gap: 8px; }
+#ws-sources .ws-record-condition { display: grid; min-width: 0; overflow-wrap: anywhere; }
+#ws-sources .ws-record-label, #ws-sources .ws-card-status { color: var(--text-3); font-size: 12px; line-height: 16px; }
+#ws-sources .ws-record-conditions.type-data { font-size: 14px; line-height: 20px; }
+#ws-sources .ws-card:hover { background: var(--surface-2); }
+#ws-sources .ws-card[aria-pressed="true"] { border-left-color: var(--accent); background: #000; outline: 1px solid var(--accent); outline-offset: -1px; }
+#ws-sources :is(button, input, select):focus-visible,
+.ws-record-detail :is(button, a, summary):focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+#ws-sources button, .ws-record-detail :is(button, summary) { touch-action: manipulation; cursor: pointer; }
+#ws-sources .ws-empty { color: var(--text-1); overflow-wrap: anywhere; }
+.ws-record-detail { border-radius: 0; padding: 12px; overflow-wrap: anywhere; }
+.ws-record-detail p { margin: 8px 0; }
+.ws-record-detail .ws-detail-head h3 { font-size: 16px; line-height: 24px; }
+.ws-record-detail .ws-note { font-size: 14px; line-height: 20px; }
+.ws-record-detail :is(.text-2, details p) { color: var(--text-2); }
+.ws-record-detail .text-3, .ws-record-detail dt { color: var(--text-3); }
+.ws-record-detail dd { font-size: 14px; line-height: 20px; }
+.ws-record-detail .ws-locator { font-size: 12px; line-height: 18px; }
+.ws-record-detail details { border-top: 1px solid var(--border-control); margin-top: 8px; }
+.ws-record-detail details > summary { display: list-item; min-height: 44px; padding: 10px 0; color: var(--text-1); font-size: 14px; line-height: 24px; }
+.ws-record-detail a { color: var(--accent); text-decoration: underline; }
+.ws-record-detail .ws-conditions > div { min-width: 0; }
+@media (pointer: coarse) {
+  #ws-sources .ws-filters :is(input, select, button), #ws-sources .ws-scope button { min-height: 44px; }
+}
+@media (max-width: 360px) {
+  #ws-sources .ws-filters { grid-template-columns: minmax(0, 1fr); }
+  #ws-sources .ws-record-conditions { gap: 4px; }
+}

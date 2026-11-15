@@ -112,8 +112,10 @@ test('tabs, panels and primary controls keep IDs and sizes', () => {
   const tabs = [...html.matchAll(/role="tab" id="tab-([^"]+)"/g)].map(m => m[1]);
   assert.deepEqual(tabs, ['cabin', ...VIEWS]);
   assert.match(html, /<button type="button" id="rover-demo" class="btn-primary"[^>]*disabled>/);
-  assert.match(css, /button, input, select \{[^}]*min-height: 40px;/);
-  assert.match(css, /\.tabs \[role="tab"\] \{[^}]*min-height: 44px;/);
+  assert.match(css, /button, input, select \{[^}]*min-height: var\(--control-h\);/);
+  assert.match(css, /\.tabs \[role="tab"\] \{[^}]*min-height: var\(--bar-h\);/);
+  assert.match(css, /--control-h: 32px;/, 'fine pointer controls stay above the 24 px minimum');
+  assert.match(css, /@media \(pointer: coarse\), \(max-width: 1080px\) \{\s*:root \{ --control-h: 44px; --bar-h: 44px; \}/);
   assert.match(css, /\[hidden\] \{ display: none !important; \}/);
   assert.match(css, /\.table-scroll \{ overflow-x: auto; \}/);
 });

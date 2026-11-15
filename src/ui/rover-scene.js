@@ -5,6 +5,8 @@
 // Accent blue from DESIGN.md; evidence red/orange stays reserved for real labels.
 export const SELECTED_COLOR = 0x7cb8ff;
 const SELECTED_EMISSIVE = 0x1a3350;
+// Selection outline: text-1 hairline edges, so selection reads by shape as well as colour.
+const OUTLINE = 0xe8eaed;
 const DIM_OPACITY = 0.25;
 
 const HULL = 0x8a93a1;
@@ -119,6 +121,28 @@ export function buildRoverScene(THREE) {
   rover.add(wheels);
   occluders.push(wheels);
 
+  // One merged edge outline per material, shown only while that material is selected.
+  const outlines = new Map();
+  const outlineMaterial = new THREE.LineBasicMaterial({ color: OUTLINE });
+  materials.add(outlineMaterial);
+  for (const [materialId, meshes] of parts) {
+    const points = [];
+    for (const mesh of meshes) {
+      mesh.updateMatrix();
+      const edges = new THREE.EdgesGeometry(mesh.geometry).applyMatrix4(mesh.matrix);
+      points.push(...edges.getAttribute('position').array);
+      edges.dispose();
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+    geometries.add(geometry);
+    const outline = new THREE.LineSegments(geometry, outlineMaterial);
+    outline.name = `Selection outline ${materialId}`;
+    outline.visible = false;
+    rover.add(outline);
+    outlines.set(materialId, outline);
+  }
+
   rover.updateMatrixWorld(true);
   const anchors = new Map(Object.entries(ANCHORS).map(([id, local]) => [id, rover.localToWorld(new THREE.Vector3(...local))]));
   const sphere = new THREE.Box3().setFromObject(rover).getBoundingSphere(new THREE.Sphere());
@@ -138,10 +162,12 @@ export function buildRoverScene(THREE) {
     },
     setWireframe(on) {
       for (const material of materials) {
+        if (material === outlineMaterial) continue;
         if (material.wireframe !== Boolean(on)) { material.wireframe = Boolean(on); material.needsUpdate = true; }
       }
     },
     applyState({ highlightId = null, inRequest = new Set() } = {}) {
+      for (const [id, outline] of outlines) outline.visible = id === highlightId;
       for (const mesh of partList) {
         const { materialId, baseColor, baseOpacity } = mesh.userData;
         const selected = materialId === highlightId;
