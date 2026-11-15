@@ -2,7 +2,7 @@
 
 Applied on LAPTOP-AM at 2026-11-15 03:36 PST to the actual files in `C:\Users\nehap\redline-conductor`, not just this application checkout. Originals are preserved at `state\issue245-backup-20261115-033234`. Existing work folders, A1/agent processes and scheduled Fable were untouched. No resets, worktree deletion, server, browser or persistent replacement process was used.
 
-Installed files match these tracked snapshots by SHA256:
+Installed-file SHA256 values are recorded below. Tracked snapshots have identical text after CRLF/LF normalization; git checkout line endings can give their raw files different hashes:
 
 | File | SHA256 |
 | --- | --- |
@@ -50,3 +50,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\conductor.ps1 -Agent codex
 ```
 
 That command is provided, not executed. It will re-read current heads/base and rerun tests before publishing; the recorded integration SHA is historical verification, not authorization to skip fresh checks. Merger logs are now `state\merger-<PID>.log`; failures persist in `state\merger-AkarshSharma2012_REDLINE-failures.json`. Verify-only uses a separate failure-state file. Never launch an old script copy alongside this one, since legacy versions do not honor the new lock.
+
+## Fresh verification, 2026-11-15 04:06 PST
+
+Re-read actual local conductor/test sources. All three installed files equal the tracked snapshots after CRLF/LF normalization. Actual local `test-conductor.ps1` exited 0: 62 wrapper checks, including ten merger regressions. No implementation changes were needed in this continuation.
+
+A second bounded `-MergeOnly -Once -MergeVerifyOnly` run exited 0. Base `0f4b2e2c88e1e408ba94d6de8101711a857329c6`; tested integrated SHA `41afd316fa5095b0260f6ed8895170d56c7dd2ce`. Full `node --test`: 1149 tests, 1066 passed, 0 failed, 83 TODO. Integrated scratch remained clean. Log: `state/merger-test-41afd316fa5095b0260f6ed8895170d56c7dd2ce.log`; scan receipt: `state/merger-31548.log`.
+
+Queue before = queue after: 228,229,236,237,238,239,244,246,248. Heads for the original seven remain exactly as recorded above. New heads: PR246 `69b7e260fe66d2bee44fe692d619bdc27321597a`; PR248 `4da4548a25e5f668f97cc3ccc2c6bd0bc9fd5775`. All nine were included in the tested tree; no main push or comments were made. Known agent conductors were preserved; no known persistent merger existed to restart. Verification PID31548 exited. Activation handoff above remains necessary under the hard no-persistent-process rule.
