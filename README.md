@@ -58,6 +58,8 @@ The **Evidence review** panel (Model and evidence pane) turns the cabin setup in
 3. **Pin baseline**, then change oxygen, pressure or gravity in Cabin setup. The panel lists which records changed state, condition by condition, and the ordered research questions update.
 4. **Download Markdown brief** / **Download JSON brief**, or **Open brief** to read the exact export. A reviewer can open a downloaded brief file later.
 
+Walkthrough video (96 s, live recording of this build with captions and synthetic narration): [MP4](docs/pitch/walkthrough/redline-evidence-review-walkthrough.mp4), [captions (WebVTT)](docs/pitch/walkthrough/redline-evidence-review-walkthrough.vtt), [transcript](docs/pitch/walkthrough/redline-evidence-review-walkthrough-transcript.md), and the [Markdown](docs/pitch/walkthrough/redline-brief-lunar-pressurized-rover-cabin-illustrative.md) and [JSON](docs/pitch/walkthrough/redline-brief-lunar-pressurized-rover-cabin-illustrative.json) briefs exported on screen. The scenario is illustrative and is not an experimental result.
+
 **Review-ready** means a verified record whose stated conditions all match the request, ready for bounded source review; it is not a safety finding. With the current dataset all 45 records are drafts and 0 are review-ready. Fewer gaps do not mean lower fire risk. The brief is built from data only; Ask REDLINE text is never included.
 
 ## Data sources
