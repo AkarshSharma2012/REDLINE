@@ -135,10 +135,11 @@ export function compareSnapshots(baseline, current, evidence) {
   return { conditions, lines, fields, counts: { before: count(baseline), after: count(current) } };
 }
 
-// Changes that move a candidate further from or closer to the requested context come first.
+// State transitions first (to conflict/unknown before resolved), then requested-value-only changes.
 const RANK = { conflict: 0, unknown: 1, na: 2, listed: 3 };
 export function orderFieldChanges(fields) {
-  return [...fields].sort((a, b) => (RANK[a.after.state] - RANK[b.after.state])
+  const moved = (f) => (f.before.state === f.after.state ? 1 : 0);
+  return [...fields].sort((a, b) => (moved(a) - moved(b)) || (RANK[a.after.state] - RANK[b.after.state])
     || a.line_id.localeCompare(b.line_id) || a.evidence_id.localeCompare(b.evidence_id));
 }
 

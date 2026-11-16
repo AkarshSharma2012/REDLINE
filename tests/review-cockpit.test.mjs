@@ -72,8 +72,10 @@ test('baseline diff: duplicate lines tracked separately; add/remove; no change i
   const same = compareSnapshots(a, snapshot(a), evidence);
   assert.equal(same.conditions.length + same.lines.length + same.fields.length, 0);
   assert.deepEqual(compareSnapshots(null, a, evidence).fields, []);
-  const ordered = orderFieldChanges([{ line_id: 'line-1', evidence_id: 'R1', after: { state: 'listed' } }, { line_id: 'line-2', evidence_id: 'R1', after: { state: 'conflict' } }]);
-  assert.equal(ordered[0].after.state, 'conflict');
+  const ordered = orderFieldChanges([{ line_id: 'line-1', evidence_id: 'R1', before: { state: 'conflict' }, after: { state: 'conflict' } },
+    { line_id: 'line-2', evidence_id: 'R1', before: { state: 'conflict' }, after: { state: 'listed' } },
+    { line_id: 'line-3', evidence_id: 'R1', before: { state: 'listed' }, after: { state: 'conflict' } }]);
+  assert.deepEqual(ordered.map((f) => f.line_id), ['line-3', 'line-2', 'line-1']);
 });
 
 test('triage query keeps duplicates and names; filenames are safe', () => {
