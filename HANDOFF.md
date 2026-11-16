@@ -9,6 +9,6 @@
 - The claims table is posted on issue #344.
 
 ## Testing
-- `npm ci` (jsdom was missing in this worktree), `node scripts/build-ui.mjs` OK, then `node --test`: 1381 tests, 0 fail (1 existing TODO warning).
+- Revision run: `npm ci`, `node scripts/build-ui.mjs` OK, `node --test`: 1381 tests, 1337 pass, 0 fail, 44 todo (existing TODO-marked test-data checks, not touched here). Branch already on current origin/main.
 
 STATUS: DONE
