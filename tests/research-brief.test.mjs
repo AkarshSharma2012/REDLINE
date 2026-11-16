@@ -225,3 +225,23 @@ test('deterministic JSON roundtrip preserves Unicode and source locators', () =>
   assert.equal(researchBriefMarkdown(back), researchBriefMarkdown(b1));
   assert.match(researchBriefMarkdown(back), /日本語/);
 });
+
+// B1 #323 integration additions (reviewed on PR #324): candidate-level change tracking and
+// request-or-source missing-field label.
+test('candidate-level changes: gravity 0.16 -> 1 adds a gravity_g conflict on a draft row', () => {
+  const base = triage([line('L1', 'pmma', 'Window', [cand('R1', { conflicts: [] }), cand('R2')])], { ...COND, gravity_g: 0.16 });
+  const cur = triage([line('L1', 'pmma', 'Window', [cand('R1', { conflicts: ['gravity_g'] }), cand('R3')], { request: { ...COND, gravity_g: 1, material_id: 'pmma', thickness_mm: 1, form: 'sheet' } })], { ...COND, gravity_g: 1 });
+  const b = buildResearchBrief(cur, { baseline: base });
+  const f = b.changes.map((c) => `${c.field}:${c.change}`);
+  assert.ok(f.includes('conditions.gravity_g:changed'));
+  const g = b.changes.find((c) => c.field === 'lines[L1].candidates[R1].conflicts');
+  assert.deepEqual([g.before, g.after], [[], ['gravity_g']]);
+  assert.ok(f.includes('lines[L1].candidates[R3]:added'));
+  assert.ok(f.includes('lines[L1].candidates[R2]:removed'));
+  assert.equal(b.changes.find((c) => c.field === 'lines[L1].candidates[R3]').after.review_status, 'draft');
+  assert.deepEqual(buildResearchBrief(cur, { baseline: base }).changes, b.changes, 'deterministic');
+  const md = researchBriefMarkdown(b);
+  assert.match(md, /lines\\[L1\\]\.candidates\\[R1\\]\.conflicts: \[\] → \\["gravity\_g"\\]|candidates.*R1.*conflicts/);
+  assert.match(md, /Missing or unknown fields \(request or source side\): pressure_kpa/);
+  assert.doesNotMatch(md, /Source fields not reported/);
+});

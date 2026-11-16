@@ -192,6 +192,8 @@ const keyUnion = (a, b) => [...new Set([...Object.keys(a), ...Object.keys(b)])].
 const lineSummary = (it) => ({ line_id: it.line_id, line_index: it.line_index, material_id: it.material_id, name: it.name });
 const lineKey = (it) => `${typeof it.line_id}:${it.line_id}`;
 const fieldId = (it) => `lines[${it.line_id}]`;
+const CANDIDATE_KEYS = ['grade', 'review_ready', 'conflicts', 'missing_fields'];
+const candidateSummary = (c) => ({ evidence_id: c.evidence_id, review_status: c.review_status, grade: c.grade, review_ready: c.review_ready });
 
 function diff(base, cur) {
   const changes = [];
@@ -216,6 +218,16 @@ function diff(base, cur) {
       if (CONDITION_KEYS.includes(k) && same(a, get(base.conditions, k)) && same(b, get(cur.conditions, k))) continue;
       changes.push(change(`${f}.request.${k}`, a, b));
     }
+    // Candidate-level changes: which evidence changed review context, matched by evidence_id.
+    const oldCands = new Map(old.candidates.map((c) => [c.evidence_id, c]));
+    const curIds = new Set(it.candidates.map((c) => c.evidence_id));
+    for (const c of it.candidates) {
+      const was = oldCands.get(c.evidence_id);
+      const cf = `${f}.candidates[${c.evidence_id}]`;
+      if (!was) { changes.push(change(cf, MISSING, candidateSummary(c))); continue; }
+      for (const k of CANDIDATE_KEYS) if (!same(was[k], c[k])) changes.push(change(`${cf}.${k}`, was[k], c[k]));
+    }
+    for (const c of old.candidates) if (!curIds.has(c.evidence_id)) changes.push(change(`${f}.candidates[${c.evidence_id}]`, candidateSummary(c), MISSING));
   }
   for (const it of base.items) if (!curKeys.has(lineKey(it))) changes.push(change(fieldId(it), lineSummary(it), MISSING));
   return changes;
@@ -309,7 +321,7 @@ export function researchBriefMarkdown(brief) {
       L.push(`- Evidence ${esc(c.evidence_id)}: review status ${esc(c.review_status)}${c.review_status === 'verified' ? '' : ' (draft, not verified)'}; grade ${esc(c.grade)}; review-ready ${c.review_ready === true ? 'yes' : 'no'}`,
         `  - ${citation(c)}`);
       for (const r of c.rules || []) L.push(`  - Rule ${esc(r.rule)}: ${esc(r.grade)}; ${esc(r.why)}`);
-      if (c.missing_fields?.length) L.push(`  - Source fields not reported: ${c.missing_fields.map(esc).join(', ')}`);
+      if (c.missing_fields?.length) L.push(`  - Missing or unknown fields (request or source side): ${c.missing_fields.map(esc).join(', ')}`);
       if (c.conflicts?.length) L.push(`  - Conflicts: ${c.conflicts.map(esc).join('; ')}`);
     }
     L.push('');
