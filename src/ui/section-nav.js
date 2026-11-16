@@ -40,7 +40,7 @@ export function applyRoute(doc, { section, view }) {
     const panel = doc.getElementById(`panel-${sub}`);
     if (panel) panel.hidden = view !== sub;
   }
-  for (const link of doc.querySelectorAll('.subnav a[href^="#"]')) {
+  for (const link of doc.querySelectorAll?.('.subnav a[href^="#"]') ?? []) {
     if (routeFromHash(link.getAttribute('href')).view === view) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
   }
@@ -51,7 +51,7 @@ export function applyRoute(doc, { section, view }) {
 // tap pins it open (aria-expanded), Escape or a tap elsewhere closes it. The tip text is also
 // the button's accessible description. Critical warnings never live in these tips.
 export function wireHelp(doc) {
-  const buttons = [...doc.querySelectorAll('.help > .help-btn')];
+  const buttons = [...(doc.querySelectorAll?.('.help > .help-btn') ?? [])];
   const closeAll = (except) => { for (const b of buttons) if (b !== except) b.setAttribute('aria-expanded', 'false'); };
   for (const b of buttons) {
     b.addEventListener('click', () => {
@@ -71,7 +71,7 @@ export function wireHelp(doc) {
     b.addEventListener('blur', reset);
     b.parentElement?.addEventListener('mouseleave', reset);
   }
-  doc.addEventListener('pointerdown', (event) => {
+  doc.addEventListener?.('pointerdown', (event) => {
     if (!event.target?.closest?.('.help')) closeAll(null);
   });
   return buttons.length;

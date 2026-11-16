@@ -134,11 +134,11 @@ test('record detail opens beside the records and closes back to the record', () 
   assert.equal(card.getAttribute('aria-pressed'), 'true');
   const detail = $('ws-source-detail');
   assert.ok(detail.children.length, 'detail rendered');
-  assert.equal(doc.activeElement, null, 'desktop keeps focus on the list');
+  assert.ok(detail.contains(doc.activeElement), 'focus moves into the open detail, not off screen');
   detail.onkeydown({ key: 'Escape', preventDefault() {} });
   assert.equal(detail.children.length, 0);
   assert.equal(card.getAttribute('aria-pressed'), 'false');
-  assert.equal(doc.activeElement, card, 'focus restored to the record');
+  assert.ok(doc.activeElement === card, 'focus restored to the record');
 });
 
 test('stored v1 layout preferences are ignored; stage view starts on the part list', () => {
