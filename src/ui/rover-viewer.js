@@ -157,7 +157,7 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
     selection.textContent = selectionText(state);
     legend.hidden = !(evidence && inspect.overlay && three?.rover);
     legend.textContent = 'Part colours show evidence review state, not fire risk: blue = '
-      + `${EVIDENCE_STATE_TEXT['review-ready']}; red = ${EVIDENCE_STATE_TEXT['review-required']}; gray = ${EVIDENCE_STATE_TEXT['no-record']}. All 45 current records are drafts.`;
+      + `${EVIDENCE_STATE_TEXT['review-ready']}; red = ${EVIDENCE_STATE_TEXT['review-required']}; gray = ${EVIDENCE_STATE_TEXT['no-record']}. Draft records are not verified.`;
     scenario.textContent = state.conditions.length
       ? `Requested scenario (user input, not measured): ${state.conditions.map(row => row.text).join(' · ')}`
       : 'Requested scenario (user input): not provided.';
