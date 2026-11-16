@@ -68,3 +68,18 @@ test('no match, unknown conditions and injected text are handled without inventi
   assert.match(nextCheckFor(hit), /at Table 1/);
   assert.doesNotMatch(html + why, /\bsafe\b|confidence|probability|risk score/i);
 });
+
+test('example chips stay local even with an API key set; manual submit keeps the opt-in API path', async () => {
+  const { w, d, calls } = mount();
+  const key = d.querySelector('[data-role="key"]');
+  key.value = 'sk-test-not-a-real-key';
+  key.dispatchEvent(new w.Event('input'));
+  d.querySelector('[data-example="Nomex oxygen limit tests"]').click();
+  await new Promise((r) => setTimeout(r, 0));
+  assert.equal(calls(), 0, 'chip never calls requestAnswer');
+  assert.match(d.querySelector('[data-role="status"]').textContent, /local search only/);
+  d.getElementById('ask-question').value = 'nomex oxygen';
+  d.querySelector('[data-role="form"]').dispatchEvent(new w.Event('submit', { cancelable: true }));
+  await new Promise((r) => setTimeout(r, 0));
+  assert.equal(calls(), 1, 'explicit submit with a key still uses the opt-in path');
+});

@@ -188,7 +188,8 @@ export function renderAsk(root, data = {}, { requestAnswer = askClaude } = {}) {
     $('status').textContent = 'Key forgotten.';
   });
 
-  async function ask(question) {
+  // ask(question, { localOnly }) — localOnly never calls requestAnswer, even when a key is set.
+  async function ask(question, { localOnly = false } = {}) {
     const current = ++revision;
     question = String(question ?? '').trim();
     if (!question) {
@@ -218,6 +219,10 @@ export function renderAsk(root, data = {}, { requestAnswer = askClaude } = {}) {
       $('answer').innerHTML = decisionNoticeHtml() + $('answer').innerHTML;
       $('status').textContent = `${hits.length} rows retrieved. REDLINE does not approve, certify or predict, so no live answer was requested.`;
       return { hits, answer: null, boundary: 'decision-request' };
+    }
+    if (localOnly) {
+      $('status').textContent = `${hits.length} rows retrieved by local search only (example question: nothing was sent, even if a key is set).`;
+      return { hits, answer: null, localOnly: true };
     }
     if (!apiKey) {
       $('status').textContent = `${hits.length} rows retrieved by matching words in your question; they are not an answer. Read the matching records below; an AI-written discussion is optional.`;
@@ -261,7 +266,7 @@ export function renderAsk(root, data = {}, { requestAnswer = askClaude } = {}) {
   // Example chips fill the field and run the same local search; they never call the API by themselves.
   (root.querySelectorAll?.('[data-example]') ?? []).forEach((b) => b.addEventListener('click', () => {
     field.value = b.getAttribute('data-example');
-    ask(field.value);
+    ask(field.value, { localOnly: true });
   }));
   return { ask, invalidate() { revision++; } };
 }
