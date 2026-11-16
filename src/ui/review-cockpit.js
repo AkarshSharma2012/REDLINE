@@ -226,7 +226,7 @@ export function mountReviewCockpit(root, options = {}) {
     const ol = element(d, 'ol', null, 'cockpit-questions');
     for (const a of item.next_actions ?? []) {
       const li = element(d, 'li', a.message);
-      const meta = [a.field && `field ${a.field}`, a.evidence_ids?.length && `records ${a.evidence_ids.join(', ')}`].filter(Boolean).join(' · ');
+      const meta = [a.field && `field ${a.field}`, a.evidence_ids?.length && `records ${a.evidence_ids.slice(0, 6).join(', ')}${a.evidence_ids.length > 6 ? ` +${a.evidence_ids.length - 6} more (full list in the brief)` : ''}`].filter(Boolean).join(' · ');
       if (meta) li.append(element(d, 'span', ` (${meta})`, 'text-3'));
       ol.append(li);
     }

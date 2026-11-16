@@ -108,9 +108,9 @@ function nextActions(item, materialId) {
   }
   const g = ids((c) => c.conflicts.includes('gravity_g'));
   if (g.length) {
-    const tested = [...new Set(g.map((id) => fmt(item.rows.get(id)?.gravity_g)))].join(', ');
+    const tested = [...new Set(g.map((id) => `${fmt(item.rows.get(id)?.gravity_g)} g`))].join(' or ');
     actions.push({ kind: 'investigate_gravity_mismatch', field: 'gravity_g', evidence_ids: g,
-      message: `Investigate the gravity mismatch: requested ${fmt(item.request.gravity_g)} g vs tested ${tested} g in ${g.length} record${g.length === 1 ? '' : 's'}. Partial gravity has no direct data in these sources; results can only bound it between 0 g and 1 g.` });
+      message: `Investigate the gravity mismatch: requested ${fmt(item.request.gravity_g)} g vs tested ${tested} in ${g.length} record${g.length === 1 ? '' : 's'}. Partial gravity has no direct data in these sources; results can only bound it between 0 g and 1 g.` });
   }
   for (const k of TRIAGE_FIELDS.filter((f) => f !== 'gravity_g')) {
     const hit = ids((c) => c.conflicts.includes(k));
