@@ -49,6 +49,17 @@ For the 3D camera, use the orbit, zoom and **Reset view** buttons. With the view
 
 The workspace respects reduced-motion preferences. If animation or WebGL is unavailable, the HTML source browser, citation details and cabin-item controls remain usable; the viewer provides a schematic fallback. The model is **illustrative, not a fire simulation**. Inspecting a draft record does not verify it or make it eligible for results. **Zero verified rows cannot produce evidence-backed cabin results.** Model selection does not change review status, establish gravity transfer or validate a cabin design. No universal measured 0 g/1 g gravity bounds are inferred.
 
+## Evidence review workflow
+
+The **Evidence review** panel (Model and evidence pane) turns the cabin setup into a research handoff:
+
+1. Choose **Load lunar rover scenario**. Each BOM line, including duplicates, lists its candidate NASA records; a material with no record is shown as a research task, not as a finding.
+2. Pick a line and a candidate record. The matrix puts the requested conditions beside the source's stated conditions, with the citation and locator. **Unknown** stays unknown (never 0), **Conflict** marks a differing condition, and rod/wire width is **Not applicable**.
+3. **Pin baseline**, then change oxygen, pressure or gravity in Cabin setup. The panel lists which records changed state, condition by condition, and the ordered research questions update.
+4. **Download Markdown brief** / **Download JSON brief**, or **Open brief** to read the exact export. A reviewer can open a downloaded brief file later.
+
+**Review-ready** means a verified record whose stated conditions all match the request, ready for bounded source review; it is not a safety finding. With the current dataset all 45 records are drafts and 0 are review-ready. Fewer gaps do not mean lower fire risk. The brief is built from data only; Ask REDLINE text is never included.
+
 ## Data sources
 
 The primary dataset is [NASA PSI](https://psi.nasa.gov/), with supporting publications from the [NASA Technical Reports Server](https://ntrs.nasa.gov/). Follow each result's NASA citation and recorded test conditions. See the [data documentation](data/README.md), [source metadata](data/metadata.json), [credits and data attributions](docs/credits.md), and [methods and limitations](docs/methods.md) for provenance, verification status and interpretation limits.
