@@ -79,7 +79,7 @@ test('actual-shaped zero-ready draft triage: 45 draft rows, 0 ready, boundary pr
   assert.doesNotMatch(md, /\bsafe\b|never burns|never tested/i);
   const json = serializeResearchBrief(b);
   assert.match(json, /Not a safety assessment/);
-  assert.match(json, /"draft_count":45/);
+  assert.match(json, /"draft_count": 45/);
 });
 
 test('duplicate material lines stay distinct by line identity', () => {
