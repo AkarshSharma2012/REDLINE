@@ -91,3 +91,25 @@ test('triage failure or missing module never leaves a stale or empty-success rev
   assert.deepEqual(engines, { buildTriage: null, brief: null });
   assert.throws(() => reviewTriage({ conditions: {}, materials: [] }, evidence, null), /unavailable/);
 });
+
+test('real pipeline: actual dataset -> triage -> brief with baseline -> Markdown and JSON round trip', async () => {
+  const { buildEvidenceTriage } = await import('../src/rules/evidence-triage.js');
+  const { buildResearchBrief, researchBriefMarkdown, serializeResearchBrief } = await import('../src/rules/research-brief.js');
+  const conditions = { o2_pct: 34, pressure_kpa: 56.5, flow_speed_cm_s: null, flow_direction: null, gravity_g: 0, external_heat_flux_kw_m2: null };
+  const materials = [{ material_id: 'pmma', form: 'sheet', thickness_mm: null, width_mm: null, name: 'Window / display panel' },
+    { material_id: 'pmma', form: 'sheet', thickness_mm: null, width_mm: null, name: 'Window / display panel' },
+    { material_id: 'mystery', form: null, thickness_mm: null, width_mm: null, name: 'Unlisted gasket' }];
+  const base = buildEvidenceTriage({ conditions, materials }, evidence);
+  const cur = buildEvidenceTriage({ conditions: { ...conditions, gravity_g: 0.16 }, materials }, evidence);
+  const brief = buildResearchBrief(cur, { scenarioName: 'Lunar rover (illustrative)', baseline: base });
+  assert.equal(brief.summary.review_ready_count, 0);
+  assert.equal(brief.summary.draft_count, brief.summary.candidate_count);
+  assert.deepEqual(brief.items.map((i) => i.status), ['REVIEW_REQUIRED', 'REVIEW_REQUIRED', 'NO_CANDIDATES']);
+  assert.ok(brief.changes.some((c) => c.field === 'conditions.gravity_g' && c.before === 0 && c.after === 0.16));
+  const md = researchBriefMarkdown(brief);
+  assert.match(md, /Not a safety assessment, recommendation, certification or prediction/);
+  assert.match(md, /PSI25-B1/);
+  assert.match(md, /Investigate the gravity mismatch/);
+  const json = serializeResearchBrief(brief);
+  assert.equal(researchBriefMarkdown(JSON.parse(json)), md, 'reopened JSON renders the same brief');
+});
