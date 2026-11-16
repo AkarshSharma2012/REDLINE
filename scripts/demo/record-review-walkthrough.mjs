@@ -32,6 +32,8 @@ export const BEATS = [
     say: 'A lunar rover team must decide which cabin materials still need fire test evidence. NASA records exist, but each one was tested under its own conditions.' },
   { id: 'load', caption: 'Load the illustrative lunar rover BOM. Each line is matched to candidate NASA records. All 45 records are drafts and 0 are verified, and the app says so.',
     say: 'Load the illustrative lunar rover bill of materials. Each line is matched to candidate NASA records. All forty five records are drafts, none are verified, and the app says so.' },
+  { id: 'model', caption: 'The illustrative cabin model colours each part by evidence review state: red means gaps are listed. It is not a fire simulation.',
+    say: 'The illustrative cabin model colours each part by its evidence review state. Red means gaps are listed. It is not a fire simulation.' },
   { id: 'matrix', caption: 'Window panel, record PSI25-B1: requested conditions beside what the source tested, with citation, page locator and the dataset notes. Unknown stays unknown, never zero.',
     say: 'For the window panel, record P S I 25 B 1 sits beside the requested conditions, with its citation, page locator and the dataset notes. Unknown values stay unknown, never zero.' },
   { id: 'baseline', caption: 'Set the microgravity reference (0 g) and pin it as the baseline.',
@@ -163,6 +165,14 @@ async function main() {
     await beat('problem', async () => { await moveTo('#cockpit-load'); });
     await beat('load', async () => { await click('#cockpit-load'); await sleep(600); await outline('#cockpit-summary'); });
     log.facts.summary_loaded = await p.textContent('#cockpit-summary');
+    if (!SHORT) await beat('model', async () => {
+      await click('#ws-view-model');
+      if (await p.isVisible('#ws-load-model')) await click('#ws-load-model');
+      await p.waitForSelector('#rover-viewer-root canvas', { timeout: 15000 }).catch(() => {});
+      await sleep(1200); await outline('#rover-viewer-root');
+      await moveTo('.rover-viewer__pick[data-material-id="pmma"]');
+    });
+    if (!SHORT) { await click('#ws-view-evidence'); await sleep(400); }
     await beat('matrix', async () => {
       await click('.cockpit-line[data-line-id="line-1"]');
       await scrollPane('.cockpit-source'); await sleep(700); await outline('.cockpit-matrix');
