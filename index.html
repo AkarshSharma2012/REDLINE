@@ -33,154 +33,156 @@
     </details>
   </header>
 
-  <nav id="tabs" class="tabs" role="tablist" aria-label="REDLINE screens">
-    <button type="button" role="tab" id="tab-cabin" aria-controls="panel-cabin" aria-selected="true">Cabin Check</button>
-    <button type="button" role="tab" id="tab-investigations" aria-controls="panel-investigations" aria-selected="false" tabindex="-1">Investigations <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
-    <button type="button" role="tab" id="tab-gravity" aria-controls="panel-gravity" aria-selected="false" tabindex="-1">Gravity view <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
-    <button type="button" role="tab" id="tab-oxygen" aria-controls="panel-oxygen" aria-selected="false" tabindex="-1">O2 tradeoff <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
-    <button type="button" role="tab" id="tab-accuracy" aria-controls="panel-accuracy" aria-selected="false" tabindex="-1">Accuracy <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
-    <button type="button" role="tab" id="tab-ask" aria-controls="panel-ask" aria-selected="false" tabindex="-1">Ask REDLINE <span class="preview-label" aria-hidden="true">Preview</span><span class="sr-only">, Research preview</span></button>
+  <nav id="tabs" class="tabs" role="tablist" aria-label="REDLINE sections">
+    <button type="button" role="tab" id="tab-model" aria-controls="panel-model" aria-selected="true">Model</button>
+    <button type="button" role="tab" id="tab-evidence" aria-controls="panel-evidence" aria-selected="false" tabindex="-1">Evidence</button>
+    <button type="button" role="tab" id="tab-investigations" aria-controls="panel-investigations" aria-selected="false" tabindex="-1">Investigations</button>
+    <button type="button" role="tab" id="tab-brief" aria-controls="panel-brief" aria-selected="false" tabindex="-1">Review brief</button>
   </nav>
 
-  <section id="panel-investigations" role="tabpanel" aria-labelledby="tab-investigations" class="region region-investigations" hidden>
-    <h2 class="type-heading">PSI combustion investigations</h2>
-    <p class="text-2">Summarize, rank and compare NASA Physical Sciences Informatics (PSI) combustion investigations for fire prevention, detection and suppression. Every value links to its source.</p>
-    <aside class="research-preview" aria-label="Investigations research status">
-      <details>
-        <summary><span class="hold-tag">Research preview</span> Rankings held for scientific review</summary>
-        <p>Catalog browsing is available; rankings await scientific review, so tied zero scores do not establish equal relevance and “No source given” means supporting citation evidence is missing.</p>
-      </details>
-    </aside>
-    <div id="investigations-root"></div>
-  </section>
+  <main id="app-main" class="workspace" data-view="evidence">
+    <div id="status" role="status" aria-live="polite" class="app-status text-2"></div>
 
-  <section id="panel-ask" role="tabpanel" aria-labelledby="tab-ask" class="region" hidden>
-    <aside class="research-preview" aria-label="Ask REDLINE research status">
-      <details>
-        <summary><span class="hold-tag">Research preview</span> Answers held for scientific review</summary>
-        <p>The question interface is available; answer and citation quality await scientific review, so “No source given” means no supporting citation has been established and tied zero scores do not establish equal relevance.</p>
-      </details>
-    </aside>
-    <div id="ask-root"></div>
-  </section>
-
-  <main id="panel-cabin" role="tabpanel" aria-labelledby="tab-cabin" class="layout workspace" data-density="comfortable" data-view="evidence" data-pane="sources">
-    <div id="workspace-toolbar" class="ws-toolbar" hidden>
-      <div class="ws-group ws-jump" role="group" aria-label="Show pane">
-        <button type="button" id="ws-jump-controls" aria-pressed="false">Setup</button>
-        <button type="button" id="ws-jump-sources" aria-pressed="true">Records</button>
-        <button type="button" id="ws-jump-visual" aria-pressed="false">Model and evidence</button>
-      </div>
-      <div class="ws-group ws-seg" role="group" aria-label="Right pane view">
-        <button type="button" id="ws-view-evidence" aria-pressed="true">Evidence</button>
-        <button type="button" id="ws-view-model" aria-pressed="false">Model + evidence</button>
-      </div>
-      <details id="ws-settings" class="ws-settings">
-        <summary>Layout</summary>
-        <div class="ws-settings-body">
-          <div class="ws-group ws-seg" role="group" aria-label="Show panes">
-            <button type="button" id="ws-toggle-controls" aria-controls="ws-pane-controls" aria-pressed="true">Setup pane</button>
-            <button type="button" id="ws-toggle-sources" aria-controls="ws-pane-sources" aria-pressed="true">Records pane</button>
-          </div>
-          <div class="ws-group ws-widths" role="group" aria-label="Pane widths">
-            <span class="ws-group-label" aria-hidden="true">Setup width</span>
-            <button type="button" id="ws-narrow-controls" aria-label="Narrow setup pane">&minus;</button>
-            <button type="button" id="ws-widen-controls" aria-label="Widen setup pane">+</button>
-            <span class="ws-group-label" aria-hidden="true">Records width</span>
-            <button type="button" id="ws-narrow-sources" aria-label="Narrow records pane">&minus;</button>
-            <button type="button" id="ws-widen-sources" aria-label="Widen records pane">+</button>
-          </div>
-          <div class="ws-group ws-seg" role="group" aria-label="Density">
-            <button type="button" id="ws-density-comfortable" aria-pressed="true">Comfortable</button>
-            <button type="button" id="ws-density-compact" aria-pressed="false">Compact</button>
-          </div>
-          <button type="button" id="ws-reset">Reset layout</button>
-        </div>
-      </details>
-    </div>
-
-    <section id="ws-pane-controls" class="region region-cabin ws-pane" aria-labelledby="cabin-heading" tabindex="-1">
-      <h2 id="cabin-heading" class="region-title">Cabin setup</h2>
-      <button type="button" id="rover-demo" class="btn-primary" aria-describedby="rover-note" disabled>Load lunar rover demo</button>
-      <p id="rover-note" class="region-note">Illustrative pressurized rover cabin; item uses are hypothetical, not a real rover manifest.</p>
-      <div id="cabin-form"></div>
-    </section>
-    <div id="ws-sep-controls" class="ws-sep" role="separator" aria-orientation="vertical" aria-label="Resize setup pane" aria-controls="ws-pane-controls" aria-valuemin="220" aria-valuemax="400" aria-valuenow="240" tabindex="0"></div>
-
-    <section id="ws-pane-sources" class="region region-results ws-pane" aria-labelledby="sources-heading" tabindex="-1">
-      <h2 id="sources-heading" class="region-title">NASA source records</h2>
-      <div id="status" role="status" aria-live="polite" class="text-2"></div>
-      <div id="ws-sources"><p class="text-3">Loading source records…</p></div>
-      <p class="region-note">Rows from the evidence file, cited to NASA PSI investigations and NTRS reports.</p>
-      <details id="ws-results-disclosure" class="ws-disclosure ws-results" open>
-        <summary><span id="results-heading">Results</span> and label key</summary>
+    <section id="panel-model" role="tabpanel" aria-labelledby="tab-model" class="section section-model layout">
+      <div class="ws-infobar" role="group" aria-label="Model summary">
+        <p>Records <span id="ws-info-records" class="type-data">loading</span></p>
+        <p>Selected <span id="ws-info-selected" class="type-data">none</span></p>
         <ul class="legend" aria-label="Label key">
           <li><span class="chip chip-burned">Burned in testing at these conditions</span></li>
           <li><span class="chip chip-near">Close to a measured limit</span></li>
           <li><span class="chip chip-ne">Not established</span></li>
         </ul>
-        <div id="results-table" class="table-scroll"></div>
-      </details>
-      <details id="ws-fixes-disclosure" class="ws-disclosure">
-        <summary>What changes the label and candidate experiments</summary>
-        <div id="fixes"></div>
-      </details>
-    </section>
-    <div id="ws-sep-sources" class="ws-sep" role="separator" aria-orientation="vertical" aria-label="Resize records pane" aria-controls="ws-pane-sources" aria-valuemin="300" aria-valuemax="560" aria-valuenow="400" tabindex="0"></div>
-
-    <section id="ws-pane-visual" class="region region-evidence ws-pane" aria-labelledby="evidence-heading" tabindex="-1">
-      <h2 id="evidence-heading" class="region-title">Model and evidence</h2>
-      <div id="review-cockpit" role="region" aria-labelledby="cockpit-heading"></div>
-      <div class="ws-visual">
-        <div id="ws-stage-empty" class="ws-stage-empty">
-          <p class="ws-stage-title">Rover cabin model not loaded</p>
-          <p class="ws-stage-text">Loads on request. Pick a cabin item in the model or the list to scope the NASA records.</p>
-          <button type="button" id="ws-load-model" class="btn-primary">Load rover model</button>
-        </div>
-        <div id="rover-viewer-root" class="ws-viewer" hidden></div>
-        <p id="ws-viewer-status" class="text-3" role="status"></p>
-        <div id="ws-materials"></div>
+        <p><span class="hold-tag">Illustrative model · not a fire simulation</span></p>
+        <p><a href="https://www.nasa.gov/psi/" target="_blank" rel="noopener">Primary dataset: NASA PSI Data Repository</a></p>
       </div>
-      <div id="ws-source-detail"></div>
-      <div id="evidence-panel"><p class="text-3">Select a material to see the tests behind its label.</p></div>
+
+      <section id="ws-pane-controls" class="region region-cabin ws-pane" aria-labelledby="cabin-heading" tabindex="-1">
+        <div class="pane-head">
+          <h2 id="cabin-heading" class="region-title">Rover BOM</h2>
+          <span class="help"><button type="button" class="help-btn" aria-label="About the rover demo" aria-describedby="rover-note" aria-expanded="false">?</button><span id="rover-note" class="help-tip">Illustrative pressurized rover cabin; item uses are hypothetical, not a real rover manifest. Change pressure or oxygen below to see which records still match.</span></span>
+        </div>
+        <button type="button" id="rover-demo" class="btn-primary" aria-describedby="rover-note" disabled>Load lunar rover demo</button>
+        <div id="cabin-form"></div>
+      </section>
+
+      <section id="ws-pane-visual" class="region region-evidence ws-pane" aria-labelledby="evidence-heading" tabindex="-1">
+        <div class="pane-head">
+          <h2 id="evidence-heading" class="region-title">Cabin model</h2>
+          <div id="workspace-toolbar" class="ws-group ws-seg" role="group" aria-label="Stage view" hidden>
+            <button type="button" id="ws-view-model" aria-pressed="false">Model</button>
+            <button type="button" id="ws-view-evidence" aria-pressed="true">Parts only</button>
+          </div>
+        </div>
+        <div class="ws-visual">
+          <div id="ws-stage-empty" class="ws-stage-empty">
+            <p class="ws-stage-title">Rover cabin model not loaded</p>
+            <p class="ws-stage-text">Loads on request. Pick a part in the model or the list below.</p>
+            <button type="button" id="ws-load-model" class="btn-primary">Load rover model</button>
+          </div>
+          <div id="rover-viewer-root" class="ws-viewer" hidden></div>
+          <p id="ws-viewer-status" class="text-3" role="status"></p>
+          <div id="ws-materials"></div>
+        </div>
+      </section>
+
+      <section id="ws-inspector" class="region ws-pane" aria-labelledby="inspector-heading" tabindex="-1">
+        <div class="pane-head">
+          <h2 id="inspector-heading" class="region-title">Selected part</h2>
+          <a class="pane-link" href="#brief">Applicability in brief</a>
+        </div>
+        <div id="evidence-panel"><p class="text-3">Select a part to see the tests behind its label.</p></div>
+        <details id="ws-results-disclosure" class="ws-disclosure ws-results" open>
+          <summary><span id="results-heading">Results</span> for every BOM line</summary>
+          <div id="results-table" class="table-scroll"></div>
+        </details>
+        <details id="ws-fixes-disclosure" class="ws-disclosure">
+          <summary>What changes the label and candidate experiments</summary>
+          <div id="fixes"></div>
+        </details>
+      </section>
     </section>
 
-    <footer class="ws-infobar" aria-label="Workspace summary">
-      <p>Records <span id="ws-info-records" class="type-data">loading</span></p>
-      <p>Selected <span id="ws-info-selected" class="type-data">none</span></p>
-      <p><a href="https://www.nasa.gov/psi/" target="_blank" rel="noopener">Primary dataset: NASA PSI Data Repository</a></p>
-    </footer>
+    <section id="panel-evidence" role="tabpanel" aria-labelledby="tab-evidence" class="section section-evidence" hidden>
+      <nav class="subnav" aria-label="Evidence views">
+        <a href="#evidence" aria-current="page">NASA records</a>
+        <a href="#gravity">Gravity view <span class="preview-label">Preview</span></a>
+        <a href="#oxygen">O2 tradeoff <span class="preview-label">Preview</span></a>
+      </nav>
+      <div id="evidence-main" class="evidence-grid">
+        <section id="ws-pane-sources" class="region region-results ws-pane" aria-labelledby="sources-heading" tabindex="-1">
+          <div class="pane-head">
+            <h2 id="sources-heading" class="region-title">NASA source records</h2>
+            <span class="help"><button type="button" class="help-btn" aria-label="About source records" aria-describedby="sources-note" aria-expanded="false">?</button><span id="sources-note" class="help-tip">Rows from the evidence file, cited to NASA PSI investigations and NTRS reports. Selecting a part in Model scopes this list to its material.</span></span>
+          </div>
+          <div id="ws-sources"><p class="text-3">Loading source records…</p></div>
+        </section>
+        <section id="ws-pane-detail" class="region ws-pane evidence-side" aria-labelledby="record-heading" tabindex="-1">
+          <h2 id="record-heading" class="region-title">Record detail</h2>
+          <div id="ws-source-detail"></div>
+          <p class="text-3 ws-detail-empty">Select a record to see its conditions and citation.</p>
+        </section>
+      </div>
+      <section id="panel-gravity" aria-label="Gravity view" class="subview" hidden>
+        <aside class="research-preview" aria-label="Gravity research status">
+          <details>
+            <summary><span class="hold-tag">Research preview</span> Numeric comparisons held for scientific review</summary>
+            <p>Source context is available; numeric gravity comparisons are held for scientific review, and estimates are not lunar measurements.</p>
+          </details>
+        </aside>
+        <div id="gravity-view"></div>
+      </section>
+      <section id="panel-oxygen" aria-label="O2 tradeoff" class="subview" hidden>
+        <aside class="research-preview" aria-label="Oxygen tradeoff research status">
+          <details>
+            <summary><span class="hold-tag">Research preview</span> Interpretation held for scientific review</summary>
+            <p>Oxygen scenario exploration is available; interpretation awaits scientific review and label counts do not establish cabin certification.</p>
+          </details>
+        </aside>
+        <div id="o2-slider"></div>
+      </section>
+    </section>
+
+    <section id="panel-investigations" role="tabpanel" aria-labelledby="tab-investigations" class="section section-investigations" hidden>
+      <nav class="subnav" aria-label="Investigation views">
+        <a href="#investigations" aria-current="page">PSI catalog</a>
+        <a href="#accuracy">Accuracy <span class="preview-label">Preview</span></a>
+        <a href="#ask">Ask REDLINE <span class="preview-label">Preview</span></a>
+      </nav>
+      <div id="investigations-main" class="region region-investigations">
+        <h2 class="type-heading">PSI combustion investigations</h2>
+        <p class="text-2">Summarize, rank and compare NASA Physical Sciences Informatics (PSI) combustion investigations for fire prevention, detection and suppression. Every value links to its source.</p>
+        <aside class="research-preview" aria-label="Investigations research status">
+          <details>
+            <summary><span class="hold-tag">Research preview</span> Rankings held for scientific review</summary>
+            <p>Catalog browsing is available; rankings await scientific review, so tied zero scores do not establish equal relevance and “No source given” means supporting citation evidence is missing.</p>
+          </details>
+        </aside>
+        <div id="investigations-root"></div>
+      </div>
+      <section id="panel-accuracy" aria-label="Accuracy" class="subview" hidden>
+        <aside class="research-preview" aria-label="Accuracy research status">
+          <details>
+            <summary><span class="hold-tag">Research preview</span> Held-out evaluation pending scientific review</summary>
+            <p>Report inspection is available; held-out evaluation requires scientific review, so tied zero scores do not establish measured accuracy and “No source given” indicates missing supporting citation evidence.</p>
+          </details>
+        </aside>
+        <div id="accuracy-view"></div>
+      </section>
+      <section id="panel-ask" aria-label="Ask REDLINE" class="subview" hidden>
+        <aside class="research-preview" aria-label="Ask REDLINE research status">
+          <details>
+            <summary><span class="hold-tag">Research preview</span> Answers held for scientific review</summary>
+            <p>The question interface is available; answer and citation quality await scientific review, so “No source given” means no supporting citation has been established and tied zero scores do not establish equal relevance.</p>
+          </details>
+        </aside>
+        <div id="ask-root"></div>
+      </section>
+    </section>
+
+    <section id="panel-brief" role="tabpanel" aria-labelledby="tab-brief" class="section section-brief" hidden>
+      <div id="review-cockpit" role="region" aria-labelledby="cockpit-heading"></div>
+    </section>
   </main>
-
-  <section id="panel-gravity" role="tabpanel" aria-labelledby="tab-gravity" class="region" hidden>
-    <aside class="research-preview" aria-label="Gravity research status">
-      <details>
-        <summary><span class="hold-tag">Research preview</span> Numeric comparisons held for scientific review</summary>
-        <p>Source context is available; numeric gravity comparisons are held for scientific review, and estimates are not lunar measurements.</p>
-      </details>
-    </aside>
-    <div id="gravity-view"></div>
-  </section>
-
-  <section id="panel-oxygen" role="tabpanel" aria-labelledby="tab-oxygen" class="region" hidden>
-    <aside class="research-preview" aria-label="Oxygen tradeoff research status">
-      <details>
-        <summary><span class="hold-tag">Research preview</span> Interpretation held for scientific review</summary>
-        <p>Oxygen scenario exploration is available; interpretation awaits scientific review and label counts do not establish cabin certification.</p>
-      </details>
-    </aside>
-    <div id="o2-slider"></div>
-  </section>
-
-  <section id="panel-accuracy" role="tabpanel" aria-labelledby="tab-accuracy" class="region" hidden>
-    <aside class="research-preview" aria-label="Accuracy research status">
-      <details>
-        <summary><span class="hold-tag">Research preview</span> Held-out evaluation pending scientific review</summary>
-        <p>Report inspection is available; held-out evaluation requires scientific review, so tied zero scores do not establish measured accuracy and “No source given” indicates missing supporting citation evidence.</p>
-      </details>
-    </aside>
-    <div id="accuracy-view"></div>
-  </section>
   <script type="module" src="src/ui/investigations.js"></script>
 </body>
 </html>

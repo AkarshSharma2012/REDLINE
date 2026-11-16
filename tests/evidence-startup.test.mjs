@@ -68,7 +68,7 @@ test('invalid evidence startup shows Retry, preserves tabs, and has no unhandled
       location.hash = '#investigations';
       hashchange();
       assert.equal(doc.getElementById('panel-investigations').hidden, false);
-      assert.equal(doc.getElementById('panel-cabin').hidden, true);
+      assert.equal(doc.getElementById('panel-model').hidden, true);
     `;
     const result = spawnSync(process.execPath, ['--unhandled-rejections=strict', '--input-type=module'], {
       cwd: new URL('../', import.meta.url), input: script, encoding: 'utf8', timeout: 10000,

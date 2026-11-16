@@ -62,19 +62,16 @@ export function makeDoc() {
 }
 
 // Build the subset of index.html the workspace binds to (IDs only, as in the page).
-export const WORKSPACE_IDS = ['workspace-toolbar', 'ws-toggle-controls', 'ws-toggle-sources',
-  'ws-narrow-controls', 'ws-widen-controls', 'ws-narrow-sources', 'ws-widen-sources',
-  'ws-density-comfortable', 'ws-density-compact', 'ws-view-evidence', 'ws-view-model', 'ws-reset',
-  'ws-jump-controls', 'ws-jump-sources', 'ws-jump-visual',
-  'ws-sep-controls', 'ws-sep-sources', 'ws-pane-controls', 'ws-pane-sources', 'ws-pane-visual',
+export const WORKSPACE_IDS = ['panel-model', 'workspace-toolbar', 'ws-view-evidence', 'ws-view-model',
+  'ws-pane-controls', 'ws-pane-sources', 'ws-pane-visual', 'ws-pane-detail', 'ws-inspector',
   'ws-sources', 'ws-materials', 'ws-source-detail', 'rover-viewer-root', 'ws-viewer-status',
-  'ws-settings', 'ws-load-model', 'ws-stage-empty', 'ws-info-records', 'ws-info-selected'];
+  'ws-load-model', 'ws-stage-empty', 'ws-info-records', 'ws-info-selected'];
 
 export function workspaceDoc() {
   const doc = makeDoc();
-  const main = doc.createElement('main'); main.id = 'panel-cabin'; doc.body.append(main);
+  const main = doc.createElement('main'); main.id = 'app-main'; doc.body.append(main);
   for (const id of WORKSPACE_IDS) {
-    const tag = id.startsWith('ws-pane') ? 'section' : /^ws-(toggle|narrow|widen|density|view|reset|jump|load)/.test(id) ? 'button' : 'div';
+    const tag = /^(ws-pane|ws-inspector|panel-)/.test(id) ? 'section' : /^ws-(view|load)/.test(id) ? 'button' : 'div';
     const el = doc.createElement(tag); el.id = id; main.append(el);
   }
   doc.getElementById('rover-viewer-root').hidden = true;
