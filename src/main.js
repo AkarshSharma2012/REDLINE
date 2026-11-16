@@ -16,6 +16,7 @@ import { validateEvidence } from './schema/validate.js';
 import { mountWorkspace } from './ui/workspace.js';
 import { mountReviewCockpit } from './ui/review-cockpit.js';
 import { triageQuery } from './ui/cockpit-model.js';
+import { evidenceStatesFromTriage } from './ui/rover-model.js';
 
 const EVIDENCE_URL = 'data/evidence.json';
 
@@ -163,18 +164,22 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
     });
     renderFixes($('fixes'), withQ, context);
     slider?.update(query);
-    ws?.update({ cabinQuery: query, results: withQ });
-    refreshCockpit(query);
+    const triage = refreshCockpit(query);
+    // Model overlay (#336): categorical review state per material from the same triage.
+    ws?.update({ cabinQuery: query, results: withQ, evidenceStates: triage ? evidenceStatesFromTriage(triage) : null });
   }
 
   // Analysis and exported brief are rebuilt together from the current inputs only.
   function refreshCockpit(query) {
-    if (!cockpit) return;
+    let triage = null;
     try {
-      cockpit.update({ triage: reviewTriage(query, evidence, buildTriage), evidence, scenarioName: query.name ?? '' });
+      triage = reviewTriage(query, evidence, buildTriage);
+      cockpit?.update({ triage, evidence, scenarioName: query.name ?? '' });
     } catch (err) {
-      cockpit.clear(`Evidence review unavailable (${err.message}). No analysis or brief is shown.`);
+      cockpit?.clear(`Evidence review unavailable (${err.message}). No analysis or brief is shown.`);
+      return null;
     }
+    return triage;
   }
 
   // Model or HTML cabin item -> the same engine result and evidence panel as the results table.

@@ -206,10 +206,11 @@ export function mountWorkspace({
 
   // ---- Illustrative model: loaded only when requested; any failure keeps HTML controls ----
   function viewerStatus(text) { const s = $('ws-viewer-status'); if (s) s.textContent = text; }
+  let evidenceStates = null;
   function pushViewer() {
     if (!viewer.handle) return;
     try {
-      viewer.handle.update({ materialIds: cabin.materials.map(m => m.material_id), selectedMaterialId, conditions: cabin.conditions });
+      viewer.handle.update({ materialIds: cabin.materials.map(m => m.material_id), selectedMaterialId, conditions: cabin.conditions, evidenceStates });
     } catch { viewerStatus('Model update failed; use the cabin item list. Evidence is unaffected.'); }
   }
   function showViewer() {
@@ -312,7 +313,9 @@ export function mountWorkspace({
     return true;
   }
 
-  function update({ cabinQuery } = {}) {
+  // evidenceStates (#336): optional categorical review state per material, forwarded to the viewer.
+  function update({ cabinQuery, evidenceStates: states = null } = {}) {
+    evidenceStates = states;
     const materials = Array.isArray(cabinQuery?.materials) ? cabinQuery.materials : [];
     cabin = {
       materials: materials.filter(m => isObject(m) && typeof m.material_id === 'string' && m.material_id)
