@@ -26,7 +26,7 @@ export const TABS = SECTIONS;
 
 // Illustrative lunar pressurized rover cabin (screens.md §7, docs/pitch.md 0:00-0:20).
 // Item uses are hypothetical, not a real rover manifest. Atmosphere: the form's default
-// sourced exploration preset (56.5 kPa / 34% O2, R7-S4); gravity: lunar scenario (0.16 g).
+// sourced exploration preset (56.5 kPa / 34% O2, R7-S12 BVAD 2022 Sec 4.6.3.6); gravity: lunar scenario (0.16 g).
 export const ROVER_DEMO = Object.freeze({
   name: 'Lunar pressurized rover cabin (illustrative)',
   items: Object.freeze([
