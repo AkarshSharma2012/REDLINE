@@ -31,7 +31,8 @@ export function evidenceSchema() {
     additionalProperties: false,
     allOf: [
       { if: { required: ['review_status'], properties: { review_status: { const: 'verified' } } },
-        then: { allOf: [present('endpoint'), present('o2_pct'), { anyOf: [present('value'), present('outcome')] }] } },
+        then: { allOf: [present('endpoint'), present('o2_pct'), { anyOf: [present('value'), present('outcome')] },
+          { properties: { research_status: { not: { const: 'HOLD_scientific_review' } } } }] } },
       { if: present('value'), then: present('value_unit') },
       { if: { required: ['endpoint'], properties: { endpoint: { const: 'burn/no-burn' } } }, then: present('outcome') },
     ],

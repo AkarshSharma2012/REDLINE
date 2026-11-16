@@ -119,6 +119,7 @@ function checkRow(row, i, ctx, errors) {
 
   // Rule 4: a verified row must be able to support a label. pressure_kpa may be null (S4 §9).
   if (row.review_status === 'verified') {
+    if (row.research_status === 'HOLD_scientific_review') err('verified row must not retain a scientific review HOLD');
     for (const key of ['endpoint', 'o2_pct']) if (row[key] === null || row[key] === undefined) err(`verified row needs "${key}"`);
     if ((row.value ?? null) === null && (row.outcome ?? null) === null) err('verified row needs "value" or "outcome"');
   }
