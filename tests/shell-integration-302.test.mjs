@@ -39,7 +39,7 @@ test('shell does not override B1 viewer stage or tool layout', () => {
 });
 
 test('workspace body surfaces are explicit black', () => {
-  assert.match(wsCss, /\.layout\.workspace \{[^}]*background: #000/);
-  assert.match(wsCss, /#ws-pane-controls \{ background: #000; \}/);
+  assert.match(wsCss, /\n\.workspace \{[^}]*background: #000/);
+  assert.match(wsCss, /#ws-pane-controls \{[^}]*background: #000; \}/);
   assert.match(wsCss, /\.ws-detail \{[^}]*background: #000/);
 });
