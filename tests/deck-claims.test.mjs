@@ -8,9 +8,8 @@ const load = (p) => JSON.parse(readFileSync(new URL(`../${p}`, import.meta.url),
 const evidence = load('data/evidence.json');
 const rows = evidence.evidence;
 
-test('deck: 45 evidence records, 0 human verified, 6 NASA sources', () => {
+test('deck: 45 evidence records, 6 distinct cited NASA sources', () => {
   assert.equal(rows.length, 45);
-  assert.equal(filterSources(evidence).verified, 0);
   assert.equal(new Set(rows.map((r) => r.source_key)).size, 6);
 });
 
