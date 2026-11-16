@@ -3,6 +3,8 @@
 // The scoring helpers below are pure (no DOM) so the eval script and the tests share them.
 // Metric arithmetic is computed by REDLINE; only truth and evidence rows link to sources.
 
+import { publishedAccuracyReportUrl } from './accuracy-report-url.js';
+
 export const RESULTS_URL = 'research/validation-results.csv';
 
 // R8 §6 minimums and §7 kill thresholds: project design choices, not NASA requirements.
@@ -340,7 +342,8 @@ export function accuracyViewHtml(summary, { sources = {} } = {}) {
 }
 
 // loadAccuracyReport(url) -> rows ([] when the results file is absent: "not run").
-export async function loadAccuracyReport(url = RESULTS_URL) {
+export async function loadAccuracyReport(url = publishedAccuracyReportUrl) {
+  if (url === null) return [];
   const res = await fetch(url);
   if (res.status === 404) return [];
   if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
