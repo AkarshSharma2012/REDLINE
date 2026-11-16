@@ -18,7 +18,17 @@ const FIXED_LIMITATIONS = [
   'Changes describe research assumptions (requested conditions and BOM lines) between two triage snapshots, not real-time spacecraft telemetry.',
   'Fewer flags, conflicts or missing fields is not a claim of lower fire risk; it only reflects how the cited evidence matches the requested assumptions.',
 ];
-const PARTIAL_G_LIMITATION = 'Lunar or other partial gravity (between 0 g and 1 g) has no direct flammability data in the sources reviewed; behavior there can only be estimated as a range bounded by 0 g and 1 g results, not measured.';
+// No physical bound or interpolation is claimed: results at 0 g and 1 g do not
+// establish behavior at a partial gravity (issue #329). The module also does not
+// assert whether the loaded dataset holds partial-gravity rows.
+const PARTIAL_G_LIMITATION = 'A requested gravity between 0 g and 1 g (for example lunar) is a research assumption. Results at other gravity levels, including 0 g and 1 g, do not establish behavior at the requested gravity, and this brief does not bound, interpolate or predict it. Any partial-gravity rows shown are context only: check their source notes for how the gravity value was obtained (for example simulated or normalized), and identify a relevant experiment or an expert-reviewed transfer method.';
+const TESTED_LIMITATION = 'Tested conditions are copied from each cited source row as recorded in the dataset, with no derived values; null means not reported in that row, not zero. "Unavailable" means the triage snapshot did not supply them.';
+
+// Optional per-candidate source-row conditions (issue #329). Exact contract keys;
+// anything else is dropped so no unvetted or derived value enters the brief.
+export const TESTED_KEYS = ['form', 'thickness_mm', 'width_mm', 'o2_pct', 'pressure_kpa', 'flow_speed_cm_s',
+  'flow_direction', 'gravity_g', 'external_heat_flux_kw_m2', 'endpoint', 'outcome'];
+const TESTED_STRING_KEYS = new Set(['form', 'flow_direction', 'endpoint', 'outcome']);
 
 // ---------- validation helpers ----------
 
@@ -67,6 +77,20 @@ function validateConditions(c, path) {
   return out;
 }
 
+// undefined/null -> null (unavailable). Missing keys -> null; 0 stays 0.
+function validateTested(t, path) {
+  if (t === undefined || t === null) return null;
+  if (!isObj(t)) fail(path, 'must be an object or null');
+  const out = {};
+  for (const k of TESTED_KEYS) {
+    const v = has(t, k) ? t[k] : null;
+    if (v === null || v === undefined) { out[k] = null; continue; }
+    if (TESTED_STRING_KEYS.has(k)) { if (typeof v !== 'string') fail(`${path}.${k}`, 'must be a string or null'); out[k] = v; }
+    else { if (typeof v !== 'number' || !Number.isFinite(v)) fail(`${path}.${k}`, 'must be a finite number or null'); out[k] = v === 0 ? 0 : v; }
+  }
+  return out;
+}
+
 function validateCandidate(c, path) {
   if (!isObj(c)) fail(path, 'must be an object');
   const evidence_id = str(c.evidence_id, `${path}.evidence_id`, { nonEmpty: true });
@@ -86,11 +110,14 @@ function validateCandidate(c, path) {
   if (typeof c.review_ready !== 'boolean') fail(`${path}.review_ready`, 'must be boolean');
   if (c.review_ready && review_status !== 'verified') fail(`${path}.review_ready`, `is true but review_status is ${JSON.stringify(review_status)}, not "verified"`);
   const safe = safeUrl(url);
+  const tested_conditions = validateTested(c.tested_conditions, `${path}.tested_conditions`);
+  const source_notes = str(c.source_notes, `${path}.source_notes`, { nullable: true });
   return {
     evidence_id, review_status, draft: review_status !== 'verified', grade: c.grade, review_ready: c.review_ready,
     source: { title, url: safe, url_status: safe ? 'available' : 'unavailable', locator },
     rules, missing_fields: strArray(c.missing_fields, `${path}.missing_fields`),
     conflicts: strArray(c.conflicts, `${path}.conflicts`),
+    tested_conditions, tested_conditions_status: tested_conditions ? 'available' : 'unavailable', source_notes,
   };
 }
 
@@ -245,7 +272,7 @@ export function buildResearchBrief(triage, options = {}) {
   const all = cur.items.flatMap((it) => it.candidates);
   const status_counts = Object.fromEntries(STATUSES.map((s) => [s, cur.items.filter((it) => it.status === s).length]));
   const gravities = [cur.conditions.gravity_g, ...cur.items.map((it) => it.requested.gravity_g)];
-  const limitations = [...FIXED_LIMITATIONS];
+  const limitations = [...FIXED_LIMITATIONS, TESTED_LIMITATION];
   if (gravities.some((g) => typeof g === 'number' && g > 0 && g < 1)) limitations.push(PARTIAL_G_LIMITATION);
   for (const l of cur.limitations) if (!limitations.includes(l)) limitations.push(l);
   return {
@@ -275,7 +302,13 @@ function validateBrief(b) {
   if (b.boundary !== BOUNDARY || !b.limitations.includes(BOUNDARY)) fail('brief', 'must carry the research boundary statement');
   b.items.forEach((it, i) => {
     if (!isObj(it) || !isObj(it.requested) || !Array.isArray(it.candidates) || !Array.isArray(it.next_actions)) fail(`brief.items[${i}]`, 'is malformed');
-    it.candidates.forEach((c, j) => { if (!isObj(c) || !isObj(c.source)) fail(`brief.items[${i}].candidates[${j}]`, 'is malformed'); });
+    it.candidates.forEach((c, j) => {
+      const p = `brief.items[${i}].candidates[${j}]`;
+      if (!isObj(c) || !isObj(c.source)) fail(p, 'is malformed');
+      // Older briefs without these fields stay readable; present values must be well-formed.
+      if (c.tested_conditions !== undefined) validateTested(c.tested_conditions, `${p}.tested_conditions`);
+      if (c.source_notes !== undefined) str(c.source_notes, `${p}.source_notes`, { nullable: true });
+    });
   });
   b.changes.forEach((c, i) => { if (!isObj(c) || typeof c.field !== 'string') fail(`brief.changes[${i}]`, 'is malformed'); });
 }
@@ -286,6 +319,12 @@ function fmt(v, present = true) {
   if (typeof v === 'number' || typeof v === 'boolean') return String(v);
   return esc(JSON.stringify(v));
 }
+
+function testedLine(t) {
+  if (!isObj(t)) return 'Tested conditions (source row): unavailable, not supplied in the triage snapshot';
+  return `Tested conditions (source row, as recorded; not requested): ${TESTED_KEYS.map((k) => `${k} = ${t[k] === null || t[k] === undefined ? 'null (not reported)' : fmt(t[k])}`).join('; ')}`;
+}
+const isPartialG = (t) => isObj(t) && typeof t.gravity_g === 'number' && t.gravity_g > 0 && t.gravity_g < 1;
 
 function citation(c) {
   const s = c.source;
@@ -321,6 +360,9 @@ export function researchBriefMarkdown(brief) {
       L.push(`- Evidence ${esc(c.evidence_id)}: review status ${esc(c.review_status)}${c.review_status === 'verified' ? '' : ' (draft, not verified)'}; grade ${esc(c.grade)}; review-ready ${c.review_ready === true ? 'yes' : 'no'}`,
         `  - ${citation(c)}`);
       for (const r of c.rules || []) L.push(`  - Rule ${esc(r.rule)}: ${esc(r.grade)}; ${esc(r.why)}`);
+      L.push(`  - ${testedLine(c.tested_conditions)}`);
+      if (isPartialG(c.tested_conditions)) L.push('  - Partial-gravity context row: the gravity value is as recorded in the dataset; check the source notes for whether it was simulated or normalized. It does not establish behavior at the requested gravity.');
+      L.push(`  - Source notes (verbatim from the source row): ${typeof c.source_notes === 'string' && c.source_notes.length ? esc(c.source_notes) : 'not supplied in the triage snapshot'}`);
       if (c.missing_fields?.length) L.push(`  - Missing or unknown fields (request or source side): ${c.missing_fields.map(esc).join(', ')}`);
       if (c.conflicts?.length) L.push(`  - Conflicts: ${c.conflicts.map(esc).join('; ')}`);
     }

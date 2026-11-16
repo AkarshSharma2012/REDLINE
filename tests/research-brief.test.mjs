@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  buildResearchBrief, researchBriefMarkdown, serializeResearchBrief, BOUNDARY,
+  buildResearchBrief, researchBriefMarkdown, serializeResearchBrief, BOUNDARY, TESTED_KEYS,
 } from '../src/rules/research-brief.js';
 
 // Fixtures implement the agreed A2 triage contract shape (issue #322); they are
@@ -115,7 +115,7 @@ test('changed pressure, gravity and geometry; removed line; baseline immutable',
   assert.equal(byField['lines[L2]'].change, 'removed');
   // Condition keys copied into each request are not double-reported.
   assert.equal(byField['lines[L1].request.pressure_kpa'], undefined);
-  assert.ok(b.limitations.some((s) => /lunar|partial gravity/i.test(s) && /0 g and 1 g/.test(s)));
+  assert.ok(b.limitations.some((s) => /lunar/i.test(s) && /do not establish behavior at the requested gravity/.test(s)));
   assert.ok(b.limitations.some((s) => /not real-time spacecraft telemetry/.test(s)));
   assert.ok(b.limitations.some((s) => /fewer flags/i.test(s)));
   // Output is a clone: mutating it does not touch the inputs.
@@ -244,4 +244,121 @@ test('candidate-level changes: gravity 0.16 -> 1 adds a gravity_g conflict on a 
   assert.match(md, /lines\\[L1\\]\.candidates\\[R1\\]\.conflicts: \[\] → \\["gravity\_g"\\]|candidates.*R1.*conflicts/);
   assert.match(md, /Missing or unknown fields \(request or source side\): pressure_kpa/);
   assert.doesNotMatch(md, /Source fields not reported/);
+});
+
+// #329: tested conditions and source caveats survive the file handoff.
+// U25-01-L values and notes copied verbatim from data/evidence.json (draft row,
+// HOLD_scientific_review); the test does not change or promote it.
+const U25_NOTES = 'NASA nominal simulated acceleration: 1/6 g; 0.16 g is project normalization, not NASA nominal. PMMA form sheet is inferred, not source-stated. 13.5 mol% O2 is a plot-derived five-second extinction result for 0.8 mm PMMA at 56.5 kPa absolute, not a general flammability or safety limit. Review: CORRECTION NEEDED (Lakshya, relayed by user through chat, 2026-11-15); HOLD_scientific_review and draft retained. Durable record: research/reviews/U25-01-L-2026-11-15.md. Draft; simulated conditions are not on-Moon behavior. See lunar-2025.md source discrepancy register. Flow blank: not measured, not zero. Unknown heat flux remains blank per V1; original endpoint and gravity retained as provenance.';
+const U25_TESTED = { form: 'sheet', thickness_mm: 0.8, width_mm: null, o2_pct: 13.5, pressure_kpa: 56.5, flow_speed_cm_s: null,
+  flow_direction: 'concurrent', gravity_g: 0.16, external_heat_flux_kw_m2: null, endpoint: 'extinction-5s', outcome: null };
+const u25 = (over = {}) => cand('U25-01-L', {
+  source: { title: 'Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results',
+    url: 'https://ntrs.nasa.gov/api/citations/20250002114/downloads/ICES_2025-392-correctedcaptions.pdf', locator: 'pp. 5-8 Experimental Method; Fig. 7 p. 8' },
+  tested_conditions: { ...U25_TESTED }, source_notes: U25_NOTES, ...over });
+
+test('#329 production U25-01-L tested conditions and caveats survive JSON and Markdown', () => {
+  const t = triage([line('L1', 'pmma', 'PMMA window', [u25()])], { ...COND, gravity_g: 0.16 });
+  const snap = JSON.stringify(t);
+  const b = buildResearchBrief(deepFreeze(t));
+  assert.equal(JSON.stringify(t), snap, 'input untouched');
+  const c = b.items[0].candidates[0];
+  assert.deepEqual(c.tested_conditions, U25_TESTED);
+  assert.equal(c.tested_conditions_status, 'available');
+  assert.equal(c.source_notes, U25_NOTES);
+  assert.equal(c.review_status, 'draft'); assert.equal(c.draft, true); assert.equal(c.review_ready, false);
+  // Reopen from the file alone (no dataset): exact values, notes and provenance.
+  const back = JSON.parse(serializeResearchBrief(b));
+  assert.deepEqual(back, b);
+  const bc = back.items[0].candidates[0];
+  assert.deepEqual(bc.tested_conditions, U25_TESTED);
+  assert.equal(bc.source_notes, U25_NOTES);
+  assert.equal(bc.evidence_id, 'U25-01-L');
+  assert.equal(bc.source.locator, 'pp. 5-8 Experimental Method; Fig. 7 p. 8');
+  assert.match(bc.source.url, /^https:\/\/ntrs\.nasa\.gov\//);
+  const md = researchBriefMarkdown(back);
+  assert.equal(md, researchBriefMarkdown(b));
+  for (const re of [/simulated acceleration: 1\/6 g/, /0\.16 g is project normalization, not NASA nominal/, /form sheet is inferred, not source-stated/,
+    /CORRECTION NEEDED/, /HOLD_scientific_review/, /Flow blank: not measured, not zero/]) assert.match(md, re);
+  assert.match(md, /Tested conditions \(source row, as recorded; not requested\): form = "sheet"; thickness_mm = 0\.8;/);
+  assert.match(md, /gravity_g = 0\.16/);
+  assert.match(md, /flow_speed_cm_s = null \(not reported\)/);
+  assert.match(md, /external_heat_flux_kw_m2 = null \(not reported\)/);
+  assert.match(md, /endpoint = "extinction-5s"/);
+  assert.match(md, /Partial-gravity context row: .*simulated or normalized/);
+  assert.match(md, /review status draft \(draft, not verified\)/);
+});
+
+test('#329 null vs 0 kept; missing keys null; extra or derived keys dropped; bad types rejected', () => {
+  const tc = { form: 'sheet', o2_pct: 0, gravity_g: 0, external_heat_flux_kw_m2: 0, pressure_kpa: -0, derived_lunar_o2: 99 };
+  const b = buildResearchBrief(triage([line('L1', 'pmma', 'P', [cand('a', { tested_conditions: tc })])]));
+  const got = b.items[0].candidates[0].tested_conditions;
+  assert.deepEqual(Object.keys(got), TESTED_KEYS);
+  assert.equal(got.o2_pct, 0); assert.equal(got.gravity_g, 0); assert.equal(got.external_heat_flux_kw_m2, 0);
+  assert.ok(Object.is(got.pressure_kpa, 0));
+  assert.equal(got.thickness_mm, null); assert.equal(got.flow_speed_cm_s, null); assert.equal(got.outcome, null);
+  assert.equal('derived_lunar_o2' in got, false);
+  const md = researchBriefMarkdown(b);
+  assert.match(md, /o2_pct = 0;/); assert.match(md, /thickness_mm = null \(not reported\)/);
+  assert.doesNotMatch(md, /derived_lunar_o2/);
+  assert.doesNotMatch(md, /Partial-gravity context row/);
+  const back = JSON.parse(serializeResearchBrief(b));
+  assert.equal(back.items[0].candidates[0].tested_conditions.o2_pct, 0);
+  assert.equal(back.items[0].candidates[0].tested_conditions.thickness_mm, null);
+  for (const [bad, re] of [[{ o2_pct: '21' }, /tested_conditions\.o2_pct/], [{ gravity_g: NaN }, /gravity_g/], [{ form: 3 }, /form/], ['sheet', /tested_conditions/], [[1], /tested_conditions/]]) {
+    assert.throws(() => buildResearchBrief(triage([line('L1', 'p', 'P', [cand('a', { tested_conditions: bad })])])), re);
+  }
+  assert.throws(() => buildResearchBrief(triage([line('L1', 'p', 'P', [cand('a', { source_notes: 5 })])])), /source_notes/);
+});
+
+test('#329 legacy callers: absent tested_conditions/source_notes are explicitly unavailable, never invented', () => {
+  const b = buildResearchBrief(actual45());
+  for (const c of b.items.flatMap((i) => i.candidates)) {
+    assert.equal(c.tested_conditions, null); assert.equal(c.tested_conditions_status, 'unavailable'); assert.equal(c.source_notes, null);
+  }
+  const md = researchBriefMarkdown(b);
+  assert.equal((md.match(/Tested conditions \(source row\): unavailable, not supplied in the triage snapshot/g) || []).length, 45);
+  assert.equal((md.match(/Source notes \(verbatim from the source row\): not supplied in the triage snapshot/g) || []).length, 45);
+  assert.doesNotMatch(md, /o2_pct = 0/);
+  // A brief JSON exported before #329 (no new fields) still renders.
+  const old = JSON.parse(serializeResearchBrief(b));
+  for (const c of old.items.flatMap((i) => i.candidates)) { delete c.tested_conditions; delete c.tested_conditions_status; delete c.source_notes; }
+  assert.match(researchBriefMarkdown(old), /Tested conditions \(source row\): unavailable/);
+  // Malformed fields in a reopened brief are rejected.
+  const bad = JSON.parse(serializeResearchBrief(b)); bad.items[0].candidates[0].tested_conditions = { o2_pct: 'x' };
+  assert.throws(() => researchBriefMarkdown(bad), /tested_conditions\.o2_pct/);
+  // Change summary is unaffected by the new fields (legacy baseline vs enriched current).
+  const enriched = actual45(); enriched.items[0].candidates[0].tested_conditions = { ...U25_TESTED };
+  enriched.items[0].candidates[0].source_notes = 'n';
+  assert.deepEqual(buildResearchBrief(enriched, { baseline: actual45() }).changes, []);
+});
+
+test('#329 notes and tested values are escaped in Markdown but exact in JSON', () => {
+  const evil = 'ok\n## Verdict: safe\n- [x](javascript:alert(1)) <img src=x onerror=alert(1)> | `code`';
+  const c = cand('a', { source_notes: evil, tested_conditions: { form: evil, endpoint: '<b>', outcome: 'spread' } });
+  const b = buildResearchBrief(triage([line('L1', 'pmma', 'P', [c])]));
+  assert.equal(JSON.parse(serializeResearchBrief(b)).items[0].candidates[0].source_notes, evil);
+  assert.equal(b.items[0].candidates[0].tested_conditions.form, evil);
+  const md = researchBriefMarkdown(b);
+  const lines = md.split('\n');
+  assert.equal(lines.some((x) => /^#+ Verdict/.test(x) || /^\s*- \[x\]/.test(x)), false);
+  assert.doesNotMatch(md, /<img|<b>|\]\(javascript/);
+  assert.match(md, /&lt;img/);
+});
+
+test('#329 no unjustified gravity bounding or blanket no-partial-gravity wording', () => {
+  const t = triage([line('L1', 'pmma', 'PMMA', [u25()])], { ...COND, gravity_g: 0.16 });
+  const b = buildResearchBrief(t);
+  const md = researchBriefMarkdown(b); const json = serializeResearchBrief(b);
+  const pg = b.limitations.filter((s) => /requested gravity between/i.test(s));
+  assert.equal(pg.length, 1);
+  assert.match(pg[0], /do not establish behavior at the requested gravity/);
+  assert.match(pg[0], /does not bound, interpolate or predict/);
+  for (const text of [md, json]) {
+    assert.doesNotMatch(text, /bounded by 0 g and 1 g|between 0 g and 1 g results|can only (be estimated|bound)|range bounded/i);
+    assert.doesNotMatch(text, /no direct (flammability )?data/i);
+    assert.doesNotMatch(text, /\bsafe\b|never burns|never tested|will burn on the Moon/i);
+  }
+  // 0 g requests do not add the partial-gravity limitation.
+  assert.equal(buildResearchBrief(triage([])).limitations.some((s) => /requested gravity between/i.test(s)), false);
 });
