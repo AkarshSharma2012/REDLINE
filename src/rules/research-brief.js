@@ -15,7 +15,7 @@ const FIXED_LIMITATIONS = [
   BOUNDARY,
   'Requested conditions are research assumptions; source conditions are those reported by each cited NASA source and can differ from what was requested.',
   'Draft evidence rows are not verified and need review against the cited source before use.',
-  'Changes describe research assumptions (requested conditions and BOM lines) between two triage snapshots, not real-time spacecraft telemetry.',
+  'Changes describe research assumptions (requested conditions and BOM lines) and the resulting candidate evidence triage between two triage snapshots, not real-time spacecraft telemetry.',
   'Fewer flags, conflicts or missing fields is not a claim of lower fire risk; it only reflects how the cited evidence matches the requested assumptions.',
 ];
 const PARTIAL_G_LIMITATION = 'Lunar or other partial gravity (between 0 g and 1 g) has no direct flammability data in the sources reviewed; behavior there can only be estimated as a range bounded by 0 g and 1 g results, not measured.';
@@ -106,6 +106,11 @@ function validateItem(it, path, index) {
   if (!Array.isArray(it.candidates)) fail(`${path}.candidates`, 'must be an array');
   const candidates = it.candidates.map((c, i) => validateCandidate(c, `${path}.candidates[${i}]`));
   const n = candidates.length;
+  const ids = new Set();
+  for (const c of candidates) {
+    if (ids.has(c.evidence_id)) fail(`${path}.candidates`, `has duplicate evidence_id ${JSON.stringify(c.evidence_id)}; candidate identity within a line must be unique`);
+    ids.add(c.evidence_id);
+  }
   if (it.status === 'NO_CANDIDATES' && n > 0) fail(`${path}.status`, `is NO_CANDIDATES but the line has ${n} candidates`);
   if (it.status !== 'NO_CANDIDATES' && n === 0) fail(`${path}.status`, `is ${it.status} but the line has no candidates (expected NO_CANDIDATES)`);
   if (it.status === 'REVIEW_READY' && !candidates.some((c) => c.review_ready)) fail(`${path}.status`, 'is REVIEW_READY but no candidate is review_ready');
@@ -192,6 +197,26 @@ const keyUnion = (a, b) => [...new Set([...Object.keys(a), ...Object.keys(b)])].
 const lineSummary = (it) => ({ line_id: it.line_id, line_index: it.line_index, material_id: it.material_id, name: it.name });
 const lineKey = (it) => `${typeof it.line_id}:${it.line_id}`;
 const fieldId = (it) => `lines[${it.line_id}]`;
+const CANDIDATE_FIELDS = ['review_status', 'grade', 'review_ready', 'conflicts', 'missing_fields'];
+const candSummary = (c) => ({ evidence_id: c.evidence_id, review_status: c.review_status, grade: c.grade,
+  review_ready: c.review_ready, source_title: c.source.title, source_url: c.source.url });
+
+// Candidates are matched by evidence_id within a line matched by line_id.
+// Order: current candidates in triage order (added or changed), then removed
+// baseline candidates in baseline order.
+function diffCandidates(f, old, it, changes) {
+  const before = new Map(old.candidates.map((c) => [c.evidence_id, c]));
+  const now = new Set(it.candidates.map((c) => c.evidence_id));
+  for (const c of it.candidates) {
+    const cf = `${f}.candidates[${c.evidence_id}]`;
+    const o = before.get(c.evidence_id);
+    if (!o) { changes.push(change(cf, MISSING, candSummary(c))); continue; }
+    for (const k of CANDIDATE_FIELDS) if (!same(o[k], c[k])) changes.push(change(`${cf}.${k}`, o[k], c[k]));
+  }
+  for (const o of old.candidates) {
+    if (!now.has(o.evidence_id)) changes.push(change(`${f}.candidates[${o.evidence_id}]`, candSummary(o), MISSING));
+  }
+}
 
 function diff(base, cur) {
   const changes = [];
@@ -216,6 +241,7 @@ function diff(base, cur) {
       if (CONDITION_KEYS.includes(k) && same(a, get(base.conditions, k)) && same(b, get(cur.conditions, k))) continue;
       changes.push(change(`${f}.request.${k}`, a, b));
     }
+    diffCandidates(f, old, it, changes);
   }
   for (const it of base.items) if (!curKeys.has(lineKey(it))) changes.push(change(fieldId(it), lineSummary(it), MISSING));
   return changes;
@@ -309,7 +335,7 @@ export function researchBriefMarkdown(brief) {
       L.push(`- Evidence ${esc(c.evidence_id)}: review status ${esc(c.review_status)}${c.review_status === 'verified' ? '' : ' (draft, not verified)'}; grade ${esc(c.grade)}; review-ready ${c.review_ready === true ? 'yes' : 'no'}`,
         `  - ${citation(c)}`);
       for (const r of c.rules || []) L.push(`  - Rule ${esc(r.rule)}: ${esc(r.grade)}; ${esc(r.why)}`);
-      if (c.missing_fields?.length) L.push(`  - Source fields not reported: ${c.missing_fields.map(esc).join(', ')}`);
+      if (c.missing_fields?.length) L.push(`  - Missing or unknown fields (request or source side): ${c.missing_fields.map(esc).join(', ')}`);
       if (c.conflicts?.length) L.push(`  - Conflicts: ${c.conflicts.map(esc).join('; ')}`);
     }
     L.push('');
@@ -317,7 +343,7 @@ export function researchBriefMarkdown(brief) {
   L.push('## Changes from baseline (research assumptions only)', '',
     'These changes compare two triage snapshots of research assumptions, not real-time spacecraft telemetry. A change in flags or review counts is not a change in fire risk.', '');
   if (!brief.has_baseline) L.push('- No baseline snapshot provided.');
-  else if (!brief.changes.length) L.push('- No changes in requested conditions or BOM lines.');
+  else if (!brief.changes.length) L.push('- No changes in requested conditions, BOM lines or candidate evidence rows.');
   for (const c of brief.changes) {
     L.push(`- ${esc(c.field)}: ${fmt(c.before, c.change !== 'added')} → ${fmt(c.after, c.change !== 'removed')}`);
   }

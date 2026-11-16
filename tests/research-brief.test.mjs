@@ -225,3 +225,81 @@ test('deterministic JSON roundtrip preserves Unicode and source locators', () =>
   assert.equal(researchBriefMarkdown(back), researchBriefMarkdown(b1));
   assert.match(researchBriefMarkdown(back), /日本語/);
 });
+
+test('missing_fields label covers request- and source-side unknowns verbatim', () => {
+  const t = triage([line('L1', 'pmma', 'PMMA', [cand('a', { missing_fields: ['request.thickness_mm', 'source.pressure_kpa'] })])]);
+  const md = researchBriefMarkdown(buildResearchBrief(t));
+  assert.match(md, /Missing or unknown fields \(request or source side\): request\.thickness_mm, source\.pressure_kpa/);
+  assert.doesNotMatch(md, /Source fields not reported/);
+});
+
+test('gravity 0.16 -> 1 change: candidate-level changes matched by line_id and evidence_id', () => {
+  const lunar = { ...COND, gravity_g: 0.16 };
+  const earth = { ...COND, gravity_g: 1 };
+  const mkLine = (cond, cands, id = 'L1', mat = 'pmma') => {
+    const l = line(id, mat, 'PMMA', cands); l.request = { ...cond, material_id: mat, thickness_mm: 1, form: 'sheet' }; return l;
+  };
+  const base = deepFreeze(triage([
+    mkLine(lunar, [cand('ev-draft'), cand('ev-same'), cand('ev-gone')]),
+    // Control: same evidence_id on another line is a different candidate.
+    mkLine(lunar, [cand('ev-draft')], 'L2', 'nomex'),
+  ], lunar));
+  const snap = JSON.stringify(base);
+  const cur = deepFreeze(triage([
+    mkLine(earth, [
+      cand('ev-new', { grade: 'OK', rules: [] }),
+      cand('ev-draft', { grade: 'INVALID', conflicts: ['gravity_g: source 0 g vs requested 1 g'],
+        missing_fields: ['pressure_kpa', 'request.thickness_mm'] }),
+      cand('ev-same'),
+    ]),
+    mkLine(earth, [cand('ev-draft')], 'L2', 'nomex'),
+  ], earth));
+  const b = buildResearchBrief(cur, { baseline: base });
+  assert.equal(JSON.stringify(base), snap);
+  assert.deepEqual(b.changes.map((c) => [c.field, c.change]), [
+    ['conditions.gravity_g', 'changed'],
+    ['lines[L1].candidates[ev-new]', 'added'],
+    ['lines[L1].candidates[ev-draft].grade', 'changed'],
+    ['lines[L1].candidates[ev-draft].conflicts', 'changed'],
+    ['lines[L1].candidates[ev-draft].missing_fields', 'changed'],
+    ['lines[L1].candidates[ev-gone]', 'removed'],
+  ]);
+  const by = Object.fromEntries(b.changes.map((c) => [c.field, c]));
+  assert.deepEqual(by['conditions.gravity_g'], { field: 'conditions.gravity_g', change: 'changed', before: 0.16, after: 1 });
+  assert.deepEqual(by['lines[L1].candidates[ev-draft].conflicts'],
+    { field: 'lines[L1].candidates[ev-draft].conflicts', change: 'changed', before: [], after: ['gravity_g: source 0 g vs requested 1 g'] });
+  assert.deepEqual(by['lines[L1].candidates[ev-draft].grade'].before, 'FLAG');
+  assert.deepEqual(by['lines[L1].candidates[ev-draft].missing_fields'].after, ['pressure_kpa', 'request.thickness_mm']);
+  assert.equal(by['lines[L1].candidates[ev-new]'].before, null);
+  assert.deepEqual(by['lines[L1].candidates[ev-new]'].after, { evidence_id: 'ev-new', review_status: 'draft', grade: 'OK',
+    review_ready: false, source_title: 'NASA PSI BASS-II', source_url: PSI });
+  assert.equal(by['lines[L1].candidates[ev-gone]'].after, null);
+  assert.equal(by['lines[L1].candidates[ev-gone]'].before.evidence_id, 'ev-gone');
+  // Controls: unchanged candidates and the per-line copy of gravity are not reported.
+  assert.ok(!b.changes.some((c) => c.field.includes('ev-same') || c.field.startsWith('lines[L2]')));
+  assert.equal(by['lines[L1].request.gravity_g'], undefined);
+  // Deterministic and order-stable.
+  assert.equal(serializeResearchBrief(b), serializeResearchBrief(buildResearchBrief(structuredClone(cur), { baseline: structuredClone(base) })));
+  const md = researchBriefMarkdown(b);
+  assert.ok(md.includes(String.raw`- lines\[L1\].candidates\[ev-draft\].conflicts: \[\] → \["gravity_g: source 0 g vs requested 1 g"\]`));
+  assert.ok(md.includes(String.raw`- lines\[L1\].candidates\[ev-new\]: (missing) → `));
+  assert.match(md, /candidates\\\[ev-gone\\\]: .* → \(missing\)/);
+  assert.match(md, /conditions\.gravity_g: 0\.16 → 1/);
+});
+
+test('candidate review_ready change and draft -> verified are reported; no-baseline and no-change controls', () => {
+  const v = cand('a', { review_status: 'verified', review_ready: true, grade: 'OK' });
+  const base = triage([line('L1', 'pmma', 'PMMA', [cand('a')])]);
+  const cur = triage([line('L1', 'pmma', 'PMMA', [v])]);
+  const b = buildResearchBrief(cur, { baseline: base });
+  assert.deepEqual(b.changes.filter((c) => c.field.includes('candidates')).map((c) => [c.field.split('].').pop(), c.before, c.after]), [
+    ['review_status', 'draft', 'verified'], ['grade', 'FLAG', 'OK'], ['review_ready', false, true],
+  ]);
+  assert.deepEqual(buildResearchBrief(cur, { baseline: structuredClone(cur) }).changes, []);
+  assert.match(researchBriefMarkdown(buildResearchBrief(cur, { baseline: cur })), /No changes in requested conditions, BOM lines or candidate evidence rows/);
+  assert.deepEqual(buildResearchBrief(cur).changes, []);
+});
+
+test('rejects duplicate evidence_id within a line', () => {
+  assert.throws(() => buildResearchBrief(triage([line('L1', 'pmma', 'PMMA', [cand('a'), cand('a')])])), /duplicate evidence_id/);
+});
