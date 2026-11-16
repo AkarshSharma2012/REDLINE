@@ -1,5 +1,6 @@
 // Entry point: loads data/evidence.json and wires the UI to the rules (S1 §2-3).
-// Tabs follow screens.md §1 plus the PSI dashboard (B11) and Ask REDLINE (B12).
+// #337: four top sections (Model, Evidence, Investigations, Review brief); the older screens
+// open as sub-views inside them and keep their hashes (src/ui/section-nav.js).
 // The Investigations tab mounts itself (src/ui/investigations.js has its own <script> tag),
 // independently of the Cabin Check default if evidence.json fails to load.
 import { labelCabin } from './rules/label.js';
@@ -16,10 +17,11 @@ import { validateEvidence } from './schema/validate.js';
 import { mountWorkspace } from './ui/workspace.js';
 import { mountReviewCockpit } from './ui/review-cockpit.js';
 import { triageQuery } from './ui/cockpit-model.js';
+import { SECTIONS, routeFromHash, applyRoute, nextSection, wireHelp } from './ui/section-nav.js';
 
 const EVIDENCE_URL = 'data/evidence.json';
 
-export const TABS = ['cabin', 'investigations', 'gravity', 'oxygen', 'accuracy', 'ask'];
+export const TABS = SECTIONS;
 
 // Illustrative lunar pressurized rover cabin (screens.md §7, docs/pitch.md 0:00-0:20).
 // Item uses are hypothetical, not a real rover manifest. Atmosphere: the form's default
@@ -44,10 +46,9 @@ export async function loadEvidence(url = EVIDENCE_URL) {
   return evidence;
 }
 
-// tabFromHash('#gravity') -> 'gravity'; anything unknown -> Cabin Check.
+// tabFromHash('#gravity') -> 'gravity' (a view); '#cabin' and anything unknown -> 'model'.
 export function tabFromHash(hash = '') {
-  const id = String(hash).replace(/^#/, '');
-  return TABS.includes(id) ? id : TABS[0];
+  return routeFromHash(hash).view;
 }
 
 // label.js takes only verified rows (S1 §3.2); drafts stay inspectable in the evidence panel.
@@ -86,17 +87,11 @@ function startWorkspace() {
 }
 
 function showTab(id, { focus = false } = {}) {
-  for (const tab of TABS) {
-    const button = document.getElementById(`tab-${tab}`);
-    const panel = document.getElementById(`panel-${tab}`);
-    const active = tab === id;
-    button?.setAttribute('aria-selected', String(active));
-    if (button) button.tabIndex = active ? 0 : -1;
-    if (panel) panel.hidden = !active;
-  }
-  if (focus) document.getElementById(`tab-${id}`)?.focus();
-  workspace?.setActive(id === 'cabin');
-  onShow[id]?.();
+  const route = routeFromHash(id);
+  applyRoute(document, route);
+  if (focus) document.getElementById(`tab-${route.section}`)?.focus();
+  workspace?.setActive(route.section === 'model');
+  onShow[route.view]?.();
 }
 
 const onShow = {};
@@ -107,12 +102,10 @@ function wireTabs() {
     const button = event.target.closest('[role="tab"]');
     if (button) location.hash = button.id.replace('tab-', '');
   });
-  // Arrow keys move between tabs (WAI-ARIA tabs pattern).
+  // Arrow keys, Home and End move between tabs (WAI-ARIA tabs pattern).
   list.addEventListener('keydown', (event) => {
-    const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
-    if (!step) return;
-    const current = TABS.indexOf(tabFromHash(location.hash));
-    const next = TABS[(current + step + TABS.length) % TABS.length];
+    const next = nextSection(routeFromHash(location.hash).section, event.key);
+    if (!next) return;
     event.preventDefault();
     history.replaceState(null, '', `#${next}`);
     showTab(next, { focus: true });
@@ -266,7 +259,7 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
     if (!cabinQuery) {
       slider?.destroy(); slider = null;
       root.replaceChildren(Object.assign(doc.createElement('p'), { className: 'text-2',
-        textContent: 'Evaluate a cabin in Cabin Check first (or load the lunar rover demo). The preview holds that cabin\'s items, pressure, airflow and gravity fixed.' }));
+        textContent: 'Evaluate a cabin in Model first (or load the lunar rover demo). The preview holds that cabin\'s items, pressure, airflow and gravity fixed.' }));
       return;
     }
     if (slider) return;
@@ -274,8 +267,8 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
     slider = renderO2Slider(root, {
       cabinQuery, evidence,
       labelCabin: (query, dataset) => evaluateCabin(query, dataset, evaluate),
-      onApply: (next) => { applyConditions(next); location.hash = 'cabin'; },
-      onCancel: () => { location.hash = 'cabin'; },
+      onApply: (next) => { applyConditions(next); location.hash = 'model'; },
+      onCancel: () => { location.hash = 'model'; },
     });
   };
 
@@ -291,7 +284,7 @@ onShow.gravity = () => {
   gravity?.destroy();
   gravity = renderGravityView(document.getElementById('gravity-view'), {
     request: current.query()?.conditions,
-    onBack: () => { location.hash = 'cabin'; },
+    onBack: () => { location.hash = 'model'; },
   });
 };
 
@@ -299,7 +292,7 @@ async function wireAccuracy(evidence) {
   const root = document.getElementById('accuracy-view');
   try {
     const rows = await loadAccuracyReport();
-    renderAccuracyView(root, rows, { sources: evidence?.sources ?? {}, onBack: () => { location.hash = 'cabin'; } });
+    renderAccuracyView(root, rows, { sources: evidence?.sources ?? {}, onBack: () => { location.hash = 'model'; } });
   } catch (err) {
     root.textContent = `Accuracy report could not be loaded (${err.message}).`;
   }
@@ -342,6 +335,7 @@ function startCockpit(brief) {
 
 async function start() {
   startWorkspace();
+  wireHelp(document);
   wireTabs();
   const status = document.getElementById('status');
   status.textContent = 'Loading evidence…';
