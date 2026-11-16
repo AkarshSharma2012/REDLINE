@@ -4,7 +4,7 @@
 // Review-ready means bounded exact-context source review, never safe or certified.
 import { element } from './results-table.js';
 import {
-  conditionMatrix, compareSnapshots, describeFieldChange, orderFieldChanges, rowIndex,
+  conditionMatrix, compareSnapshots, groupFieldChanges, rowIndex,
   safeFilename, snapshot, STATE_TEXT,
 } from './cockpit-model.js';
 
@@ -248,11 +248,16 @@ export function mountReviewCockpit(root, options = {}) {
     }
     const b = diff.counts.before, a = diff.counts.after;
     const counts = element(d, 'p', `Review-ready records: ${b.review_ready_count} → ${a.review_ready_count}. Candidates: ${b.candidate_count} → ${a.candidate_count}. Fewer gaps do not mean lower fire risk.`, 'type-data');
-    const ordered = orderFieldChanges(diff.fields);
-    const fh = element(d, 'p', ordered.length ? `${ordered.length} record condition${ordered.length === 1 ? '' : 's'} changed state:` : 'No record changed triage state.');
+    const groups = groupFieldChanges(diff.fields);
+    const fh = element(d, 'p', groups.length ? `Record conditions that changed triage state or requested value (${diff.fields.length} record-line pairs):` : 'No record changed triage state.');
     const fl = element(d, 'ol', null, 'cockpit-field-changes');
-    for (const f of ordered.slice(0, 12)) fl.append(element(d, 'li', `${f.name || f.line_id}: ${describeFieldChange(f)}`));
-    if (ordered.length > 12) fl.append(element(d, 'li', `${ordered.length - 12} more in the exported brief and the matrix above.`));
+    for (const g of groups) {
+      const li = element(d, 'li', g.text);
+      li.dataset.key = g.key; li.dataset.after = g.after.state;
+      const ids = element(d, 'details'); ids.append(element(d, 'summary', `Records and lines (${g.evidence_ids.length})`),
+        element(d, 'p', `${g.evidence_ids.join(', ')} · lines: ${g.lines.join(', ')}`, 'type-data'));
+      li.append(ids); fl.append(li);
+    }
     if (!list.children.length) list.append(element(d, 'li', 'Requested conditions and BOM lines are unchanged.'));
     changes.replaceChildren(h, list, counts, fh, fl);
     changes.hidden = false;

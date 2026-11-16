@@ -147,12 +147,37 @@ export function describeFieldChange(change) {
   const req = (v) => v ?? 'not specified';
   const src = change.source ?? 'not stated';
   const head = `${change.evidence_id} · ${change.label}`;
-  if (change.after.state === 'conflict') return `${head}: requested ${req(change.after.requested)} vs source ${src}; now a conflict for exact-context review.`;
-  if (change.after.state === 'unknown') return `${head}: requested ${req(change.after.requested)} vs source ${src}; now unknown, so it cannot support exact-context review.`;
-  if (change.before.state === 'conflict' || change.before.state === 'unknown') {
-    return `${head}: requested ${req(change.after.requested)} vs source ${src}; triage no longer lists a gap for this field (not a safety finding).`;
+  const reqText = change.before.requested === change.after.requested ? `requested ${req(change.after.requested)}`
+    : `requested ${req(change.before.requested)} → ${req(change.after.requested)}`;
+  return `${head}: ${reqText} vs source ${src}; ${transition(change.before.state, change.after.state)}.`;
+}
+
+function transition(before, after) {
+  if (before === after) return `still ${STATE_TEXT[after].toLowerCase()}`;
+  if (after === 'conflict') return `${STATE_TEXT[before].toLowerCase()} → conflict, so it cannot support exact-context review`;
+  if (after === 'unknown') return `${STATE_TEXT[before].toLowerCase()} → unknown, so it cannot support exact-context review`;
+  return `${STATE_TEXT[before].toLowerCase()} → ${STATE_TEXT[after].toLowerCase()} (triage lists no gap; not a safety finding)`;
+}
+
+// Groups record changes that share field, transition, requested change and source value,
+// so "18 records tested at 0 g became conflicts" reads as one line with exact IDs.
+export function groupFieldChanges(fields) {
+  const groups = new Map();
+  for (const f of orderFieldChanges(fields)) {
+    const k = [f.key, f.before.state, f.after.state, f.before.requested, f.after.requested, f.source].join(' ');
+    if (!groups.has(k)) groups.set(k, { ...f, evidence_ids: [], lines: [] });
+    const g = groups.get(k);
+    if (!g.evidence_ids.includes(f.evidence_id)) g.evidence_ids.push(f.evidence_id);
+    if (!g.lines.includes(f.line_id)) g.lines.push(f.line_id);
   }
-  return `${head}: requested ${req(change.before.requested)} → ${req(change.after.requested)} vs source ${src}.`;
+  return [...groups.values()].map((g) => {
+    const req = (v) => v ?? 'not specified';
+    const reqText = g.before.requested === g.after.requested ? `requested ${req(g.after.requested)}`
+      : `requested ${req(g.before.requested)} → ${req(g.after.requested)}`;
+    const n = g.evidence_ids.length;
+    const on = g.lines.length > 1 ? ` on ${g.lines.length} BOM lines` : '';
+    return { ...g, text: `${g.label}: ${n} record${n === 1 ? '' : 's'}${on} with source ${g.source ?? 'not stated'} (${reqText}): ${transition(g.before.state, g.after.state)}.` };
+  });
 }
 
 // Triage input from the cabin form: conditions + one line per BOM row, duplicates preserved.

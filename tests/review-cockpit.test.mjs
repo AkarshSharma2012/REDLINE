@@ -59,7 +59,7 @@ test('baseline diff: gravity change names the record, field, requested and sourc
   assert.deepEqual(diff.conditions, [{ key: 'gravity_g', label: 'Gravity', before: '0.16 g', after: '1 g' }]);
   const g = diff.fields.find((f) => f.key === 'gravity_g');
   assert.equal(g.before.state, 'listed'); assert.equal(g.after.state, 'conflict');
-  assert.match(describeFieldChange(g), /^R1 · Gravity: requested 1 g vs source 0 g; now a conflict/);
+  assert.match(describeFieldChange(g), /^R1 · Gravity: requested 0.16 g → 1 g vs source 0 g; no gap listed → conflict, so it cannot support exact-context review./);
   assert.equal(pinned.conditions.gravity_g, 0.16, 'baseline snapshot unaffected');
   assert.ok(!/safe|risk score|recommend/i.test(describeFieldChange(g)));
 });
@@ -126,7 +126,7 @@ test('cockpit: lines with duplicates and unknown material, matrix, questions, pi
   const changes = d.querySelector('.cockpit-changes');
   assert.equal(changes.hidden, false);
   assert.match(changes.textContent, /Requested gravity: 0.16 g → 1 g/);
-  assert.match(changes.textContent, /R1 · Gravity: requested 1 g vs source 0 g; now a conflict/);
+  assert.ok(changes.textContent.includes('Gravity: 1 record on 2 BOM lines with source 0 g (requested 0.16 g → 1 g): no gap listed → conflict'));
   assert.match(changes.textContent, /Fewer gaps do not mean lower fire risk/);
   assert.equal(d.querySelector('tr[data-key="gravity_g"]').dataset.changed, 'true');
   d.getElementById('cockpit-open').click();
