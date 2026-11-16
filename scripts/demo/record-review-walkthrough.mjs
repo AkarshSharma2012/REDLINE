@@ -16,11 +16,14 @@ import { tmpdir } from 'node:os';
 const ROOT = resolve('.');
 const OUT = resolve(process.argv[2] && !process.argv[2].startsWith('--') ? process.argv[2] : 'docs/pitch/walkthrough');
 const VOICE = !process.argv.includes('--no-voice');
+// --short: the official <=30 s demo (target 29 s) from the same live workflow; unlisted beats run unnarrated.
+const SHORT = process.argv.includes('--short');
+const SHORT_MAX_SECONDS = 29.5;
 const FFMPEG = process.env.FFMPEG || 'ffmpeg';
 const { chromium } = createRequire(import.meta.url)(process.env.PLAYWRIGHT || 'playwright');
 const W = 1280, H = 640; // captured 1280x640, upscaled to 1920x960 UI + 120 px caption band = 1920x1080
 const WORK = mkdtempSync(join(tmpdir(), 'redline-walk-'));
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms) => new Promise((r) => setTimeout(r, process.argv.includes('--short') ? ms * 0.45 : ms));
 mkdirSync(OUT, { recursive: true });
 
 // Beats: caption text interprets the screen; `say` is the narration (same meaning, spoken form).
@@ -49,8 +52,23 @@ export const BEATS = [
     say: 'Illustrative scenario, draft sources, no predictions. REDLINE organises the evidence review. Engineers and safety reviewers make the decisions.' },
 ];
 
+// Short-cut narration: same meaning, fewer words. Beats not listed here are performed but not held.
+export const SHORT_BEATS = {
+  load: { caption: 'REDLINE matches a lunar rover BOM to NASA fire-test records. All are drafts; none verified.',
+    say: 'REDLINE matches a lunar rover parts list to NASA fire test records. All are drafts.' },
+  matrix: { caption: 'Each record: requested vs tested conditions, cited to the page. Unknown stays unknown.',
+    say: 'Each shows requested versus tested conditions, cited to the page.' },
+  changes: { caption: 'Change gravity: REDLINE shows exactly which records stop matching, and why.',
+    say: 'Change gravity, and REDLINE shows exactly which records stop matching, and why.' },
+  open: { caption: 'The reviewer gets the cited brief as Markdown or JSON.',
+    say: 'The reviewer gets the cited brief, as Markdown or JSON.' },
+  close: { caption: 'Research review only: no predictions, no safety approval.',
+    say: 'Research review only. No predictions, no safety approval.' },
+};
+const beatText = (id) => (SHORT ? SHORT_BEATS[id] : BEATS.find((b) => b.id === id));
+
 function speak(text, file) {
-  const ps = `Add-Type -AssemblyName System.Speech; $s = New-Object System.Speech.Synthesis.SpeechSynthesizer; $s.Rate = 1; $s.SetOutputToWaveFile('${file.replace(/'/g, "''")}'); $s.Speak([Console]::In.ReadToEnd()); $s.Dispose()`;
+  const ps = `Add-Type -AssemblyName System.Speech; $s = New-Object System.Speech.Synthesis.SpeechSynthesizer; $s.Rate = ${SHORT ? 2 : 1}; $s.SetOutputToWaveFile('${file.replace(/'/g, "''")}'); $s.Speak([Console]::In.ReadToEnd()); $s.Dispose()`;
   execFileSync('powershell', ['-NoProfile', '-Command', ps], { input: text });
 }
 function probeSeconds(file) {
@@ -94,8 +112,10 @@ async function main() {
   // 1. Narration first, so every beat holds at least as long as its spoken line.
   const audio = {};
   for (const b of BEATS) {
-    if (!VOICE) { audio[b.id] = { file: null, seconds: b.caption.split(/\s+/).length / 2.6 }; continue; }
-    const f = join(WORK, `${b.id}.wav`); speak(b.say, f); audio[b.id] = { file: f, seconds: probeSeconds(f) };
+    const t = beatText(b.id);
+    if (!t) { audio[b.id] = null; continue; }
+    if (!VOICE) { audio[b.id] = { file: null, seconds: t.caption.split(/\s+/).length / 2.6 }; continue; }
+    const f = join(WORK, `${b.id}.wav`); speak(t.say, f); audio[b.id] = { file: f, seconds: probeSeconds(f) };
   }
   const server = await serve();
   const url = `http://127.0.0.1:${server.address().port}/`;
@@ -124,10 +144,11 @@ async function main() {
     const scrollPane = (sel, block = 'start') => p.evaluate(([s, b]) => document.querySelector(s)?.scrollIntoView({ block: b, behavior: 'smooth' }), [sel, block]);
     let beatStart = 0;
     const beat = async (id, fn) => {
+      if (SHORT && !audio[id]) { await fn(); await outline(null); return; }
       const start = (Date.now() - t0) / 1000; beatStart = Date.now();
       await fn();
-      const hold = audio[id].seconds * 1000 + 900 - (Date.now() - beatStart);
-      if (hold > 0) await sleep(hold);
+      const hold = audio[id].seconds * 1000 + (SHORT ? 350 : 900) - (Date.now() - beatStart);
+      if (hold > 0) await new Promise((r) => setTimeout(r, hold)); // narration hold is never scaled
       log.beats.push({ id, start, end: (Date.now() - t0) / 1000 });
       await outline(null);
     };
@@ -158,9 +179,9 @@ async function main() {
     });
     await beat('changes', async () => { await scrollPane('.cockpit-changes'); await sleep(700); await outline('.cockpit-changes'); await moveTo('.cockpit-field-changes li'); });
     log.facts.changes = await p.textContent('.cockpit-changes');
-    await beat('questions', async () => { await scrollPane('.cockpit-questions', 'center'); await sleep(700); await outline('.cockpit-questions'); });
+    if (!SHORT) await beat('questions', async () => { await scrollPane('.cockpit-questions', 'center'); await sleep(700); await outline('.cockpit-questions'); });
     const files = {};
-    await beat('export', async () => {
+    if (!SHORT) await beat('export', async () => {
       await scrollPane('#review-cockpit'); await sleep(500);
       for (const [sel, ext] of [['#cockpit-md', 'md'], ['#cockpit-json', 'json']]) {
         await moveTo(sel); await outline(sel);
@@ -173,20 +194,22 @@ async function main() {
       await p.evaluate(() => { const pre = document.querySelector('.cockpit-brief-text'); const i = pre.textContent.indexOf('## Changes from baseline');
         if (i > 0) pre.scrollTop = pre.scrollHeight * (i / pre.textContent.length) - 40; });
     });
-    await p.click('#cockpit-brief-close');
-    await beat('reopen', async () => {
+    if (!SHORT) await p.click('#cockpit-brief-close');
+    if (!SHORT) await beat('reopen', async () => {
       await moveTo('#cockpit-file'); await outline('#cockpit-file');
       await p.setInputFiles('#cockpit-file', files.json); await sleep(1200);
     });
-    log.facts.reopened_title = await p.textContent('#cockpit-brief-title');
-    await beat('close', async () => { await p.click('#cockpit-brief-close'); await scrollPane('#review-cockpit'); await p.mouse.move(W - 40, 40, { steps: 10 }); });
+    log.facts.reopened_title = SHORT ? null : await p.textContent('#cockpit-brief-title');
+    await beat('close', async () => { if (await p.evaluate(() => document.getElementById('cockpit-brief')?.open)) await p.click('#cockpit-brief-close'); await scrollPane('#review-cockpit'); await p.mouse.move(W - 40, 40, { steps: 10 }); });
     log.facts.page_errors = errors;
     log.files = Object.fromEntries(Object.entries(files).map(([k, f]) => [k, f.slice(ROOT.length + 1).replace(/\\/g, '/')]));
     // Parse and inspect the downloaded bytes, not the page state.
+    if (files.json) {
     const brief = JSON.parse(readFileSync(files.json, 'utf8'));
     const md = readFileSync(files.md, 'utf8');
     log.facts.brief = { summary: brief.summary, has_baseline: brief.has_baseline, changes: brief.changes.length,
       md_has_boundary: md.includes('Not a safety assessment'), md_bytes: Buffer.byteLength(md), json_bytes: readFileSync(files.json).length };
+    }
   } finally {
     await page?.close().catch(() => {}); await ctx?.close().catch(() => {});
     await browser.close().catch(() => {}); server.close();
@@ -201,22 +224,23 @@ const ts = (s) => { const ms = Math.max(0, Math.round(s * 1000)); const h = Stri
 
 const { log, webm, audio } = await main();
 const end = log.beats.at(-1).end + 0.5;
-const vtt = ['WEBVTT', '', ...log.beats.flatMap((b, i) => [String(i + 1), `${ts(b.start)} --> ${ts(b.end)}`, BEATS.find((x) => x.id === b.id).caption, ''])].join('\n');
-const base = join(OUT, 'redline-evidence-review-walkthrough');
+const vtt = ['WEBVTT', '', ...log.beats.flatMap((b, i) => [String(i + 1), `${ts(b.start)} --> ${ts(b.end)}`, beatText(b.id).caption, ''])].join('\n');
+if (SHORT && end > SHORT_MAX_SECONDS) throw new Error(`short cut is ${end.toFixed(1)} s, over ${SHORT_MAX_SECONDS} s`);
+const base = join(OUT, SHORT ? 'redline-demo-29s' : 'redline-evidence-review-walkthrough');
 writeFileSync(`${base}.vtt`, vtt);
 writeFileSync(`${base}-transcript.md`, ['# REDLINE evidence review walkthrough: transcript', '',
   `Recorded live from commit ${log.commit}${log.dirty ? ' (with uncommitted changes)' : ''} on ${log.started_utc}. Narration: local Windows speech voice.`, '',
-  ...log.beats.map((b) => `- [${ts(b.start)}] ${BEATS.find((x) => x.id === b.id).say}`), ''].join('\n'));
+  ...log.beats.map((b) => `- [${ts(b.start)}] ${beatText(b.id).say}`), ''].join('\n'));
 // ASS captions in a band below the UI, never over controls.
 const ass = ['[Script Info]', 'ScriptType: v4.00+', `PlayResX: 1920`, `PlayResY: 1080`, '', '[V4+ Styles]',
   'Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV',
   'Style: Cap,Segoe UI,40,&H00FFFFFF,&H00000000,&H00000000,0,0,1,0,0,2,80,80,22', '', '[Events]',
   'Format: Layer, Start, End, Style, Text',
-  ...log.beats.map((b) => `Dialogue: 0,${ts(b.start).slice(1, -1)},${ts(b.end).slice(1, -1)},Cap,${BEATS.find((x) => x.id === b.id).caption}`)].join('\n');
+  ...log.beats.map((b) => `Dialogue: 0,${ts(b.start).slice(1, -1)},${ts(b.end).slice(1, -1)},Cap,${beatText(b.id).caption}`)].join('\n');
 const assFile = join(WORK, 'captions.ass'); writeFileSync(assFile, ass);
 const inputs = ['-ss', String(log.trim_start), '-i', webm];
 const mixParts = [];
-log.beats.forEach((b, i) => { if (audio[b.id].file) { inputs.push('-i', audio[b.id].file); mixParts.push(`[${inputs.filter((x) => x === '-i').length - 1}:a]adelay=${Math.round(b.start * 1000)}:all=1[a${i}]`); } });
+log.beats.forEach((b, i) => { if (audio[b.id]?.file) { inputs.push('-i', audio[b.id].file); mixParts.push(`[${inputs.filter((x) => x === '-i').length - 1}:a]adelay=${Math.round(b.start * 1000)}:all=1[a${i}]`); } });
 const subPath = assFile.replace(/\\/g, '/').replace(':', '\\:');
 let filter = `[0:v]fps=30,scale=1920:960:flags=lanczos,pad=1920:1080:0:0:black,subtitles='${subPath}'[v]`;
 const args = ['-y', ...inputs];
@@ -225,6 +249,6 @@ args.push('-filter_complex', filter, '-map', '[v]', ...(mixParts.length ? ['-map
   '-t', String(end), '-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', `${base}.mp4`);
 execFileSync(FFMPEG, args, { stdio: ['ignore', 'ignore', 'inherit'] });
 log.output = { mp4: `${base}.mp4`.slice(ROOT.length + 1).replace(/\\/g, '/'), seconds: end };
-writeFileSync(join(OUT, 'capture-log.json'), JSON.stringify(log, null, 2));
+writeFileSync(join(OUT, SHORT ? 'capture-log-29s.json' : 'capture-log.json'), JSON.stringify(log, null, 2));
 rmSync(WORK, { recursive: true, force: true });
 console.log(JSON.stringify({ mp4: log.output.mp4, seconds: end.toFixed(1), beats: log.beats.length, errors: log.facts.page_errors }));
