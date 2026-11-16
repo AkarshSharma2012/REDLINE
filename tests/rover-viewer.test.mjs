@@ -283,9 +283,10 @@ test('stored display preferences apply, and context loss falls back with working
 });
 
 // #299 compact tool strip and information bar contract.
-const TOOL_LABELS = ['Orbit left', 'Orbit right', 'Orbit up', 'Orbit down', 'Zoom in', 'Zoom out', 'Reset view', 'Show outer shell', 'Wireframe'];
+const TOOL_LABELS = ['Orbit left', 'Orbit right', 'Orbit up', 'Orbit down', 'Zoom in', 'Zoom out', 'Reset view', 'Show outer shell', 'Wireframe',
+  'X-ray: make structure translucent (modeled geometry only)', 'Isolate the selected part', 'Colour parts by evidence review state'];
 
-test('nine native camera/layer buttons: drawn icons carry label and tooltip, text buttons keep their word in the name', async () => {
+test('twelve native camera/layer/inspect buttons: drawn icons carry label and tooltip, text buttons keep their word in the name', async () => {
   const env = webglSetup();
   const viewer = await mountRoverViewer(env.root, { loadThree: env.loadThree });
   const tools = all(env.root).filter(el => el.tagName === 'BUTTON' && /rover-viewer__tool/.test(el.getAttribute('class')));
@@ -301,7 +302,7 @@ test('nine native camera/layer buttons: drawn icons carry label and tooltip, tex
       assert.ok(el.getAttribute('aria-label').toLowerCase().includes(el.text.toLowerCase()), `${el.text} in accessible name`);
     }
   }
-  assert.equal(tools.filter(el => !all(el).some(node => node.tagName === 'SVG')).map(el => el.text).join(','), 'Reset,Shell,Wire');
+  assert.equal(tools.filter(el => !all(el).some(node => node.tagName === 'SVG')).map(el => el.text).join(','), 'Reset,Shell,Wire,X-ray,Isolate,Evidence');
   viewer.update({ materialIds: ALL });
   env.observers[0].fire(640, 400);
   env.flush();
