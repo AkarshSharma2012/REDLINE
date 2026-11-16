@@ -14,6 +14,8 @@ import { loadAccuracyReport, renderAccuracyView } from './ui/accuracy-view.js';
 import { mountAsk } from './ui/ask.js';
 import { validateEvidence } from './schema/validate.js';
 import { mountWorkspace } from './ui/workspace.js';
+import { mountReviewCockpit } from './ui/review-cockpit.js';
+import { triageQuery } from './ui/cockpit-model.js';
 
 const EVIDENCE_URL = 'data/evidence.json';
 
@@ -119,7 +121,24 @@ function wireTabs() {
   showTab(tabFromHash(location.hash));
 }
 
-export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, document: doc = globalThis.document, workspace: ws = null } = {}) {
+// Evidence triage (#321) and research brief (#322) load as optional modules: if either is
+// missing the cockpit says so and Cabin Check keeps working.
+export async function loadReviewEngines(load = (path) => import(path)) {
+  const [triage, brief] = await Promise.allSettled([load('./rules/evidence-triage.js'), load('./rules/research-brief.js')]);
+  return {
+    buildTriage: triage.status === 'fulfilled' ? triage.value.buildEvidenceTriage ?? null : null,
+    brief: brief.status === 'fulfilled' ? brief.value : null,
+  };
+}
+
+// Cockpit input: the same cabin query the labels use, plus BOM line names; duplicates kept.
+export function reviewTriage(formState, evidence, buildTriage) {
+  if (typeof buildTriage !== 'function') throw new Error('evidence triage module unavailable');
+  return buildTriage(triageQuery(buildCabinQuery(formState), formState), evidence);
+}
+
+export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, document: doc = globalThis.document, workspace: ws = null,
+  cockpit = null, buildTriage = null } = {}) {
   const $ = (id) => doc.getElementById(id);
   const verified = verifiedOnly(evidence);
   let cabinQuery = null;
@@ -145,12 +164,24 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
     renderFixes($('fixes'), withQ, context);
     slider?.update(query);
     ws?.update({ cabinQuery: query, results: withQ });
+    refreshCockpit(query);
+  }
+
+  // Analysis and exported brief are rebuilt together from the current inputs only.
+  function refreshCockpit(query) {
+    if (!cockpit) return;
+    try {
+      cockpit.update({ triage: reviewTriage(query, evidence, buildTriage), evidence, scenarioName: query.name ?? '' });
+    } catch (err) {
+      cockpit.clear(`Evidence review unavailable (${err.message}). No analysis or brief is shown.`);
+    }
   }
 
   // Model or HTML cabin item -> the same engine result and evidence panel as the results table.
   // Works with 0 verified rows, when the table shows no rows: drafts stay inspection only.
   function selectMaterial(materialId) {
     const result = resultForMaterial(shown, materialId);
+    cockpit?.selectLineByMaterial(materialId);
     if (!result) return false;
     $('results-table').querySelectorAll?.('button[aria-pressed]').forEach((b) => b.setAttribute('aria-pressed', 'false'));
     renderEvidencePanel($('evidence-panel'), result, evidence, { query: result.query });
@@ -168,6 +199,9 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
       cabinQuery = null;
       shown = [];
       ws?.update({ cabinQuery: null, results: [] });
+      cockpit?.clear(state.materials.length
+        ? 'Correct the cabin fields to update the review. The previous analysis and brief were cleared.'
+        : 'Add a material or load the lunar rover scenario to start a review.');
       slider?.destroy(); slider = null;
       $('evidence-panel').replaceChildren();
       $('fixes').replaceChildren();
@@ -223,6 +257,7 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
   }
 
   mountForm();
+  current.loadRoverDemo = loadRoverDemo;
   $('rover-demo').disabled = false;
   $('rover-demo').addEventListener('click', loadRoverDemo);
 
@@ -249,7 +284,7 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
 }
 
 // Shared with the gravity view, which needs no evidence.json and works even if it fails to load.
-const current = { query: () => null, selectMaterial: () => false };
+const current = { query: () => null, selectMaterial: () => false, loadRoverDemo: () => {} };
 
 let gravity = null;
 onShow.gravity = () => {
@@ -289,11 +324,29 @@ function showRail(doc, rows, verified, state) {
   if (verifiedCell) { verifiedCell.textContent = verified; verifiedCell.parentElement?.setAttribute('data-state', state); }
 }
 
+let cockpit = null;
+function startCockpit(brief) {
+  const root = document.getElementById('review-cockpit');
+  if (!root) return null;
+  try {
+    return mountReviewCockpit(root, {
+      brief,
+      onLoadScenario: () => current.loadRoverDemo(),
+      onSelectLine: (item) => workspace?.selectMaterial(item.material_id, { notify: false }),
+    });
+  } catch (err) {
+    root.textContent = `Evidence review could not start (${err.message}).`;
+    return null;
+  }
+}
+
 async function start() {
   startWorkspace();
   wireTabs();
   const status = document.getElementById('status');
   status.textContent = 'Loading evidence…';
+  const engines = await loadReviewEngines();
+  cockpit = startCockpit(engines.brief);
   let evidence;
   try {
     evidence = await loadEvidence();
@@ -303,6 +356,7 @@ async function start() {
     retry.addEventListener('click', () => location.reload());
     status.append(retry);
     showRail(document, 'unavailable', 'unavailable', 'unavailable');
+    cockpit?.clear('Evidence file unavailable. No analysis or brief is shown.');
     workspace?.setEvidence(null);
     renderResultsTable(document.getElementById('results-table'), [], {
       state: 'error', onRetry: () => location.reload(),
@@ -314,7 +368,7 @@ async function start() {
   status.textContent = '';
   showDataset(evidence);
   workspace?.setEvidence(evidence);
-  wireCabin(evidence, { workspace });
+  wireCabin(evidence, { workspace, cockpit, buildTriage: engines.buildTriage });
   wireAccuracy(evidence);
   mountAsk(document.getElementById('ask-root'), evidence).catch((err) => {
     document.getElementById('ask-root').textContent = `Ask REDLINE could not start (${err.message}).`;
