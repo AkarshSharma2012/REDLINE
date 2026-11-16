@@ -52,3 +52,6 @@
   .cockpit-actions button { flex: 1 1 45%; }
 }
 .cockpit-title { font-size: 16px; line-height: 24px; margin: 0; color: var(--text-1); }
+.cockpit-notes { border-left: 2px dashed var(--border-control); padding-left: var(--space-8); }
+.cockpit-notes summary { color: var(--text-2); cursor: pointer; }
+.cockpit-notes p { margin-top: var(--space-4); max-width: 90ch; }

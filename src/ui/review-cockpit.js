@@ -195,7 +195,13 @@ export function mountReviewCockpit(root, options = {}) {
       state.evidenceId = candidate.evidence_id; select.value = candidate.evidence_id;
       select.addEventListener('change', () => { state.evidenceId = select.value; render(); d.getElementById('cockpit-candidate')?.focus(); });
       detail.append(label, select, sourceCitation(candidate));
-      const matrix = conditionMatrix(item, candidate, rows.get(candidate.evidence_id));
+      if (typeof candidate.source_notes === 'string' && candidate.source_notes) {
+        const notes = element(d, 'details', null, 'cockpit-notes'); notes.open = true;
+        notes.append(element(d, 'summary', 'Dataset notes for this record (verbatim, includes simulated or normalized conditions)'),
+          element(d, 'p', candidate.source_notes, 'text-2'));
+        detail.append(notes);
+      }
+      const matrix = conditionMatrix(item, candidate, rows.get(candidate.evidence_id) ?? candidate.tested_conditions);
       const before = baseIndex?.get(`${item.line_id}\u0000${candidate.evidence_id}`) ?? null;
       const wrap = element(d, 'div', null, 'table-scroll cockpit-matrix'); wrap.tabIndex = 0;
       wrap.setAttribute('role', 'region'); wrap.setAttribute('aria-label', `Requested versus source conditions for ${candidate.evidence_id}`);

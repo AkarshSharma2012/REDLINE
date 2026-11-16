@@ -160,3 +160,12 @@ test('cockpit: brief failure is reported, not shown as an empty success', () => 
   assert.match(d.getElementById('cockpit-notice').textContent, /Brief unavailable: triage.summary mismatch/);
   assert.equal(d.querySelector('.cockpit-brief-text'), null);
 });
+
+test('cockpit shows verbatim dataset notes for the selected record', () => {
+  const { d, root } = dom();
+  const c = mountReviewCockpit(root, { brief: fakeBrief });
+  c.update({ triage: triage([item('line-1', 'pmma', 'W', [cand('R1', { source_notes: 'NASA nominal simulated acceleration: 1/6 g; 0.16 g is project normalization.' })])]), evidence });
+  assert.match(d.querySelector('.cockpit-notes').textContent, /1\/6 g; 0\.16 g is project normalization/);
+  c.update({ triage: triage([item('line-1', 'pmma', 'W', [cand('R1')])]), evidence });
+  assert.equal(d.querySelector('.cockpit-notes'), null);
+});

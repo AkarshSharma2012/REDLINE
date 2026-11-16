@@ -39,7 +39,7 @@ test('contract shape on the actual dataset; all 45 drafts stay not review-ready'
   for (const it of t.items) {
     assert.equal(it.status, 'REVIEW_REQUIRED');
     for (const c of it.candidates) {
-      assert.deepEqual(Object.keys(c).sort(), ['conflicts', 'evidence_id', 'grade', 'missing_fields', 'review_ready', 'review_status', 'rules', 'source']);
+      assert.deepEqual(Object.keys(c).sort(), ['conflicts', 'evidence_id', 'grade', 'missing_fields', 'review_ready', 'review_status', 'rules', 'source', 'source_notes', 'tested_conditions']);
       assert.equal(c.review_ready, false);
       assert.equal(c.review_status, 'draft');
       assert.ok(['OK', 'FLAG', 'INVALID'].includes(c.grade));
@@ -166,4 +166,36 @@ test('malformed boundaries fail clearly; empty BOM and unavailable dataset are d
   // Missing conditions normalise to unknown (null), never to 0.
   const partial = buildEvidenceTriage({ conditions: {}, materials: [ROVER[0]] }, actual);
   assert.deepEqual(Object.values(partial.conditions), [null, null, null, null, null, null]);
+});
+
+test('tested_conditions are exact dataset values (null unknown, 0 kept) and source_notes keep provenance caveats', () => {
+  const t = buildEvidenceTriage({ conditions: COND, materials: [ROVER[0]] }, actual);
+  const u = t.items[0].candidates.find((c) => c.evidence_id === 'U25-01-L');
+  const row = actual.evidence.find((r) => r.evidence_id === 'U25-01-L');
+  assert.equal(u.tested_conditions.gravity_g, row.gravity_g);
+  assert.equal(u.tested_conditions.flow_speed_cm_s, null, 'blank flow stays null, not 0');
+  assert.equal(u.tested_conditions.external_heat_flux_kw_m2, null);
+  assert.equal(u.tested_conditions.endpoint, row.endpoint);
+  assert.ok('outcome' in u.tested_conditions);
+  assert.match(u.source_notes, /1\/6 g; 0\.16 g is project normalization/);
+  assert.match(u.source_notes, /form sheet is inferred/);
+  assert.match(u.source_notes, /CORRECTION NEEDED/);
+  assert.match(u.source_notes, /Research status: HOLD_scientific_review/);
+  assert.match(u.source_notes, /Gravity context: simulated lunar acceleration in centrifuge/);
+  const b1 = t.items[0].candidates.find((c) => c.evidence_id === 'PSI25-B1');
+  assert.equal(b1.tested_conditions.gravity_g, 0, '0 g stays 0');
+  const syn = buildEvidenceTriage(synQuery(), synData([SYN])).items[0].candidates[0];
+  assert.equal(syn.source_notes, null);
+  assert.equal(syn.tested_conditions.external_heat_flux_kw_m2, 0);
+});
+
+test('gravity next action never bounds, interpolates or predicts partial-gravity behaviour', () => {
+  for (const g of [0.16, 0.38, 1, 0]) {
+    const t = buildEvidenceTriage({ conditions: { ...COND, gravity_g: g }, materials: ROVER }, actual);
+    for (const a of t.items.flatMap((i) => i.next_actions).filter((x) => x.kind === 'investigate_gravity_mismatch')) {
+      assert.doesNotMatch(a.message, /bound|bracket|interpolat|extrapolat|predict|between 0 g and 1 g|no direct (lunar|partial)/i, a.message);
+      assert.match(a.message, /context only/);
+    }
+  }
+  assert.doesNotMatch(JSON.stringify(buildEvidenceTriage({ conditions: COND, materials: ROVER }, actual).limitations), /bounds? (it|by|between)|bracket|between 0 g and 1 g/i);
 });

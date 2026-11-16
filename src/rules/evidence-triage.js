@@ -90,6 +90,22 @@ function gaps(request, row) {
   return { missing, conflicts };
 }
 
+// Exact tested values from the dataset row, so a brief stays self-contained. Unknown = null; 0 kept.
+export const TESTED_FIELDS = Object.freeze([...TRIAGE_FIELDS, 'outcome']);
+function testedConditions(row) {
+  return Object.fromEntries(TESTED_FIELDS.map((k) => [k, present(row[k]) ? row[k] : null]));
+}
+// Existing dataset notes and caveats, verbatim and labelled; null when the row has none.
+function sourceNotes(row) {
+  const str = (v) => (typeof v === 'string' && v.trim() ? v.trim() : null);
+  const notes = str(row.notes);
+  const caveat = str(row.caveat);
+  const parts = [notes, caveat && !(notes ?? '').includes(caveat) ? `Caveat: ${caveat}` : null,
+    str(row.gravity_context) && `Gravity context: ${str(row.gravity_context)}`, str(row.research_status) && `Research status: ${str(row.research_status)}`];
+  const out = parts.filter(Boolean).join(' ');
+  return out || null;
+}
+
 function fmt(v) { return present(v) ? String(v) : 'not stated'; }
 
 // Ordered research steps: supply query fields, gravity mismatch, other conflicts, source gaps, human check.
@@ -110,7 +126,7 @@ function nextActions(item, materialId) {
   if (g.length) {
     const tested = [...new Set(g.map((id) => `${fmt(item.rows.get(id)?.gravity_g)} g`))].join(' or ');
     actions.push({ kind: 'investigate_gravity_mismatch', field: 'gravity_g', evidence_ids: g,
-      message: `Investigate the gravity mismatch: requested ${fmt(item.request.gravity_g)} g vs tested ${tested} in ${g.length} record${g.length === 1 ? '' : 's'}. Partial gravity has no direct data in these sources; results can only bound it between 0 g and 1 g.` });
+      message: `Investigate the gravity mismatch: requested ${fmt(item.request.gravity_g)} g vs tested ${tested} in ${g.length} record${g.length === 1 ? '' : 's'}. Tests at a different gravity are context only and do not establish behaviour at the requested gravity; identify a relevant experiment or an expert-reviewed transfer method.` });
   }
   for (const k of TRIAGE_FIELDS.filter((f) => f !== 'gravity_g')) {
     const hit = ids((c) => c.conflicts.includes(k));
@@ -156,7 +172,7 @@ export function buildEvidenceTriage(cabinQuery, dataset) {
       const review_status = typeof row.review_status === 'string' ? row.review_status : 'unknown';
       return { evidence_id: row.evidence_id, review_status, source: sourceOf(row, dataset.sources),
         grade, rules: rules.map((r) => ({ rule: r.rule, grade: r.grade, why: r.why })),
-        missing_fields: missing, conflicts,
+        missing_fields: missing, conflicts, tested_conditions: testedConditions(row), source_notes: sourceNotes(row),
         review_ready: review_status === 'verified' && grade === 'OK' && !missing.length && !conflicts.length };
     });
     const status = !candidates.length ? 'NO_CANDIDATES' : candidates.some((c) => c.review_ready) ? 'REVIEW_READY' : 'REVIEW_REQUIRED';
