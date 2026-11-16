@@ -6,6 +6,7 @@ import { reviewedGravity, reviewedForm, reviewedEndpoint } from './evidence-prov
 // to the Claude API from the browser. Without a key: retrieved rows + pre-generated insights.
 import { retrieve, buildPrompt, groundingHits, investigationList, NOT_FOUND } from '../rules/retrieve.js';
 import { esc, generatedAnswerHtml, isDecisionRequest, decisionNoticeHtml } from './ask-boundary.js';
+import { EXAMPLE_QUESTIONS, resultsSummaryHtml } from './ask-results.js';
 
 export { esc };
 
@@ -135,14 +136,17 @@ export async function askClaude({ apiKey, question, hits, fetchImpl = fetch, mod
 
 const FORM = `
   <form class="ask-form" data-role="form">
-    <label for="ask-question">Question about the NASA tests</label>
-    <input id="ask-question" name="question" type="text" autocomplete="off" required
-      aria-describedby="ask-help" size="48">
-    <button type="submit">Ask</button>
-    <p id="ask-help" class="type-small text-3">Example: "Which materials were tested at lunar gravity?" REDLINE searches the evidence rows, the investigation catalog and the pre-generated insights in your browser.</p>
+    <p class="ask-mode type-small"><span class="hold-tag">Local evidence search</span> Runs in this browser on the loaded NASA records: no setup, no account, nothing sent anywhere.</p>
+    <label for="ask-question">Ask about the NASA combustion tests</label>
+    <textarea id="ask-question" name="question" rows="3" autocomplete="off" required aria-describedby="ask-help"
+      placeholder="For example: Which PMMA tests ran in microgravity, and at what oxygen?"></textarea>
+    <div class="ask-actions"><button type="submit" class="btn-primary">Find evidence</button></div>
+    <div class="ask-examples" role="group" aria-label="Example questions">${EXAMPLE_QUESTIONS.map((q) =>
+    `<button type="button" class="ask-example" data-example="${esc(q)}">${esc(q)}</button>`).join('')}</div>
+    <p id="ask-help" class="type-small text-3">Enter searches; Shift+Enter adds a line. REDLINE searches the evidence rows, the investigation catalog and the pre-generated insights in your browser and shows the matching records with their original conditions.</p>
   </form>
   <details class="ask-live">
-    <summary>Optional live answer with your own Anthropic API key</summary>
+    <summary>Optional: AI-written discussion with your own Anthropic API key (Claude, ${MODEL})</summary>
     <label for="ask-key">Anthropic API key</label>
     <input id="ask-key" type="password" autocomplete="off" spellcheck="false" data-role="key">
     <button type="button" data-action="forget">Forget key</button>
@@ -150,12 +154,25 @@ const FORM = `
   </details>
   <div role="status" aria-live="polite" class="text-2 type-small" data-role="status"></div>
   <div data-role="answer"></div>
-  <div class="table-scroll" data-role="hits"></div>
+  <div data-role="summary"></div>
+  <details class="ask-table" data-role="hits-wrap"><summary>All retrieved rows as a table</summary>
+  <div class="table-scroll" data-role="hits"></div></details>
   <div data-role="insights"></div>`;
 
 // renderAsk(root, { evidence, investigations, insights }) -> { ask(question) }
+function ensureAskCss(doc) {
+  const head = doc?.head;
+  if (!head || head.querySelector?.('link[data-ask-css]')) return;
+  const link = doc.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = new URL('../styles/ask.css', import.meta.url).href;
+  link.setAttribute('data-ask-css', '');
+  head.append(link);
+}
+
 export function renderAsk(root, data = {}, { requestAnswer = askClaude } = {}) {
   data = data ?? {};
+  try { ensureAskCss(root.ownerDocument); } catch { /* styling is optional */ }
   root.innerHTML = FORM;
   const sources = data.evidence?.sources || {};
   const $ = (role) => root.querySelector(`[data-role="${role}"]`);
@@ -184,12 +201,14 @@ export function renderAsk(root, data = {}, { requestAnswer = askClaude } = {}) {
     } catch {
       $('answer').innerHTML = '';
       $('hits').innerHTML = '';
+      $('summary').innerHTML = '';
       $('insights').innerHTML = '';
       $('status').textContent = 'Error: evidence search could not run. Try again or reload the evidence. This is a search failure, not a finding about coverage.';
       return { hits: [], answer: null, error: 'retrieval failed' };
     }
     hits = Array.isArray(hits) ? hits : [];
     $('answer').innerHTML = unmatched.length && hits.length ? coverageHtml(unmatched) : '';
+    $('summary').innerHTML = resultsSummaryHtml(hits, unmatched, sourceLink);
     $('hits').innerHTML = `<h3 class="type-heading">Retrieved rows (${hits.length})</h3>${hitsTableHtml(hits)}`;
     const related = relatedInsights(hits, data.insights);
     $('insights').innerHTML = related.length
@@ -201,7 +220,7 @@ export function renderAsk(root, data = {}, { requestAnswer = askClaude } = {}) {
       return { hits, answer: null, boundary: 'decision-request' };
     }
     if (!apiKey) {
-      $('status').textContent = `${hits.length} rows retrieved by matching words in your question; they are not an answer. Add an API key for a live answer, or read the rows and insights below.`;
+      $('status').textContent = `${hits.length} rows retrieved by matching words in your question; they are not an answer. Read the matching records below; an AI-written discussion is optional.`;
       return { hits, answer: null };
     }
     const ground = groundingHits(hits);
@@ -225,11 +244,25 @@ export function renderAsk(root, data = {}, { requestAnswer = askClaude } = {}) {
     }
   }
 
+  const field = root.querySelector('#ask-question');
   $('form').addEventListener('submit', (e) => {
     e.preventDefault();
-    const q = root.querySelector('#ask-question').value.trim();
+    const q = field.value.trim();
     if (q) ask(q);
+    else $('status').textContent = 'Enter a question, or choose an example below the field.';
   });
+  // Enter submits, Shift+Enter keeps a newline (multiline composer).
+  field?.addEventListener?.('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+      e.preventDefault();
+      if (typeof $('form').requestSubmit === 'function') $('form').requestSubmit(); else ask(field.value);
+    }
+  });
+  // Example chips fill the field and run the same local search; they never call the API by themselves.
+  (root.querySelectorAll?.('[data-example]') ?? []).forEach((b) => b.addEventListener('click', () => {
+    field.value = b.getAttribute('data-example');
+    ask(field.value);
+  }));
   return { ask, invalidate() { revision++; } };
 }
 
