@@ -1,6 +1,6 @@
 # REDLINE global-submission requirements and finish plan
 
-Updated 16 November 2026, 03:41 UTC. Internal finish target: **06:59 UTC today**, not a verified organizer deadline. Status describes observed evidence, not an eligibility guarantee. Repository artifacts, a saved portal draft and a submitted entry are different states.
+Updated 16 November 2026, 03:56 UTC. Internal finish target: **06:59 UTC today**, not a verified organizer deadline. Status describes observed evidence, not an eligibility guarantee. Repository artifacts, a saved portal draft and a submitted entry are different states.
 
 ## Executive decision
 
@@ -76,15 +76,54 @@ Other required checks: [current submission guide](https://www.spaceappschallenge
 ## Buffet and conductor execution contract
 
 - Real shared GitHub issue queues, actual worker acknowledgement, scoped branches/PRs, explicit handoffs, tests/build before review, default-closed no-AI merger. Queued is not running, PR is not integrated, test pass is not deployment.
-- A2 issue336 owns rover model/scene/viewer, necessary asset/helper, pairedCSV/manifest and rover tests. B2 issue337 owns four-section app shell/layout and focused navigation tests. Both target task/323-upgrade-integration, not independent broad rewrites.
+- B1 explicitly took issue336 after the offline-A2 gate, confirmed at03:48:48. B1 owns model/scene/viewer, necessary asset/helper, pairedCSV/manifest and rover tests. B2 issue337 owns four-section shell/layout and focused navigation tests. A2 now has a distinct priority issue339 for Ask-only composer/results improvements, preserving mountAsk API. No overlap with B2 app entry or B1 rover files. All PRs target task/323-upgrade-integration.
 - B1 issue323 owns evidence/export integration, final package and video last. Coordinator researches, dispatches and independently checks; does not spend the remaining Codex budget implementing parallel features.
 - Preserve current worker processes, authentication and unrelated changes. B2 can inspect the shared laptop's actual A2 failure and restart only its existing launcher if authenticated and absent. If blocked, report rather than invent liveness.
+- A real orchestration bug was found and fixed: B1's read-only wait excluded owner-authored comments, including coordinator instructions. Only that polling process tree was stopped, not the agent. B1 then integrated consumer331. Future waits must consider relevant owner comments and have a short deadline, not silently wait for an absent worker.
 - Nested operational HANDOFF.md only, not conflicting root handoffs. Merger approval only after the exact reviewed head passes. No blind auto-merge, no duplicate conductor, no implicit account switching.
+
+## Peer-team comparison and structural improvement plan
+
+Evidence is only the user's noisy presentation transcript, not the competing app, source code, judging ballot or validated performance data. Its team/product name, precise numbers, implementation quality and current capabilities are unverified. This is not a claim REDLINE is already superior. Borrow the effective problem-to-decision flow, not their footage, branding, unsupported numbers or uninspected implementation.
+
+| Apparent strength in transcript | Integrate into REDLINE's core | Observable proof / honest boundary |
+| --- | --- | --- |
+| A named engineer overwhelmed by experiment data | Start with one concrete material-review question and a single bundled rover+CSV action, not a feature tour. | First useful source-linked result without setup. Scenario is illustrative, not an actual NASA vehicle approval task. |
+| Spatial material map makes the problem tangible | Select actual modeled part -> matching CSV line -> candidate experimental records in the adjacent inspector. | Selection and source identity stay synchronized. Clearly disclose illustrative composition and available geometry. |
+| Change something, see the consequence | Change requested gravity/oxygen/pressure -> explicit applicability or missing-evidence change and next research question. | Counts/flags describe evidence fit, never measured risk reduction, fire propagation or emergency telemetry. |
+| A useful recommendation and report | Recommend a specific evidence review/check, preserve exact source conditions/notes, then export/reopen a reviewer brief. | Judge can audit original source and reconstruct why the requested use remains unsupported. No fabricated safer-material recommendation. |
+| Chat accesses experiment data | A2 issue339: visible question composer, examples, source-first readable answers and a next step from actual matched rows. | Local retrieval works without APIkey. Any generated explanation is separated, unverified and not used as deterministic evidence. |
+| Confident impact story | Demonstrate one complete handoff and the exact uncertainty removed or exposed. | No invented time-saving percentage, accuracy or risk score. A real human comparison would be needed to claim a productivity gain. |
+
+## Adversarial pass and proof of judging value
+
+This is a coordinator's adversarial analysis, not a fabricated independent multi-agent debate. Spend remaining tokens on closing a failure, not on ceremonial debate transcripts. Re-run these objections against the final build, video and page.
+
+| Adversarial question | Required response in the product/demo | Failure condition |
+| --- | --- | --- |
+| Is this just a pretty CAD with links? | Complete part -> BOM -> experimental conditions -> explicit gap -> portable report, using actual files. | Model selection does not change the relevant evidence, or report loses source context. |
+| Does abstaining on everything help anyone? | Show exact mismatch/missing field and a concrete next source-review action; keep unknown and duplicate lines legible. | Every result is merely a warning with no actionable explanation. |
+| Why should anyone trust a generated answer? | Show source text/conditions next to claims, expose draft state, keep model prose outside verified/brief outputs. | A known citation disguises unsupported safety approval or model prose silently becomes evidence. |
+| Can a judge use it immediately? | Open public site, Load demo, select a part, type/click an example prompt and export with no setup. | Blank-looking prompt, required key/install, unusable mobile controls or inaccessible hover-only help. |
+| Why is this better than the peer workflow? | Demonstrate reproducible condition-aware source traceability and explain the gap it makes visible. | Superiority is asserted without actually showing the differentiating behavior. |
+| What demonstrates relevance and impact? | NASA source -> experiment finding -> material-review question -> reviewer handoff, clearly tied to selected challenge. | NASA is only decoration, or unsupported operational/safety benefits dominate. |
+| Is the package eligible and usable? | Current owner-event deadline, accepted terms/route, compliant primary demo and anonymous playback verified. | Beautiful build but inaccessible links, missing required field or no confirmed submission. |
+
+## AI comprehension, model reality and usage controls
+
+- Current inspected Ask implementation is local deterministic retrieval plus stored generated insights and optional browser Claude API with an ephemeral user-provided key. No Ollama/WebLLM runtime implementation was found in src. Do not call this a proven local language model, or treat a ChatGPT/Claude subscription as an app API credential.
+- A2 issue339: obvious labelled multiline composer, real example actions, plain-language result hierarchy, original source cards and limitations/next checks. Preserve existing safety-request bypass, escaping, stale-request invalidation and no-generated-prose-in-brief boundary. Keep current working APIs.
+- Output hierarchy: Question -> What matched -> Source conditions -> What is not established -> Next research check. This is a comprehension design hypothesis, not a proven psychological-performance claim. Acceptance is task completion, keyboard use and legibility, not decorative chat animation.
+- Optional provider/model configuration is useful only when real availability and a real request are verified. Timebox already-installed local-runtime discovery/test to15minutes. No model downloads, public runtime exposure, silent cloud transmission, hardcoded keys, paid purchase or mandatory backend for the deadline build. Additional unvalidated providers are cut before useful no-key search.
+- The requested21th.dev is interpreted as21st.dev. Official component patterns may inform a composer, but do not install an entire design system or unreviewed dependencies just to cite a library. Existing React, React Aria and Lucide are installed. Any copied component needs item-level license/attribution and must preserve the project design rules.
+- Quota remaining/reset times are not currently verified. Do not invent a budget meter or claim quota enforcement. Use actual worker quota/error reports. Existing B1+B2 do scoped implementation, A2 joins only after an actual acknowledgement. No extra reviewer/research-only agents, recursive swarms or duplicated worker processes.
+- Batch independent checks, reuse current tests/capture tools, report compact checkpoints, avoid repeated full-context debates and rapid polling. Maximum one bounded retry for a transient worker error, then report/reassign. No automatic account switching, credential copying or paid top-ups.
+- If A2 has not acknowledged339 by04:05, record it as blocked and explicitly reassign a small Ask patch after the first B2 UI PR, without overlapping B2's existing edits. Do not leave critical AI usability work merely queued until the deadline.
+- Hard gates remain04:35 first usable feature PRs,05:00 featurefreeze,05:30 verified final build,06:10 media,06:40 owner/public-link checks,06:59 finish target. New scope does not move these gates. Qualification or an award is never guaranteed.
 
 ## Current proof and unresolved risks
 
-- Integration producer checkpointb7b4b23:1355tests,1311pass,0fail,44TODO; build passed. Actual11testedfields and original source notes matched inspected row. These are technical tests, not scientific validation.
-- Earlier29c4ccf passed real browser load/conditions/pin/download/reopen, keyboard focus and390px layout. Those results do not certify the not-yet-integrated CAD/sectioned UI.
-- PR328 remains blocked pending consumer331 and final exact-head export/browser acceptance. New336/337 still require implementation and integration. Final media must use the accepted final UI.
+- Producer+consumer integration d27c82b:1360tests,1316pass,0fail,44TODO and build passed. Independent real Chrome157 browser checked all28 exported candidate occurrences against11 exact dataset fields, original notes in actual JSON/Markdown, actual file reopen, keyboard focus,390px document390px,0pageerrors. JSON149702bytes, Markdown88112bytes. These are technical workflow checks, not scientific validation or a live-model evaluation.
+- PR328 remains blocked for final upgraded acceptance. New model336, UI337 and Ask339 still require integration and validation. Passing d27c82b does not certify future changes. Final media must use the accepted final UI.
 - Structural gap: no human-verified dataset or validated performance study. Position REDLINE as traceable research-review/triage assistance, not an operational fire decision authority. Demonstrate an actual audit trail and decision gap instead of fictional safety gains.
 - Eligibility and access risks can defeat even a polished build. Owner-only deadline/nomination/terms/data listing/consent and public links are on the critical path. If these remain unverified, report **prepared prototype, submission eligibility unconfirmed**, not globally ready.
