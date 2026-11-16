@@ -182,8 +182,8 @@
       "o2_pct": 34,
       "status": "planned",
       "context": "Source-dated atmosphere comparison; not a universal EVA procedure",
-      "source_key": "R7-S4",
-      "source_locator": "Table 1, journal p.77 / PDF p.2; ISS 21% rounded from 20.8%",
+      "source_key": "R7-S12",
+      "source_locator": "Section 4.6.3.6, printed p.142 / PDF p.156; generic surface habitat/rover atmosphere 8.2 psia (56.5 kPa) / 34% O2",
       "prebreathe": [
         {
           "minutes": "0–15",
