@@ -1,0 +1,3558 @@
+{
+  "boundary": "Not a safety assessment, recommendation, certification or prediction.",
+  "changes": [
+    {
+      "after": 0.16,
+      "before": 0,
+      "change": "changed",
+      "field": "conditions.gravity_g"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B1].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B6].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B10].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B11].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B12].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B13].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B14].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B15].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B16].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B17].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B18].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B19].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B20].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B21].conflicts"
+    },
+    {
+      "after": [
+        "gravity_g"
+      ],
+      "before": [],
+      "change": "changed",
+      "field": "lines[line-1].candidates[PSI25-B22].conflicts"
+    },
+    {
+      "after": [
+        "o2_pct",
+        "endpoint"
+      ],
+      "before": [
+        "o2_pct",
+        "gravity_g",
+        "endpoint"
+      ],
+      "change": "changed",
+      "field": "lines[line-1].candidates[U25-01-L].conflicts"
+    },
+    {
+      "after": [
+        "form",
+        "o2_pct",
+        "pressure_kpa",
+        "gravity_g"
+      ],
+      "before": [
+        "form",
+        "o2_pct",
+        "pressure_kpa"
+      ],
+      "change": "changed",
+      "field": "lines[line-1].candidates[M25-FS-M].conflicts"
+    },
+    {
+      "after": [
+        "o2_pct",
+        "endpoint"
+      ],
+      "before": [
+        "o2_pct",
+        "gravity_g",
+        "endpoint"
+      ],
+      "change": "changed",
+      "field": "lines[line-2].candidates[U25-03-L].conflicts"
+    },
+    {
+      "after": [
+        "o2_pct",
+        "endpoint"
+      ],
+      "before": [
+        "o2_pct",
+        "gravity_g",
+        "endpoint"
+      ],
+      "change": "changed",
+      "field": "lines[line-2].candidates[U25-04-L].conflicts"
+    },
+    {
+      "after": [
+        "o2_pct",
+        "endpoint"
+      ],
+      "before": [
+        "o2_pct",
+        "gravity_g",
+        "endpoint"
+      ],
+      "change": "changed",
+      "field": "lines[line-3].candidates[U25-02-L].conflicts"
+    },
+    {
+      "after": [
+        "form",
+        "o2_pct",
+        "endpoint"
+      ],
+      "before": [
+        "form",
+        "o2_pct",
+        "gravity_g",
+        "endpoint"
+      ],
+      "change": "changed",
+      "field": "lines[line-4].candidates[U25-06-L].conflicts"
+    },
+    {
+      "after": [
+        "o2_pct",
+        "pressure_kpa",
+        "endpoint"
+      ],
+      "before": [
+        "o2_pct",
+        "pressure_kpa",
+        "gravity_g",
+        "endpoint"
+      ],
+      "change": "changed",
+      "field": "lines[line-4].candidates[OF12-NOMEX-L-MOCSTAR].conflicts"
+    },
+    {
+      "after": [
+        "o2_pct",
+        "pressure_kpa",
+        "endpoint"
+      ],
+      "before": [
+        "o2_pct",
+        "pressure_kpa",
+        "gravity_g",
+        "endpoint"
+      ],
+      "change": "changed",
+      "field": "lines[line-4].candidates[OF12-NOMEX-L-ULOISTAR].conflicts"
+    },
+    {
+      "after": [
+        "o2_pct",
+        "pressure_kpa",
+        "gravity_g",
+        "endpoint"
+      ],
+      "before": [
+        "o2_pct",
+        "pressure_kpa",
+        "endpoint"
+      ],
+      "change": "changed",
+      "field": "lines[line-4].candidates[OF12-NOMEX-0G-MOCSTAR].conflicts"
+    },
+    {
+      "after": [
+        "o2_pct",
+        "pressure_kpa",
+        "gravity_g",
+        "endpoint"
+      ],
+      "before": [
+        "o2_pct",
+        "pressure_kpa",
+        "endpoint"
+      ],
+      "change": "changed",
+      "field": "lines[line-4].candidates[OF12-NOMEX-0G-ULOISTAR].conflicts"
+    }
+  ],
+  "conditions": {
+    "external_heat_flux_kw_m2": null,
+    "flow_direction": null,
+    "flow_speed_cm_s": null,
+    "gravity_g": 0.16,
+    "o2_pct": 34,
+    "pressure_kpa": 56.5
+  },
+  "dataset": {
+    "name": "NASA Physical Sciences Informatics (PSI) Data Repository",
+    "url": "https://psi.nasa.gov/"
+  },
+  "has_baseline": true,
+  "items": [
+    {
+      "candidates": [
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B1",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"100 micron PMMA film   2 cm wide\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.1 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 20 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 103; PDF p. 111; test B1; as-run 7; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B6",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"2 cm 0.1 mm PMMA film\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.1 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 20 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 104; PDF p. 112; test B6; as-run 57; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B10",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"1 cm   0.2 mm PMMA film\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.2 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 10 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 103; PDF p. 111; test B10; as-run 62; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B11",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"2 cm   0.2 mm PMMA film\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.2 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 20 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 103; PDF p. 111; test B11; as-run 61; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B12",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"300 micron film   2 cm wide\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.3 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 20 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 103; PDF p. 111; test B12; as-run 13; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B13",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"2 cm   0.4 mm thick film\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.4 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 20 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 103; PDF p. 111; test B13; as-run 63; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B14",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"1 cm wide 200 micron thick PMMA\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.2 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 10 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 103; PDF p. 111; test B14; as-run 47; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B15",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"2 cm   0.1 mm PMMA film\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.1 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 20 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 103; PDF p. 111; test B15; as-run 59; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B16",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"2 cm 100 micron thick PMMA\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.1 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 20 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 103; PDF p. 111; test B16; as-run 51; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B17",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"1 cm wide 200 micron thick PMMA\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.2 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 10 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 103; PDF p. 111; test B17; as-run 48; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B18",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"1 cm wide 200 micron thick PMMA\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.2 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 10 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 104; PDF p. 112; test B18; as-run 49; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B19",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"2 cm 100 micron thick PMMA\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.1 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 20 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 104; PDF p. 112; test B19; as-run 52; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B20",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"2 cm 100 micron thick PMMA\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.1 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 20 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 104; PDF p. 112; test B20; as-run 50; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B21",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"1 cm wide 200 micron thick PMMA\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.2 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 10 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 104; PDF p. 112; test B21; as-run 121; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "PSI25-B22",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "source.o2_pct",
+            "source.pressure_kpa",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2",
+            "source.endpoint"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"1 cm wide 200 micron thick PMMA\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.2 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row 10 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "Table A.1; printed p. 104; PDF p. 112; test B22; as-run 126; gravity context section 2.1",
+            "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+            "url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "o2_pct",
+            "endpoint"
+          ],
+          "draft": true,
+          "evidence_id": "U25-01-L",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row extinction-5s, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"PMMA\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin sheet vs row sheet"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 0.8 mm"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row concurrent"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "OK",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 56.5 kPa"
+            },
+            {
+              "grade": "OK",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0.16 g"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row drop-tower, a short-duration test"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row extinguishes before end of drop; normally four passes below surviving case"
+            },
+            {
+              "grade": "OK",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 13.5% O2, row uncertainty editorial plot-read allowance +/-0.5 pp O2; experimental uncertainty not stated; method describes 1 pp oxygen separation"
+            }
+          ],
+          "source": {
+            "locator": "slide 14 left blue reference; paper Fig. 7 p. 8",
+            "title": "Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results",
+            "url": "https://ntrs.nasa.gov/api/citations/20250002114/downloads/ICES_2025-392-correctedcaptions.pdf",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "form",
+            "o2_pct",
+            "pressure_kpa",
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "M25-FS-G",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "OK",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row LOC-FS"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"PMMA, black\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "INVALID",
+              "rule": "F",
+              "why": "form: cabin sheet vs row rod"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 12.7 mm"
+            },
+            {
+              "grade": "OK",
+              "rule": "W",
+              "why": "width: cabin not specified vs row rod, where width does not apply"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 100 kPa; differs by more than 10 kPa"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 1 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ground"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row lower-o2; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 18.8% O2, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "p. 3, Task Progress, numeric LOC-FS comparison; p. 2 for material/facility",
+            "title": "Material Ignition and Suppression Test (MIST) in Space Exploration Atmospheres, NASA Task Book FY2025",
+            "url": "https://taskbook.nasaprs.com/tbp/tbpdf.cfm?id=16225",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "form",
+            "o2_pct",
+            "pressure_kpa",
+            "gravity_g"
+          ],
+          "draft": true,
+          "evidence_id": "M25-FS-M",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "OK",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row LOC-FS"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin PMMA (acrylic) vs row \"PMMA, black\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "INVALID",
+              "rule": "F",
+              "why": "form: cabin sheet vs row rod"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row 12.7 mm"
+            },
+            {
+              "grade": "OK",
+              "rule": "W",
+              "why": "width: cabin not specified vs row rod, where width does not apply"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row opposed"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 100 kPa; differs by more than 10 kPa"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ISS"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row lower-o2; pass criterion: query not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 16.2% O2, row uncertainty not stated"
+            }
+          ],
+          "source": {
+            "locator": "p. 3, Task Progress, numeric LOC-FS comparison; p. 2 for material/facility",
+            "title": "Material Ignition and Suppression Test (MIST) in Space Exploration Atmospheres, NASA Task Book FY2025",
+            "url": "https://taskbook.nasaprs.com/tbp/tbpdf.cfm?id=16225",
+            "url_status": "available"
+          }
+        }
+      ],
+      "line_id": "line-1",
+      "line_index": 0,
+      "material_id": "pmma",
+      "name": "Window / display panel",
+      "next_actions": [
+        {
+          "evidence_ids": [
+            "PSI25-B1",
+            "PSI25-B6",
+            "PSI25-B10",
+            "PSI25-B11",
+            "PSI25-B12",
+            "PSI25-B13",
+            "PSI25-B14",
+            "PSI25-B15",
+            "PSI25-B16",
+            "PSI25-B17",
+            "PSI25-B18",
+            "PSI25-B19",
+            "PSI25-B20",
+            "PSI25-B21",
+            "PSI25-B22",
+            "U25-01-L",
+            "M25-FS-G",
+            "M25-FS-M"
+          ],
+          "field": "thickness_mm",
+          "kind": "supply_query_field",
+          "message": "Specify the requested thickness (mm) for this line; 18 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "PSI25-B1",
+            "PSI25-B6",
+            "PSI25-B10",
+            "PSI25-B11",
+            "PSI25-B12",
+            "PSI25-B13",
+            "PSI25-B14",
+            "PSI25-B15",
+            "PSI25-B16",
+            "PSI25-B17",
+            "PSI25-B18",
+            "PSI25-B19",
+            "PSI25-B20",
+            "PSI25-B21",
+            "PSI25-B22",
+            "U25-01-L"
+          ],
+          "field": "width_mm",
+          "kind": "supply_query_field",
+          "message": "Specify the requested width (mm) for this line; 16 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "PSI25-B1",
+            "PSI25-B6",
+            "PSI25-B10",
+            "PSI25-B11",
+            "PSI25-B12",
+            "PSI25-B13",
+            "PSI25-B14",
+            "PSI25-B15",
+            "PSI25-B16",
+            "PSI25-B17",
+            "PSI25-B18",
+            "PSI25-B19",
+            "PSI25-B20",
+            "PSI25-B21",
+            "PSI25-B22",
+            "U25-01-L",
+            "M25-FS-G",
+            "M25-FS-M"
+          ],
+          "field": "flow_speed_cm_s",
+          "kind": "supply_query_field",
+          "message": "Specify the requested flow speed (cm/s) for this line; 18 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "PSI25-B1",
+            "PSI25-B6",
+            "PSI25-B10",
+            "PSI25-B11",
+            "PSI25-B12",
+            "PSI25-B13",
+            "PSI25-B14",
+            "PSI25-B15",
+            "PSI25-B16",
+            "PSI25-B17",
+            "PSI25-B18",
+            "PSI25-B19",
+            "PSI25-B20",
+            "PSI25-B21",
+            "PSI25-B22",
+            "U25-01-L",
+            "M25-FS-G",
+            "M25-FS-M"
+          ],
+          "field": "flow_direction",
+          "kind": "supply_query_field",
+          "message": "Specify the requested flow direction for this line; 18 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "PSI25-B1",
+            "PSI25-B6",
+            "PSI25-B10",
+            "PSI25-B11",
+            "PSI25-B12",
+            "PSI25-B13",
+            "PSI25-B14",
+            "PSI25-B15",
+            "PSI25-B16",
+            "PSI25-B17",
+            "PSI25-B18",
+            "PSI25-B19",
+            "PSI25-B20",
+            "PSI25-B21",
+            "PSI25-B22",
+            "U25-01-L",
+            "M25-FS-G",
+            "M25-FS-M"
+          ],
+          "field": "external_heat_flux_kw_m2",
+          "kind": "supply_query_field",
+          "message": "Specify the requested external heat flux (kW/m2) for this line; 18 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "PSI25-B1",
+            "PSI25-B6",
+            "PSI25-B10",
+            "PSI25-B11",
+            "PSI25-B12",
+            "PSI25-B13",
+            "PSI25-B14",
+            "PSI25-B15",
+            "PSI25-B16",
+            "PSI25-B17",
+            "PSI25-B18",
+            "PSI25-B19",
+            "PSI25-B20",
+            "PSI25-B21",
+            "PSI25-B22",
+            "M25-FS-G",
+            "M25-FS-M"
+          ],
+          "field": "gravity_g",
+          "kind": "investigate_gravity_mismatch",
+          "message": "Investigate the gravity mismatch: requested 0.16 g vs tested 0 g or 1 g in 17 records. Partial gravity has no direct data in these sources; results can only bound it between 0 g and 1 g."
+        },
+        {
+          "evidence_ids": [
+            "M25-FS-G",
+            "M25-FS-M"
+          ],
+          "field": "form",
+          "kind": "inspect_source_condition",
+          "message": "Requested form sheet differs from the tested value in 2 records; confirm the tested condition at the cited locator."
+        },
+        {
+          "evidence_ids": [
+            "U25-01-L",
+            "M25-FS-G",
+            "M25-FS-M"
+          ],
+          "field": "o2_pct",
+          "kind": "inspect_source_condition",
+          "message": "Requested oxygen (%) 34 differs from the tested value in 3 records; confirm the tested condition at the cited locator."
+        },
+        {
+          "evidence_ids": [
+            "M25-FS-G",
+            "M25-FS-M"
+          ],
+          "field": "pressure_kpa",
+          "kind": "inspect_source_condition",
+          "message": "Requested pressure (kPa) 56.5 differs from the tested value in 2 records; confirm the tested condition at the cited locator."
+        },
+        {
+          "evidence_ids": [
+            "U25-01-L"
+          ],
+          "field": "endpoint",
+          "kind": "inspect_source_condition",
+          "message": "1 record reports a non-spread endpoint; check in the cited source whether it answers a flame-spread question."
+        },
+        {
+          "evidence_ids": [
+            "PSI25-B1",
+            "PSI25-B6",
+            "PSI25-B10",
+            "PSI25-B11",
+            "PSI25-B12",
+            "PSI25-B13",
+            "PSI25-B14",
+            "PSI25-B15",
+            "PSI25-B16",
+            "PSI25-B17",
+            "PSI25-B18",
+            "PSI25-B19",
+            "PSI25-B20",
+            "PSI25-B21",
+            "PSI25-B22"
+          ],
+          "field": "o2_pct",
+          "kind": "inspect_source_condition",
+          "message": "15 records do not state oxygen (%) in the dataset; check the cited source locator for it."
+        },
+        {
+          "evidence_ids": [
+            "PSI25-B1",
+            "PSI25-B6",
+            "PSI25-B10",
+            "PSI25-B11",
+            "PSI25-B12",
+            "PSI25-B13",
+            "PSI25-B14",
+            "PSI25-B15",
+            "PSI25-B16",
+            "PSI25-B17",
+            "PSI25-B18",
+            "PSI25-B19",
+            "PSI25-B20",
+            "PSI25-B21",
+            "PSI25-B22"
+          ],
+          "field": "pressure_kpa",
+          "kind": "inspect_source_condition",
+          "message": "15 records do not state pressure (kPa) in the dataset; check the cited source locator for it."
+        },
+        {
+          "evidence_ids": [
+            "PSI25-B1",
+            "PSI25-B6",
+            "PSI25-B10",
+            "PSI25-B11",
+            "PSI25-B12",
+            "PSI25-B13",
+            "PSI25-B14",
+            "PSI25-B15",
+            "PSI25-B16",
+            "PSI25-B17",
+            "PSI25-B18",
+            "PSI25-B19",
+            "PSI25-B20",
+            "PSI25-B21",
+            "PSI25-B22"
+          ],
+          "field": "endpoint",
+          "kind": "inspect_source_condition",
+          "message": "15 records do not state endpoint in the dataset; check the cited source locator for it."
+        },
+        {
+          "evidence_ids": [
+            "PSI25-B1",
+            "PSI25-B6",
+            "PSI25-B10",
+            "PSI25-B11",
+            "PSI25-B12",
+            "PSI25-B13",
+            "PSI25-B14",
+            "PSI25-B15",
+            "PSI25-B16",
+            "PSI25-B17",
+            "PSI25-B18",
+            "PSI25-B19",
+            "PSI25-B20",
+            "PSI25-B21",
+            "PSI25-B22",
+            "U25-01-L",
+            "M25-FS-G",
+            "M25-FS-M"
+          ],
+          "field": null,
+          "kind": "request_human_source_check",
+          "message": "18 draft records need a human check against the cited source before any review use."
+        }
+      ],
+      "next_research_action": "Specify the requested thickness (mm) for this line; 18 candidate records cannot be compared on it until you do.",
+      "requested": {
+        "external_heat_flux_kw_m2": null,
+        "flow_direction": null,
+        "flow_speed_cm_s": null,
+        "form": "sheet",
+        "gravity_g": 0.16,
+        "material_id": "pmma",
+        "o2_pct": 34,
+        "pressure_kpa": 56.5,
+        "thickness_mm": null,
+        "width_mm": null
+      },
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "candidates": [
+        {
+          "conflicts": [
+            "o2_pct",
+            "endpoint"
+          ],
+          "draft": true,
+          "evidence_id": "U25-03-L",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row extinction-5s, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin Cotton vs row \"Cotton Beefy-T\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin fabric vs row fabric"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row concurrent"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "OK",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 56.5 kPa"
+            },
+            {
+              "grade": "OK",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0.16 g"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row drop-tower, a short-duration test"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row extinguishes before end of drop; normally four passes below surviving case"
+            },
+            {
+              "grade": "OK",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 11% O2, row uncertainty editorial plot-read allowance +/-0.5 pp O2; experimental uncertainty not stated; method describes 1 pp oxygen separation"
+            }
+          ],
+          "source": {
+            "locator": "slide 15 left blue reference; paper Fig. 9 p. 8",
+            "title": "Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results",
+            "url": "https://ntrs.nasa.gov/api/citations/20250002114/downloads/ICES_2025-392-correctedcaptions.pdf",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "o2_pct",
+            "endpoint"
+          ],
+          "draft": true,
+          "evidence_id": "U25-04-L",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row extinction-5s, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin Cotton vs row \"Cotton Beefy-T\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin fabric vs row fabric"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row concurrent"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "OK",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 56.5 kPa"
+            },
+            {
+              "grade": "OK",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0.16 g"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row drop-tower, a short-duration test"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row extinguishes before end of drop; normally four passes below surviving case"
+            },
+            {
+              "grade": "OK",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 11% O2, row uncertainty editorial plot-read allowance +/-0.5 pp O2; experimental uncertainty not stated; method describes 1 pp oxygen separation"
+            }
+          ],
+          "source": {
+            "locator": "slide 15 right blue reference; paper Fig. 10 p. 8",
+            "title": "Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results",
+            "url": "https://ntrs.nasa.gov/api/citations/20250002114/downloads/ICES_2025-392-correctedcaptions.pdf",
+            "url_status": "available"
+          }
+        }
+      ],
+      "line_id": "line-2",
+      "line_index": 1,
+      "material_id": "cotton",
+      "name": "Crew clothing",
+      "next_actions": [
+        {
+          "evidence_ids": [
+            "U25-03-L",
+            "U25-04-L"
+          ],
+          "field": "thickness_mm",
+          "kind": "supply_query_field",
+          "message": "Specify the requested thickness (mm) for this line; 2 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-03-L",
+            "U25-04-L"
+          ],
+          "field": "width_mm",
+          "kind": "supply_query_field",
+          "message": "Specify the requested width (mm) for this line; 2 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-03-L",
+            "U25-04-L"
+          ],
+          "field": "flow_speed_cm_s",
+          "kind": "supply_query_field",
+          "message": "Specify the requested flow speed (cm/s) for this line; 2 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-03-L",
+            "U25-04-L"
+          ],
+          "field": "flow_direction",
+          "kind": "supply_query_field",
+          "message": "Specify the requested flow direction for this line; 2 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-03-L",
+            "U25-04-L"
+          ],
+          "field": "external_heat_flux_kw_m2",
+          "kind": "supply_query_field",
+          "message": "Specify the requested external heat flux (kW/m2) for this line; 2 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-03-L",
+            "U25-04-L"
+          ],
+          "field": "o2_pct",
+          "kind": "inspect_source_condition",
+          "message": "Requested oxygen (%) 34 differs from the tested value in 2 records; confirm the tested condition at the cited locator."
+        },
+        {
+          "evidence_ids": [
+            "U25-03-L",
+            "U25-04-L"
+          ],
+          "field": "endpoint",
+          "kind": "inspect_source_condition",
+          "message": "2 records report a non-spread endpoint; check in the cited source whether it answers a flame-spread question."
+        },
+        {
+          "evidence_ids": [
+            "U25-03-L",
+            "U25-04-L"
+          ],
+          "field": null,
+          "kind": "request_human_source_check",
+          "message": "2 draft records need a human check against the cited source before any review use."
+        }
+      ],
+      "next_research_action": "Specify the requested thickness (mm) for this line; 2 candidate records cannot be compared on it until you do.",
+      "requested": {
+        "external_heat_flux_kw_m2": null,
+        "flow_direction": null,
+        "flow_speed_cm_s": null,
+        "form": "fabric",
+        "gravity_g": 0.16,
+        "material_id": "cotton",
+        "o2_pct": 34,
+        "pressure_kpa": 56.5,
+        "thickness_mm": null,
+        "width_mm": null
+      },
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "candidates": [
+        {
+          "conflicts": [
+            "o2_pct",
+            "endpoint"
+          ],
+          "draft": true,
+          "evidence_id": "U25-02-L",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row extinction-5s, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "OK",
+              "rule": "M",
+              "why": "material: cabin P213 tape vs row \"P213 tape\""
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin tape vs row tape"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row concurrent"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "OK",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 56.5 kPa"
+            },
+            {
+              "grade": "OK",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0.16 g"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row drop-tower, a short-duration test"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row extinguishes before end of drop; normally four passes below surviving case"
+            },
+            {
+              "grade": "OK",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 13% O2, row uncertainty editorial plot-read allowance +/-0.5 pp O2; experimental uncertainty not stated; method describes 1 pp oxygen separation"
+            }
+          ],
+          "source": {
+            "locator": "slide 14 right blue reference; paper Fig. 8 p. 8",
+            "title": "Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results",
+            "url": "https://ntrs.nasa.gov/api/citations/20250002114/downloads/ICES_2025-392-correctedcaptions.pdf",
+            "url_status": "available"
+          }
+        }
+      ],
+      "line_id": "line-3",
+      "line_index": 2,
+      "material_id": "p213",
+      "name": "Hardware tape",
+      "next_actions": [
+        {
+          "evidence_ids": [
+            "U25-02-L"
+          ],
+          "field": "thickness_mm",
+          "kind": "supply_query_field",
+          "message": "Specify the requested thickness (mm) for this line; 1 candidate record cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-02-L"
+          ],
+          "field": "width_mm",
+          "kind": "supply_query_field",
+          "message": "Specify the requested width (mm) for this line; 1 candidate record cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-02-L"
+          ],
+          "field": "flow_speed_cm_s",
+          "kind": "supply_query_field",
+          "message": "Specify the requested flow speed (cm/s) for this line; 1 candidate record cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-02-L"
+          ],
+          "field": "flow_direction",
+          "kind": "supply_query_field",
+          "message": "Specify the requested flow direction for this line; 1 candidate record cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-02-L"
+          ],
+          "field": "external_heat_flux_kw_m2",
+          "kind": "supply_query_field",
+          "message": "Specify the requested external heat flux (kW/m2) for this line; 1 candidate record cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-02-L"
+          ],
+          "field": "o2_pct",
+          "kind": "inspect_source_condition",
+          "message": "Requested oxygen (%) 34 differs from the tested value in 1 record; confirm the tested condition at the cited locator."
+        },
+        {
+          "evidence_ids": [
+            "U25-02-L"
+          ],
+          "field": "endpoint",
+          "kind": "inspect_source_condition",
+          "message": "1 record reports a non-spread endpoint; check in the cited source whether it answers a flame-spread question."
+        },
+        {
+          "evidence_ids": [
+            "U25-02-L"
+          ],
+          "field": null,
+          "kind": "request_human_source_check",
+          "message": "1 draft record needs a human check against the cited source before any review use."
+        }
+      ],
+      "next_research_action": "Specify the requested thickness (mm) for this line; 1 candidate record cannot be compared on it until you do.",
+      "requested": {
+        "external_heat_flux_kw_m2": null,
+        "flow_direction": null,
+        "flow_speed_cm_s": null,
+        "form": "tape",
+        "gravity_g": 0.16,
+        "material_id": "p213",
+        "o2_pct": 34,
+        "pressure_kpa": 56.5,
+        "thickness_mm": null,
+        "width_mm": null
+      },
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "candidates": [
+        {
+          "conflicts": [
+            "form",
+            "o2_pct",
+            "endpoint"
+          ],
+          "draft": true,
+          "evidence_id": "U25-06-L",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row extinction-5s, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin Nomex vs row \"Nomex Velcro\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "INVALID",
+              "rule": "F",
+              "why": "form: cabin fabric vs row other"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row concurrent"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "OK",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 56.5 kPa"
+            },
+            {
+              "grade": "OK",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0.16 g"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row drop-tower, a short-duration test"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row extinguishes before end of drop; normally four passes below surviving case"
+            },
+            {
+              "grade": "OK",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 24% O2, row uncertainty editorial plot-read allowance +/-0.5 pp O2; experimental uncertainty not stated; method describes 1 pp oxygen separation"
+            }
+          ],
+          "source": {
+            "locator": "slide 16 right blue reference; paper Fig. 12 p. 9",
+            "title": "Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results",
+            "url": "https://ntrs.nasa.gov/api/citations/20250002114/downloads/ICES_2025-392-correctedcaptions.pdf",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "o2_pct",
+            "pressure_kpa",
+            "gravity_g",
+            "endpoint"
+          ],
+          "draft": true,
+          "evidence_id": "OF12-NOMEX-1G-MOC",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row MOC, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin Nomex vs row \"Nomex HT90-40\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin fabric vs row fabric"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row upward-buoyant"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 1 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ground"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row five Test 1 burn-criterion passes; fail at 1 pp higher O2"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 22.1% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars"
+            }
+          ],
+          "source": {
+            "locator": "Table I p. 6; criteria pp. 2,4; material p. 3",
+            "title": "Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test",
+            "url": "https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "o2_pct",
+            "pressure_kpa",
+            "gravity_g",
+            "endpoint"
+          ],
+          "draft": true,
+          "evidence_id": "OF12-NOMEX-1G-ULOI",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row ULOI, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin Nomex vs row \"Nomex HT90-40\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin fabric vs row fabric"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row upward-buoyant"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 1 g; cross-gravity comparison"
+            },
+            {
+              "grade": "OK",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row ground"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row approximately half pass Test 1 burn criterion"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 23.5% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars"
+            }
+          ],
+          "source": {
+            "locator": "Table I p. 6; criteria pp. 2,4; material p. 3",
+            "title": "Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test",
+            "url": "https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "o2_pct",
+            "pressure_kpa",
+            "endpoint"
+          ],
+          "draft": true,
+          "evidence_id": "OF12-NOMEX-L-MOCSTAR",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row MOC, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin Nomex vs row \"Nomex HT90-40\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin fabric vs row fabric"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row concurrent"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa"
+            },
+            {
+              "grade": "OK",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0.16 g"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row drop-tower, a short-duration test"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row highest O2 extinguishing within drop"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 19.9% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars"
+            }
+          ],
+          "source": {
+            "locator": "Table I p. 6; criteria pp. 2,4; material p. 3",
+            "title": "Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test",
+            "url": "https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "o2_pct",
+            "pressure_kpa",
+            "endpoint"
+          ],
+          "draft": true,
+          "evidence_id": "OF12-NOMEX-L-ULOISTAR",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row ULOI, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin Nomex vs row \"Nomex HT90-40\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin fabric vs row fabric"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row concurrent"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa"
+            },
+            {
+              "grade": "OK",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0.16 g"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row drop-tower, a short-duration test"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row lowest O2 surviving full drop"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 21% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars"
+            }
+          ],
+          "source": {
+            "locator": "Table I p. 6; criteria pp. 2,4; material p. 3",
+            "title": "Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test",
+            "url": "https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "o2_pct",
+            "pressure_kpa",
+            "gravity_g",
+            "endpoint"
+          ],
+          "draft": true,
+          "evidence_id": "OF12-NOMEX-0G-MOCSTAR",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row MOC, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin Nomex vs row \"Nomex HT90-40\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin fabric vs row fabric"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row concurrent"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row 30 cm/s"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row drop-tower, a short-duration test"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row highest O2 extinguishing within drop"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 22% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars"
+            }
+          ],
+          "source": {
+            "locator": "Table I p. 6; criteria pp. 2,4; material p. 3",
+            "title": "Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test",
+            "url": "https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf",
+            "url_status": "available"
+          }
+        },
+        {
+          "conflicts": [
+            "o2_pct",
+            "pressure_kpa",
+            "gravity_g",
+            "endpoint"
+          ],
+          "draft": true,
+          "evidence_id": "OF12-NOMEX-0G-ULOISTAR",
+          "grade": "INVALID",
+          "missing_fields": [
+            "request.thickness_mm",
+            "request.width_mm",
+            "request.flow_speed_cm_s",
+            "request.flow_direction",
+            "request.external_heat_flux_kw_m2"
+          ],
+          "review_ready": false,
+          "review_status": "draft",
+          "rules": [
+            {
+              "grade": "INVALID",
+              "rule": "E",
+              "why": "endpoint: cabin asks about flame spread vs row ULOI, which is not a flame-spread endpoint"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "M",
+              "why": "material: cabin Nomex vs row \"Nomex HT90-40\"; grade, colour or maker may differ"
+            },
+            {
+              "grade": "OK",
+              "rule": "F",
+              "why": "form: cabin fabric vs row fabric"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "T",
+              "why": "thickness: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "W",
+              "why": "width: cabin not specified vs row not stated"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "D",
+              "why": "flow direction: cabin not specified vs row concurrent"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "V",
+              "why": "flow speed: cabin not specified vs row 30 cm/s"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "P",
+              "why": "pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "G",
+              "why": "gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "X",
+              "why": "facility: cabin (long duration) vs row drop-tower, a short-duration test"
+            },
+            {
+              "grade": "OK",
+              "rule": "H",
+              "why": "external heat flux: cabin 0 kW/m2 vs row 0 kW/m2"
+            },
+            {
+              "grade": "OK",
+              "rule": "A",
+              "why": "limit approach: query not specified vs row not stated; pass criterion: query not specified vs row lowest O2 surviving full drop"
+            },
+            {
+              "grade": "FLAG",
+              "rule": "U",
+              "why": "uncertainty: cabin 34% O2 vs row 23% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars"
+            }
+          ],
+          "source": {
+            "locator": "Table I p. 6; criteria pp. 2,4; material p. 3",
+            "title": "Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test",
+            "url": "https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf",
+            "url_status": "available"
+          }
+        }
+      ],
+      "line_id": "line-4",
+      "line_index": 3,
+      "material_id": "nomex",
+      "name": "Seat cover",
+      "next_actions": [
+        {
+          "evidence_ids": [
+            "U25-06-L",
+            "OF12-NOMEX-1G-MOC",
+            "OF12-NOMEX-1G-ULOI",
+            "OF12-NOMEX-L-MOCSTAR",
+            "OF12-NOMEX-L-ULOISTAR",
+            "OF12-NOMEX-0G-MOCSTAR",
+            "OF12-NOMEX-0G-ULOISTAR"
+          ],
+          "field": "thickness_mm",
+          "kind": "supply_query_field",
+          "message": "Specify the requested thickness (mm) for this line; 7 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-06-L",
+            "OF12-NOMEX-1G-MOC",
+            "OF12-NOMEX-1G-ULOI",
+            "OF12-NOMEX-L-MOCSTAR",
+            "OF12-NOMEX-L-ULOISTAR",
+            "OF12-NOMEX-0G-MOCSTAR",
+            "OF12-NOMEX-0G-ULOISTAR"
+          ],
+          "field": "width_mm",
+          "kind": "supply_query_field",
+          "message": "Specify the requested width (mm) for this line; 7 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-06-L",
+            "OF12-NOMEX-1G-MOC",
+            "OF12-NOMEX-1G-ULOI",
+            "OF12-NOMEX-L-MOCSTAR",
+            "OF12-NOMEX-L-ULOISTAR",
+            "OF12-NOMEX-0G-MOCSTAR",
+            "OF12-NOMEX-0G-ULOISTAR"
+          ],
+          "field": "flow_speed_cm_s",
+          "kind": "supply_query_field",
+          "message": "Specify the requested flow speed (cm/s) for this line; 7 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-06-L",
+            "OF12-NOMEX-1G-MOC",
+            "OF12-NOMEX-1G-ULOI",
+            "OF12-NOMEX-L-MOCSTAR",
+            "OF12-NOMEX-L-ULOISTAR",
+            "OF12-NOMEX-0G-MOCSTAR",
+            "OF12-NOMEX-0G-ULOISTAR"
+          ],
+          "field": "flow_direction",
+          "kind": "supply_query_field",
+          "message": "Specify the requested flow direction for this line; 7 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "U25-06-L",
+            "OF12-NOMEX-1G-MOC",
+            "OF12-NOMEX-1G-ULOI",
+            "OF12-NOMEX-L-MOCSTAR",
+            "OF12-NOMEX-L-ULOISTAR",
+            "OF12-NOMEX-0G-MOCSTAR",
+            "OF12-NOMEX-0G-ULOISTAR"
+          ],
+          "field": "external_heat_flux_kw_m2",
+          "kind": "supply_query_field",
+          "message": "Specify the requested external heat flux (kW/m2) for this line; 7 candidate records cannot be compared on it until you do."
+        },
+        {
+          "evidence_ids": [
+            "OF12-NOMEX-1G-MOC",
+            "OF12-NOMEX-1G-ULOI",
+            "OF12-NOMEX-0G-MOCSTAR",
+            "OF12-NOMEX-0G-ULOISTAR"
+          ],
+          "field": "gravity_g",
+          "kind": "investigate_gravity_mismatch",
+          "message": "Investigate the gravity mismatch: requested 0.16 g vs tested 1 g or 0 g in 4 records. Partial gravity has no direct data in these sources; results can only bound it between 0 g and 1 g."
+        },
+        {
+          "evidence_ids": [
+            "U25-06-L"
+          ],
+          "field": "form",
+          "kind": "inspect_source_condition",
+          "message": "Requested form fabric differs from the tested value in 1 record; confirm the tested condition at the cited locator."
+        },
+        {
+          "evidence_ids": [
+            "U25-06-L",
+            "OF12-NOMEX-1G-MOC",
+            "OF12-NOMEX-1G-ULOI",
+            "OF12-NOMEX-L-MOCSTAR",
+            "OF12-NOMEX-L-ULOISTAR",
+            "OF12-NOMEX-0G-MOCSTAR",
+            "OF12-NOMEX-0G-ULOISTAR"
+          ],
+          "field": "o2_pct",
+          "kind": "inspect_source_condition",
+          "message": "Requested oxygen (%) 34 differs from the tested value in 7 records; confirm the tested condition at the cited locator."
+        },
+        {
+          "evidence_ids": [
+            "OF12-NOMEX-1G-MOC",
+            "OF12-NOMEX-1G-ULOI",
+            "OF12-NOMEX-L-MOCSTAR",
+            "OF12-NOMEX-L-ULOISTAR",
+            "OF12-NOMEX-0G-MOCSTAR",
+            "OF12-NOMEX-0G-ULOISTAR"
+          ],
+          "field": "pressure_kpa",
+          "kind": "inspect_source_condition",
+          "message": "Requested pressure (kPa) 56.5 differs from the tested value in 6 records; confirm the tested condition at the cited locator."
+        },
+        {
+          "evidence_ids": [
+            "U25-06-L",
+            "OF12-NOMEX-1G-MOC",
+            "OF12-NOMEX-1G-ULOI",
+            "OF12-NOMEX-L-MOCSTAR",
+            "OF12-NOMEX-L-ULOISTAR",
+            "OF12-NOMEX-0G-MOCSTAR",
+            "OF12-NOMEX-0G-ULOISTAR"
+          ],
+          "field": "endpoint",
+          "kind": "inspect_source_condition",
+          "message": "7 records report a non-spread endpoint; check in the cited source whether it answers a flame-spread question."
+        },
+        {
+          "evidence_ids": [
+            "U25-06-L",
+            "OF12-NOMEX-1G-MOC",
+            "OF12-NOMEX-1G-ULOI",
+            "OF12-NOMEX-L-MOCSTAR",
+            "OF12-NOMEX-L-ULOISTAR",
+            "OF12-NOMEX-0G-MOCSTAR",
+            "OF12-NOMEX-0G-ULOISTAR"
+          ],
+          "field": null,
+          "kind": "request_human_source_check",
+          "message": "7 draft records need a human check against the cited source before any review use."
+        }
+      ],
+      "next_research_action": "Specify the requested thickness (mm) for this line; 7 candidate records cannot be compared on it until you do.",
+      "requested": {
+        "external_heat_flux_kw_m2": null,
+        "flow_direction": null,
+        "flow_speed_cm_s": null,
+        "form": "fabric",
+        "gravity_g": 0.16,
+        "material_id": "nomex",
+        "o2_pct": 34,
+        "pressure_kpa": 56.5,
+        "thickness_mm": null,
+        "width_mm": null
+      },
+      "status": "REVIEW_REQUIRED"
+    }
+  ],
+  "limitations": [
+    "Not a safety assessment, recommendation, certification or prediction.",
+    "Requested conditions are research assumptions; source conditions are those reported by each cited NASA source and can differ from what was requested.",
+    "Draft evidence rows are not verified and need review against the cited source before use.",
+    "Changes describe research assumptions (requested conditions and BOM lines) between two triage snapshots, not real-time spacecraft telemetry.",
+    "Fewer flags, conflicts or missing fields is not a claim of lower fire risk; it only reflects how the cited evidence matches the requested assumptions.",
+    "Lunar or other partial gravity (between 0 g and 1 g) has no direct flammability data in the sources reviewed; behavior there can only be estimated as a range bounded by 0 g and 1 g results, not measured.",
+    "Research-review triage only: not a burn prediction, certification, safety assessment or recommendation.",
+    "REVIEW_READY means a verified row whose stated conditions all match the request, ready for bounded exact-context source review; it does not mean safe.",
+    "Compare grades come from heuristic research rules (compare.js), not a scientific validity gate. Oxygen has no standalone compare rule, so triage compares it directly.",
+    "Unknown requested or source conditions stay unknown; no missing value, including heat flux, is treated as 0.",
+    "Materials match by exact material_id only; no alias mapping. Candidates come from the loaded sources only, not all published literature.",
+    "Summary counts are per candidate occurrence across BOM lines: a row matched on two lines counts twice. verified_count counts verified rows; review_ready_count counts review-ready candidates."
+  ],
+  "scenario_name": "Lunar pressurized rover cabin (illustrative)",
+  "summary": {
+    "candidate_count": 28,
+    "draft_count": 28,
+    "line_count": 4,
+    "review_ready_count": 0,
+    "status_counts": {
+      "NO_CANDIDATES": 0,
+      "REVIEW_READY": 0,
+      "REVIEW_REQUIRED": 4
+    },
+    "verified_count": 0
+  },
+  "title": "REDLINE research brief: Lunar pressurized rover cabin (illustrative)",
+  "version": 1
+}

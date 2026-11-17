@@ -87,9 +87,11 @@ for (const [name, text, count] of [
   assert.equal(out.errors.length > 0, count === 0);
 });
 
-test('college student: all six tab hashes survive refresh and unknown hashes return to Cabin Check', () => {
+test('college student: section and sub-view hashes survive refresh and unknown hashes return to the Model section', () => {
   for (const tab of TABS) assert.equal(tabFromHash(`#${tab}`), tab);
-  assert.equal(tabFromHash('#nonsense'), 'cabin');
+  for (const view of ['gravity', 'oxygen', 'accuracy', 'ask']) assert.equal(tabFromHash(`#${view}`), view);
+  assert.equal(tabFromHash('#cabin'), 'model');
+  assert.equal(tabFromHash('#nonsense'), 'model');
 });
 
 test('college student: initial evidence failure mounts the Ask recovery notice', () => {

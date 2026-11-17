@@ -1,0 +1,608 @@
+# REDLINE research brief: Lunar pressurized rover cabin \(illustrative\)
+
+## Boundary
+
+**Not a safety assessment, recommendation, certification or prediction.**
+
+This brief is a research handoff built from a REDLINE evidence triage. Requested conditions are research assumptions entered by the user. Source conditions are those reported by each cited source; they can differ and are compared by the triage rules listed per row.
+
+Primary dataset: NASA Physical Sciences Informatics \(PSI\) Data Repository <https://psi.nasa.gov/>
+
+## Summary
+
+- 4 BOM lines; 28 candidate evidence rows: 28 draft (not verified), 0 verified, 0 review-ready.
+- Line status: NO_CANDIDATES 0, REVIEW_REQUIRED 4, REVIEW_READY 0.
+
+## Requested conditions (research assumptions)
+
+- o2_pct (requested): 34
+- pressure_kpa (requested): 56.5
+- flow_speed_cm_s (requested): null
+- flow_direction (requested): null
+- gravity_g (requested): 0.16
+- external_heat_flux_kw_m2 (requested): null
+
+## Lines
+
+### Line 1: Window / display panel
+
+- line_id: "line-1"; material_id: "pmma"; status: REVIEW_REQUIRED
+- Requested for this line (assumption): form = "sheet"; material_id = "pmma"; thickness_mm = null; width_mm = null
+- Next research action: Specify the requested thickness \(mm\) for this line; 18 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested width \(mm\) for this line; 16 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested flow speed \(cm/s\) for this line; 18 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested flow direction for this line; 18 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested external heat flux \(kW/m2\) for this line; 18 candidate records cannot be compared on it until you do.
+- Further research action: Investigate the gravity mismatch: requested 0.16 g vs tested 0 g or 1 g in 17 records. Partial gravity has no direct data in these sources; results can only bound it between 0 g and 1 g.
+- Further research action: Requested form sheet differs from the tested value in 2 records; confirm the tested condition at the cited locator.
+- Further research action: Requested oxygen \(%\) 34 differs from the tested value in 3 records; confirm the tested condition at the cited locator.
+- Further research action: Requested pressure \(kPa\) 56.5 differs from the tested value in 2 records; confirm the tested condition at the cited locator.
+- Further research action: 1 record reports a non-spread endpoint; check in the cited source whether it answers a flame-spread question.
+- Further research action: 15 records do not state oxygen \(%\) in the dataset; check the cited source locator for it.
+- Further research action: 15 records do not state pressure \(kPa\) in the dataset; check the cited source locator for it.
+- Further research action: 15 records do not state endpoint in the dataset; check the cited source locator for it.
+- Further research action: 18 draft records need a human check against the cited source before any review use.
+- Evidence PSI25-B1: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111); locator: Table A.1; printed p. 103; PDF p. 111; test B1; as-run 7; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "100 micron PMMA film   2 cm wide"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.1 mm
+  - Rule W: FLAG; width: cabin not specified vs row 20 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B6: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112); locator: Table A.1; printed p. 104; PDF p. 112; test B6; as-run 57; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "2 cm 0.1 mm PMMA film"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.1 mm
+  - Rule W: FLAG; width: cabin not specified vs row 20 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B10: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111); locator: Table A.1; printed p. 103; PDF p. 111; test B10; as-run 62; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "1 cm   0.2 mm PMMA film"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.2 mm
+  - Rule W: FLAG; width: cabin not specified vs row 10 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B11: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111); locator: Table A.1; printed p. 103; PDF p. 111; test B11; as-run 61; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "2 cm   0.2 mm PMMA film"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.2 mm
+  - Rule W: FLAG; width: cabin not specified vs row 20 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B12: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111); locator: Table A.1; printed p. 103; PDF p. 111; test B12; as-run 13; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "300 micron film   2 cm wide"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.3 mm
+  - Rule W: FLAG; width: cabin not specified vs row 20 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B13: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111); locator: Table A.1; printed p. 103; PDF p. 111; test B13; as-run 63; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "2 cm   0.4 mm thick film"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.4 mm
+  - Rule W: FLAG; width: cabin not specified vs row 20 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B14: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111); locator: Table A.1; printed p. 103; PDF p. 111; test B14; as-run 47; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "1 cm wide 200 micron thick PMMA"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.2 mm
+  - Rule W: FLAG; width: cabin not specified vs row 10 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B15: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111); locator: Table A.1; printed p. 103; PDF p. 111; test B15; as-run 59; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "2 cm   0.1 mm PMMA film"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.1 mm
+  - Rule W: FLAG; width: cabin not specified vs row 20 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B16: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111); locator: Table A.1; printed p. 103; PDF p. 111; test B16; as-run 51; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "2 cm 100 micron thick PMMA"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.1 mm
+  - Rule W: FLAG; width: cabin not specified vs row 20 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B17: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=111); locator: Table A.1; printed p. 103; PDF p. 111; test B17; as-run 48; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "1 cm wide 200 micron thick PMMA"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.2 mm
+  - Rule W: FLAG; width: cabin not specified vs row 10 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B18: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112); locator: Table A.1; printed p. 104; PDF p. 112; test B18; as-run 49; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "1 cm wide 200 micron thick PMMA"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.2 mm
+  - Rule W: FLAG; width: cabin not specified vs row 10 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B19: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112); locator: Table A.1; printed p. 104; PDF p. 112; test B19; as-run 52; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "2 cm 100 micron thick PMMA"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.1 mm
+  - Rule W: FLAG; width: cabin not specified vs row 20 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B20: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112); locator: Table A.1; printed p. 104; PDF p. 112; test B20; as-run 50; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "2 cm 100 micron thick PMMA"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.1 mm
+  - Rule W: FLAG; width: cabin not specified vs row 20 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B21: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112); locator: Table A.1; printed p. 104; PDF p. 112; test B21; as-run 121; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "1 cm wide 200 micron thick PMMA"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.2 mm
+  - Rule W: FLAG; width: cabin not specified vs row 10 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence PSI25-B22: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Burning and Suppression of Solids-II \(BASS-II\) Summary Report; NASA/TM-20210011385](https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf#page=112); locator: Table A.1; printed p. 104; PDF p. 112; test B22; as-run 126; gravity context section 2.1
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row not stated, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "1 cm wide 200 micron thick PMMA"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.2 mm
+  - Rule W: FLAG; width: cabin not specified vs row 10 mm
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row not stated
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row not stated, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, source.o2_pct, source.pressure_kpa, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2, source.endpoint
+  - Conflicts: gravity_g
+- Evidence U25-01-L: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results](https://ntrs.nasa.gov/api/citations/20250002114/downloads/ICES_2025-392-correctedcaptions.pdf); locator: slide 14 left blue reference; paper Fig. 7 p. 8
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row extinction-5s, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "PMMA"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin sheet vs row sheet
+  - Rule T: FLAG; thickness: cabin not specified vs row 0.8 mm
+  - Rule W: FLAG; width: cabin not specified vs row not stated
+  - Rule D: FLAG; flow direction: cabin not specified vs row concurrent
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: OK; pressure: cabin 56.5 kPa vs row 56.5 kPa
+  - Rule G: OK; gravity: cabin 0.16 g vs row 0.16 g
+  - Rule X: FLAG; facility: cabin \(long duration\) vs row drop-tower, a short-duration test
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row extinguishes before end of drop; normally four passes below surviving case
+  - Rule U: OK; uncertainty: cabin 34% O2 vs row 13.5% O2, row uncertainty editorial plot-read allowance +/-0.5 pp O2; experimental uncertainty not stated; method describes 1 pp oxygen separation
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: o2_pct; endpoint
+- Evidence M25-FS-G: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Material Ignition and Suppression Test \(MIST\) in Space Exploration Atmospheres, NASA Task Book FY2025](https://taskbook.nasaprs.com/tbp/tbpdf.cfm?id=16225); locator: p. 3, Task Progress, numeric LOC-FS comparison; p. 2 for material/facility
+  - Rule E: OK; endpoint: cabin asks about flame spread vs row LOC-FS
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "PMMA, black"; grade, colour or maker may differ
+  - Rule F: INVALID; form: cabin sheet vs row rod
+  - Rule T: FLAG; thickness: cabin not specified vs row 12.7 mm
+  - Rule W: OK; width: cabin not specified vs row rod, where width does not apply
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row 100 kPa; differs by more than 10 kPa
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 1 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ground
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row lower-o2; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row 18.8% O2, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: form; o2_pct; pressure_kpa; gravity_g
+- Evidence M25-FS-M: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Material Ignition and Suppression Test \(MIST\) in Space Exploration Atmospheres, NASA Task Book FY2025](https://taskbook.nasaprs.com/tbp/tbpdf.cfm?id=16225); locator: p. 3, Task Progress, numeric LOC-FS comparison; p. 2 for material/facility
+  - Rule E: OK; endpoint: cabin asks about flame spread vs row LOC-FS
+  - Rule M: FLAG; material: cabin PMMA \(acrylic\) vs row "PMMA, black"; grade, colour or maker may differ
+  - Rule F: INVALID; form: cabin sheet vs row rod
+  - Rule T: FLAG; thickness: cabin not specified vs row 12.7 mm
+  - Rule W: OK; width: cabin not specified vs row rod, where width does not apply
+  - Rule D: FLAG; flow direction: cabin not specified vs row opposed
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row 100 kPa; differs by more than 10 kPa
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ISS
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row lower-o2; pass criterion: query not specified vs row not stated
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row 16.2% O2, row uncertainty not stated
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: form; o2_pct; pressure_kpa; gravity_g
+
+### Line 2: Crew clothing
+
+- line_id: "line-2"; material_id: "cotton"; status: REVIEW_REQUIRED
+- Requested for this line (assumption): form = "fabric"; material_id = "cotton"; thickness_mm = null; width_mm = null
+- Next research action: Specify the requested thickness \(mm\) for this line; 2 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested width \(mm\) for this line; 2 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested flow speed \(cm/s\) for this line; 2 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested flow direction for this line; 2 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested external heat flux \(kW/m2\) for this line; 2 candidate records cannot be compared on it until you do.
+- Further research action: Requested oxygen \(%\) 34 differs from the tested value in 2 records; confirm the tested condition at the cited locator.
+- Further research action: 2 records report a non-spread endpoint; check in the cited source whether it answers a flame-spread question.
+- Further research action: 2 draft records need a human check against the cited source before any review use.
+- Evidence U25-03-L: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results](https://ntrs.nasa.gov/api/citations/20250002114/downloads/ICES_2025-392-correctedcaptions.pdf); locator: slide 15 left blue reference; paper Fig. 9 p. 8
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row extinction-5s, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin Cotton vs row "Cotton Beefy-T"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin fabric vs row fabric
+  - Rule T: FLAG; thickness: cabin not specified vs row not stated
+  - Rule W: FLAG; width: cabin not specified vs row not stated
+  - Rule D: FLAG; flow direction: cabin not specified vs row concurrent
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: OK; pressure: cabin 56.5 kPa vs row 56.5 kPa
+  - Rule G: OK; gravity: cabin 0.16 g vs row 0.16 g
+  - Rule X: FLAG; facility: cabin \(long duration\) vs row drop-tower, a short-duration test
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row extinguishes before end of drop; normally four passes below surviving case
+  - Rule U: OK; uncertainty: cabin 34% O2 vs row 11% O2, row uncertainty editorial plot-read allowance +/-0.5 pp O2; experimental uncertainty not stated; method describes 1 pp oxygen separation
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: o2_pct; endpoint
+- Evidence U25-04-L: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results](https://ntrs.nasa.gov/api/citations/20250002114/downloads/ICES_2025-392-correctedcaptions.pdf); locator: slide 15 right blue reference; paper Fig. 10 p. 8
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row extinction-5s, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin Cotton vs row "Cotton Beefy-T"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin fabric vs row fabric
+  - Rule T: FLAG; thickness: cabin not specified vs row not stated
+  - Rule W: FLAG; width: cabin not specified vs row not stated
+  - Rule D: FLAG; flow direction: cabin not specified vs row concurrent
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: OK; pressure: cabin 56.5 kPa vs row 56.5 kPa
+  - Rule G: OK; gravity: cabin 0.16 g vs row 0.16 g
+  - Rule X: FLAG; facility: cabin \(long duration\) vs row drop-tower, a short-duration test
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row extinguishes before end of drop; normally four passes below surviving case
+  - Rule U: OK; uncertainty: cabin 34% O2 vs row 11% O2, row uncertainty editorial plot-read allowance +/-0.5 pp O2; experimental uncertainty not stated; method describes 1 pp oxygen separation
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: o2_pct; endpoint
+
+### Line 3: Hardware tape
+
+- line_id: "line-3"; material_id: "p213"; status: REVIEW_REQUIRED
+- Requested for this line (assumption): form = "tape"; material_id = "p213"; thickness_mm = null; width_mm = null
+- Next research action: Specify the requested thickness \(mm\) for this line; 1 candidate record cannot be compared on it until you do.
+- Further research action: Specify the requested width \(mm\) for this line; 1 candidate record cannot be compared on it until you do.
+- Further research action: Specify the requested flow speed \(cm/s\) for this line; 1 candidate record cannot be compared on it until you do.
+- Further research action: Specify the requested flow direction for this line; 1 candidate record cannot be compared on it until you do.
+- Further research action: Specify the requested external heat flux \(kW/m2\) for this line; 1 candidate record cannot be compared on it until you do.
+- Further research action: Requested oxygen \(%\) 34 differs from the tested value in 1 record; confirm the tested condition at the cited locator.
+- Further research action: 1 record reports a non-spread endpoint; check in the cited source whether it answers a flame-spread question.
+- Further research action: 1 draft record needs a human check against the cited source before any review use.
+- Evidence U25-02-L: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results](https://ntrs.nasa.gov/api/citations/20250002114/downloads/ICES_2025-392-correctedcaptions.pdf); locator: slide 14 right blue reference; paper Fig. 8 p. 8
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row extinction-5s, which is not a flame-spread endpoint
+  - Rule M: OK; material: cabin P213 tape vs row "P213 tape"
+  - Rule F: OK; form: cabin tape vs row tape
+  - Rule T: FLAG; thickness: cabin not specified vs row not stated
+  - Rule W: FLAG; width: cabin not specified vs row not stated
+  - Rule D: FLAG; flow direction: cabin not specified vs row concurrent
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: OK; pressure: cabin 56.5 kPa vs row 56.5 kPa
+  - Rule G: OK; gravity: cabin 0.16 g vs row 0.16 g
+  - Rule X: FLAG; facility: cabin \(long duration\) vs row drop-tower, a short-duration test
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row extinguishes before end of drop; normally four passes below surviving case
+  - Rule U: OK; uncertainty: cabin 34% O2 vs row 13% O2, row uncertainty editorial plot-read allowance +/-0.5 pp O2; experimental uncertainty not stated; method describes 1 pp oxygen separation
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: o2_pct; endpoint
+
+### Line 4: Seat cover
+
+- line_id: "line-4"; material_id: "nomex"; status: REVIEW_REQUIRED
+- Requested for this line (assumption): form = "fabric"; material_id = "nomex"; thickness_mm = null; width_mm = null
+- Next research action: Specify the requested thickness \(mm\) for this line; 7 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested width \(mm\) for this line; 7 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested flow speed \(cm/s\) for this line; 7 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested flow direction for this line; 7 candidate records cannot be compared on it until you do.
+- Further research action: Specify the requested external heat flux \(kW/m2\) for this line; 7 candidate records cannot be compared on it until you do.
+- Further research action: Investigate the gravity mismatch: requested 0.16 g vs tested 1 g or 0 g in 4 records. Partial gravity has no direct data in these sources; results can only bound it between 0 g and 1 g.
+- Further research action: Requested form fabric differs from the tested value in 1 record; confirm the tested condition at the cited locator.
+- Further research action: Requested oxygen \(%\) 34 differs from the tested value in 7 records; confirm the tested condition at the cited locator.
+- Further research action: Requested pressure \(kPa\) 56.5 differs from the tested value in 6 records; confirm the tested condition at the cited locator.
+- Further research action: 7 records report a non-spread endpoint; check in the cited source whether it answers a flame-spread question.
+- Further research action: 7 draft records need a human check against the cited source before any review use.
+- Evidence U25-06-L: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results](https://ntrs.nasa.gov/api/citations/20250002114/downloads/ICES_2025-392-correctedcaptions.pdf); locator: slide 16 right blue reference; paper Fig. 12 p. 9
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row extinction-5s, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin Nomex vs row "Nomex Velcro"; grade, colour or maker may differ
+  - Rule F: INVALID; form: cabin fabric vs row other
+  - Rule T: FLAG; thickness: cabin not specified vs row not stated
+  - Rule W: FLAG; width: cabin not specified vs row not stated
+  - Rule D: FLAG; flow direction: cabin not specified vs row concurrent
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: OK; pressure: cabin 56.5 kPa vs row 56.5 kPa
+  - Rule G: OK; gravity: cabin 0.16 g vs row 0.16 g
+  - Rule X: FLAG; facility: cabin \(long duration\) vs row drop-tower, a short-duration test
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row extinguishes before end of drop; normally four passes below surviving case
+  - Rule U: OK; uncertainty: cabin 34% O2 vs row 24% O2, row uncertainty editorial plot-read allowance +/-0.5 pp O2; experimental uncertainty not stated; method describes 1 pp oxygen separation
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: form; o2_pct; endpoint
+- Evidence OF12-NOMEX-1G-MOC: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test](https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf); locator: Table I p. 6; criteria pp. 2,4; material p. 3
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row MOC, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin Nomex vs row "Nomex HT90-40"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin fabric vs row fabric
+  - Rule T: FLAG; thickness: cabin not specified vs row not stated
+  - Rule W: FLAG; width: cabin not specified vs row not stated
+  - Rule D: FLAG; flow direction: cabin not specified vs row upward-buoyant
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 1 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ground
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row five Test 1 burn-criterion passes; fail at 1 pp higher O2
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row 22.1% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: o2_pct; pressure_kpa; gravity_g; endpoint
+- Evidence OF12-NOMEX-1G-ULOI: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test](https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf); locator: Table I p. 6; criteria pp. 2,4; material p. 3
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row ULOI, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin Nomex vs row "Nomex HT90-40"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin fabric vs row fabric
+  - Rule T: FLAG; thickness: cabin not specified vs row not stated
+  - Rule W: FLAG; width: cabin not specified vs row not stated
+  - Rule D: FLAG; flow direction: cabin not specified vs row upward-buoyant
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 1 g; cross-gravity comparison
+  - Rule X: OK; facility: cabin \(long duration\) vs row ground
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row approximately half pass Test 1 burn criterion
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row 23.5% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: o2_pct; pressure_kpa; gravity_g; endpoint
+- Evidence OF12-NOMEX-L-MOCSTAR: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test](https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf); locator: Table I p. 6; criteria pp. 2,4; material p. 3
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row MOC, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin Nomex vs row "Nomex HT90-40"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin fabric vs row fabric
+  - Rule T: FLAG; thickness: cabin not specified vs row not stated
+  - Rule W: FLAG; width: cabin not specified vs row not stated
+  - Rule D: FLAG; flow direction: cabin not specified vs row concurrent
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa
+  - Rule G: OK; gravity: cabin 0.16 g vs row 0.16 g
+  - Rule X: FLAG; facility: cabin \(long duration\) vs row drop-tower, a short-duration test
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row highest O2 extinguishing within drop
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row 19.9% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: o2_pct; pressure_kpa; endpoint
+- Evidence OF12-NOMEX-L-ULOISTAR: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test](https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf); locator: Table I p. 6; criteria pp. 2,4; material p. 3
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row ULOI, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin Nomex vs row "Nomex HT90-40"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin fabric vs row fabric
+  - Rule T: FLAG; thickness: cabin not specified vs row not stated
+  - Rule W: FLAG; width: cabin not specified vs row not stated
+  - Rule D: FLAG; flow direction: cabin not specified vs row concurrent
+  - Rule V: FLAG; flow speed: cabin not specified vs row not stated
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa
+  - Rule G: OK; gravity: cabin 0.16 g vs row 0.16 g
+  - Rule X: FLAG; facility: cabin \(long duration\) vs row drop-tower, a short-duration test
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row lowest O2 surviving full drop
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row 21% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: o2_pct; pressure_kpa; endpoint
+- Evidence OF12-NOMEX-0G-MOCSTAR: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test](https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf); locator: Table I p. 6; criteria pp. 2,4; material p. 3
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row MOC, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin Nomex vs row "Nomex HT90-40"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin fabric vs row fabric
+  - Rule T: FLAG; thickness: cabin not specified vs row not stated
+  - Rule W: FLAG; width: cabin not specified vs row not stated
+  - Rule D: FLAG; flow direction: cabin not specified vs row concurrent
+  - Rule V: FLAG; flow speed: cabin not specified vs row 30 cm/s
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: FLAG; facility: cabin \(long duration\) vs row drop-tower, a short-duration test
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row highest O2 extinguishing within drop
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row 22% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: o2_pct; pressure_kpa; gravity_g; endpoint
+- Evidence OF12-NOMEX-0G-ULOISTAR: review status draft (draft, not verified); grade INVALID; review-ready no
+  - Citation: [Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test](https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf); locator: Table I p. 6; criteria pp. 2,4; material p. 3
+  - Rule E: INVALID; endpoint: cabin asks about flame spread vs row ULOI, which is not a flame-spread endpoint
+  - Rule M: FLAG; material: cabin Nomex vs row "Nomex HT90-40"; grade, colour or maker may differ
+  - Rule F: OK; form: cabin fabric vs row fabric
+  - Rule T: FLAG; thickness: cabin not specified vs row not stated
+  - Rule W: FLAG; width: cabin not specified vs row not stated
+  - Rule D: FLAG; flow direction: cabin not specified vs row concurrent
+  - Rule V: FLAG; flow speed: cabin not specified vs row 30 cm/s
+  - Rule P: FLAG; pressure: cabin 56.5 kPa vs row 101.3 kPa; differs by more than 10 kPa
+  - Rule G: FLAG; gravity: cabin 0.16 g vs row 0 g; cross-gravity comparison
+  - Rule X: FLAG; facility: cabin \(long duration\) vs row drop-tower, a short-duration test
+  - Rule H: OK; external heat flux: cabin 0 kW/m2 vs row 0 kW/m2
+  - Rule A: OK; limit approach: query not specified vs row not stated; pass criterion: query not specified vs row lowest O2 surviving full drop
+  - Rule U: FLAG; uncertainty: cabin 34% O2 vs row 23% O2, row uncertainty not stated for this table entry; MOC and ULOI are distinct endpoints, not error bars
+  - Missing or unknown fields (request or source side): request.thickness_mm, request.width_mm, request.flow_speed_cm_s, request.flow_direction, request.external_heat_flux_kw_m2
+  - Conflicts: o2_pct; pressure_kpa; gravity_g; endpoint
+
+## Changes from baseline (research assumptions only)
+
+These changes compare two triage snapshots of research assumptions, not real-time spacecraft telemetry. A change in flags or review counts is not a change in fire risk.
+
+- conditions.gravity_g: 0 → 0.16
+- lines\[line-1\].candidates\[PSI25-B1\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B6\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B10\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B11\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B12\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B13\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B14\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B15\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B16\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B17\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B18\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B19\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B20\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B21\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[PSI25-B22\].conflicts: \[\] → \["gravity_g"\]
+- lines\[line-1\].candidates\[U25-01-L\].conflicts: \["o2_pct","gravity_g","endpoint"\] → \["o2_pct","endpoint"\]
+- lines\[line-1\].candidates\[M25-FS-M\].conflicts: \["form","o2_pct","pressure_kpa"\] → \["form","o2_pct","pressure_kpa","gravity_g"\]
+- lines\[line-2\].candidates\[U25-03-L\].conflicts: \["o2_pct","gravity_g","endpoint"\] → \["o2_pct","endpoint"\]
+- lines\[line-2\].candidates\[U25-04-L\].conflicts: \["o2_pct","gravity_g","endpoint"\] → \["o2_pct","endpoint"\]
+- lines\[line-3\].candidates\[U25-02-L\].conflicts: \["o2_pct","gravity_g","endpoint"\] → \["o2_pct","endpoint"\]
+- lines\[line-4\].candidates\[U25-06-L\].conflicts: \["form","o2_pct","gravity_g","endpoint"\] → \["form","o2_pct","endpoint"\]
+- lines\[line-4\].candidates\[OF12-NOMEX-L-MOCSTAR\].conflicts: \["o2_pct","pressure_kpa","gravity_g","endpoint"\] → \["o2_pct","pressure_kpa","endpoint"\]
+- lines\[line-4\].candidates\[OF12-NOMEX-L-ULOISTAR\].conflicts: \["o2_pct","pressure_kpa","gravity_g","endpoint"\] → \["o2_pct","pressure_kpa","endpoint"\]
+- lines\[line-4\].candidates\[OF12-NOMEX-0G-MOCSTAR\].conflicts: \["o2_pct","pressure_kpa","endpoint"\] → \["o2_pct","pressure_kpa","gravity_g","endpoint"\]
+- lines\[line-4\].candidates\[OF12-NOMEX-0G-ULOISTAR\].conflicts: \["o2_pct","pressure_kpa","endpoint"\] → \["o2_pct","pressure_kpa","gravity_g","endpoint"\]
+
+## Limitations
+
+- Not a safety assessment, recommendation, certification or prediction.
+- Requested conditions are research assumptions; source conditions are those reported by each cited NASA source and can differ from what was requested.
+- Draft evidence rows are not verified and need review against the cited source before use.
+- Changes describe research assumptions \(requested conditions and BOM lines\) between two triage snapshots, not real-time spacecraft telemetry.
+- Fewer flags, conflicts or missing fields is not a claim of lower fire risk; it only reflects how the cited evidence matches the requested assumptions.
+- Lunar or other partial gravity \(between 0 g and 1 g\) has no direct flammability data in the sources reviewed; behavior there can only be estimated as a range bounded by 0 g and 1 g results, not measured.
+- Research-review triage only: not a burn prediction, certification, safety assessment or recommendation.
+- REVIEW_READY means a verified row whose stated conditions all match the request, ready for bounded exact-context source review; it does not mean safe.
+- Compare grades come from heuristic research rules \(compare.js\), not a scientific validity gate. Oxygen has no standalone compare rule, so triage compares it directly.
+- Unknown requested or source conditions stay unknown; no missing value, including heat flux, is treated as 0.
+- Materials match by exact material_id only; no alias mapping. Candidates come from the loaded sources only, not all published literature.
+- Summary counts are per candidate occurrence across BOM lines: a row matched on two lines counts twice. verified_count counts verified rows; review_ready_count counts review-ready candidates.

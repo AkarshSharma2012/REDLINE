@@ -16,9 +16,9 @@ test('production React Aria controls retain workspace initialization, selection,
   let workspace, roots = [];
   try {
     const ids = [...document.querySelectorAll('#workspace-toolbar button')].map(b => b.id);
-    document.getElementById('ws-narrow-sources').disabled = true;
+    document.getElementById('ws-view-evidence').disabled = true;
     roots = mountReactControls();
-    assert.equal(ids.length, 14, 'all 14 workspace toolbar buttons');
+    assert.deepEqual(ids, ['ws-view-model', 'ws-view-evidence'], 'stage view switch (#337)');
     assert.equal(roots.length, ids.length);
     assert.equal(mountReactControls().length, 0);
     for (const id of ids) {
@@ -30,44 +30,25 @@ test('production React Aria controls retain workspace initialization, selection,
       assert.equal(b.querySelector('button'), null);
       assert.equal(b.parentElement.style.display, 'contents');
     }
-    assert.equal(document.getElementById('ws-narrow-controls').getAttribute('aria-label'), 'Narrow setup pane');
     let loads = 0;
     workspace = mountWorkspace({ document, window, storage: window.localStorage, motion: null,
       loadViewer: async () => { loads++; return { mountRoverViewer: async () => ({ update() {}, setVisible() {}, destroy() {} }) }; } });
     const click = id => document.getElementById(id).click();
     assert.equal(loads, 0);
-    click('ws-narrow-sources');
-    assert.equal(workspace.getPrefs().sources, 400, 'initial disabled retained');
-    document.getElementById('ws-narrow-sources').disabled = false;
-    click('ws-narrow-sources');
-    assert.equal(workspace.getPrefs().sources, 380, 'imperative enable works');
-    click('ws-widen-controls');
-    assert.equal(workspace.getPrefs().controls, 260);
-    click('ws-toggle-controls');
-    assert.equal(workspace.getPrefs().controlsOpen, false);
-    click('ws-density-compact');
-    assert.equal(workspace.getPrefs().density, 'compact');
-    const compact = document.getElementById('ws-density-compact');
-    compact.dispatchEvent(new window.MouseEvent('mouseover', { bubbles: true }));
-    await new Promise(resolve => setTimeout(resolve, 20));
-    assert.equal(compact.getAttribute('aria-pressed'), 'true', 'Aria internal renders preserve imperative pressed state');
-    compact.disabled = true;
-    click('ws-density-comfortable');
-    compact.dispatchEvent(new window.MouseEvent('mouseout', { bubbles: true }));
-    await new Promise(resolve => setTimeout(resolve, 20));
-    click('ws-density-compact');
-    assert.equal(compact.disabled, true);
-    assert.equal(workspace.getPrefs().density, 'comfortable', 'disabled native click is suppressed');
-    compact.disabled = false;
-    click('ws-density-compact');
-    assert.equal(workspace.getPrefs().density, 'compact');
     click('ws-view-model');
     await workspace.viewerReady();
     assert.equal(loads, 1);
-    assert.equal(document.getElementById('ws-view-model').getAttribute('aria-pressed'), 'true');
-    click('ws-reset');
-    assert.equal(workspace.getPrefs().view, 'evidence');
-    assert.equal(document.getElementById('ws-view-model').getAttribute('aria-pressed'), 'false');
+    const model = document.getElementById('ws-view-model');
+    assert.equal(model.getAttribute('aria-pressed'), 'true');
+    model.dispatchEvent(new window.MouseEvent('mouseover', { bubbles: true }));
+    await new Promise(resolve => setTimeout(resolve, 20));
+    assert.equal(model.getAttribute('aria-pressed'), 'true', 'Aria internal renders preserve imperative pressed state');
+    click('ws-view-evidence');
+    assert.equal(workspace.getPrefs().view, 'model', 'initial disabled retained: native click is suppressed');
+    document.getElementById('ws-view-evidence').disabled = false;
+    click('ws-view-evidence');
+    assert.equal(workspace.getPrefs().view, 'evidence', 'imperative enable works');
+    assert.equal(model.getAttribute('aria-pressed'), 'false');
   } finally {
     workspace?.destroy();
     for (const root of roots) root.unmount();
@@ -82,6 +63,5 @@ test('production React Aria controls retain workspace initialization, selection,
 test('workspace child-combinator button selectors also match through display:contents React hosts', async () => {
   const css = await readFile('src/styles/workspace.css', 'utf8');
   for (const sel of ['.ws-seg > .react-control-host > button', '.ws-seg > .react-control-host + .react-control-host > button',
-    '.ws-seg > .react-control-host:first-child > button', '.ws-seg > .react-control-host:last-child > button',
-    '.ws-jump > .react-control-host > button']) assert.ok(css.includes(sel), sel);
+]) assert.ok(css.includes(sel), sel);
 });
