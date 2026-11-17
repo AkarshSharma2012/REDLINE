@@ -1,11 +1,10 @@
-// #277 three-pane workspace shell: structure, preferences, configuration, viewer
+// #277 workspace shell, recomposed into the #337 four-section Model view: structure, preferences, configuration, viewer
 // failure isolation and motion. Node checks only; visual acceptance is a browser task.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { PREFS_KEY, DEFAULT_PREFS, PANE_BOUNDS, VIEWER_LABEL, sanitizePrefs, readPrefs, writePrefs,
-  resizePane, layoutColumns, mountWorkspace } from '../src/ui/workspace.js';
+import { PREFS_KEY, DEFAULT_PREFS, VIEWER_LABEL, sanitizePrefs, readPrefs, writePrefs, mountWorkspace } from '../src/ui/workspace.js';
 import { createMotion, prefersReducedMotion, GSAP_VERSION } from '../src/ui/workspace-motion.js';
 import { resultForMaterial } from '../src/main.js';
 import { workspaceDoc, memoryStorage } from './fixtures/workspace-dom.mjs';
@@ -14,51 +13,42 @@ const root = new URL('../', import.meta.url);
 const read = p => readFile(new URL(p, root), 'utf8');
 const html = await read('index.html');
 const evidence = JSON.parse(await read('data/evidence.json'));
-const main = html.match(/<main\b[^>]*id="panel-cabin"[^>]*>([\s\S]*?)<\/main>/);
+const model = html.match(/<section id="panel-model"[\s\S]*?(?=<section id="panel-evidence")/);
+const evidenceSec = html.match(/<section id="panel-evidence"[\s\S]*?(?=<section id="panel-investigations")/);
 
-test('cabin panel is a three-pane workspace that keeps every existing ID and control', () => {
-  assert.ok(main, 'main#panel-cabin');
-  assert.match(main[0], /class="layout workspace"/);
-  const panes = [...main[1].matchAll(/<section\b[^>]*id="(ws-pane-[a-z]+)"/g)].map(m => m[1]);
-  assert.deepEqual(panes, ['ws-pane-controls', 'ws-pane-sources', 'ws-pane-visual']);
-  for (const id of ['rover-demo', 'rover-note', 'cabin-form', 'status', 'results-table', 'fixes', 'evidence-panel',
-    'cabin-heading', 'results-heading', 'evidence-heading', 'ws-sources', 'ws-materials', 'ws-source-detail', 'rover-viewer-root']) {
-    assert.match(main[1], new RegExp(`id="${id}"`), id);
+test('Model section: BOM sidebar, center viewer, summary bar and inspector keep every existing ID', () => {
+  assert.ok(model && evidenceSec);
+  assert.match(html, /<main id="app-main" class="workspace"/);
+  const panes = [...model[0].matchAll(/<section\b[^>]*id="((?:ws-pane-|ws-inspector)[a-z]*)"/g)].map(m => m[1]);
+  assert.deepEqual(panes, ['ws-pane-controls', 'ws-pane-visual', 'ws-inspector']);
+  assert.ok(model[0].indexOf('ws-infobar') < model[0].indexOf('ws-pane-controls'), 'summary sits above the panes');
+  for (const id of ['rover-demo', 'rover-note', 'cabin-form', 'results-table', 'fixes', 'evidence-panel', 'cabin-heading',
+    'results-heading', 'evidence-heading', 'ws-materials', 'rover-viewer-root', 'ws-load-model', 'ws-info-records']) {
+    assert.match(model[0], new RegExp(`id="${id}"`), id);
   }
-  assert.match(main[1], /<div id="rover-viewer-root"[^>]*\bhidden/, 'model area hidden until requested');
-  assert.equal(html.split(VIEWER_LABEL).length - 1, 0, 'shell carries no duplicate caption; the B1 viewer renders it once (#306)');
+  for (const id of ['ws-sources', 'ws-source-detail']) assert.match(evidenceSec[0], new RegExp(`id="${id}"`), id);
+  assert.match(html, /id="status" role="status"/);
+  assert.match(model[0], /<div id="rover-viewer-root"[^>]*\bhidden/, 'model area hidden until requested');
+  assert.equal(html.split(VIEWER_LABEL).length - 1, 0, 'shell carries no duplicate caption; the viewer renders it once (#306)');
   assert.equal(VIEWER_LABEL, 'Illustrative cabin model - not a fire simulation');
 });
 
-test('toolbar offers labelled pane, width, density, view and reset controls plus keyboard separators', () => {
-  assert.match(main[1], /<div id="workspace-toolbar" class="ws-toolbar"[^>]*\bhidden>/, 'toolbar revealed by script');
-  for (const id of ['ws-toggle-controls', 'ws-toggle-sources', 'ws-narrow-controls', 'ws-widen-controls', 'ws-narrow-sources',
-    'ws-widen-sources', 'ws-density-comfortable', 'ws-density-compact', 'ws-view-evidence', 'ws-view-model', 'ws-reset',
-    'ws-jump-controls', 'ws-jump-sources', 'ws-jump-visual']) {
-    assert.match(main[1], new RegExp(`<button type="button" id="${id}"`), id);
-  }
-  for (const pane of ['controls', 'sources']) {
-    const sep = main[1].match(new RegExp(`<div[^>]*id="ws-sep-${pane}"[^>]*>`));
-    assert.ok(sep, pane);
-    assert.match(sep[0], /role="separator"/);
-    assert.match(sep[0], /tabindex="0"/);
-    assert.match(sep[0], new RegExp(`aria-valuemin="${PANE_BOUNDS[pane].min}"`));
-    assert.match(sep[0], new RegExp(`aria-valuemax="${PANE_BOUNDS[pane].max}"`));
-    assert.match(sep[0], new RegExp(`aria-valuenow="${PANE_BOUNDS[pane].default}"`));
-  }
+test('stage toolbar offers labelled Model / Parts only toggles and nothing decorative', () => {
+  const bar = model[0].match(/<div id="workspace-toolbar"[^>]*>([\s\S]*?)<\/div>/);
+  assert.ok(bar);
+  assert.match(bar[0], /role="group" aria-label="Stage view" hidden>/, 'revealed by script');
+  const ids = [...bar[1].matchAll(/<button type="button" id="([^"]+)"/g)].map(m => m[1]);
+  assert.deepEqual(ids, ['ws-view-model', 'ws-view-evidence']);
   assert.match(html, /<link rel="stylesheet" href="src\/styles\/workspace\.css">/);
   assert.doesNotMatch(html, /vendor\/|three|gsap/i, 'no animation or 3D library fetched by the page');
 });
 
 test('workspace CSS is focused, restrained and stacks without page overflow on phones', async () => {
   const css = await read('src/styles/workspace.css');
-  assert.ok(css.split('\n').length < 500);
+  assert.ok(css.split(/\r?\n/).length < 500);
   assert.doesNotMatch(css, /gradient\(|text-shadow|backdrop-filter|blur\(|drop-shadow|box-shadow:\s*0 0 \d+px [^;]*(?:accent|7CB8FF)/i);
-  assert.match(css, /grid-template-columns: var\(--ws-columns/);
   assert.match(css, /@media \(max-width: 1080px\)[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
-  assert.match(css, /\[data-density="compact"\]/);
   assert.match(css, /prefers-reduced-motion/);
-  assert.match(css, /min-height: var\(--control-h\)/, 'workspace controls follow the shared control-height token');
   const tokens = await read('src/styles.css');
   assert.match(tokens, /@media \(pointer: coarse\), \(max-width: 1080px\) \{\s*:root \{ --control-h: 44px;/, '44 px touch targets on touch and narrow screens');
 });
@@ -80,17 +70,11 @@ test('GSAP 3.15.1 core is pinned locally with provenance and a matching checksum
   assert.match(prov, /registry\.npmjs\.org\/gsap\/-\/gsap-3\.15\.1\.tgz/);
 });
 
-test('preferences: defaults, clamping, malformed and stale storage fall back', () => {
+test('preferences: defaults, malformed and stale storage fall back', () => {
   assert.deepEqual(sanitizePrefs(undefined), DEFAULT_PREFS);
-  const clamped = sanitizePrefs({ v: 1, controls: 9999, sources: -5, density: 'compact', view: 'model', controlsOpen: false, sourcesOpen: 'no' });
-  assert.equal(clamped.controls, PANE_BOUNDS.controls.max);
-  assert.equal(clamped.sources, PANE_BOUNDS.sources.min);
-  assert.equal(clamped.density, 'compact');
-  assert.equal(clamped.view, 'model');
-  assert.equal(clamped.controlsOpen, false);
-  assert.equal(clamped.sourcesOpen, true, 'non-boolean ignored');
-  assert.equal(sanitizePrefs({ v: 1, controls: 'NaN', density: 'huge', view: 'flames' }).controls, DEFAULT_PREFS.controls);
-  assert.deepEqual(sanitizePrefs({ v: 0, density: 'compact' }), DEFAULT_PREFS, 'stale version ignored');
+  assert.equal(sanitizePrefs({ v: 2, view: 'model' }).view, 'model');
+  assert.deepEqual(sanitizePrefs({ v: 2, view: 'flames' }), DEFAULT_PREFS);
+  assert.deepEqual(sanitizePrefs({ v: 1, view: 'model' }), DEFAULT_PREFS, 'stale version ignored');
   for (const raw of ['{not json', '[]', 'null', '"x"']) assert.deepEqual(readPrefs(memoryStorage({ [PREFS_KEY]: raw })), DEFAULT_PREFS, raw);
   const denied = { getItem() { throw new Error('denied'); }, setItem() { throw new Error('denied'); } };
   assert.deepEqual(readPrefs(denied), DEFAULT_PREFS);
@@ -98,24 +82,10 @@ test('preferences: defaults, clamping, malformed and stale storage fall back', (
   assert.equal(writePrefs(denied, DEFAULT_PREFS), false);
 });
 
-test('only layout preferences are persisted: no science, verification or scenario', () => {
+test('only the stage view preference is persisted: no science, verification or scenario', () => {
   const store = memoryStorage();
   assert.equal(writePrefs(store, { ...DEFAULT_PREFS, verified: 45, apiKey: 'k', o2_pct: 34, selectedMaterialId: 'pmma' }), true);
-  const saved = JSON.parse(store.data[PREFS_KEY]);
-  assert.deepEqual(Object.keys(saved).sort(), ['controls', 'controlsOpen', 'density', 'sources', 'sourcesOpen', 'v', 'view']);
-});
-
-test('resize is bounded and layout columns follow collapsed panes', () => {
-  let p = resizePane(DEFAULT_PREFS, 'controls', 20);
-  assert.equal(p.controls, DEFAULT_PREFS.controls + 20);
-  p = resizePane(p, 'controls', 10000);
-  assert.equal(p.controls, PANE_BOUNDS.controls.max);
-  p = resizePane(p, 'sources', -10000);
-  assert.equal(p.sources, PANE_BOUNDS.sources.min);
-  assert.deepEqual(resizePane(p, 'visual', 20), p, 'unknown pane unchanged');
-  assert.equal(layoutColumns(DEFAULT_PREFS), '240px 1px 400px 1px minmax(0, 1fr)');
-  assert.equal(layoutColumns({ ...DEFAULT_PREFS, controlsOpen: false }), '0 0 400px 1px minmax(0, 1fr)');
-  assert.equal(layoutColumns({ ...DEFAULT_PREFS, controlsOpen: false, sourcesOpen: false }), '0 0 0 0 minmax(0, 1fr)');
+  assert.deepEqual(Object.keys(JSON.parse(store.data[PREFS_KEY])).sort(), ['v', 'view']);
 });
 
 function mount(opts = {}) {
@@ -128,52 +98,11 @@ function mount(opts = {}) {
   return { doc, storage, ws, selected, $: id => doc.getElementById(id) };
 }
 
-test('settings visibly change the workspace and persist; reset restores defaults', () => {
-  const { $, storage, ws } = mount();
-  const main = $('panel-cabin');
-  assert.equal($('workspace-toolbar').hidden, false);
-  assert.equal(main.style.props['--ws-columns'], layoutColumns(DEFAULT_PREFS));
-  $('ws-widen-controls').click();
-  assert.equal($('ws-sep-controls').getAttribute('aria-valuenow'), '260');
-  assert.match(main.style.props['--ws-columns'], /^260px/);
-  $('ws-toggle-sources').click();
-  assert.equal($('ws-pane-sources').hidden, true);
-  assert.equal($('ws-toggle-sources').getAttribute('aria-pressed'), 'false');
-  assert.equal($('ws-sep-sources').hidden, true);
-  $('ws-density-compact').click();
-  assert.equal(main.getAttribute('data-density'), 'compact');
-  assert.equal($('ws-density-compact').getAttribute('aria-pressed'), 'true');
-  const saved = JSON.parse(storage.data[PREFS_KEY]);
-  assert.equal(saved.controls, 260); assert.equal(saved.sourcesOpen, false); assert.equal(saved.density, 'compact');
-  $('ws-reset').click();
-  assert.deepEqual(ws.getPrefs(), DEFAULT_PREFS);
-  assert.equal($('ws-pane-sources').hidden, false);
-  assert.equal(main.getAttribute('data-density'), 'comfortable');
-});
-
-test('separators resize with keyboard: arrows, Home/End bounds and Enter reset', () => {
-  const { $ } = mount();
-  const sep = $('ws-sep-sources');
-  sep.dispatch('keydown', { key: 'ArrowRight' });
-  assert.equal(sep.getAttribute('aria-valuenow'), '420');
-  sep.dispatch('keydown', { key: 'End' });
-  assert.equal(sep.getAttribute('aria-valuenow'), String(PANE_BOUNDS.sources.max));
-  sep.dispatch('keydown', { key: 'Home' });
-  assert.equal(sep.getAttribute('aria-valuenow'), String(PANE_BOUNDS.sources.min));
-  sep.dispatch('keydown', { key: 'Enter' });
-  assert.equal(sep.getAttribute('aria-valuenow'), String(PANE_BOUNDS.sources.default));
-  sep.dispatch('pointerdown', { clientX: 100, pointerId: 1, button: 0 });
-  sep.dispatch('pointermove', { clientX: 160, pointerId: 1 });
-  sep.dispatch('pointerup', { clientX: 160, pointerId: 1 });
-  assert.equal(sep.getAttribute('aria-valuenow'), String(PANE_BOUNDS.sources.default + 60));
-});
-
-test('invalid stored preferences cannot crash the mount or hide the visual pane', () => {
-  const { $, ws } = mount({ storage: memoryStorage({ [PREFS_KEY]: '{"v":1,"controlsOpen":false,"sourcesOpen":false,"controls":"x"}' }) });
+test('invalid stored preferences cannot crash the mount or hide the stage', () => {
+  const { $, ws } = mount({ storage: memoryStorage({ [PREFS_KEY]: '{"v":2,"view":"x"}' }) });
   assert.equal($('ws-pane-visual').hidden, false);
-  assert.equal(ws.getPrefs().controls, DEFAULT_PREFS.controls);
-  $('ws-toggle-controls').click();
-  assert.equal($('ws-pane-controls').hidden, false, 'collapsed pane is one click away');
+  assert.deepEqual(ws.getPrefs(), DEFAULT_PREFS);
+  assert.equal($('workspace-toolbar').hidden, false);
 });
 
 test('viewer library is not requested in evidence view; failed import keeps HTML material controls', async () => {
@@ -195,7 +124,7 @@ test('viewer gets read-only requested conditions and selection; its picks only c
   const loadViewer = async () => ({
     mountRoverViewer: async (el, { onSelectMaterial }) => { picker = onSelectMaterial; return { update: u => updates.push(u), setVisible: v => visible.push(v), destroy() {} }; },
   });
-  const { $, ws, selected } = mount({ loadViewer, storage: memoryStorage({ [PREFS_KEY]: JSON.stringify({ ...DEFAULT_PREFS, v: 1, view: 'model' }) }) });
+  const { $, ws, selected } = mount({ loadViewer, storage: memoryStorage({ [PREFS_KEY]: JSON.stringify({ ...DEFAULT_PREFS, v: 2, view: 'model' }) }) });
   ws.setEvidence(evidence);
   const conditions = { o2_pct: 34, pressure_kpa: 56.5, gravity_g: 0.16 };
   ws.update({ cabinQuery: { conditions, materials: [{ material_id: 'pmma' }, { material_id: 'nomex' }] } });

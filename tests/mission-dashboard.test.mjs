@@ -101,16 +101,16 @@ test('header stays compact: no grid rail, readable 14 px rail text, scope collap
   assert.doesNotMatch(header, /<details[^>]*\bopen/);
 });
 
-test('tab research-preview labels are compact but keep the full status for assistive tech', () => {
-  for (const view of VIEWS) {
-    const tab = html.match(new RegExp(`id="tab-${view}"[^>]*>([\\s\\S]*?)</button>`))[1];
-    assert.match(tab, /<span class="preview-label" aria-hidden="true">Preview<\/span><span class="sr-only">, Research preview<\/span>$/);
+test('preview sub-view links carry a visible Preview label (#337)', () => {
+  for (const view of VIEWS.filter(v => v !== 'investigations')) {
+    const link = html.match(new RegExp(`<a href="#${view}"[^>]*>([\\s\\S]*?)</a>`))[1];
+    assert.match(link, /<span class="preview-label">Preview<\/span>$/);
   }
 });
 
 test('tabs, panels and primary controls keep IDs and sizes', () => {
   const tabs = [...html.matchAll(/role="tab" id="tab-([^"]+)"/g)].map(m => m[1]);
-  assert.deepEqual(tabs, ['cabin', ...VIEWS]);
+  assert.deepEqual(tabs, ['model', 'evidence', 'investigations', 'brief']);
   assert.match(html, /<button type="button" id="rover-demo" class="btn-primary"[^>]*disabled>/);
   assert.match(css, /button, input, select \{[^}]*min-height: var\(--control-h\);/);
   assert.match(css, /\.tabs \[role="tab"\] \{[^}]*min-height: var\(--bar-h\);/);

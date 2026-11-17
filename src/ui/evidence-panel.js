@@ -19,7 +19,8 @@ function sourceURL(source) {
   try { const u = new URL(source?.url); return ['https:', 'http:'].includes(u.protocol) ? u : null; }
   catch { return null; }
 }
-const isNASA = u => u && (u.hostname === 'nasa.gov' || u.hostname.endsWith('.nasa.gov'));
+// Same NASA host rule as src/schema/validate.js (NASA Task Book is hosted at taskbook.nasaprs.com).
+const isNASA = u => u && (u.hostname === 'nasa.gov' || u.hostname.endsWith('.nasa.gov') || u.hostname === 'taskbook.nasaprs.com');
 const gravityClass = g => !Number.isFinite(g) ? null : g <= 0.01 ? 'micro' : g >= 0.9 ? 'earth' : 'partial';
 
 // S1 entry point. Supply result.query (immutable selected-item snapshot), or options.query.

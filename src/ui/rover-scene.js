@@ -8,6 +8,10 @@ const SELECTED_EMISSIVE = 0x3a3a3a;
 // Selection outline: text-1 hairline edges, so selection reads by shape as well as colour.
 const OUTLINE = 0xe8eaed;
 const DIM_OPACITY = 0.25;
+const XRAY_OPACITY = 0.14;
+// Evidence-review overlay (#336): categorical review state from triage, never risk or probability.
+// Blue = review-ready, red = review required (gaps listed), gray = no record / not evaluated.
+export const EVIDENCE_COLORS = Object.freeze({ 'review-ready': 0x4c9be8, 'review-required': 0xd9534f, 'no-record': 0x8c8c8c });
 
 const HULL = 0x8a93a1;
 const SHELL = 0x6c7584;
@@ -143,6 +147,14 @@ export function buildRoverScene(THREE) {
     outlines.set(materialId, outline);
   }
 
+  const view = { layer: 'cutaway', xray: false, isolateId: null };
+  function applyVisibility() {
+    const isolating = view.isolateId !== null;
+    for (const mesh of occluders) mesh.visible = !isolating && (!shellMeshes.includes(mesh) || view.layer === 'shell');
+    for (const mesh of partList) mesh.visible = !isolating || mesh.userData.materialId === view.isolateId;
+    for (const [id, outline] of outlines) if (isolating && id !== view.isolateId) outline.visible = false;
+  }
+
   rover.updateMatrixWorld(true);
   const anchors = new Map(Object.entries(ANCHORS).map(([id, local]) => [id, rover.localToWorld(new THREE.Vector3(...local))]));
   const sphere = new THREE.Box3().setFromObject(rover).getBoundingSphere(new THREE.Sphere());
@@ -158,7 +170,20 @@ export function buildRoverScene(THREE) {
     occluders,
     partMeshes: id => [...(parts.get(id) ?? [])],
     setLayer(layer) {
-      for (const mesh of shellMeshes) mesh.visible = layer === 'shell';
+      view.layer = layer;
+      applyVisibility();
+    },
+    // X-ray: structure turns translucent so modeled parts show through. Reveals modeled geometry only.
+    setXray(on) {
+      view.xray = Boolean(on);
+      for (const material of structureMaterials.values()) {
+        const opacity = view.xray ? XRAY_OPACITY : 1;
+        const transparent = opacity < 1;
+        if (material.transparent !== transparent) material.needsUpdate = true;
+        Object.assign(material, { opacity, transparent, depthWrite: !transparent });
+      }
+      Object.assign(wheelMaterial, { opacity: view.xray ? XRAY_OPACITY : 1, transparent: view.xray, depthWrite: !view.xray });
+      wheelMaterial.needsUpdate = true;
     },
     setWireframe(on) {
       for (const material of materials) {
@@ -166,12 +191,17 @@ export function buildRoverScene(THREE) {
         if (material.wireframe !== Boolean(on)) { material.wireframe = Boolean(on); material.needsUpdate = true; }
       }
     },
-    applyState({ highlightId = null, inRequest = new Set() } = {}) {
+    // evidence: { materialId: 'review-ready'|'review-required'|'no-record' } or null (overlay off).
+    // isolate: show only the highlighted part (structure, wheels and other parts hidden).
+    applyState({ highlightId = null, inRequest = new Set(), evidence = null, isolate = false } = {}) {
+      view.isolateId = isolate ? highlightId : null;
+      applyVisibility();
       for (const [id, outline] of outlines) outline.visible = id === highlightId;
       for (const mesh of partList) {
         const { materialId, baseColor, baseOpacity } = mesh.userData;
         const selected = materialId === highlightId;
-        mesh.material.color.setHex(selected ? SELECTED_COLOR : baseColor);
+        const tint = evidence && inRequest.has(materialId) ? EVIDENCE_COLORS[evidence[materialId] ?? 'no-record'] : null;
+        mesh.material.color.setHex(selected ? SELECTED_COLOR : tint ?? baseColor);
         mesh.material.emissive.setHex(selected ? SELECTED_EMISSIVE : 0x000000);
         const opacity = inRequest.has(materialId) ? baseOpacity : Math.min(baseOpacity, DIM_OPACITY);
         const transparent = opacity < 1;

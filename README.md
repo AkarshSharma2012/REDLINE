@@ -1,5 +1,11 @@
 ﻿# REDLINE
 
+**Live demo:** https://akarshsharma2012.github.io/REDLINE/
+
+Built in under 30 hours at **NASA Space Apps Challenge 2026 (Seattle)**, Flame in Freefall challenge, by **The Embers**, three students from Interlake High School in Bellevue, WA. Want to back our next build? See [Support the team](#support-the-team).
+
+![REDLINE checking a lunar rover cabin](docs/screenshots/02-cabin-rover.png)
+
 REDLINE is a web-based dashboard for exploring combustion evidence for spacecraft and habitat fire-safety research. Its primary NASA dataset is the [Physical Sciences Informatics (PSI) Data Repository](https://psi.nasa.gov/).
 
 Enter cabin materials and conditions, including oxygen, pressure and airflow. REDLINE uses only verified evidence rows for results and checks whether test conditions are comparable. Results use qualified wording such as **burned in testing at these conditions**, **close to a measured limit**, or **not found in the sources reviewed**. Evidence-backed results link to their NASA sources; a missing result describes a gap in the reviewed evidence, not a conclusion about all testing. If no verified evidence is loaded, no evidence-backed result is available.
@@ -49,10 +55,42 @@ For the 3D camera, use the orbit, zoom and **Reset view** buttons. With the view
 
 The workspace respects reduced-motion preferences. If animation or WebGL is unavailable, the HTML source browser, citation details and cabin-item controls remain usable; the viewer provides a schematic fallback. The model is **illustrative, not a fire simulation**. Inspecting a draft record does not verify it or make it eligible for results. **Zero verified rows cannot produce evidence-backed cabin results.** Model selection does not change review status, establish gravity transfer or validate a cabin design. No universal measured 0 g/1 g gravity bounds are inferred.
 
+## Evidence review workflow
+
+The **Evidence review** panel (Model and evidence pane) turns the cabin setup into a research handoff:
+
+1. Choose **Load lunar rover scenario**. Each BOM line, including duplicates, lists its candidate NASA records; a material with no record is shown as a research task, not as a finding.
+2. Pick a line and a candidate record. The matrix puts the requested conditions beside the source's stated conditions, with the citation and locator. **Unknown** stays unknown (never 0), **Conflict** marks a differing condition, and rod/wire width is **Not applicable**.
+3. **Pin baseline**, then change oxygen, pressure or gravity in Cabin setup. The panel lists which records changed state, condition by condition, and the ordered research questions update.
+4. **Download Markdown brief** / **Download JSON brief**, or **Open brief** to read the exact export. A reviewer can open a downloaded brief file later.
+
+Walkthrough video (96 s, live recording of this build with captions and synthetic narration): [MP4](docs/pitch/walkthrough/redline-evidence-review-walkthrough.mp4), [captions (WebVTT)](docs/pitch/walkthrough/redline-evidence-review-walkthrough.vtt), [transcript](docs/pitch/walkthrough/redline-evidence-review-walkthrough-transcript.md), and the [Markdown](docs/pitch/walkthrough/redline-brief-lunar-pressurized-rover-cabin-illustrative.md) and [JSON](docs/pitch/walkthrough/redline-brief-lunar-pressurized-rover-cabin-illustrative.json) briefs exported on screen. The scenario is illustrative and is not an experimental result.
+
+**Review-ready** means a verified record whose stated conditions all match the request, ready for bounded source review; it is not a safety finding. With the current dataset all 45 records are drafts and 0 are review-ready. Fewer gaps do not mean lower fire risk. The brief is built from data only; Ask REDLINE text is never included.
+
 ## Data sources
 
 The primary dataset is [NASA PSI](https://psi.nasa.gov/), with supporting publications from the [NASA Technical Reports Server](https://ntrs.nasa.gov/). Follow each result's NASA citation and recorded test conditions. See the [data documentation](data/README.md), [source metadata](data/metadata.json), [credits and data attributions](docs/credits.md), and [methods and limitations](docs/methods.md) for provenance, verification status and interpretation limits.
 
 ## Team
 
-**Interlake Embers** — NASA Space Apps Challenge 2026, Seattle; **Flame in Freefall**. NASA researchers and contributing investigators are credited in the [source register](docs/credits.md). REDLINE is an independent challenge project; no NASA endorsement is claimed.
+**The Embers (Interlake Embers)**: Akarsh Sharma, Lakshya Khandelwal and Achintya Akula, Interlake High School, Bellevue, WA. NASA Space Apps Challenge 2026, Seattle; **Flame in Freefall**. NASA researchers and contributing investigators are credited in the [source register](docs/credits.md). REDLINE is an independent challenge project; no NASA endorsement is claimed.
+
+We build fast: REDLINE went from a blank repo to a working, sourced tool in one hackathon weekend, using AI coding agents in parallel with a human-checked evidence pipeline. This season we're entering as many hackathons and student competitions as we can.
+
+## Support the team
+
+We are looking for sponsors and partners for our 2026–27 hackathon season. What helps most:
+
+- **API and cloud credits** (LLM APIs, hosting, GPUs) so we can build at full speed during events.
+- **Tool access** (dev tools, design tools, AI coding tools).
+- **Small grants** for registration, travel to in-person events and hardware.
+- **Mentorship** from engineers in aerospace, AI or the field a challenge is about.
+
+What sponsors get: your logo and a thank-you in this README and every project we ship this season, mentions in our demos and write-ups, and honest feedback on your product from heavy student users.
+
+**Contact:** The Embers, Interlake High School, Bellevue, WA. Parent contact: meenasharma17@gmail.com
+
+### Our sponsors
+
+Your name could be here.

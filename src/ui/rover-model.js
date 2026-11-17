@@ -177,3 +177,34 @@ export function createRenderScheduler({ request, cancel, render }) {
     destroy() { destroyed = true; drop(); },
   };
 }
+
+// Evidence-review overlay input (#336): one categorical state per material from the triage
+// contract (#321). Review state only; never a risk score, probability or safety label.
+export const EVIDENCE_STATE_TEXT = Object.freeze({
+  'review-ready': 'Review-ready (bounded source review)',
+  'review-required': 'Review required (gaps listed)',
+  'no-record': 'No record / not evaluated',
+});
+export function evidenceStatesFromTriage(triage) {
+  const out = {};
+  for (const item of Array.isArray(triage?.items) ? triage.items : []) {
+    const id = item?.material_id;
+    if (typeof id !== 'string') continue;
+    const prev = out[id] ?? { state: 'no-record', records: 0, ready: 0 };
+    const cands = Array.isArray(item.candidates) ? item.candidates : [];
+    const records = Math.max(prev.records, cands.length);
+    const ready = Math.max(prev.ready, cands.filter(c => c?.review_ready === true).length);
+    const state = ready > 0 ? 'review-ready' : records > 0 ? 'review-required' : 'no-record';
+    out[id] = { state, records, ready };
+  }
+  for (const v of Object.values(out)) v.label = `${EVIDENCE_STATE_TEXT[v.state]} · ${v.records} record${v.records === 1 ? '' : 's'} · ${v.ready} ready`;
+  return out;
+}
+export function sanitizeEvidenceStates(states) {
+  if (!states || typeof states !== 'object') return null;
+  const out = {};
+  for (const [id, v] of Object.entries(states)) {
+    if (v && EVIDENCE_STATE_TEXT[v.state] && typeof v.label === 'string') out[id] = { state: v.state, label: v.label };
+  }
+  return out;
+}

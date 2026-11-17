@@ -1,5 +1,6 @@
 // Entry point: loads data/evidence.json and wires the UI to the rules (S1 §2-3).
-// Tabs follow screens.md §1 plus the PSI dashboard (B11) and Ask REDLINE (B12).
+// #337: four top sections (Model, Evidence, Investigations, Review brief); the older screens
+// open as sub-views inside them and keep their hashes (src/ui/section-nav.js).
 // The Investigations tab mounts itself (src/ui/investigations.js has its own <script> tag),
 // independently of the Cabin Check default if evidence.json fails to load.
 import { labelCabin } from './rules/label.js';
@@ -14,14 +15,18 @@ import { loadAccuracyReport, renderAccuracyView } from './ui/accuracy-view.js';
 import { mountAsk } from './ui/ask.js';
 import { validateEvidence } from './schema/validate.js';
 import { mountWorkspace } from './ui/workspace.js';
+import { mountReviewCockpit } from './ui/review-cockpit.js';
+import { triageQuery } from './ui/cockpit-model.js';
+import { evidenceStatesFromTriage } from './ui/rover-model.js';
+import { SECTIONS, routeFromHash, applyRoute, nextSection, wireHelp } from './ui/section-nav.js';
 
 const EVIDENCE_URL = 'data/evidence.json';
 
-export const TABS = ['cabin', 'investigations', 'gravity', 'oxygen', 'accuracy', 'ask'];
+export const TABS = SECTIONS;
 
 // Illustrative lunar pressurized rover cabin (screens.md §7, docs/pitch.md 0:00-0:20).
 // Item uses are hypothetical, not a real rover manifest. Atmosphere: the form's default
-// sourced exploration preset (56.5 kPa / 34% O2, R7-S4); gravity: lunar scenario (0.16 g).
+// sourced exploration preset (56.5 kPa / 34% O2, R7-S12 BVAD 2022 Sec 4.6.3.6); gravity: lunar scenario (0.16 g).
 export const ROVER_DEMO = Object.freeze({
   name: 'Lunar pressurized rover cabin (illustrative)',
   items: Object.freeze([
@@ -42,10 +47,9 @@ export async function loadEvidence(url = EVIDENCE_URL) {
   return evidence;
 }
 
-// tabFromHash('#gravity') -> 'gravity'; anything unknown -> Cabin Check.
+// tabFromHash('#gravity') -> 'gravity' (a view); '#cabin' and anything unknown -> 'model'.
 export function tabFromHash(hash = '') {
-  const id = String(hash).replace(/^#/, '');
-  return TABS.includes(id) ? id : TABS[0];
+  return routeFromHash(hash).view;
 }
 
 // label.js takes only verified rows (S1 §3.2); drafts stay inspectable in the evidence panel.
@@ -84,17 +88,11 @@ function startWorkspace() {
 }
 
 function showTab(id, { focus = false } = {}) {
-  for (const tab of TABS) {
-    const button = document.getElementById(`tab-${tab}`);
-    const panel = document.getElementById(`panel-${tab}`);
-    const active = tab === id;
-    button?.setAttribute('aria-selected', String(active));
-    if (button) button.tabIndex = active ? 0 : -1;
-    if (panel) panel.hidden = !active;
-  }
-  if (focus) document.getElementById(`tab-${id}`)?.focus();
-  workspace?.setActive(id === 'cabin');
-  onShow[id]?.();
+  const route = routeFromHash(id);
+  applyRoute(document, route);
+  if (focus) document.getElementById(`tab-${route.section}`)?.focus();
+  workspace?.setActive(route.section === 'model');
+  onShow[route.view]?.();
 }
 
 const onShow = {};
@@ -105,12 +103,10 @@ function wireTabs() {
     const button = event.target.closest('[role="tab"]');
     if (button) location.hash = button.id.replace('tab-', '');
   });
-  // Arrow keys move between tabs (WAI-ARIA tabs pattern).
+  // Arrow keys, Home and End move between tabs (WAI-ARIA tabs pattern).
   list.addEventListener('keydown', (event) => {
-    const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
-    if (!step) return;
-    const current = TABS.indexOf(tabFromHash(location.hash));
-    const next = TABS[(current + step + TABS.length) % TABS.length];
+    const next = nextSection(routeFromHash(location.hash).section, event.key);
+    if (!next) return;
     event.preventDefault();
     history.replaceState(null, '', `#${next}`);
     showTab(next, { focus: true });
@@ -119,7 +115,24 @@ function wireTabs() {
   showTab(tabFromHash(location.hash));
 }
 
-export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, document: doc = globalThis.document, workspace: ws = null } = {}) {
+// Evidence triage (#321) and research brief (#322) load as optional modules: if either is
+// missing the cockpit says so and Cabin Check keeps working.
+export async function loadReviewEngines(load = (path) => import(path)) {
+  const [triage, brief] = await Promise.allSettled([load('./rules/evidence-triage.js'), load('./rules/research-brief.js')]);
+  return {
+    buildTriage: triage.status === 'fulfilled' ? triage.value.buildEvidenceTriage ?? null : null,
+    brief: brief.status === 'fulfilled' ? brief.value : null,
+  };
+}
+
+// Cockpit input: the same cabin query the labels use, plus BOM line names; duplicates kept.
+export function reviewTriage(formState, evidence, buildTriage) {
+  if (typeof buildTriage !== 'function') throw new Error('evidence triage module unavailable');
+  return buildTriage(triageQuery(buildCabinQuery(formState), formState), evidence);
+}
+
+export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, document: doc = globalThis.document, workspace: ws = null,
+  cockpit = null, buildTriage = null } = {}) {
   const $ = (id) => doc.getElementById(id);
   const verified = verifiedOnly(evidence);
   let cabinQuery = null;
@@ -144,13 +157,29 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
     });
     renderFixes($('fixes'), withQ, context);
     slider?.update(query);
-    ws?.update({ cabinQuery: query, results: withQ });
+    const triage = refreshCockpit(query);
+    // Model overlay (#336): categorical review state per material from the same triage.
+    ws?.update({ cabinQuery: query, results: withQ, evidenceStates: triage ? evidenceStatesFromTriage(triage) : null });
+  }
+
+  // Analysis and exported brief are rebuilt together from the current inputs only.
+  function refreshCockpit(query) {
+    let triage = null;
+    try {
+      triage = reviewTriage(query, evidence, buildTriage);
+      cockpit?.update({ triage, evidence, scenarioName: query.name ?? '' });
+    } catch (err) {
+      cockpit?.clear(`Evidence review unavailable (${err.message}). No analysis or brief is shown.`);
+      return null;
+    }
+    return triage;
   }
 
   // Model or HTML cabin item -> the same engine result and evidence panel as the results table.
   // Works with 0 verified rows, when the table shows no rows: drafts stay inspection only.
   function selectMaterial(materialId) {
     const result = resultForMaterial(shown, materialId);
+    cockpit?.selectLineByMaterial(materialId);
     if (!result) return false;
     $('results-table').querySelectorAll?.('button[aria-pressed]').forEach((b) => b.setAttribute('aria-pressed', 'false'));
     renderEvidencePanel($('evidence-panel'), result, evidence, { query: result.query });
@@ -168,6 +197,9 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
       cabinQuery = null;
       shown = [];
       ws?.update({ cabinQuery: null, results: [] });
+      cockpit?.clear(state.materials.length
+        ? 'Correct the cabin fields to update the review. The previous analysis and brief were cleared.'
+        : 'Add a material or load the lunar rover scenario to start a review.');
       slider?.destroy(); slider = null;
       $('evidence-panel').replaceChildren();
       $('fixes').replaceChildren();
@@ -223,6 +255,7 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
   }
 
   mountForm();
+  current.loadRoverDemo = loadRoverDemo;
   $('rover-demo').disabled = false;
   $('rover-demo').addEventListener('click', loadRoverDemo);
 
@@ -231,7 +264,7 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
     if (!cabinQuery) {
       slider?.destroy(); slider = null;
       root.replaceChildren(Object.assign(doc.createElement('p'), { className: 'text-2',
-        textContent: 'Evaluate a cabin in Cabin Check first (or load the lunar rover demo). The preview holds that cabin\'s items, pressure, airflow and gravity fixed.' }));
+        textContent: 'Evaluate a cabin in Model first (or load the lunar rover demo). The preview holds that cabin\'s items, pressure, airflow and gravity fixed.' }));
       return;
     }
     if (slider) return;
@@ -239,8 +272,8 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
     slider = renderO2Slider(root, {
       cabinQuery, evidence,
       labelCabin: (query, dataset) => evaluateCabin(query, dataset, evaluate),
-      onApply: (next) => { applyConditions(next); location.hash = 'cabin'; },
-      onCancel: () => { location.hash = 'cabin'; },
+      onApply: (next) => { applyConditions(next); location.hash = 'model'; },
+      onCancel: () => { location.hash = 'model'; },
     });
   };
 
@@ -249,14 +282,14 @@ export function wireCabin(evidence, { labelCabin: evaluate = labelCabin, documen
 }
 
 // Shared with the gravity view, which needs no evidence.json and works even if it fails to load.
-const current = { query: () => null, selectMaterial: () => false };
+const current = { query: () => null, selectMaterial: () => false, loadRoverDemo: () => {} };
 
 let gravity = null;
 onShow.gravity = () => {
   gravity?.destroy();
   gravity = renderGravityView(document.getElementById('gravity-view'), {
     request: current.query()?.conditions,
-    onBack: () => { location.hash = 'cabin'; },
+    onBack: () => { location.hash = 'model'; },
   });
 };
 
@@ -264,7 +297,7 @@ async function wireAccuracy(evidence) {
   const root = document.getElementById('accuracy-view');
   try {
     const rows = await loadAccuracyReport();
-    renderAccuracyView(root, rows, { sources: evidence?.sources ?? {}, onBack: () => { location.hash = 'cabin'; } });
+    renderAccuracyView(root, rows, { sources: evidence?.sources ?? {}, onBack: () => { location.hash = 'model'; } });
   } catch (err) {
     root.textContent = `Accuracy report could not be loaded (${err.message}).`;
   }
@@ -289,11 +322,30 @@ function showRail(doc, rows, verified, state) {
   if (verifiedCell) { verifiedCell.textContent = verified; verifiedCell.parentElement?.setAttribute('data-state', state); }
 }
 
+let cockpit = null;
+function startCockpit(brief) {
+  const root = document.getElementById('review-cockpit');
+  if (!root) return null;
+  try {
+    return mountReviewCockpit(root, {
+      brief,
+      onLoadScenario: () => current.loadRoverDemo(),
+      onSelectLine: (item) => workspace?.selectMaterial(item.material_id, { notify: false }),
+    });
+  } catch (err) {
+    root.textContent = `Evidence review could not start (${err.message}).`;
+    return null;
+  }
+}
+
 async function start() {
   startWorkspace();
+  wireHelp(document);
   wireTabs();
   const status = document.getElementById('status');
   status.textContent = 'Loading evidence…';
+  const engines = await loadReviewEngines();
+  cockpit = startCockpit(engines.brief);
   let evidence;
   try {
     evidence = await loadEvidence();
@@ -303,6 +355,7 @@ async function start() {
     retry.addEventListener('click', () => location.reload());
     status.append(retry);
     showRail(document, 'unavailable', 'unavailable', 'unavailable');
+    cockpit?.clear('Evidence file unavailable. No analysis or brief is shown.');
     workspace?.setEvidence(null);
     renderResultsTable(document.getElementById('results-table'), [], {
       state: 'error', onRetry: () => location.reload(),
@@ -314,7 +367,7 @@ async function start() {
   status.textContent = '';
   showDataset(evidence);
   workspace?.setEvidence(evidence);
-  wireCabin(evidence, { workspace });
+  wireCabin(evidence, { workspace, cockpit, buildTriage: engines.buildTriage });
   wireAccuracy(evidence);
   mountAsk(document.getElementById('ask-root'), evidence).catch((err) => {
     document.getElementById('ask-root').textContent = `Ask REDLINE could not start (${err.message}).`;
