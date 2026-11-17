@@ -1,5 +1,11 @@
 ﻿# REDLINE
 
+**Live demo:** https://akarshsharma2012.github.io/REDLINE/
+
+Built in under 30 hours at **NASA Space Apps Challenge 2026 (Seattle)**, Flame in Freefall challenge, by **The Embers**, three students from Interlake High School in Bellevue, WA. Want to back our next build? See [Support the team](#support-the-team).
+
+![REDLINE checking a lunar rover cabin](docs/screenshots/02-cabin-rover.png)
+
 REDLINE is a web-based dashboard for exploring combustion evidence for spacecraft and habitat fire-safety research. Its primary NASA dataset is the [Physical Sciences Informatics (PSI) Data Repository](https://psi.nasa.gov/).
 
 Enter cabin materials and conditions, including oxygen, pressure and airflow. REDLINE uses only verified evidence rows for results and checks whether test conditions are comparable. Results use qualified wording such as **burned in testing at these conditions**, **close to a measured limit**, or **not found in the sources reviewed**. Evidence-backed results link to their NASA sources; a missing result describes a gap in the reviewed evidence, not a conclusion about all testing. If no verified evidence is loaded, no evidence-backed result is available.
@@ -68,4 +74,23 @@ The primary dataset is [NASA PSI](https://psi.nasa.gov/), with supporting public
 
 ## Team
 
-**Interlake Embers** — NASA Space Apps Challenge 2026, Seattle; **Flame in Freefall**. NASA researchers and contributing investigators are credited in the [source register](docs/credits.md). REDLINE is an independent challenge project; no NASA endorsement is claimed.
+**The Embers (Interlake Embers)**: Akarsh Sharma, Lakshya Khandelwal and Achintya Akula, Interlake High School, Bellevue, WA. NASA Space Apps Challenge 2026, Seattle; **Flame in Freefall**. NASA researchers and contributing investigators are credited in the [source register](docs/credits.md). REDLINE is an independent challenge project; no NASA endorsement is claimed.
+
+We build fast: REDLINE went from a blank repo to a working, sourced tool in one hackathon weekend, using AI coding agents in parallel with a human-checked evidence pipeline. This season we're entering as many hackathons and student competitions as we can.
+
+## Support the team
+
+We are looking for sponsors and partners for our 2026–27 hackathon season. What helps most:
+
+- **API and cloud credits** (LLM APIs, hosting, GPUs) so we can build at full speed during events.
+- **Tool access** (dev tools, design tools, AI coding tools).
+- **Small grants** for registration, travel to in-person events and hardware.
+- **Mentorship** from engineers in aerospace, AI or the field a challenge is about.
+
+What sponsors get: your logo and a thank-you in this README and every project we ship this season, mentions in our demos and write-ups, and honest feedback on your product from heavy student users.
+
+**Contact:** The Embers, Interlake High School, Bellevue, WA. Parent contact: meenasharma17@gmail.com
+
+### Our sponsors
+
+Your name could be here.
