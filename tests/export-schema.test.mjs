@@ -59,6 +59,16 @@ test('schema agrees with validator across field mutations and conditional rules'
     assert.equal(matches(row, schema), localErrors.length === 0, JSON.stringify({ row, errors: localErrors }));
   };
   compare(baseline);
+  // #315: complete numbers and a signature cannot override an explicit HOLD.
+  for (const held of data.evidence.filter((row) => row.research_status === 'HOLD_scientific_review')) {
+    for (const review_status of ['draft', 'reviewed', 'verified']) {
+      for (const verified_by of [null, 'synthetic-test-only']) {
+        const row = { ...held, review_status, verified_by };
+        assert.equal(validateEvidence({ ...data, evidence: [row] }).ok, review_status !== 'verified');
+        compare(row);
+      }
+    }
+  }
   for (const { key } of FIELDS) {
     const missing = { ...baseline }; delete missing[key]; compare(missing);
     for (const value of [null, '', '   ', 'invalid', -1, 0, 0.5, 100, 101, true, {}, []]) compare({ ...baseline, [key]: value });
