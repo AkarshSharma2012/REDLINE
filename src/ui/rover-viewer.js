@@ -5,6 +5,7 @@
 import {
   ROVER_PARTS, normalizeViewerState, VIEW_DEFAULT, stepView, viewToPosition, keyToAction,
   readPrefs, writePrefs, capPixelRatio, isClick, pointerToNdc, createRenderScheduler,
+  sanitizeEvidenceStates, EVIDENCE_STATE_TEXT,
 } from './rover-model.js';
 import { buildRoverScene } from './rover-scene.js';
 
@@ -74,6 +75,9 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
   prefs = readPrefs(storage);
   let destroyed = false;
   let three = null; // { renderer, rover, camera, scheduler, ... } while WebGL is live
+  // #336 inspection state (session only): evidence overlay input, overlay on/off, x-ray, isolate.
+  let evidence = null;
+  const inspect = { overlay: true, xray: false, isolate: false };
 
   // Skeleton: frame (stage + right-edge tool strip), information bar holding the one
   // always-visible caption, then the HTML material list that is also the fallback.
@@ -96,7 +100,9 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
   const help = el('p', 'rover-viewer__help', 'With the view focused: arrow keys orbit, + and - zoom, Home resets. Drag to orbit; click a part to select it.');
   help.id = `${uid}-help`;
   help.hidden = true;
-  bar.append(caption, selection, scenario, verification, status, help);
+  const legend = el('p', 'rover-viewer__legend');
+  legend.hidden = true;
+  bar.append(caption, selection, scenario, verification, legend, status, help);
   const listHeading = el('h3', 'rover-viewer__heading', 'Cabin materials');
   listHeading.id = `${uid}-materials`;
   const empty = el('p', 'rover-viewer__empty');
@@ -141,13 +147,17 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
       button.disabled = !part.inRequest;
       const pressed = part.materialId === state.highlightId;
       button.setAttribute('aria-pressed', String(pressed));
-      note.textContent = pressed ? 'Selected' : part.inRequest ? '' : 'Not in current request';
+      note.textContent = [pressed ? 'Selected' : part.inRequest ? '' : 'Not in current request',
+        part.inRequest ? evidence?.[part.materialId]?.label : ''].filter(Boolean).join(' · ');
     }
     empty.textContent = state.materialIds.length ? ''
       : 'No cabin items requested yet. Parts stay dimmed until matching items are added.';
     extras.textContent = state.extraIds.length
       ? `Requested materials without a modeled part: ${state.extraIds.join(', ')}.` : '';
     selection.textContent = selectionText(state);
+    legend.hidden = !(evidence && inspect.overlay && three?.rover);
+    legend.textContent = 'Part colours show evidence review state, not fire risk: blue = '
+      + `${EVIDENCE_STATE_TEXT['review-ready']}; red = ${EVIDENCE_STATE_TEXT['review-required']}; gray = ${EVIDENCE_STATE_TEXT['no-record']}. Draft records are not verified.`;
     scenario.textContent = state.conditions.length
       ? `Requested scenario (user input, not measured): ${state.conditions.map(row => row.text).join(' · ')}`
       : 'Requested scenario (user input): not provided.';
@@ -156,7 +166,8 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
       node.setAttribute('class', `rover-viewer__zone${id === state.highlightId ? ' is-selected' : ''}${state.parts.find(p => p.materialId === id)?.inRequest ? '' : ' is-absent'}`);
     }
     if (three?.rover && three.scheduler) {
-      three.rover.applyState({ highlightId: state.highlightId, inRequest: new Set(state.materialIds) });
+      const states = evidence && inspect.overlay ? Object.fromEntries(Object.entries(evidence).map(([id, v]) => [id, v.state])) : null;
+      three.rover.applyState({ highlightId: state.highlightId, inRequest: new Set(state.materialIds), evidence: states, isolate: inspect.isolate });
       three.scheduler.invalidate();
     }
   }
@@ -274,6 +285,7 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
       wrap.append(...nodes);
       return wrap;
     };
+    const tip = node => { node.setAttribute('data-tip', node.getAttribute('aria-label')); node.setAttribute('class', `${node.getAttribute('class')} rover-viewer__tool--tip`); return node; };
     const savePrefs = () => { writePrefs(storage, prefs); shell.setAttribute('data-layer', prefs.layer); };
     tools.replaceChildren(
       group('Orbit', ...['left', 'right', 'up', 'down']
@@ -292,6 +304,17 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
           node.setAttribute('aria-pressed', String(prefs.wireframe));
           rover.setWireframe(prefs.wireframe); savePrefs(); scheduler.invalidate();
         }, prefs.wireframe)),
+      group('Inspect',
+        tip(button('X-ray: make structure translucent (modeled geometry only)', 'X-ray', node => {
+          inspect.xray = !inspect.xray; node.setAttribute('aria-pressed', String(inspect.xray));
+          rover.setXray(inspect.xray); scheduler.invalidate();
+        }, false)),
+        tip(button('Isolate the selected part', 'Isolate', node => {
+          inspect.isolate = !inspect.isolate; node.setAttribute('aria-pressed', String(inspect.isolate)); render();
+        }, false)),
+        tip(button('Colour parts by evidence review state', 'Evidence', node => {
+          inspect.overlay = !inspect.overlay; node.setAttribute('aria-pressed', String(inspect.overlay)); render();
+        }, true))),
     );
     rover.setLayer(prefs.layer);
     rover.setWireframe(prefs.wireframe);
@@ -387,6 +410,7 @@ export async function mountRoverViewer(root, { onSelectMaterial = () => {}, load
     update(next = {}) {
       if (destroyed) return;
       state = normalizeViewerState(next);
+      evidence = sanitizeEvidenceStates(next.evidenceStates);
       selectedId = state.highlightId;
       render();
     },

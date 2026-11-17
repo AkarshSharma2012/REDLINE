@@ -1,0 +1,101 @@
+{
+  "started_utc": "2026-11-16T03:07:12.025Z",
+  "commit": "29c4ccfe8b738f943cb4e8ce7107619daad0fe6b",
+  "dirty": false,
+  "url": "http://127.0.0.1:59081/",
+  "beats": [
+    {
+      "id": "problem",
+      "start": 0,
+      "end": 10.251
+    },
+    {
+      "id": "load",
+      "start": 10.259,
+      "end": 22.55
+    },
+    {
+      "id": "matrix",
+      "start": 22.567,
+      "end": 34.657
+    },
+    {
+      "id": "baseline",
+      "start": 34.661,
+      "end": 39.891
+    },
+    {
+      "id": "change",
+      "start": 39.895,
+      "end": 45.575
+    },
+    {
+      "id": "changes",
+      "start": 45.62,
+      "end": 53.94
+    },
+    {
+      "id": "questions",
+      "start": 53.953,
+      "end": 59.782
+    },
+    {
+      "id": "export",
+      "start": 59.786,
+      "end": 69.998
+    },
+    {
+      "id": "open",
+      "start": 70.002,
+      "end": 78.844
+    },
+    {
+      "id": "reopen",
+      "start": 79.093,
+      "end": 84.473
+    },
+    {
+      "id": "close",
+      "start": 84.498,
+      "end": 95.468
+    }
+  ],
+  "facts": {
+    "rail": {
+      "rows": "45",
+      "verified": "0"
+    },
+    "summary_loaded": "Lunar pressurized rover cabin (illustrative) · 4 lines · 28 candidate records · 0 verified · 0 review-ready",
+    "changes": "What changed since the pinned baselineRequested gravity: 0 g → 0.16 gReview-ready records: 0 → 0. Candidates: 28 → 28. Fewer gaps do not mean lower fire risk.Record conditions that changed triage state or requested value (28 record-line pairs):Gravity: 18 records on 2 BOM lines with source 0 g (requested 0 g → 0.16 g): no gap listed → conflict, so it cannot support exact-context review.Records and lines (18)M25-FS-M, PSI25-B1, PSI25-B10, PSI25-B11, PSI25-B12, PSI25-B13, PSI25-B14, PSI25-B15, PSI25-B16, PSI25-B17, PSI25-B18, PSI25-B19, PSI25-B20, PSI25-B21, PSI25-B22, PSI25-B6, OF12-NOMEX-0G-MOCSTAR, OF12-NOMEX-0G-ULOISTAR · lines: line-1, line-4Gravity: 7 records on 4 BOM lines with source 0.16 g (requested 0 g → 0.16 g): conflict → no gap listed (triage lists no gap; not a safety finding).Records and lines (7)U25-01-L, U25-03-L, U25-04-L, U25-02-L, OF12-NOMEX-L-MOCSTAR, OF12-NOMEX-L-ULOISTAR, U25-06-L · lines: line-1, line-2, line-3, line-4Gravity: 3 records on 2 BOM lines with source 1 g (requested 0 g → 0.16 g): still conflict.Records and lines (3)M25-FS-G, OF12-NOMEX-1G-MOC, OF12-NOMEX-1G-ULOI · lines: line-1, line-4",
+    "reopened_title": "Brief file: redline-brief-lunar-pressurized-rover-cabin-illustrative.json",
+    "page_errors": [],
+    "brief": {
+      "summary": {
+        "candidate_count": 28,
+        "draft_count": 28,
+        "line_count": 4,
+        "review_ready_count": 0,
+        "status_counts": {
+          "NO_CANDIDATES": 0,
+          "REVIEW_READY": 0,
+          "REVIEW_REQUIRED": 4
+        },
+        "verified_count": 0
+      },
+      "has_baseline": true,
+      "changes": 26,
+      "md_has_boundary": true,
+      "md_bytes": 59408,
+      "json_bytes": 120334
+    }
+  },
+  "trim_start": 2.863,
+  "files": {
+    "md": "docs/pitch/walkthrough/redline-brief-lunar-pressurized-rover-cabin-illustrative.md",
+    "json": "docs/pitch/walkthrough/redline-brief-lunar-pressurized-rover-cabin-illustrative.json"
+  },
+  "output": {
+    "mp4": "docs/pitch/walkthrough/redline-evidence-review-walkthrough.mp4",
+    "seconds": 95.968
+  }
+}

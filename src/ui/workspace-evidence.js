@@ -15,7 +15,8 @@ export function formatCondition(value, unit = '') {
 function httpURL(raw) {
   try { const u = new URL(String(raw)); return ['https:', 'http:'].includes(u.protocol) ? u : null; } catch { return null; }
 }
-const isNASA = u => Boolean(u && (u.hostname === 'nasa.gov' || u.hostname.endsWith('.nasa.gov')));
+// Same NASA host rule as src/schema/validate.js (NASA Task Book is hosted at taskbook.nasaprs.com).
+const isNASA = u => Boolean(u && (u.hostname === 'nasa.gov' || u.hostname.endsWith('.nasa.gov') || u.hostname === 'taskbook.nasaprs.com'));
 
 // Valid rows only; a missing or malformed file is "unavailable", never zero coverage.
 function index(evidence) {

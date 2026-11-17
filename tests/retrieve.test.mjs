@@ -98,7 +98,9 @@ test('answer rendering escapes HTML, links citations and flags unknown ones', ()
   const id = hits.find((h) => h.kind === 'evidence').id;
   const html = answerHtml(`<img src=x onerror=alert(1)> ok [${id}] and [FAKE-1].`, hits);
   assert.ok(!html.includes('<img'));
-  assert.match(html, new RegExp(`<a href="https://[^"]+"[^>]*>${id}</a>`));
+  // #325: the [ID] in generated prose jumps to the exact row copy; the NASA link sits on that row only.
+  assert.match(html, new RegExp(`<a href="#ask-row-${id}">${id}</a>`));
+  assert.match(html, /data-role="cited-rows"[\s\S]*<a href="https:\/\//);
   assert.match(html, /FAKE-1, which is not among the retrieved rows/);
   assert.match(answerHtml('PMMA burned.', hits), /cites no retrieved row/);
   assert.doesNotMatch(answerHtml(`${NOT_FOUND}.`, hits), /Caveat/);

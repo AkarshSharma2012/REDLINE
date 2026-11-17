@@ -1,110 +1,82 @@
-/* #277 three-pane evidence workspace, recomposed in #297 as a flush desktop tool:
-   slim toolbar | setup rail (~16%) | records column (~28%) | dominant model + evidence pane
-   | bottom summary strip. Tokens from src/styles.css (DESIGN.md). Hairline dividers,
-   rectangular panes, no gradients, glow, glass or decoration. */
+/* #337 four-section shell (recomposed from the #277/#297 three-pane workspace):
+   tabs | Model: summary strip over BOM sidebar, dominant model stage and tall inspector |
+   Evidence: NASA records beside record detail | Investigations | Review brief.
+   Tokens from src/styles.css (DESIGN.md). Hairline dividers, rectangular panes, black body;
+   no gradients, glow, glass or decoration. */
 
-.layout.workspace {
-  grid-template-columns: var(--ws-columns, 240px 1px 400px 1px minmax(0, 1fr));
-  grid-template-rows: auto minmax(0, 1fr) auto;
+.workspace { min-width: 0; background: #000; /* #302: explicit high-contrast black body */ }
+.workspace > .section { min-width: 0; }
+.app-status:empty { display: none; }
+.app-status { padding: var(--space-8) var(--space-12); border-bottom: 1px solid var(--divider); }
+
+/* Model section: summary across the top, then sidebar | stage | inspector */
+.workspace > .section-model {
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) minmax(0, 1fr) minmax(300px, 380px);
+  grid-template-rows: auto minmax(0, 1fr);
   align-items: stretch;
-  min-height: 0;
-  background: #000; /* #302: explicit high-contrast black body, no washed-out pane surfaces */
 }
+.section-model > .ws-infobar { grid-column: 1 / -1; grid-row: 1; }
+.section-model > #ws-pane-controls { grid-column: 1; grid-row: 2; border-right: 1px solid var(--divider); background: #000; }
+.section-model > #ws-pane-visual { grid-column: 2; grid-row: 2; border: 0; }
+.section-model > #ws-inspector { grid-column: 3; grid-row: 2; border-left: 1px solid var(--divider); }
 
-/* Explicit placement: a collapsed (hidden) pane must not shift its neighbours. */
-.workspace > .ws-toolbar { grid-column: 1 / -1; grid-row: 1; }
-.workspace > #ws-pane-controls { grid-column: 1; grid-row: 2; }
-.workspace > #ws-sep-controls { grid-column: 2; grid-row: 2; }
-.workspace > #ws-pane-sources { grid-column: 3; grid-row: 2; }
-.workspace > #ws-sep-sources { grid-column: 4; grid-row: 2; }
-.workspace > #ws-pane-visual { grid-column: 5; grid-row: 2; }
-.workspace > .ws-infobar { grid-column: 1 / -1; grid-row: 3; }
+/* Evidence section: records list beside the selected record */
+.evidence-grid { display: grid; grid-template-columns: minmax(300px, 440px) minmax(0, 1fr); align-items: stretch; min-height: 0; }
+.evidence-grid > #ws-pane-sources { border-right: 1px solid var(--divider); }
+#ws-source-detail:not(:empty) + .ws-detail-empty { display: none; }
+.subview, .section-brief, .section-investigations > .region { padding: var(--space-12) var(--space-16); }
 
-/* Panes: flush rectangles that scroll independently; the separators draw the dividers. */
-.workspace .ws-pane { min-width: 0; min-height: 0; padding: 0 var(--space-12) var(--space-16); overflow-y: auto; overscroll-behavior: contain; border: 0; }
-.workspace > #ws-pane-controls { background: #000; }
+/* Secondary views inside a section: plain links, current view filled + underlined */
+.subnav { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-4) var(--space-12); border-bottom: 1px solid var(--divider); }
+.subnav a { display: inline-flex; align-items: center; gap: var(--space-4); min-height: var(--control-h); padding: 0 var(--space-8); color: var(--text-2); text-decoration: none; font-size: 13px; }
+.subnav a:hover { color: var(--text-1); background: var(--surface-1); }
+.subnav a[aria-current="page"] { color: var(--text-1); background: var(--surface-selected); box-shadow: inset 0 -2px 0 var(--accent); }
+.subnav a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* Panes: flush rectangles that scroll independently on desktop */
+.workspace .ws-pane { min-width: 0; min-height: 0; padding: 0 var(--space-12) var(--space-16); overflow-y: auto; overscroll-behavior: contain; }
 .workspace .ws-pane:focus { outline: none; }
 .workspace .ws-pane:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
-/* Pane header: one compact bar that stays in view while the pane scrolls */
-.workspace .ws-pane > .region-title {
-  position: sticky;
-  top: 0;
-  z-index: 1;
+/* Pane header: one compact bar (title plus help, link or view switch) that stays in view */
+.workspace .pane-head {
+  position: sticky; top: 0; z-index: 3;
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-8);
   margin: 0 calc(-1 * var(--space-12)) var(--space-8);
   padding: var(--space-8) var(--space-12) var(--space-4);
-  background: #000;
-  border-bottom: 1px solid var(--divider);
-  font-size: 13px;
-  line-height: 20px;
+  background: #000; border-bottom: 1px solid var(--divider);
 }
-.workspace > #ws-pane-controls > .region-title { background-color: #000; }
-.workspace .ws-pane > .ws-subtitle { position: static; margin-top: var(--space-16); }
+.workspace .pane-head > .region-title { flex: 1 1 auto; margin: 0; padding: 0; border: 0; font-size: 13px; line-height: 20px; }
+.workspace .ws-pane > .region-title {
+  position: sticky; top: 0; z-index: 3;
+  margin: 0 calc(-1 * var(--space-12)) var(--space-8); padding: var(--space-8) var(--space-12) var(--space-4);
+  background: #000; border-bottom: 1px solid var(--divider); font-size: 13px; line-height: 20px;
+}
+.pane-link { font-size: 13px; }
 .workspace .region-note { margin: var(--space-4) 0 var(--space-8); font-size: 13px; line-height: 18px; }
+#ws-pane-controls > #rover-demo { margin-bottom: var(--space-8); }
 
-/* Toolbar: one slim row. Pane switch (phones), right-pane view, layout settings disclosure. */
-.ws-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-4) var(--space-12);
-  min-height: var(--bar-h);
-  padding: 0 var(--space-12);
-  border-bottom: 1px solid var(--divider);
-  background: #000;
-  min-width: 0;
+/* Contextual help: hover, keyboard focus or tap shows it; Escape dismisses. Never critical text. */
+.help { position: relative; display: inline-flex; }
+.help-btn { min-width: 24px; min-height: 24px; padding: 0; border: 1px solid var(--border-control); border-radius: 50%; background: transparent; color: var(--text-2); font-size: 12px; line-height: 1; cursor: help; }
+.help-btn:hover, .help-btn[aria-expanded="true"] { color: var(--text-1); border-color: var(--text-2); }
+.help-tip {
+  display: none; position: absolute; z-index: 30; top: calc(100% + var(--space-4)); right: 0;
+  width: max-content; max-width: min(320px, calc(100vw - 32px)); padding: var(--space-8);
+  background: var(--surface-1); border: 1px solid var(--border-control);
+  color: var(--text-1); font-size: 13px; line-height: 18px; font-weight: 400; white-space: normal;
 }
+.help:hover > .help-btn:not([data-dismissed]) + .help-tip,
+.help-btn:focus-visible:not([data-dismissed]) + .help-tip,
+.help-btn[aria-expanded="true"] + .help-tip { display: block; }
+
+/* Stage view switch: joined rectangles, selection = fill + accent underline */
 .ws-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
-.ws-group-label { color: var(--text-2); font-size: 12px; line-height: 16px; font-weight: 500; margin: 0 var(--space-2) 0 var(--space-4); }
-.ws-toolbar button { padding: 0 var(--space-8); font-size: 13px; line-height: 18px; }
-/* Segmented groups: joined rectangles, selection = fill + accent underline (from button[aria-pressed]) */
 .ws-seg { gap: 0; }
+.ws-seg button { padding: 0 var(--space-8); font-size: 13px; line-height: 18px; }
 .ws-seg > button, .ws-seg > .react-control-host > button { border-radius: 0; }
 .ws-seg > button + button, .ws-seg > .react-control-host + .react-control-host > button { border-left-width: 0; }
-.ws-seg > button:first-child, .ws-seg > .react-control-host:first-child > button { border-radius: var(--radius-control) 0 0 var(--radius-control); }
-.ws-seg > button:last-child, .ws-seg > .react-control-host:last-child > button { border-radius: 0 var(--radius-control) var(--radius-control) 0; }
-.ws-widths button { min-width: var(--control-h); font-family: var(--font-mono); }
-.ws-jump { display: none; }
-
-/* Layout settings: a native disclosure that opens a small panel under the toolbar */
-.ws-settings { position: relative; margin-left: auto; }
-.ws-settings > summary {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  min-height: var(--control-h);
-  padding: 0 var(--space-8);
-  list-style: none;
-  color: var(--text-1);
-  font-size: 13px;
-  border: 1px solid var(--border-control);
-  border-radius: var(--radius-control);
-  background: var(--surface-2);
-}
-.ws-settings > summary::-webkit-details-marker { display: none; }
-.ws-settings > summary::after { content: ""; width: 6px; height: 6px; margin: 0 var(--space-2) var(--space-2) var(--space-4); border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); }
-.ws-settings[open] > summary { background: var(--surface-selected); box-shadow: inset 0 -2px 0 var(--accent); }
-.ws-settings-body {
-  position: absolute;
-  z-index: 20;
-  top: calc(100% + var(--space-4));
-  right: 0;
-  display: grid;
-  gap: var(--space-12);
-  justify-items: start;
-  width: max-content;
-  max-width: calc(100vw - 24px);
-  padding: var(--space-12);
-  background: var(--surface-1);
-  border: 1px solid var(--border-control);
-}
-
-/* Separators: 1 px hairline; a wider invisible hit area overlaps the panes; accent on hover and focus */
-.ws-sep { position: relative; z-index: 2; align-self: stretch; background: var(--divider); cursor: col-resize; touch-action: none; }
-.ws-sep::after { content: ""; position: absolute; top: 0; bottom: 0; left: -4px; right: -4px; }
-.ws-sep::before { content: ""; position: absolute; top: 0; bottom: 0; left: -1px; width: 3px; background: transparent; }
-.ws-sep:hover::before, .ws-sep:focus-visible::before { background: var(--accent); }
-.ws-sep:focus-visible { outline: none; }
 
 /* Records column: compact filters, counts, then dense row-aligned records */
 .ws-filters {
@@ -126,7 +98,6 @@
   font-size: 13px;
   line-height: 18px;
 }
-.workspace .legend { gap: var(--space-4) var(--space-8); margin-bottom: var(--space-8); }
 
 /* Record rows: full-width text buttons separated by hairlines, not padded cards.
    Row 1 record ID and investigation; row 2 material and review state; row 3 conditions. */
@@ -202,41 +173,40 @@
 .ws-detail details > summary { color: var(--text-2); min-height: var(--control-h); display: flex; align-items: center; }
 .ws-detail details p { max-width: 80ch; color: var(--text-2); }
 
-/* Bottom summary strip: real counts, the current selection and the primary dataset link */
-.ws-infobar { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-24); min-height: 28px; padding: var(--space-2) var(--space-12); border-top: 1px solid var(--divider); background: #000; color: var(--text-2); font-size: 12px; line-height: 16px; }
-.ws-infobar p { margin: 0; }
+/* Model summary strip: real counts, the current selection, label key and the primary dataset link */
+.ws-infobar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-24); min-height: 36px; padding: var(--space-4) var(--space-12); border-bottom: 1px solid var(--divider); background: #000; color: var(--text-2); font-size: 12px; line-height: 16px; }
+.ws-infobar p, .ws-infobar .legend { margin: 0; }
+.ws-infobar .legend { gap: var(--space-4) var(--space-8); }
 .ws-infobar p:last-child { margin-left: auto; }
 .ws-infobar .type-data { margin-left: var(--space-4); color: var(--text-1); font-size: 12px; line-height: 16px; }
 
 /* #302: viewer stage/tool-strip layout is owned by B1 (#299 rover-viewer.css); the shell only hosts it. */
 
-/* Compact density: tighter rhythm, same type sizes and control heights */
-.workspace[data-density="compact"] .ws-pane { padding-bottom: var(--space-8); }
-.workspace[data-density="compact"] .ws-card, .workspace[data-density="compact"] .ws-material { padding: var(--space-4) var(--space-8); }
-.workspace[data-density="compact"] .ws-pane > .ws-subtitle { margin-top: var(--space-8); }
-.workspace[data-density="compact"] .ws-detail { padding: var(--space-8); }
+/* Wide, tall window: the page is one viewport and each section scrolls inside its panes. */
+@media (min-width: 1081px) and (min-height: 560px) {
+  body > main.workspace { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+  .workspace > .section:not([hidden]) { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+  .workspace > .section-model:not([hidden]) { overflow: hidden; }
+  .workspace > .section-evidence:not([hidden]) { display: flex; flex-direction: column; overflow: hidden; }
+  .section-evidence > .evidence-grid:not([hidden]) { flex: 1 1 auto; }
+  .section-evidence > .subview { overflow-y: auto; }
+}
 
-/* Tablet and phone: one pane at a time, chosen by the full-width pane switch; page scrolls */
+/* Tablet and phone: every section is one column and the page scrolls; no horizontal overflow */
 @media (max-width: 1080px) {
-  .layout.workspace { grid-template-columns: minmax(0, 1fr) !important; grid-template-rows: none; }
-  /* Same ID specificity as the desktop placements above, so these win and no implicit columns appear. */
-  .workspace > #ws-pane-controls, .workspace > #ws-pane-sources, .workspace > #ws-pane-visual,
-  .workspace > #ws-sep-controls, .workspace > #ws-sep-sources, .workspace > .ws-toolbar, .workspace > .ws-infobar { grid-column: 1; grid-row: auto; }
-  .workspace > .ws-pane { min-width: 0; width: auto; }
+  .workspace > .section-model, .evidence-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .section-model > #ws-pane-controls, .section-model > #ws-pane-visual,
+  .section-model > #ws-inspector, .section-model > .ws-infobar { grid-column: 1; grid-row: auto; }
+  .section-model > .ws-pane, .evidence-grid > .ws-pane { border: 0; border-bottom: 1px solid var(--divider); }
   .workspace .ws-pane { overflow: visible; }
-  .workspace[data-pane="controls"] > .ws-pane:not(#ws-pane-controls),
-  .workspace[data-pane="sources"] > .ws-pane:not(#ws-pane-sources),
-  .workspace[data-pane="visual"] > .ws-pane:not(#ws-pane-visual) { display: none; }
-  .workspace > .ws-sep, .ws-widths { display: none; }
-  .ws-toolbar { padding: var(--space-4) var(--space-12); }
-  .ws-jump { display: flex; flex: 1 0 100%; }
-  .ws-jump > button, .ws-jump > .react-control-host > button { flex: 1 1 0; min-width: 0; }
-  .ws-infobar { gap: var(--space-2) var(--space-16); }
+  .ws-infobar { gap: var(--space-4) var(--space-16); }
   .ws-infobar p:last-child { margin-left: 0; }
 }
 @media (max-width: 480px) {
   .ws-filters { grid-template-columns: minmax(0, 1fr); }
-  .ws-toolbar button { padding: 0 var(--space-4); }
+  .subview, .section-brief, .section-investigations > .region { padding: var(--space-12); }
+  /* Tips sit inside the viewport, never past its right edge */
+  .help-tip { position: fixed; top: auto; bottom: var(--space-12); left: var(--space-12); right: var(--space-12); width: auto; max-width: none; }
 }
 
 /* Motion is GSAP-only (opacity/transform, 150-240 ms) and skipped for reduced motion. */
@@ -245,6 +215,6 @@
 }
 
 @media print {
-  .ws-toolbar, .ws-sep, .ws-viewer, .ws-stage-empty { display: none !important; }
+  .ws-viewer, .ws-stage-empty, .subnav, .help { display: none !important; }
   .workspace .ws-pane { display: block !important; overflow: visible; }
 }

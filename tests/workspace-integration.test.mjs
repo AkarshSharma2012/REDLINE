@@ -11,23 +11,24 @@ const html = await read('index.html');
 const css = await read('src/styles/workspace.css');
 const viewerCss = await read('src/styles/rover-viewer.css');
 
-const sources = html.match(/<section\b[^>]*id="ws-pane-sources"[^>]*>([\s\S]*?)<\/section>/)[1];
-const at = id => sources.indexOf(`id="${id}"`);
+const inspector = html.match(/<section\b[^>]*id="ws-inspector"[^>]*>([\s\S]*?)<\/section>/)[1];
+const at = id => inspector.indexOf(`id="${id}"`);
 
-test('middle pane is source-first (#306): records heading, status, NASA records, then Results disclosure, then fixes', () => {
-  for (const id of ['status', 'results-table', 'sources-heading', 'ws-sources', 'ws-results-disclosure', 'results-heading', 'fixes']) assert.ok(at(id) > -1, id);
-  assert.ok(at('sources-heading') < at('status'));
-  assert.ok(at('status') < at('ws-sources'));
-  assert.ok(at('ws-sources') < at('ws-results-disclosure'), 'records come before the results/legend block');
-  assert.match(sources, /<details id="ws-results-disclosure" class="ws-disclosure ws-results" open>\s*<summary><span id="results-heading">Results<\/span>[^<]*<\/summary>\s*<ul class="legend"[\s\S]*<div id="results-table"/, 'legend and results in a native open disclosure');
+test('Model inspector (#337): selected part evidence, then every-line results, then fixes', () => {
+  for (const id of ['inspector-heading', 'evidence-panel', 'ws-results-disclosure', 'results-heading', 'results-table', 'fixes']) assert.ok(at(id) > -1, id);
+  assert.ok(at('inspector-heading') < at('evidence-panel'));
+  assert.ok(at('evidence-panel') < at('ws-results-disclosure'), 'selected part comes before the all-lines table');
+  assert.match(inspector, /<details id="ws-results-disclosure" class="ws-disclosure ws-results" open>\s*<summary><span id="results-heading">Results<\/span>[^<]*<\/summary>\s*<div id="results-table"/, 'results in a native open disclosure');
   assert.ok(at('results-table') < at('fixes'), 'fixes/experiment planning sits below results');
-  const disclosure = sources.match(/<details\b[^>]*id="ws-fixes-disclosure"[^>]*>\s*<summary>([^<]+)<\/summary>([\s\S]*?)<\/details>/);
+  const disclosure = inspector.match(/<details\b[^>]*id="ws-fixes-disclosure"[^>]*>\s*<summary>([^<]+)<\/summary>([\s\S]*?)<\/details>/);
   assert.ok(disclosure, 'native details disclosure wraps fixes');
   assert.doesNotMatch(disclosure[0], /<details\b[^>]*\bopen/, 'collapsed by default');
   assert.match(disclosure[1], /changes the label/i);
   assert.match(disclosure[1], /experiment/i);
   assert.match(disclosure[2], /<div id="fixes"><\/div>/);
   assert.doesNotMatch(css, /#fixes[^{]*\{[^}]*display\s*:\s*none/, 'no CSS-only hiding');
+  // The label key stays visible above the model, not tucked in a disclosure.
+  assert.match(html, /<div class="ws-infobar"[^>]*>[\s\S]*?<ul class="legend" aria-label="Label key">[\s\S]*?chip-ne/);
 });
 
 // Minimal cascade: top-level rules plus one level of @media, selector specificity, source order.
@@ -73,20 +74,20 @@ function resolve(el, prop, mobile) {
 }
 const pane = id => ({ id, classes: ['region', 'ws-pane', id === 'ws-pane-controls' ? 'region-cabin' : id === 'ws-pane-sources' ? 'region-results' : 'region-evidence'] });
 
-test('desktop keeps explicit three-pane placement', () => {
-  assert.equal(resolve(pane('ws-pane-controls'), 'grid-column', false), '1');
-  assert.equal(resolve(pane('ws-pane-sources'), 'grid-column', false), '3');
-  assert.equal(resolve(pane('ws-pane-visual'), 'grid-column', false), '5');
+test('desktop Model places summary across the top, then sidebar | stage | inspector', () => {
+  assert.match(css, /\.workspace > \.section-model \{[^}]*grid-template-columns: minmax\(220px, 260px\) minmax\(0, 1fr\) minmax\(300px, 380px\)/);
+  assert.match(css, /\.section-model > \.ws-infobar \{ grid-column: 1 \/ -1; grid-row: 1; \}/);
+  assert.match(css, /\.section-model > #ws-pane-controls \{ grid-column: 1; grid-row: 2;/);
+  assert.match(css, /\.section-model > #ws-pane-visual \{ grid-column: 2; grid-row: 2;/);
+  assert.match(css, /\.section-model > #ws-inspector \{ grid-column: 3; grid-row: 2;/);
 });
 
-test('mobile breakpoint overrides the ID placements: every pane resolves to column 1, auto row', () => {
-  for (const id of ['ws-pane-controls', 'ws-pane-sources', 'ws-pane-visual']) {
-    assert.equal(resolve(pane(id), 'grid-column', true), '1', id);
-    assert.equal(resolve(pane(id), 'grid-row', true), 'auto', id);
-    assert.equal(resolve(pane(id), 'min-width', true), '0', `${id} can shrink to the single track`);
-  }
-  const mobile = rules(css).find(r => r.media && /max-width:\s*1080px/.test(r.media) && r.decls['grid-template-columns']);
-  assert.match(mobile.decls['grid-template-columns'], /^minmax\(0,\s*1fr\)\s*!important$/, 'one track');
+test('mobile breakpoint collapses Model and Evidence to one shrinkable column, auto rows', () => {
+  const mobile = css.match(/@media \(max-width: 1080px\) \{([\s\S]*?)\n\}/)[1];
+  assert.match(mobile, /\.workspace > \.section-model, \.evidence-grid \{ grid-template-columns: minmax\(0, 1fr\); grid-template-rows: none; \}/);
+  for (const id of ['ws-pane-controls', 'ws-pane-visual', 'ws-inspector']) assert.match(mobile, new RegExp(`\\.section-model > #${id}`), id);
+  assert.match(mobile, /grid-column: 1; grid-row: auto;/);
+  assert.match(css, /\.workspace \.ws-pane \{ min-width: 0;/);
 });
 
 test('viewer host flows the whole mounted widget; only the inner stage reserves aspect ratio and clips', () => {

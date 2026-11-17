@@ -505,6 +505,15 @@
                 }
               }
             ]
+          },
+          {
+            "properties": {
+              "research_status": {
+                "not": {
+                  "const": "HOLD_scientific_review"
+                }
+              }
+            }
           }
         ]
       }
