@@ -17,6 +17,18 @@ const copy = value => structuredClone(value);
 const stated = value => value === null || value === undefined || value === ''
   ? 'Not stated in this source' : String(value);
 
+// Judge click-through (#169): missing or malformed inputs become empty, never a crash.
+// Valid inputs are returned unchanged so dataset identity checks still hold.
+function safeEvidence(evidence) {
+  if (evidence && Array.isArray(evidence.evidence)) return evidence;
+  return { ...(evidence && typeof evidence === 'object' ? evidence : {}), evidence: [] };
+}
+function safeQuery(cabinQuery) {
+  const q = cabinQuery && typeof cabinQuery === 'object' ? cabinQuery : {};
+  return { ...q, conditions: { ...(q.conditions ?? {}) },
+    materials: (Array.isArray(q.materials) ? q.materials : []).filter(m => m && typeof m === 'object') };
+}
+
 function sourceLink(data, key, locator) {
   const source = data.sources?.[key];
   let url;
@@ -40,13 +52,15 @@ function resultSources(result, data) {
 
 /** Pure preview adapter. Calls the supplied engine once for this setting. */
 export function buildO2Preview(cabinQuery, evidence, labelCabin) {
+  cabinQuery = safeQuery(cabinQuery);
+  evidence = safeEvidence(evidence);
   const { o2_pct, pressure_kpa } = cabinQuery.conditions;
   if (!Number.isFinite(o2_pct) || o2_pct < 0 || o2_pct > 100
       || !Number.isFinite(pressure_kpa) || pressure_kpa <= 0) {
     throw new Error('Enter oxygen from 0 to 100% and an absolute pressure above 0 kPa.');
   }
   const counts = { BURNED: 0, NEAR: 0, NOT_ESTABLISHED: 0 };
-  const rows = evidence.evidence.filter(row => row.review_status === 'verified');
+  const rows = evidence.evidence.filter(row => row?.review_status === 'verified');
   const results = labelCabin(copy(cabinQuery), copy({ ...evidence, evidence: rows }));
   if (!Array.isArray(results) || results.length !== cabinQuery.materials.length) {
     throw new Error('Engine returned an incomplete material list');
@@ -70,8 +84,9 @@ export function buildO2Preview(cabinQuery, evidence, labelCabin) {
 
 export function mountO2Slider(root, options) {
   const doc = root.ownerDocument;
-  let data = options.evidence;
-  let original = copy(options.cabinQuery);
+  options = options ?? {};
+  let data = safeEvidence(options.evidence);
+  let original = copy(safeQuery(options.cabinQuery));
   let preview = copy(original);
   let pressureSelected = false;
   let baseline;
@@ -95,7 +110,7 @@ export function mountO2Slider(root, options) {
   }
   const panel = el('section', null, root, { class: 'o2-slider', 'aria-label': 'Oxygen tradeoff preview' });
   el('h2', 'Oxygen tradeoff (illustrative)', panel);
-  el('p', 'Illustration, not a mission calculation. Counts describe evidence labels, not predicted ignition. No pre-breathe duration is computed.', panel);
+  el('p', 'Illustration, not a mission calculation. Counts describe evidence labels, not predicted ignition. Pre-breathe means breathing oxygen before a spacewalk to reduce nitrogen in the body. No pre-breathe duration is computed.', panel);
   const presets = el('div', null, panel, { role: 'group', 'aria-label': 'Published atmosphere presets' });
   const buttons = [];
   for (const preset of data.cabin_presets ?? []) {
@@ -183,7 +198,7 @@ export function mountO2Slider(root, options) {
   function render(syncInputs = true) {
     if (destroyed) return;
     const conditions = preview.conditions;
-    if (syncInputs) numeric.value = String(conditions.o2_pct);
+    if (syncInputs) numeric.value = Number.isFinite(conditions.o2_pct) ? String(conditions.o2_pct) : '';
     const withinSweep = Number.isFinite(conditions.o2_pct)
       && conditions.o2_pct >= O2_RANGE.min && conditions.o2_pct <= O2_RANGE.max;
     const onStep = withinSweep && Number.isInteger((conditions.o2_pct - O2_RANGE.min) / O2_RANGE.step);
@@ -191,8 +206,10 @@ export function mountO2Slider(root, options) {
     if (withinSweep) range.value = String(conditions.o2_pct);
     // Native range inputs snap off-step numeric edits; describe the actual thumb
     // rather than claiming that the snapped thumb equals the numeric preview.
-    range.setAttribute('aria-valuetext', `${range.value} percent oxygen${withinSweep && !onStep ? '; preview uses the numeric field' : ''}`);
-    held.textContent = `Preview: ${conditions.o2_pct}% O2; pressure ${stated(conditions.pressure_kpa)} kPa; airflow ${stated(conditions.flow_speed_cm_s)} cm/s, ${stated(conditions.flow_direction)}; gravity ${stated(conditions.gravity_g)} g; ${preview.materials.length} material items. Sweep holds pressure, airflow, gravity and items fixed.`;
+    range.setAttribute('aria-valuetext', withinSweep
+      ? `${range.value} percent oxygen${!onStep ? '; preview uses the numeric field' : ''}`
+      : 'Outside the illustrative sweep');
+    held.textContent = `Preview: ${Number.isFinite(conditions.o2_pct) ? `${conditions.o2_pct}% O2` : 'O2 not stated'}; pressure ${stated(conditions.pressure_kpa)} kPa; airflow ${stated(conditions.flow_speed_cm_s)} cm/s, ${stated(conditions.flow_direction)}; gravity ${stated(conditions.gravity_g)} g; ${preview.materials.length} material items. Sweep holds pressure, airflow, gravity and items fixed.`;
     error.textContent = withinSweep ? '' : 'Outside the illustrative sweep: edit the numeric oxygen field; the cabin value is not clamped.';
     results.replaceChildren();
     summary.replaceChildren();
@@ -233,7 +250,9 @@ export function mountO2Slider(root, options) {
       }
       apply.disabled = typeof options.onApply !== 'function';
     } catch (failure) {
-      error.textContent = `Evidence preview unavailable: ${failure.message}`;
+      // Our own validation messages are plain language; anything else gets a generic sentence.
+      const plain = failure instanceof TypeError || !failure?.message ? 'the cabin settings or evidence file are incomplete' : failure.message;
+      error.textContent = `Evidence preview unavailable: ${plain}`;
       el('p', 'Counts unavailable. Change a setting or retry.', summary);
     }
   }
@@ -261,8 +280,8 @@ export function mountO2Slider(root, options) {
   return {
     update(cabinQuery, evidence = data) {
       if (destroyed) return;
-      if (evidence !== data) throw new Error('Remount the slider when the dataset changes');
-      original = copy(cabinQuery); preview = copy(original); pressureSelected = false;
+      if (evidence !== data && evidence !== options.evidence) throw new Error('Remount the slider when the dataset changes');
+      original = copy(safeQuery(cabinQuery)); preview = copy(original); pressureSelected = false;
       rebase(); render();
     },
     destroy() { destroyed = true; listeners.forEach(remove => remove()); panel.remove(); },

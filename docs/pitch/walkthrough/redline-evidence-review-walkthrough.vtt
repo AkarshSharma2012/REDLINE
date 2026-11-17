@@ -1,0 +1,45 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:10.251
+A lunar rover team must decide which cabin materials still need fire-test evidence. NASA records exist, but each was tested under its own conditions.
+
+2
+00:00:10.259 --> 00:00:22.550
+Load the illustrative lunar rover BOM. Each line is matched to candidate NASA records. All 45 records are drafts and 0 are verified, and the app says so.
+
+3
+00:00:22.567 --> 00:00:34.657
+Window panel, record PSI25-B1: requested conditions beside what the source tested, with citation and page locator. Unknown stays unknown, never zero.
+
+4
+00:00:34.661 --> 00:00:39.891
+Set the microgravity reference (0 g) and pin it as the baseline.
+
+5
+00:00:39.895 --> 00:00:45.575
+Change one assumption: lunar gravity, 0.16 g (an estimate; no direct lunar data).
+
+6
+00:00:45.620 --> 00:00:53.940
+REDLINE lists exactly which records stopped matching and why. Fewer gaps would not mean lower fire risk.
+
+7
+00:00:53.953 --> 00:00:59.782
+Each gap becomes an ordered research question naming the field and the records to check.
+
+8
+00:00:59.786 --> 00:01:09.998
+Export the reviewer brief as Markdown and JSON: conditions, citations, review states, what changed, next questions.
+
+9
+00:01:10.002 --> 00:01:18.844
+This is the exported file itself, built from data rather than generated prose. It is not a safety assessment.
+
+10
+00:01:19.093 --> 00:01:24.473
+A reviewer reopens the downloaded JSON brief and sees the same reasoning.
+
+11
+00:01:24.498 --> 00:01:35.468
+Illustrative scenario, draft sources, no predictions. REDLINE organises evidence review; engineers and safety reviewers decide.

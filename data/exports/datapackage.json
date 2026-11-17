@@ -1,0 +1,95 @@
+{
+  "profile": "data-package",
+  "name": "redline-evidence",
+  "title": "REDLINE evidence data package",
+  "sources": [
+    {
+      "title": "Concurrent flame growth, spread and extinction over composite fabric samples in low speed purely forced flow in microgravity",
+      "authors": "Zhao, T'ien, Ferkul and Olson",
+      "year": 2015,
+      "name": "ZHAO15",
+      "path": "https://ntrs.nasa.gov/api/citations/20150008962/downloads/20150008962.pdf"
+    },
+    {
+      "title": "Fire Safety Implications of Preliminary Results from Saffire IV and V Experiments on Large Scale Spacecraft Fires",
+      "authors": "Urban et al.",
+      "year": 2021,
+      "name": "SAFFIRE21",
+      "path": "https://ntrs.nasa.gov/api/citations/20210011521/downloads/ICES%202021-266%200503-2021%20final.pdf"
+    },
+    {
+      "title": "Burning and Suppression of Solids-II (BASS-II) Summary Report; NASA/TM-20210011385",
+      "authors": "Not stated in extraction",
+      "year": 2021,
+      "name": "BASS2-TM",
+      "path": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf"
+    },
+    {
+      "title": "Solid Fuel Ignition Testing for Lunar Applications, Theory and Experimental Results (presentation)",
+      "authors": "Urban et al.",
+      "year": 2025,
+      "name": "US25",
+      "path": "https://ntrs.nasa.gov/api/citations/20250006779/downloads/ICES%202025-392%20Lunar%20Flam%20070725.pdf"
+    },
+    {
+      "title": "Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test",
+      "authors": "Olson and Ferkul",
+      "year": 2012,
+      "name": "OF12",
+      "path": "https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf"
+    },
+    {
+      "title": "Material Ignition and Suppression Test (MIST) in Space Exploration Atmospheres, NASA Task Book FY2025",
+      "authors": "Not stated in extraction",
+      "year": 2025,
+      "name": "M25",
+      "path": "https://taskbook.nasaprs.com/tbp/tbpdf.cfm?id=16225"
+    },
+    {
+      "title": "Modeling a 15-min extravehicular activity prebreathe protocol",
+      "authors": "Abercromby, Conkin and Gernhardt",
+      "year": 2015,
+      "name": "R7-S4",
+      "path": "https://www.nasa.gov/wp-content/uploads/2023/03/abercromby-8.2-34-atm-2015.pdf"
+    },
+    {
+      "title": "Human Health and Performance, NASA EVA Exploration Workshop",
+      "authors": "NASA",
+      "year": 2020,
+      "name": "R7-S5",
+      "path": "https://ntrs.nasa.gov/api/citations/20200001073/downloads/20200001073.pdf?attachment=true"
+    },
+    {
+      "title": "Development, Validation and Approval of A Planetary Extravehicular Activity Prebreathe Protocol: NASA Exploration Atmosphere Tests 1 & 2",
+      "authors": "Garbino et al.",
+      "year": 2024,
+      "name": "R7-S7",
+      "path": "https://ntrs.nasa.gov/citations/20230015380"
+    },
+    {
+      "title": "Life Support Baseline Values and Assumptions Document",
+      "authors": "Ewert, Chen and Powell (editors)",
+      "year": 2022,
+      "name": "R7-S12",
+      "path": "https://ntrs.nasa.gov/api/citations/20210024855/downloads/BVAD_2.15.22-final.pdf"
+    }
+  ],
+  "resources": [
+    {
+      "name": "evidence-csv",
+      "path": "evidence.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 72375
+    },
+    {
+      "name": "evidence-json",
+      "path": "evidence.json",
+      "format": "json",
+      "mediatype": "application/json",
+      "encoding": "utf-8",
+      "bytes": 150053
+    }
+  ]
+}

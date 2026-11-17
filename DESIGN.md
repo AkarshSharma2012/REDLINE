@@ -42,6 +42,10 @@ luminance", "contrast ratio"); the numbers are our calculation, not a source's.
 Dark theme only. Hex values are **[Inference]** choices; the ratios are computed (see note at
 top). "On" columns = contrast against that background.
 
+### 2.0 Amendment (#306, user-authorized black/white neutral theme)
+
+The user required a high-contrast black and white UI with no blue theme. Live tokens in `src/styles.css` now are: `bg` and `surface-1` `#000000`, `surface-2` `#141414`, `surface-selected` `#262626`, `divider` `#333333`, `border-control` `#8C8C8C` (6.25:1 on black), `text-1` `#FFFFFF` (21:1), `text-2` `#D0D0D0` (13.62:1), `text-3` `#ADADAD` (9.36:1), `accent` `#FFFFFF` (selection/focus/links, neutral). `ev-ne` (Not established) becomes neutral `#C8C8C8` (12.55:1); its hollow-circle glyph and dashed outline still distinguish it. `ev-burned` and `ev-near` stay unchanged and remain reserved for the defined label outcomes. Where this section conflicts with the tables below, this section wins.
+
 ### 2.1 Neutrals
 
 | Token | Hex | Use | On `bg` | On `surface-1` | On `surface-2` |
@@ -159,6 +163,33 @@ Rules ([Inference] unless cited):
 - **Narrow screens:** at 320 CSS px width, regions stack vertically with no horizontal page
   scrolling. The results table may scroll horizontally inside its own container: data tables
   are an allowed exception ([WCAG22] SC 1.4.10, AA).
+- **Workspace (#277; recomposed #297, user-approved 2026-11-15):** Cabin Check is a flush
+  desktop tool modelled on the spatial hierarchy of a data-search workspace (structure only,
+  no affiliation art): slim black masthead, compact tabs and one slim toolbar (together at
+  most 120 px on a fine pointer), then setup rail (~240 px) | results and NASA source records
+  (~400 px) | model and evidence (remaining width, at least half of a 1440 px window), and a
+  bottom summary strip with real record counts, the current selection and the PSI dataset link.
+  Panes are rectangular, separated by 1 px hairlines (wider invisible drag target), and scroll
+  independently when the window is at least 1081 x 560 px; otherwise the page scrolls. Pane
+  widths are bounded (setup 220-400 px, records 300-560 px) and adjustable by drag, keyboard
+  separator or -/+ buttons; panes collapse and reset; density is comfortable or compact. These
+  rare settings sit in a native "Layout" disclosure (Escape closes it and returns focus). Only
+  layout preferences are stored locally, never evidence, review state or a cabin scenario.
+  Below 1080 px one pane shows at a time, chosen by a full-width Setup / Records / Model and
+  evidence switch; selecting a record or item there shows its detail pane.
+- **Control height (#297):** `--control-h` is 32 px on a fine pointer and 44 px on touch or
+  below 1080 px; bars use `--bar-h` (36 / 44 px). Never below the 24 px minimum in 5.7.
+- **Model stage (#297):** before the model is requested, its slot shows a reserved 16:10 empty
+  stage with one "Load rover model" action. The 3D module still loads only on that request;
+  no scenario is loaded automatically.
+- **Illustrative cabin model exception (#277, user-approved 2026-11-15):** the ban on
+  illustrations in section 1 has one narrow exception: a functional geometric cutaway
+  rover/cabin model used only to select cabin items. It is always labelled
+  "Illustrative cabin model - not a fire simulation", loads only when the user chooses the model view, and
+  has an HTML item list beside it and as its fallback. No flames, no predictive airflow, no
+  Moon terrain, no realistic engineering dimensions, no NASA endorsement. It never shows a
+  combustion outcome; review status and source links stay in the HTML evidence panes. All
+  evidence rules in this file are unchanged.
 
 ---
 
@@ -287,6 +318,10 @@ Rules ([Inference] unless cited):
 - **Motion:** only opacity/colour transitions ≤ 150 ms for state changes. No layout motion,
   no number counters, no pulsing alarms. Respect `prefers-reduced-motion: reduce` (user asked
   to minimise non-essential motion, [MDNprm]) by turning transitions off ([WCAG22] SC 2.3.3).
+  Workspace exception (#277): locally vendored GSAP 3.15.1 may run 150-240 ms opacity/transform
+  tweens when a pane opens or a record is selected; they overwrite on rapid input, clear their
+  inline styles, are skipped under reduced motion (checked live) and the UI is complete
+  without GSAP. No scroll hijacking, intros, moving labels or automatic camera movement.
 - Hover is never the only way to see information: tooltip content is also reachable by focus
   and present in the evidence panel.
 

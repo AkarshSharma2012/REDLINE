@@ -1,4 +1,5 @@
 import { element, sourceLink, styleUI } from './results-table.js';
+import { renderBomImport } from './bom-import.js';
 
 /** Explicit fixture-only stub. It never invents measurements or infers a cabin outcome. */
 export function labelCabin(query, fixture) {
@@ -15,6 +16,19 @@ export function labelCabin(query, fixture) {
   });
 }
 
+export const PSIA_TO_KPA = 6.894757293;
+// Converted pressures are kept to 0.001 kPa / 0.0001 psia so no tab shows float noise
+// such as 56.53700980259999 kPa (persona B2 finding).
+const round = (value, places) => Math.round(value * 10 ** places) / 10 ** places;
+export function toKpa(value, unit) { return round(value * (unit === 'psia' ? PSIA_TO_KPA : 1), 3); }
+// Non-blocking unit check: a cabin pressure typed in the wrong unit is a common slip.
+export function pressureUnitHint(value, unit) {
+  if (!Number.isFinite(value) || value <= 0) return '';
+  if (unit === 'kpa' && value < 25) return ` Check the unit: ${value} psia would be ${toKpa(value, 'psia')} kPa.`;
+  if (unit === 'psia' && value > 40) return ` Check the unit: ${value} kPa would be ${round(value / PSIA_TO_KPA, 2)} psia.`;
+  return '';
+}
+
 let instance = 0;
 /** Compatible with B1 scaffold; inject real labelCabin once the engine is available.
  * onEvaluate(results, query), onChange(query); controller.destroy() removes the form.
@@ -26,7 +40,7 @@ export function renderCabinForm(root, options = {}) {
   styleUI(root);
   let nextId = 0, removed;
   const form = element(d, 'form'); form.noValidate = true;
-  form.append(element(d, 'h2', 'Cabin Check'), element(d, 'p', 'Illustrative scenario — evidence review, not cabin certification.'));
+  form.append(element(d, 'h2', 'Cabin Check'), element(d, 'p', 'Illustrative scenario — evidence review, not cabin certification. PSI means NASA’s Physical Sciences Informatics data repository.'));
   const errors = element(d, 'div'); errors.setAttribute('role', 'alert');
   const status = element(d, 'p'); status.setAttribute('role', 'status');
   const controls = {};
@@ -51,7 +65,7 @@ export function renderCabinForm(root, options = {}) {
     button.addEventListener('click', () => applyPreset(preset)); presetGroup.append(button); presetButtons.push([button, preset]);
   }
   presetGroup.append(presetSource);
-  controls.o2 = field(form, 'o2', 'Oxygen (% by volume)', 'number');
+  controls.o2 = field(form, 'o2', 'Oxygen (% by volume: oxygen’s share of the cabin gas)', 'number');
   controls.o2.input.min = '0'; controls.o2.input.max = '100'; controls.o2.input.step = 'any';
   controls.pressure = field(form, 'pressure', 'Absolute pressure', 'number'); controls.pressure.input.step = 'any';
   controls.unit = field(form, 'unit', 'Pressure unit', null, [['kpa', 'kPa'], ['psia', 'psia']]);
@@ -62,6 +76,10 @@ export function renderCabinForm(root, options = {}) {
   controls.gravity = field(form, 'gravity', 'Gravity context', null, [['0.16', 'Lunar scenario (0.16 g, estimate)'], ['0', 'Microgravity reference (0 g)'], ['1', 'Earth reference (1 g)']]);
   const list = element(d, 'div'); form.append(list);
   const items = [];
+  const importer = renderBomImport(form, { materials, onImport: lines => {
+    for (const line of lines) addItem({ ...line, thickness: line.thickness_mm, width: line.width_mm });
+    changed();
+  } });
   const add = element(d, 'button', 'Add material'); add.type = 'button';
   const undo = element(d, 'button', 'Undo removal'); undo.type = 'button'; undo.hidden = true;
   const submit = element(d, 'button', 'Evaluate cabin'); submit.type = 'submit'; submit.disabled = true;
@@ -73,8 +91,15 @@ export function renderCabinForm(root, options = {}) {
   function addItem(values = {}) {
     const id = values.item_id || `${prefix}-item-${++nextId}`;
     const group = element(d, 'fieldset'); group.append(element(d, 'legend', 'Material and use'));
-    const entry = { item_id: id, group };
+    const entry = { item_id: id, group, quantity: values.quantity ?? null, note: values.note ?? '',
+      importedMaterial: values.material_recognised === false ? values.material_id : null };
     entry.material = field(group, `${id}-material`, 'Material', null, [['', 'Choose material'], ...materials.map(m => [m.material_id, m.display_name])]);
+    if (entry.importedMaterial) {
+      const option = element(d, 'option', `${values.name} — material not recognised; not found in the sources reviewed`);
+      option.value = entry.importedMaterial; entry.material.input.append(option);
+    }
+    if (values.quantity != null) group.append(element(d, 'p', `Quantity (user input): ${values.quantity}`));
+    if (values.note) group.append(element(d, 'p', `Note (user input): ${values.note}`));
     entry.name = field(group, `${id}-name`, 'Item name');
     entry.use = field(group, `${id}-use`, 'How it is used / location');
     entry.grade = field(group, `${id}-grade`, 'Exact grade / product (optional)');
@@ -96,7 +121,7 @@ export function renderCabinForm(root, options = {}) {
   }
   function number(control, title, { optional = false, min = 0, strict = false, max = Infinity } = {}, messages = []) {
     const raw = control.input.value.trim(), value = raw === '' ? null : Number(raw);
-    const invalid = (value === null && !optional) || (value !== null && (!Number.isFinite(value) || (strict ? value <= min : value < min) || value > max));
+    const invalid = !!control.input.validity?.badInput || (value === null && !optional) || (value !== null && (!Number.isFinite(value) || (strict ? value <= min : value < min) || value > max));
     control.error.textContent = invalid ? `Error: ${title}` : '';
     control.input.setAttribute('aria-invalid', String(invalid));
     if (invalid) messages.push({ input: control.input, message: title });
@@ -116,17 +141,21 @@ export function renderCabinForm(root, options = {}) {
     }
     const lines = items.map(entry => {
       const material_id = entry.material.input.value;
-      const invalid = !materials.some(m => m.material_id === material_id);
+      const invalid = !materials.some(m => m.material_id === material_id) && material_id !== entry.importedMaterial;
       entry.material.error.textContent = invalid ? 'Error: Choose a material in the material list.' : '';
       entry.material.input.setAttribute('aria-invalid', String(invalid));
       if (invalid) messages.push({ input: entry.material.input, message: 'Choose a material in the material list.' });
       return { item_id: entry.item_id, material_id, name: entry.name.input.value, use: entry.use.input.value,
+        quantity: entry.quantity, note: entry.note,
         material_grade: entry.grade.input.value || null, form: entry.form.input.value || null,
         thickness_mm: number(entry.thickness, 'Enter positive thickness or leave blank.', { optional: true, strict: true }, messages),
         width_mm: number(entry.width, 'Enter positive width or leave blank.', { optional: true, strict: true }, messages) };
     });
-    const kpa = pressure == null ? null : pressure * (controls.unit.input.value === 'psia' ? 6.894757293 : 1);
-    pressureNote.textContent = kpa == null ? 'Pressure not specified' : `${kpa.toFixed(2)} kPa (${(kpa / 6.894757293).toFixed(2)} psia)`;
+    const unit = controls.unit.input.value;
+    const kpa = pressure == null || !Number.isFinite(pressure) ? null
+      : converted && controls.pressure.input.value.trim() === converted.text ? converted.kpa : toKpa(pressure, unit);
+    pressureNote.textContent = kpa == null ? 'Pressure not specified'
+      : `${kpa.toFixed(2)} kPa (${(kpa / PSIA_TO_KPA).toFixed(2)} psia).${pressureUnitHint(pressure, unit)}`;
     return { messages, query: { name: controls.name.input.value, context: controls.context.input.value,
       conditions: { o2_pct: o2, pressure_kpa: kpa, flow_speed_cm_s: flow, flow_direction: controls.direction.input.value || null,
         gravity_g: Number(controls.gravity.input.value), external_heat_flux_kw_m2: null }, materials: lines } };
@@ -135,7 +164,7 @@ export function renderCabinForm(root, options = {}) {
     revision++;
     status.textContent = 'Inputs changed. Evaluate cabin to update results.';
     const { query, messages } = read();
-    const active = presetButtons.find(([, preset]) => Math.abs(query.conditions.pressure_kpa - preset.pressure_kpa) < 1e-8 && query.conditions.o2_pct === preset.o2_pct);
+    const active = query.conditions.pressure_kpa == null ? null : presetButtons.find(([, preset]) => Math.abs(query.conditions.pressure_kpa - preset.pressure_kpa) < 1e-8 && query.conditions.o2_pct === preset.o2_pct);
     for (const [button] of presetButtons) button.setAttribute('aria-pressed', String(button === active?.[0]));
     if (active) {
       presetSource.replaceChildren(sourceLink(d, sources[active[1].source_key], active[1].source_locator));
@@ -145,7 +174,7 @@ export function renderCabinForm(root, options = {}) {
     onChange?.(query, { valid: !messages.length, stale: true });
   }
   function applyPreset(preset) {
-    previousUnit = 'kpa';
+    previousUnit = 'kpa'; converted = null;
     controls.unit.input.value = 'kpa'; controls.pressure.input.value = preset.pressure_kpa; controls.o2.input.value = preset.o2_pct;
     presetSource.replaceChildren(sourceLink(d, sources[preset.source_key], preset.source_locator));
     changed(); status.textContent = `Preset applied: ${preset.o2_pct}% oxygen and ${preset.pressure_kpa} kPa. Materials retained.`;
@@ -158,13 +187,16 @@ export function renderCabinForm(root, options = {}) {
     empty.hidden = true;
   });
   form.addEventListener('input', changed);
-  let previousUnit = controls.unit.input.value;
+  let previousUnit = controls.unit.input.value, converted = null;
   form.addEventListener('change', event => {
     if (event.target === controls.unit.input) {
-      const value = Number(controls.pressure.input.value);
-      if (controls.pressure.input.value !== '' && Number.isFinite(value)) {
-        const kpa = value * (previousUnit === 'psia' ? 6.894757293 : 1);
-        controls.pressure.input.value = kpa / (controls.unit.input.value === 'psia' ? 6.894757293 : 1);
+      const raw = controls.pressure.input.value.trim(), value = Number(raw);
+      if (raw !== '' && Number.isFinite(value)) {
+        // Switching units back and forth must not drift: keep the exact kPa behind the shown value.
+        const kpa = converted && raw === converted.text ? converted.kpa : toKpa(value, previousUnit);
+        const unit = controls.unit.input.value;
+        const text = String(unit === 'psia' ? round(kpa / PSIA_TO_KPA, 4) : kpa);
+        controls.pressure.input.value = text; converted = { text, kpa };
       }
       previousUnit = controls.unit.input.value;
     }
@@ -196,5 +228,5 @@ export function renderCabinForm(root, options = {}) {
   if (initial) applyPreset(initial);
   for (const item of options.items || []) addItem(item);
   if (!items.length) status.textContent = 'Add a material to compare evidence';
-  return { getQuery: () => read().query, addItem, destroy: () => { revision++; root.replaceChildren(); } };
+  return { getQuery: () => read().query, addItem, destroy: () => { revision++; importer.destroy(); root.replaceChildren(); } };
 }

@@ -1,0 +1,20 @@
+/* Ask composer and readable results (#339). Neutral tokens; no chat bubbles, gradients or glow. */
+#ask-root .ask-form { display: grid; gap: var(--space-8); max-width: 72ch; }
+#ask-root .ask-mode { margin: 0; color: var(--text-2); }
+#ask-root textarea#ask-question { width: 100%; min-height: 72px; resize: vertical; padding: var(--space-8); font: inherit;
+  color: var(--text-1); background: var(--surface-2); border: 1px solid var(--border-control); border-radius: var(--radius-control); }
+#ask-root textarea#ask-question:focus-visible, #ask-root .ask-example:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#ask-root .ask-actions { display: flex; gap: var(--space-8); }
+#ask-root .ask-examples { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+#ask-root .ask-example { min-height: var(--control-h); padding: 0 var(--space-12); font: inherit; color: var(--text-1);
+  background: var(--surface-1); border: 1px dashed var(--border-control); border-radius: var(--radius-control); cursor: pointer; text-align: left; }
+#ask-root .ask-summary { margin-top: var(--space-16); max-width: 90ch; }
+#ask-root .ask-cards { display: grid; gap: var(--space-12); }
+#ask-root .ask-card { border: 1px solid var(--divider); border-radius: var(--radius-panel); padding: var(--space-12); display: grid; gap: var(--space-8); }
+#ask-root .ask-card h4 { margin: 0; }
+#ask-root .ask-conditions { display: grid; grid-template-columns: max-content 1fr; gap: 2px var(--space-12); margin: 0; font-size: 13px; }
+#ask-root .ask-conditions dt { color: var(--text-2); }
+#ask-root .ask-conditions dd { margin: 0; font-family: var(--font-mono); overflow-wrap: anywhere; }
+#ask-root .ask-next { margin: 0; border-left: 2px solid var(--accent); padding-left: var(--space-8); }
+#ask-root .ask-table { margin-top: var(--space-12); }
+@media (max-width: 720px) { #ask-root .ask-example { flex: 1 1 100%; } }

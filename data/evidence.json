@@ -182,8 +182,8 @@
       "o2_pct": 34,
       "status": "planned",
       "context": "Source-dated atmosphere comparison; not a universal EVA procedure",
-      "source_key": "R7-S4",
-      "source_locator": "Table 1, journal p.77 / PDF p.2; ISS 21% rounded from 20.8%",
+      "source_key": "R7-S12",
+      "source_locator": "Section 4.6.3.6, printed p.142 / PDF p.156; generic surface habitat/rover atmosphere 8.2 psia (56.5 kPa) / 34% O2",
       "prebreathe": [
         {
           "minutes": "0–15",
@@ -221,8 +221,8 @@
     }
   ],
   "schema_version": "1.0.0",
-  "built_at": "2026-11-14T22:11:45.713Z",
-  "built_from": "data/evidence.csv@c78b68c2b7ae1c952eb9feb0d51c1a6e7f08b5aa",
+  "built_at": "2026-11-15T20:07:58.538Z",
+  "built_from": "data/evidence.csv@0546ff2758feead28b157f7e33d997df1506ecca",
   "evidence": [
     {
       "evidence_id": "PSI25-B1",
@@ -1179,7 +1179,7 @@
       "limit_approach": null,
       "pass_criterion": "extinguishes before end of drop; normally four passes below surviving case",
       "test_duration_s": 5,
-      "notes": "Draft; simulated conditions are not on-Moon behavior. See lunar-2025.md source discrepancy register. Flow blank: not measured, not zero. Unknown heat flux remains blank per V1; original endpoint and gravity retained as provenance.",
+      "notes": "NASA nominal simulated acceleration: 1/6 g; 0.16 g is project normalization, not NASA nominal. PMMA form sheet is inferred, not source-stated. 13.5 mol% O2 is a plot-derived five-second extinction result for 0.8 mm PMMA at 56.5 kPa absolute, not a general flammability or safety limit. Review: CORRECTION NEEDED (Lakshya, relayed by user through chat, 2026-11-15); HOLD_scientific_review and draft retained. Durable record: research/reviews/U25-01-L-2026-11-15.md. Draft; simulated conditions are not on-Moon behavior. See lunar-2025.md source discrepancy register. Flow blank: not measured, not zero. Unknown heat flux remains blank per V1; original endpoint and gravity retained as provenance.",
       "holdout_group": "US25",
       "review_status": "draft",
       "verified_by": null,

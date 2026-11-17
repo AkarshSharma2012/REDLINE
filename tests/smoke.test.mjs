@@ -47,7 +47,7 @@ test('labelCabin returns one S1-shaped result per material', async () => {
 
 test('styles.css defines the DESIGN.md tokens and three label chips', async () => {
   const css = await readFile(new URL('src/styles.css', root), 'utf8');
-  for (const token of ['--bg: #0E1013', '--ev-burned: #FF6A33', '--ev-near: #F0D545', '--ev-ne: #8EC5F0', '--accent: #7CB8FF']) {
+  for (const token of ['--bg: #000000', '--ev-burned: #FF6A33', '--ev-near: #F0D545', '--ev-ne: #C8C8C8', '--accent: #FFFFFF']) {
     assert.ok(css.includes(token), token);
   }
   for (const chip of ['.chip-burned', '.chip-near', '.chip-ne']) assert.ok(css.includes(chip), chip);

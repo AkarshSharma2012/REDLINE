@@ -9,11 +9,11 @@ const root = new URL('../', import.meta.url);
 const evidence = JSON.parse(await readFile(new URL('data/evidence.json', root), 'utf8'));
 const html = await readFile(new URL('index.html', root), 'utf8');
 
-test('PSI Investigations is the first screen; unknown hashes fall back to it', () => {
-  assert.equal(TABS[0], 'investigations');
-  assert.deepEqual(TABS, ['investigations', 'ask', 'cabin', 'gravity', 'oxygen', 'accuracy']);
-  assert.equal(tabFromHash(''), 'investigations');
-  assert.equal(tabFromHash('#nope'), 'investigations');
+test('Model is the first section (#337); unknown hashes and the old #cabin fall back to it', () => {
+  assert.deepEqual(TABS, ['model', 'evidence', 'investigations', 'brief']);
+  assert.equal(tabFromHash(''), 'model');
+  assert.equal(tabFromHash('#nope'), 'model');
+  assert.equal(tabFromHash('#cabin'), 'model');
   assert.equal(tabFromHash('#gravity'), 'gravity');
 });
 
@@ -22,9 +22,9 @@ test('index.html has one tab and one panel per screen, only the first visible', 
     assert.match(html, new RegExp(`id="tab-${tab}"[^>]*aria-controls="panel-${tab}"`), tab);
     const panel = html.match(new RegExp(`<[a-z]+ id="panel-${tab}"[^>]*>`))?.[0];
     assert.ok(panel, `panel-${tab}`);
-    assert.equal(/\shidden\b/.test(panel), tab !== 'investigations', `panel-${tab} hidden state`);
+    assert.equal(/\shidden\b/.test(panel), tab !== TABS[0], `panel-${tab} hidden state`);
   }
-  for (const id of ['investigations-root', 'ask-root', 'cabin-form', 'results-table', 'evidence-panel', 'fixes', 'gravity-view', 'o2-slider', 'accuracy-view', 'rover-demo', 'status', 'dataset']) {
+  for (const id of ['review-cockpit', 'investigations-root', 'ask-root', 'cabin-form', 'results-table', 'evidence-panel', 'fixes', 'gravity-view', 'o2-slider', 'accuracy-view', 'rover-demo', 'status', 'dataset']) {
     assert.ok(html.includes(`id="${id}"`), id);
   }
 });
