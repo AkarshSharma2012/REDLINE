@@ -94,3 +94,7 @@ What sponsors get: your logo and a thank-you in this README and every project we
 ### Our sponsors
 
 Your name could be here.
+
+## License
+
+REDLINE's source code is open source under the [MIT License](LICENSE). Bundled third-party libraries in `src/vendor/` keep their own licenses (GSAP is under the GSAP Standard License), and NASA documents, datasets and other cited sources keep their original terms.
